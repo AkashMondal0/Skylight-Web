@@ -35,6 +35,7 @@ AuthRouter.get("/login", async (req, res) => {
         const token = jwt.sign({ email: db_user[0].email, id: db_user[0].id }, secret as string, { expiresIn: '1h' })
 
         return res.status(200).json({
+            ...db_user[0],
             token,
         })
 
@@ -66,7 +67,10 @@ AuthRouter.post("/register", ValidateMiddleware(zodUserSchema), async (req, res)
             username: data.username,
         }).returning()
         const token = jwt.sign({ email: newUser[0].email, id: newUser[0].id }, secret as string, { expiresIn: '1h' })
-        return res.status(200).json({ token })
+        return res.status(200).json({
+            ...newUser[0],
+            token,
+        })
     } catch (error: any) {
         console.log(error)
         res.status(500).json({ message: "Server Error Please Try Again" })

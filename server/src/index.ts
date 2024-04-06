@@ -9,9 +9,9 @@ import { createServer } from 'http';
 import responseTime from 'response-time';
 import { client, httpRequestDurationMicroseconds, totalRequestCounter } from './grafana/prometheus';
 import { socketIO } from './services/socket';
-import verifyToken from './middleware/verify-jwt.token';
 import AuthRouter from './routes/auth';
 import { config } from './config';
+import ProfileRouter from './routes/profile';
 
 const app = express();
 const httpServer = createServer(app);
@@ -35,9 +35,9 @@ server.start()
     }))
     app.use(cors());
     app.use(express.json())
-    app.use("/graphql", verifyToken, expressMiddleware(server));
+    app.use("/graphql", expressMiddleware(server));
     app.use("/auth", AuthRouter)
-    // app.use("/profile", ProfileRouter);
+    app.use("/profile", ProfileRouter);
 
     app.get('/metrics', async (req, res) => {
       res.setHeader('Content-Type', client.register.contentType);
@@ -45,9 +45,7 @@ server.start()
       res.send(metrics);
     })
 
-    app.get("/", verifyToken, (req, res) => {
-      //@ts-ignore
-      console.log("authenticating user")
+    app.get("/", (req, res) => {
       res.send("Welcome to the Apollo Server");
     });
 

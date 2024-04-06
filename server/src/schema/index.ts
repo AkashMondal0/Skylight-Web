@@ -7,6 +7,7 @@ export const users = pgTable('users', {
     email: varchar('email').notNull(),
     password: varchar('password').notNull(),
     profilePicture: varchar('profile_picture'),
+    bio: varchar('bio'),
     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
 });
@@ -34,3 +35,98 @@ export const conversations = pgTable('conversations', {
     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
 });
+
+export const posts = pgTable('posts', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    caption: varchar('caption').notNull(),
+    fileUrl: varchar('file_url').array(),
+    authorId: uuid('author_id').notNull().references(() => users.id),
+    createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+})
+
+export const comments = pgTable('comments', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    comment: varchar('comment').notNull(),
+    authorId: uuid('author_id').notNull().references(() => users.id),
+    postId: uuid('post_id').notNull().references(() => posts.id),
+    createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+})
+
+export const likes = pgTable('likes', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    authorId: uuid('author_id').notNull().references(() => users.id),
+    postId: uuid('post_id').notNull().references(() => posts.id),
+    createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+})
+
+export const followers = pgTable('followers', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    followerUserId: uuid('follower_id').notNull().references(() => users.id),
+    followingUserId: uuid('following_id').notNull().references(() => users.id),
+    createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+})
+
+export const notifications = pgTable('notifications', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    content: varchar('content').notNull(),
+    authorId: uuid('author_id').notNull().references(() => users.id),
+    receiverId: uuid('receiver_id').notNull().references(() => users.id),
+    postId: uuid('post_id').notNull().references(() => posts.id),
+    createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+})
+
+export const dm = pgTable('dm', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    content: varchar('content').notNull(),
+    authorId: uuid('author_id').notNull().references(() => users.id),
+    receiverId: uuid('receiver_id').notNull().references(() => users.id),
+    createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+})
+
+export const stories = pgTable('stories', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    fileUrl: varchar('file_url').array(),
+    caption: varchar('caption').notNull(),
+    authorId: uuid('author_id').notNull().references(() => users.id),
+    createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+})
+
+export const storyViews = pgTable('story_views', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    viewerId: uuid('viewer_id').notNull().references(() => users.id),
+    storyId: uuid('story_id').notNull().references(() => stories.id),
+    createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+})
+
+export const storyReplies = pgTable('story_replies', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    content: varchar('content').notNull(),
+    authorId: uuid('author_id').notNull().references(() => users.id),
+    storyId: uuid('story_id').notNull().references(() => stories.id),
+    createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+})
+
+export const storyLikes = pgTable('story_likes', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    authorId: uuid('author_id').notNull().references(() => users.id),
+    storyId: uuid('story_id').notNull().references(() => stories.id),
+    createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+})
+
+export const savedPosts = pgTable('saved_posts', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    postId: uuid('post_id').notNull().references(() => posts.id),
+    userId: uuid('user_id').notNull().references(() => users.id),
+    createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+})
