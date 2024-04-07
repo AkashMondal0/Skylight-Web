@@ -6,7 +6,7 @@ import Redux_Provider from "@/provider/Redux_Provider";
 import type { Metadata } from 'next'
  
 export const metadata: Metadata = {
-  title: 'Sky Form',
+  title: 'Sky Media',
   description: `
   `,
 }
@@ -15,7 +15,7 @@ export default function RootLayout({ children }: {
 }) {
   return (
     <>
-      <html lang="en" suppressHydrationWarning>
+      <html lang="en" suppressHydrationWarning={false}>
         <head />
         <body>
           <Toaster />
@@ -23,7 +23,7 @@ export default function RootLayout({ children }: {
             <NextAuth_Provider>
               <ThemeProvider
                 attribute="class"
-                defaultTheme="system"
+                defaultTheme="dark"
                 enableSystem
               >
                 {children}

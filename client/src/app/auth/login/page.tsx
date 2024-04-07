@@ -70,7 +70,7 @@ export default function LoginPage() {
         return redirect("/")
     }
     return (
-        <div className="h-screen p-1 flex justify-center items-center">
+        <div className="h-[100dvh] p-1 flex justify-center items-center">
             <Card className="md:w-96 md:h-auto w-full h-full pt-16 md:pt-0 rounded-3xl">
                 <CardHeader className="space-y-1">
                     <CardTitle className="text-2xl">
