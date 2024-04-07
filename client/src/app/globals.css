@@ -86,3 +86,37 @@ input[type='number']::-webkit-outer-spin-button {
     @apply bg-background text-foreground;
   }
 }
+
+
+/* my rainbow color bg*/
+.rainbow-animation {
+  animation: backgroundColorPalette 4s linear infinite;
+}
+
+@keyframes backgroundColorPalette {
+  0% {
+    background: red;
+  }
+
+  20% {
+    background: orange;
+  }
+
+  40% {
+    background: yellow;
+  }
+
+  60% {
+    background: blue;
+  }
+
+  80% {
+    background: indigo;
+  }
+
+  100% {
+    background: violet;
+  }
+}
+
+
