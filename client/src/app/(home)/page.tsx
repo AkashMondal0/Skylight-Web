@@ -1,4 +1,7 @@
-import Sidebar from "./components/Navigation";
+import Lg_Navigation from "./components/lg-navigation";
+import Sm_Header from "./components/sm-header";
+import Sm_Navigation from "./components/sm-navigation";
+
 export default function Home() {
   return (
     <>
@@ -10,18 +13,22 @@ export default function Home() {
         hidden md:flex md:w-20
         xl:w-72 ease-in-out 
         duration-300`}>
-          <Sidebar />
+          <Lg_Navigation />
         </div>
         {/* right side */}
         <div className="flex h-full
          min-h-[100dvh] w-full justify-center">
-          <div className="flex w-full justify-center">
+          <div className="md:flex w-full justify-center">
+            {/* sm device header*/}
+            <Sm_Header />
             {/* feed posts */}
             <div className="grow h-full 
             min-h-[100dvh] 
             w-full max-w-[650px]">
               post
             </div>
+            {/* sm device footer*/}
+            <Sm_Navigation />
             {/* suggestions */}
             <div className="h-full
             min-h-[100dvh] 

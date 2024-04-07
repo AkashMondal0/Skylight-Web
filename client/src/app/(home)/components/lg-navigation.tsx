@@ -19,7 +19,7 @@ const SideIconData = [
   { icon: CircleUserRound, label: "Profile" },
 ]
 
-export default function Sidebar() {
+export default function Lg_Navigation() {
   return (
     <div className="p-2 w-full flex flex-col justify-between">
       <div>
@@ -64,7 +64,7 @@ const Banner = () => {
       <div className={`hidden xl:block my-8
         text-primary-500 text-xl px-5
         font-semibold`}>
-        Sky Media
+        Skymedia
       </div>
       <Button
         variant="ghost"
