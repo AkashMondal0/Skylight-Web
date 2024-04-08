@@ -19,6 +19,7 @@ import {
   Moon,
   SunMoon,
   Sun,
+  MessageSquareWarning,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -104,9 +105,9 @@ export default function MoreDropdownMenu({ children }: {
             </DropdownMenuPortal>
           </DropdownMenuSub>
           <DropdownMenuItem className="rounded-xl">
-            <Plus className="mr-3 h-7 w-7" />
+            <MessageSquareWarning className="mr-3 h-7 w-7" />
             <span>Report</span>
-            <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
+            {/* <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut> */}
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
@@ -126,7 +127,7 @@ export default function MoreDropdownMenu({ children }: {
         <DropdownMenuItem className="rounded-xl" onClick={() => signOut()}>
           <LogOut className="mr-3 h-7 w-7" />
           <span>Log out</span>
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+          {/* <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut> */}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

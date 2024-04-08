@@ -49,20 +49,20 @@ export default function Lg_Navigation() {
               if (label === "Notifications") {
                 return <NotificationModel key={index}>
                   <NavigationItem label={label} onClick={onClick}>
-                    {React.createElement(icon, { size: 30 })}
+                    {React.createElement(icon, { size: 28 })}
                   </NavigationItem>
                 </NotificationModel>
               }
               if (label === "Search") {
                 return <SearchModel key={index}>
                   <NavigationItem label={label} onClick={onClick}>
-                    {React.createElement(icon, { size: 30 })}
+                    {React.createElement(icon, { size: 28 })}
                   </NavigationItem>
                 </SearchModel>
               }
               return <NavigationItem key={index} label={label}
                 onClick={onClick}>
-                {React.createElement(icon, { size: 30 })}
+                {React.createElement(icon, { size: 28 })}
               </NavigationItem>
             })}
           </div>
@@ -116,7 +116,7 @@ const Banner = () => {
       <Button
         variant="ghost"
         className={`w-full justify-start gap-3 xl:hidden h-full rounded-xl my-8`}>
-        <AtSign size={30} />
+        <AtSign size={28} />
       </Button>
     </div>
   )
@@ -128,7 +128,7 @@ const MoreButton = () => {
       <Button
         variant={"ghost"}
         className={`w-full justify-start gap-4 h-full py-2 rounded-xl`}>
-        <Menu size={30} />
+        <Menu size={28} />
         <p className={cn("hidden xl:block text-primary-500 text-base font-normal")}>
           More
         </p>
