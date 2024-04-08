@@ -4,7 +4,7 @@ import Sm_Navigation from '../components/sm-navigation';
 import Sm_Header from '../components/sm-header';
 
 export const metadata: Metadata = {
-  title: 'SkyMedia',
+  title: 'Feed',
   description: `Sky Media is a social media platform that 
   allows users to share their thoughts and ideas with the world.`,
 }
@@ -13,9 +13,7 @@ export default function RootLayout({ children }: {
 }) {
   return (
     <>
-      <html lang="en" suppressHydrationWarning={false}>
-        <head />
-        <body>
+        <div>
           {/* sm device header*/}
           <Sm_Header />
           <div className="flex">
@@ -25,8 +23,7 @@ export default function RootLayout({ children }: {
           </div>
           {/* sm device footer*/}
           <Sm_Navigation />
-        </body>
-      </html>
+        </div>
     </>
   )
 }

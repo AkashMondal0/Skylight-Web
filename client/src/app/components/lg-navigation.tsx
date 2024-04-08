@@ -39,7 +39,7 @@ export default function Lg_Navigation() {
         border-r scroll-smooth
         h-[100dvh] overflow-y-auto
         hidden md:flex md:w-20
-        xl:w-72 ease-in-out 
+        xl:w-72 ease-in-out sticky top-0
         duration-300`}>
       <div className="p-2 w-full flex flex-col justify-between">
         <div>
