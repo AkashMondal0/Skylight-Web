@@ -1,3 +1,4 @@
+import ExploreSuggestion from "./components/Explore";
 import FeedPost from "./components/FeedPost";
 import Stories_bar from "./components/Storiesbar";
 
@@ -20,7 +21,7 @@ export default function Home() {
             hidden lg:flex lg:w-full 
             lg:max-w-[400px] ease-in-out 
             duration-300">
-            suggestions
+            <ExploreSuggestion/>
           </div>
         </div>
       </div>
