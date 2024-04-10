@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation"
 import NotificationModel from "./model/NotificationModel"
 import SearchModel from "./model/SearchModel"
 import MoreDropdownMenu from "./model/More_DropDown"
+import UploadPostDialog from "../(home)/components/dialog/upload-post"
 
 
 export default function Lg_Navigation() {
@@ -30,7 +31,7 @@ export default function Lg_Navigation() {
     { icon: Film, label: "Reels", onClick: () => pageChange('/reels') },
     { icon: MessageCircleCode, label: "Messages", onClick: () => pageChange('/message') },
     { icon: Heart, label: "Notifications", onClick: () => { } },
-    { icon: CopyPlus, label: "Create", onClick: () => pageChange('/create') },
+    { icon: CopyPlus, label: "Create", onClick: () => { } },
     { icon: CircleUserRound, label: "Profile", onClick: () => pageChange('/profile') },
   ]
 
@@ -59,6 +60,14 @@ export default function Lg_Navigation() {
                     {React.createElement(icon, { size: 28 })}
                   </NavigationItem>
                 </SearchModel>
+              }
+              if (label === "Create") {
+                return <UploadPostDialog key={index}>
+                  <NavigationItem key={index} label={label}
+                    onClick={onClick}>
+                    {React.createElement(icon, { size: 28 })}
+                  </NavigationItem>
+                </UploadPostDialog>
               }
               return <NavigationItem key={index} label={label}
                 onClick={onClick}>
