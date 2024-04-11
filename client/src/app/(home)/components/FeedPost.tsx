@@ -32,12 +32,18 @@ const PostItem = ({
               alt="@shadcn" className='rounded-full' />
           </Avatar>
           <div>
-            <div className='font-semibold text-base'>Akash Mondal . <span className='font-light text-base text-gray-300'>1d</span></div>
+            <div className='font-semibold text-base'>Akash Mondal .
+              <span className='font-light text-base'>1d</span>
+            </div>
             <div className='text-sm'>Los Angeles, California</div>
           </div>
         </div>
         <div className='flex items-center'>
-          <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-ellipsis"><circle cx={12} cy={12} r={1} /><circle cx={19} cy={12} r={1} /><circle cx={5} cy={12} r={1} /></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24}
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}
+            strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-ellipsis">
+            <circle cx={12} cy={12} r={1} /><circle cx={19} cy={12} r={1} /><circle cx={5} cy={12} r={1} />
+          </svg>
         </div>
       </div>
 
@@ -45,13 +51,13 @@ const PostItem = ({
         <Carousel>
           <CarouselContent>
             {Array.from({ length: 10 }).map((_, index) => (
-                <CarouselItem key={index}> <img
-                  src="https://github.com/shadcn.png"
-                  width={500}
-                  height={500}
-                  alt="Picture of the author"
-                /></CarouselItem>
-              ))}
+              <CarouselItem key={index}> <img
+                src="https://github.com/shadcn.png"
+                width={500}
+                height={500}
+                alt="Picture of the author"
+              /></CarouselItem>
+            ))}
           </CarouselContent>
           <div className='flex'>
             <CarouselPrevious className='md:flex hidden' />

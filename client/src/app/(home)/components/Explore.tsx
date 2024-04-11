@@ -7,11 +7,11 @@ const ExploreSuggestion = () => {
         <div className='my-4 space-y-4'>
             <MyAccount />
             <div className='flex justify-between px-2 max-w-sm w-72'>
-                <div className='font-semibold text-sm text-gray-200'>Suggestion for you</div>
+                <div className='font-semibold text-sm'>Suggestion for you</div>
                 <Link href={"/explore/people"} className='font-semibold text-xs hover:opacity-50 cursor-pointer'>See All</Link>
             </div>
             <div className='space-y-3'>
-                {[...Array(10)].map((_, i) => <ExploreUserCard key={i} />)}
+                {[...Array(5)].map((_, i) => <ExploreUserCard key={i} />)}
             </div>
         </div>
     )
@@ -33,8 +33,10 @@ const ExploreUserCard = ({
                             alt="@shadcn" className='rounded-full' />
                     </Avatar>
                     <div>
-                        <div className='font-semibold text-base'>Akash Mondal . <span className='font-light text-base text-gray-300'>1d</span></div>
-                        <div className='text-sm'>Los Angeles, California</div>
+                        <div className='font-semibold text-base'>Akash Mondal</div>
+                        <div className='text-sm'>
+                            suggested for you
+                        </div>
                     </div>
                 </div>
                 <div className='flex items-center'>
@@ -61,8 +63,10 @@ const MyAccount = ({
                         alt="@shadcn" className='rounded-full' />
                 </Avatar>
                 <div>
-                    <div className='font-semibold text-base'>Akash Mondal . <span className='font-light text-base text-gray-300'>1d</span></div>
-                    <div className='text-sm'>Los Angeles, California</div>
+                    <div className='font-semibold text-base'>iamskysolo</div>
+                    <div className='text-sm'>
+                        Akash Mondal
+                    </div>
                 </div>
             </div>
             <div className='flex items-center'>
