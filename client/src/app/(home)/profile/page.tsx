@@ -196,7 +196,7 @@ const Page = () => {
                 </div>
               </div>
 
-              <div className='sm:sm:cursor-pointer text-center' onClick={followers}>
+              <div className='cursor-pointer text-center' onClick={followers}>
                 <p className='text-base font-semibold'>
                   {data?.user.followers.length}
                 </p>
@@ -205,7 +205,7 @@ const Page = () => {
                 </div>
               </div>
 
-              <div className='sm:sm:cursor-pointer text-center' onClick={following}>
+              <div className='cursor-pointer text-center' onClick={following}>
                 <p className='text-base font-semibold'>
                   {data?.user.following.length}
                 </p>

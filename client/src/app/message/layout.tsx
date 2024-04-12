@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Lg_Navigation from '../components/lg-navigation';
 export const metadata: Metadata = {
   title: 'Message',
   description: `Sky Media is a social media platform that 
@@ -8,8 +9,9 @@ export default function RootLayout({ children }: {
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <div className='flex'>
+      <Lg_Navigation hideLabel/>
       {children}
-    </>
+    </div>
   )
 }

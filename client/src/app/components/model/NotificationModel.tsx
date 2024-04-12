@@ -11,8 +11,10 @@ const NotificationModel = ({ children }: { children: React.ReactNode }) => {
             <DrawerTrigger asChild>
                 {children}
             </DrawerTrigger>
-            <DrawerContent className='w-96 h-[100dvh] overflow-y-auto'>
-                Notification
+            <DrawerContent className='w-96 h-[100dvh] overflow-y-auto p-4'>
+                <div className='w-full space-y-4 py-4 mb-4'>
+                    <h2 className='text-2xl font-semibold'>Notification</h2>
+                </div>
             </DrawerContent>
         </Drawer>
     )

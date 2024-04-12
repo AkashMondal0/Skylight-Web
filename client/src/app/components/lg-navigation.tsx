@@ -20,7 +20,11 @@ import MoreDropdownMenu from "./model/More_DropDown"
 import UploadPostDialog from "../(home)/components/dialog/upload-post"
 
 
-export default function Lg_Navigation() {
+export default function Lg_Navigation({
+  hideLabel = false
+}: {
+  hideLabel?: boolean
+}) {
   const router = useRouter()
   const pageChange = (path: string) => router.push(path)
 
@@ -36,58 +40,61 @@ export default function Lg_Navigation() {
   ]
 
   return (
-    <div className={`
+    <div className={cn(
+      `
         border-r scroll-smooth
-        h-[100dvh] overflow-y-auto
-        hidden md:flex md:w-20
-        xl:w-72 ease-in-out sticky top-0
-        duration-300`}>
+        h-[100dvh] overflow-y-auto md:flex
+        hidden ease-in-out sticky top-0 md:w-20 xl:w-72
+        duration-300`,
+      hideLabel ? "w-20" : "w-72"
+    )}>
       <div className="p-2 w-full flex flex-col justify-between">
         <div>
-          <Banner />
+          <Banner hideLabel={hideLabel} />
           <div className="space-y-3">
             {SideIconData.map(({ icon, label, onClick }, index) => {
               if (label === "Notifications") {
                 return <NotificationModel key={index}>
-                  <NavigationItem label={label} onClick={onClick}>
+                  <NavigationItem label={label} onClick={onClick} hideLabel={hideLabel}>
                     {React.createElement(icon, { size: 28 })}
                   </NavigationItem>
                 </NotificationModel>
               }
               if (label === "Search") {
                 return <SearchModel key={index}>
-                  <NavigationItem label={label} onClick={onClick}>
+                  <NavigationItem label={label} onClick={onClick} hideLabel={hideLabel}>
                     {React.createElement(icon, { size: 28 })}
                   </NavigationItem>
                 </SearchModel>
               }
               if (label === "Create") {
                 return <UploadPostDialog key={index}>
-                  <NavigationItem key={index} label={label}
+                  <NavigationItem key={index} label={label} hideLabel={hideLabel}
                     onClick={onClick}>
                     {React.createElement(icon, { size: 28 })}
                   </NavigationItem>
                 </UploadPostDialog>
               }
-              return <NavigationItem key={index} label={label}
+              return <NavigationItem key={index} label={label} hideLabel={hideLabel}
                 onClick={onClick}>
                 {React.createElement(icon, { size: 28 })}
               </NavigationItem>
             })}
           </div>
         </div>
-        <MoreButton />
+        <MoreButton hideLabel={hideLabel} />
       </div>
     </div>
   )
 }
 
 
-const NavigationItem = ({ children, active, label, onClick }: {
+const NavigationItem = ({ children, active, label, onClick, hideLabel }: {
   children: React.ReactNode
   active?: boolean
   label?: string
   onClick?: () => void
+  hideLabel?: boolean
 }) => {
   return (
     <TooltipProvider>
@@ -114,24 +121,52 @@ const NavigationItem = ({ children, active, label, onClick }: {
 }
 
 
-const Banner = () => {
+const Banner = ({ hideLabel }: {
+  hideLabel?: boolean
+}) => {
+  if (hideLabel) {
+    return (
+      <div>
+        <Button
+          variant="ghost"
+          className={`w-full justify-start gap-3 h-full rounded-xl my-8`}>
+          <AtSign size={28} />
+        </Button>
+      </div>
+    )
+  }
   return (
     <div>
-      <div className={`hidden xl:block my-8
-        text-primary-500 text-xl px-5
-        font-semibold`}>
-        Skymedia
-      </div>
       <Button
         variant="ghost"
         className={`w-full justify-start gap-3 xl:hidden h-full rounded-xl my-8`}>
         <AtSign size={28} />
       </Button>
+      <div className={`hidden xl:block my-8
+      text-primary-500 text-xl px-5
+      font-semibold`}>
+        Skymedia
+      </div>
     </div>
   )
 }
 
-const MoreButton = () => {
+const MoreButton = ({ hideLabel }: {
+  hideLabel?: boolean
+}) => {
+
+  if (hideLabel) {
+    return <div>
+      <MoreDropdownMenu>
+        <Button
+          variant={"ghost"}
+          className={`w-full justify-start gap-4 h-full py-2 rounded-xl`}>
+          <Menu size={28} />
+        </Button>
+      </MoreDropdownMenu>
+    </div>
+  }
+
   return <div>
     <MoreDropdownMenu>
       <Button
