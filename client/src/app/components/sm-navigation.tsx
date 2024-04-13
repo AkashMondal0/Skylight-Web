@@ -19,7 +19,7 @@ const Sm_Navigation = () => {
         { icon: CircleUserRound, label: "Profile", onClick: () => pageChange('/profile') },
     ]
     return (
-        <div className="md:hidden flex sticky bottom-0 z-10 border-t py-2 bg-background text-foreground">
+        <div className="md:hidden flex sticky bottom-0 z-10 border-t py-2 bg-background text-foreground h-[6dvh] items-center">
             <div className="p-2 w-full flex justify-around">
                 {SideIconData.map(({ icon, label, onClick }, index) => (
                     <NavigationItem key={index} label={label}

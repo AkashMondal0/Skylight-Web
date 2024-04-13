@@ -32,7 +32,7 @@ export default function Lg_Navigation({
     { icon: Home, label: "Home", onClick: () => pageChange('/') },
     { icon: Search, label: "Search", onClick: () => { } },
     { icon: Compass, label: "Explore", onClick: () => pageChange('/explore') },
-    { icon: Film, label: "Reels", onClick: () => pageChange('/reels') },
+    { icon: Film, label: "Reels", onClick: () => pageChange('/reels/5') },
     { icon: MessageCircleCode, label: "Messages", onClick: () => pageChange('/message') },
     { icon: Heart, label: "Notifications", onClick: () => { } },
     { icon: CopyPlus, label: "Create", onClick: () => { } },
@@ -40,9 +40,8 @@ export default function Lg_Navigation({
   ]
 
   return (
-    <div className={cn(
-      `
-        border-r scroll-smooth
+    <div className={cn(`
+        border-r scroll-smooth hideScrollbar
         h-[100dvh] overflow-y-auto md:flex
         hidden ease-in-out sticky top-0 md:w-20 xl:w-72
         duration-300`,

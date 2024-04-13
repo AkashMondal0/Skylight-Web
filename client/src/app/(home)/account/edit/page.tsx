@@ -1,3 +1,4 @@
+'use client'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -100,7 +101,7 @@ import {
 } from "@/components/ui/select"
 import OptionAvatarDialog from '../../profile/dialog/options'
 
-export function SelectGender() {
+function SelectGender() {
     return (
         <Select>
             <SelectTrigger className="w-full rounded-2xl">
