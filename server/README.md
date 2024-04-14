@@ -79,3 +79,10 @@ Learn more about the power of Turborepo:
 - [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
 - [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
 - [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+
+{
+    "code": 0,
+    "message": "Invalid email or password",
+    "error_code": 0001,
+    "data": {}
+}

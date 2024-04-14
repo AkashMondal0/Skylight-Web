@@ -128,6 +128,19 @@ interface SavedPost {
     updatedAt: Date;
 }
 
+interface PayloadData {
+    payload: {
+        code: number,
+        message: string,
+        data: {
+            email: string,
+            name: string,
+            id: string,
+            profilePicture: string,
+        }
+    }
+}
+
 
 export type {
     User,
@@ -143,5 +156,6 @@ export type {
     StoryView,
     StoryReply,
     StoryLike,
-    SavedPost
+    SavedPost,
+    PayloadData
 }

@@ -20,6 +20,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import { PayloadData } from "@/types";
 
 const FormSchema = z.object({
     password: z.string().min(6, {
@@ -47,23 +48,19 @@ export default function LoginPage() {
 
     const onSubmit = async (data: FormData) => {
         const { password, email } = data;
-        try {
-            const res = await dispatch(loginApi({ email, password }) as any)
-            if (res.payload?.id) {
-                signIn("credentials", {
-                    email: res.payload.email,
-                    name: res.payload.name,
-                    id: res.payload.id,
-                    image: res.payload.image || null,
-                    redirect: false,
-                });
-            }
-            else {
-                toast.error(`${res.payload}`)
-            }
-        } catch (error: any) {
-            console.error("Internal Failed", error);
-            toast.error("Internal Failed")
+        const res = await dispatch(loginApi({ email, password }) as any) as PayloadData
+
+        if (res.payload?.code === 1) {
+            signIn("credentials", {
+                email: res.payload.data.email,
+                name: res.payload.data.name,
+                id: res.payload.data.id,
+                image: res.payload.data.profilePicture,
+                redirect: false,
+            });
+        }
+        else {
+            toast.error(`${res.payload.message}`)
         }
     };
     if (session) {

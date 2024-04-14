@@ -21,7 +21,9 @@ export const loginApi = createAsyncThunk(
             })
             return res.data
         } catch (error: any) {
-            return thunkApi.rejectWithValue(error?.response?.data?.message ? error.response.data.message : error.message)
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
         }
     }
 );
@@ -45,7 +47,9 @@ export const registerApi = createAsyncThunk(
             })
             return res.data
         } catch (error: any) {
-            return thunkApi.rejectWithValue(error?.response?.data?.message ? error.response.data.message : error.message)
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
         }
     }
 );
