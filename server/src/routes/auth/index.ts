@@ -114,7 +114,7 @@ AuthRouter.post("/register", ValidateMiddleware(zodUserSchema), async (req, res)
                 ...newUser[0],
                 token,
             }
-        
+
         })
     } catch (error: any) {
         console.log(error)
@@ -140,9 +140,9 @@ AuthRouter.get("/authorization", verifyToken, async (req, res) => {
             })
         }
 
-        const verify = jwt.verify(token, secret as string) as { email: string };
+        const verify = jwt.verify(token, secret as string) as { email: string, id: string };
 
-        if (!verify?.email) {
+        if (!verify?.id) {
             return res.status(404).json({
                 code: 0,
                 message: "Invalid token",
@@ -151,17 +151,34 @@ AuthRouter.get("/authorization", verifyToken, async (req, res) => {
             })
         }
 
-        const user = await db.select().from(users).where(eq(users.email, verify.email));
+        const user = await db.query.users.findFirst({
+            where(fields) {
+                return eq(fields.id, verify.id)
+            },
+            with: {
+                posts: {
+                    limit: 9,
+                }
+            }
+        })
+        if (!user) {
+            return res.status(404).json({
+                code: 0,
+                message: "User not found",
+                error_code: 404,
+                data: {}
+            })
+        }
 
         return res.status(200).json({
             code: 1,
-            message: "Authorization successfully",
+            message: "Authorization successfully - user found",
             error_code: 200,
-            data: user[0]
+            data: user
         })
     } catch (error: any) {
         console.log(error)
-        res.status(500).json({
+        return res.status(500).json({
             code: 0,
             message: "Server Error Please Try Again - authorize route",
             error_code: 500,

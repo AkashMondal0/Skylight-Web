@@ -10,6 +10,8 @@ export const users = pgTable('users', {
     bio: varchar('bio'),
     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+    isVerified: boolean('is_verified').default(false),
+    isPrivate: boolean('is_private').default(false),
 });
 
 export const messages = pgTable('messages', {
@@ -148,4 +150,10 @@ export const commentsRelations = relations(comments, ({ one ,many}) => ({
 
 export const likesRelations = relations(likes, ({ one }) => ({
     post: one(posts, { fields: [likes.postId], references: [posts.id] }),
+}));
+
+
+export const followersRelations = relations(followers, ({ one }) => ({
+    follower: one(users, { fields: [followers.followerUserId], references: [users.id] }),
+    following: one(users, { fields: [followers.followingUserId], references: [users.id] }),
 }));
