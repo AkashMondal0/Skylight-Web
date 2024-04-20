@@ -2,7 +2,7 @@
 import express from "express"
 import db from "../../db-connections/postgresql"
 import { followers, posts, users } from "../../schema"
-import { count, eq, sql } from "drizzle-orm"
+import { and, count, eq, or, sql } from "drizzle-orm"
 const ProfileRouter = express.Router()
 // profile route
 // ProfileRouter.delete("/delete", async (req, res) => { })
@@ -73,18 +73,22 @@ ProfileRouter.get("/public/:userId", async (req, res) => {
                 data: {}
             })
         }
+
+        // get followers count
         const FollowersCount = await db.select({
             followersCount: count(eq(followers.followerUserId, user.id)),
         })
             .from(followers)
             .where(eq(followers.followerUserId, user.id))
 
+        // get following count
         const FollowingCount = await db.select({
             followingCount: count(eq(followers.followingUserId, user.id)),
         })
             .from(followers)
             .where(eq(followers.followingUserId, user.id))
 
+        // get post count
         const PostCount = await db.select({
             postCount: count(eq(posts.authorId, user.id)),
         })
@@ -98,8 +102,8 @@ ProfileRouter.get("/public/:userId", async (req, res) => {
             error_code: 200,
             data: {
                 ...user,
-                followersCount: FollowersCount[0].followersCount,
-                followingCount: FollowingCount[0].followingCount,
+                followersCount: FollowingCount[0].followingCount,
+                followingCount: FollowersCount[0].followersCount,
                 postCount: PostCount[0].postCount,
             }
         })
@@ -198,7 +202,10 @@ ProfileRouter.post("/follow/create", async (req, res) => {
 
         const check = await db.query.followers.findFirst({
             where(fields) {
-                return eq(fields.followerUserId, req.body.followerUserId) && eq(fields.followingUserId, req.body.followingUserId)
+                return and(
+                    eq(fields.followerUserId, req.body.followerUserId),
+                    eq(fields.followingUserId, req.body.followingUserId)
+                )
             }
         })
 
@@ -238,7 +245,10 @@ ProfileRouter.post("/follow/destroy", async (req, res) => {
 
         const check = await db.query.followers.findFirst({
             where(fields) {
-                return eq(fields.followerUserId, req.body.followerUserId) && eq(fields.followingUserId, req.body.followingUserId)
+                return and(
+                    eq(fields.followerUserId, req.body.followerUserId),
+                    eq(fields.followingUserId, req.body.followingUserId)
+                )
             }
         })
 

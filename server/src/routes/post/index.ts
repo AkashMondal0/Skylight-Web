@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import express from "express"
 import db from "../../db-connections/postgresql"
-import { comments, likes, posts, users } from "../../schema"
+import { comments, followers, likes, posts, users } from "../../schema"
 import { asc, desc, eq, sql } from "drizzle-orm"
 const PostRouter = express.Router()
 
@@ -78,6 +78,62 @@ PostRouter.get("/get", async (req, res) => {
             .limit(12)
             .orderBy(asc(posts.createdAt), desc(posts.updatedAt))
 
+
+        return res.status(200).json({
+            code: 1,
+            message: "post Fetched Successfully",
+            error_code: 200,
+            data: data
+        })
+    } catch (error: any) {
+        console.log(error)
+        return res.status(500).json({
+            code: 0,
+            message: "Server Error Please Try Again (Post Route - /post/get)",
+            error_code: 200,
+            data: {}
+        })
+    }
+})
+
+PostRouter.get("/get/daily-feed", async (req, res) => {
+    try {
+        const authorId = req.headers["author_id"] as string
+
+        const data = await db.select({
+            id: followers.followingUserId,
+            post: {
+                id: posts.id,
+                caption: posts.caption,
+                fileUrl: posts.fileUrl,
+                commentCount: sql`COUNT(${comments.id})`,
+                likeCount: sql`COUNT(${likes.id})`,
+            },
+            userData: {
+                id: users.id,
+                username: users.username,
+                email: users.email,
+                profileUrl: users.profilePicture,
+            },
+        })
+            .from(followers)
+            .where(eq(followers.followerUserId, authorId))
+            .limit(12)
+            .offset(0)
+            .orderBy(desc(followers.createdAt))
+            .fullJoin(posts, eq(followers.followingUserId, posts.authorId))
+            .leftJoin(comments, eq(posts.id, comments.postId))
+            .leftJoin(likes, eq(posts.id, likes.postId))
+            .innerJoin(users, eq(posts.authorId, users.id))
+            .groupBy(
+                posts.id,
+                users.id,
+                followers.followingUserId,
+                followers.followerUserId,
+                followers.createdAt,
+                followers.updatedAt,
+                followers.id
+            )
 
         return res.status(200).json({
             code: 1,
