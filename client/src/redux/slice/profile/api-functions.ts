@@ -13,7 +13,7 @@ export const loginApi = createAsyncThunk(
         password: string,
     }, thunkApi) => {
         try {
-            const res = await axios.get(`${url}/auth/login`, {
+            const res = await axios.get(`/api/authentication/login`, {
                 headers: {
                     email,
                     password
@@ -40,10 +40,30 @@ export const registerApi = createAsyncThunk(
         name: string,
     }, thunkApi) => {
         try {
-            const res = await axios.post(`${url}/auth/register`, {
+            const res = await axios.post(`/api/authentication/register`, {
                 email: email,
                 password: password,
                 username: name
+            })
+            return res.data
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
+        }
+    }
+);
+
+
+export const fetchProfileDataApi = createAsyncThunk(
+    'fetchProfileDataApi/get',
+    async ({ token }: { token: string }, thunkApi) => {
+        try {
+            const res = await axios.get(`${url}/auth/register`, {
+                headers: {
+                    authorization: token
+                }
+
             })
             return res.data
         } catch (error: any) {

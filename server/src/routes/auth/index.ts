@@ -158,6 +158,11 @@ AuthRouter.get("/authorization", verifyToken, async (req, res) => {
             with: {
                 posts: {
                     limit: 9,
+                    with:{
+                        comments: {
+                            limit: 3
+                        }
+                    }
                 }
             }
         })

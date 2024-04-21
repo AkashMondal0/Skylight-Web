@@ -43,9 +43,9 @@ export default function Lg_Navigation({
     <div className={cn(`
         border-r scroll-smooth hideScrollbar
         h-[100dvh] overflow-y-auto md:flex
-        hidden ease-in-out sticky top-0 md:w-20 xl:w-72
+        hidden ease-in-out sticky top-0
         duration-300`,
-      hideLabel ? "w-20" : "w-72"
+      hideLabel ? "w-20" : "w-72 2xl:w-96 max-w-[20rem] md:w-20 xl:w-72"
     )}>
       <div className="p-2 w-full flex flex-col justify-between">
         <div>
@@ -95,6 +95,26 @@ const NavigationItem = ({ children, active, label, onClick, hideLabel }: {
   onClick?: () => void
   hideLabel?: boolean
 }) => {
+
+  if (hideLabel) {
+    return (
+      <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            onClick={onClick}
+            variant={"ghost"}
+            className={`w-full justify-start gap-4 h-full py-2 rounded-xl`}>
+            {children}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="right">
+          <p>{label}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+    )
+  }
   return (
     <TooltipProvider>
       <Tooltip>

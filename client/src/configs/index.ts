@@ -1,6 +1,7 @@
 const _configs = {
     serverApi: {
-        baseUrl: process.env.SERVER_API_URL
+        baseUrl: process.env.SERVER_API_URL,
+        dataBaseUrl: process.env.DATABASE_URL,
     },
     supabase: {
         bucketUrl: process.env.SUPABASE_BUCKET_URL,

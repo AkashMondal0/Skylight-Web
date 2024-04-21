@@ -108,6 +108,7 @@ PostRouter.get("/get/daily-feed", async (req, res) => {
                 fileUrl: posts.fileUrl,
                 commentCount: sql`COUNT(${comments.id})`,
                 likeCount: sql`COUNT(${likes.id})`,
+                alreadyLiked: eq(likes.authorId, authorId)
             },
             userData: {
                 id: users.id,
@@ -132,7 +133,9 @@ PostRouter.get("/get/daily-feed", async (req, res) => {
                 followers.followerUserId,
                 followers.createdAt,
                 followers.updatedAt,
-                followers.id
+                followers.id,
+                comments.id,
+                likes.id,
             )
 
         return res.status(200).json({

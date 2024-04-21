@@ -51,6 +51,7 @@ export default function LoginPage() {
         const res = await dispatch(loginApi({ email, password }) as any) as PayloadData
 
         if (res.payload?.code === 1) {
+            reset();
             signIn("credentials", {
                 email: res.payload.data.email,
                 name: res.payload.data.name,

@@ -1,6 +1,7 @@
 import { RootState } from '@/redux/store'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
+import { fetchProfileDataApi } from './api-functions'
 
 // Define a type for the slice state
 interface ProfileState {
@@ -19,7 +20,16 @@ export const profileSlice = createSlice({
 
     },
     extraReducers: (builder) => {
-        
+        builder
+            .addCase(fetchProfileDataApi.pending, (state) => {
+
+            })
+            .addCase(fetchProfileDataApi.fulfilled, (state, action: PayloadAction<any>) => {
+
+            })
+            .addCase(fetchProfileDataApi.rejected, (state, action) => {
+
+            })
     },
 })
 
