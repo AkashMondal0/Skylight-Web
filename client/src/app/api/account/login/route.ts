@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { users } from "../../../../../db/schema";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { cookies } from 'next/headers';
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 
 export async function GET(request: NextRequest, response: NextResponse) {
@@ -41,7 +42,15 @@ export async function GET(request: NextRequest, response: NextResponse) {
     }
 
     const token = jwt.sign({ email: db_user[0].email, id: db_user[0].id }, secret as string, { expiresIn: '1h' })
-
+    cookies().set({
+      name: 'token-auth',
+      value: token,
+      httpOnly: true,
+      path: '/',
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      secure: true,
+      sameSite: "lax"
+    })
     return NextResponse.json({
       code: 1,
       message: "Login successfully",
@@ -52,6 +61,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
       }
     }, { status: 200 })
   } catch (error) {
+    console.log(error)
     return NextResponse.json({
       code: 0,
       message: "Internal server error",

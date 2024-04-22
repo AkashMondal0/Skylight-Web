@@ -18,17 +18,20 @@ import {
     type CarouselApi,
 } from "@/components/ui/carousel"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { supabaseClient } from "@/lib/supa-base"
-import { configs } from "@/configs"
+import { useDispatch, useSelector } from "react-redux"
+import { postFilesApi } from "@/redux/slice/post-feed/api-functions"
+import { RootState } from "@/redux/store"
+
 
 export default function UploadPostDialog({
     children
 }: {
     children: React.ReactNode
 }) {
-
+    const dispatch = useDispatch()
     const [isFile, setIsFile] = useState<File[]>([])
     const [isCaption, setIsCaption] = useState<string>('')
+    const useProfile = useSelector((state: RootState) => state.profile)
 
     const onChangeFilePicker = (event: any) => {
         var fileArray = []
@@ -47,22 +50,28 @@ export default function UploadPostDialog({
         setIsFile(filteredImages)
     }
 
-
-
     const handleUpload = async () => {
-        var photoUrls: string[] = []
-        for (let index = 0; index < isFile.length; index++) {
-            const { data, error } = await supabaseClient.storage.from('skymedia').upload(`currentUser.state.id/file`, isFile[index]);
-            photoUrls.push(`${configs.supabase.bucketUrl}/${data?.path}`)
+        
+        if (useProfile.profileData) {
+            const data = await dispatch(postFilesApi({
+                isFile,
+                isCaption,
+                profile: useProfile.profileData
+            }) as any)
+            setIsFile([])
+            setIsCaption('')
         }
-        console.log(photoUrls)
-        // post api call
     }
 
     const selectFile = useCallback(() => {
         const fileInput = document.getElementById('file')
         fileInput?.click()
     }, [])
+
+
+    useEffect(() => {
+        console.log(useProfile.profileData)
+    }, [useProfile.profileData])
 
     return (
         <Dialog>
@@ -158,9 +167,9 @@ const ShowSelectedImages = ({
                     onChange={(e) => setIsCaption(e.target.value)}
                 />
                 <DialogClose asChild>
-                    <Button variant={"default"} 
-                    onClick={uploadFiles}
-                    className="rounded-md p-2 w-full">
+                    <Button variant={"default"}
+                        onClick={uploadFiles}
+                        className="rounded-md p-2 w-full">
                         Upload
                     </Button>
                 </DialogClose>

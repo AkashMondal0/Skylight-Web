@@ -57,7 +57,7 @@ export default function LoginPage() {
                 name: res.payload.data.name,
                 id: res.payload.data.id,
                 image: res.payload.data.profilePicture,
-                redirect: false,
+                redirect: true,
             });
         }
         else {

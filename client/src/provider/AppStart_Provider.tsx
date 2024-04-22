@@ -1,6 +1,6 @@
 'use client'
 import { fetchProfileDataApi } from '@/redux/slice/profile/api-functions'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 const AppStart_context = React.createContext({})
 
@@ -11,9 +11,11 @@ const AppStart_Provider = ({
     children: React.ReactNode
 }) => {
     const dispatch = useDispatch()
-    const StartApp = async () => {
-        // await dispatch(fetchProfileDataApi())
-    }
+    const StartApp = async () => { await dispatch(fetchProfileDataApi() as any) }
+
+    useEffect(() => {
+        StartApp()
+    }, [])
 
 
     return (

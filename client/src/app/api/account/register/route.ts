@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { users } from "../../../../../db/schema";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { cookies } from 'next/headers';
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 const saltRounds = 10
 
@@ -43,7 +44,15 @@ export async function POST(request: NextRequest, response: NextResponse) {
       username: username,
     }).returning()
     const token = jwt.sign({ email: newUser[0].email, id: newUser[0].id }, secret as string, { expiresIn: '1h' })
-
+    cookies().set({
+      name: 'token-auth',
+      value: token,
+      httpOnly: true,
+      path: '/',
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      secure: true,
+      sameSite: "lax"
+    })
     return NextResponse.json({
       code: 1,
       message: "Register successfully",
