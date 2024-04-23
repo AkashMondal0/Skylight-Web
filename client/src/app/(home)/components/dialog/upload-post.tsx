@@ -66,11 +66,6 @@ export default function UploadPostDialog({
         fileInput?.click()
     }, [])
 
-
-    useEffect(() => {
-        console.log(useProfile.profileData)
-    }, [useProfile.profileData])
-
     return (
         <Dialog>
             <DialogTrigger asChild>
