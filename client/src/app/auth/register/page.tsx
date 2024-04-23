@@ -56,7 +56,7 @@ export default function LoginPage() {
         if (res.payload?.code === 1) {
             signIn("credentials", {
                 email: res.payload.data.email,
-                name: res.payload.data.name,
+                name: res.payload.data.username,
                 id: res.payload.data.id,
                 image: res.payload.data.profilePicture,
                 redirect: true,

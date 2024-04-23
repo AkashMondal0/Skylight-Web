@@ -41,7 +41,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
       }, { status: 401 })
     }
 
-    const token = jwt.sign({ email: db_user[0].email, id: db_user[0].id }, secret as string, { expiresIn: '1h' })
+    const token = jwt.sign({ email: db_user[0].email, id: db_user[0].id }, secret as string, { expiresIn: '720h' })
     cookies().set({
       name: 'token-auth',
       value: token,
