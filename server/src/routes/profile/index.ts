@@ -22,14 +22,14 @@ ProfileRouter.patch("/details/edit", async (req, res) => {
         return res.status(200).json({
             code: 1,
             message: "User Updated Successfully",
-            error_code: 200,
+            status_code: 200,
             data: data
         })
     } catch (error) {
         return res.status(500).json({
             code: 0,
             message: "Server Error Please Try Again (Post Route - /post/update)",
-            error_code: 500,
+            status_code: 500,
             data: {}
         })
     }
@@ -69,7 +69,7 @@ ProfileRouter.get("/public/:userId", async (req, res) => {
             return res.status(404).json({
                 code: 0,
                 message: "User not found",
-                error_code: 404,
+                status_code: 404,
                 data: {}
             })
         }
@@ -99,7 +99,7 @@ ProfileRouter.get("/public/:userId", async (req, res) => {
         return res.status(200).json({
             code: 1,
             message: "Authorization successfully - user found",
-            error_code: 200,
+            status_code: 200,
             data: {
                 ...user,
                 followersCount: FollowingCount[0].followingCount,
@@ -111,7 +111,7 @@ ProfileRouter.get("/public/:userId", async (req, res) => {
         return res.status(500).json({
             code: 0,
             message: "Server Error Please Try Again - (Get Route - /profile/public/:id)",
-            error_code: 500,
+            status_code: 500,
             data: {}
         })
     }
@@ -128,7 +128,7 @@ ProfileRouter.get("/public/:userId/more-posts", async (req, res) => {
         return res.status(200).json({
             code: 1,
             message: "User Post Fetch Successfully",
-            error_code: 200,
+            status_code: 200,
             data: {
                 postCount: PostsData,
             }
@@ -137,7 +137,7 @@ ProfileRouter.get("/public/:userId/more-posts", async (req, res) => {
         return res.status(500).json({
             code: 0,
             message: "Server Error Please Try Again - (Get Route - /profile/public/:id/more-posts)",
-            error_code: 500,
+            status_code: 500,
             data: {}
         })
     }
@@ -157,14 +157,14 @@ ProfileRouter.get("/public/:userId/follower", async (req, res) => {
         return res.status(200).json({
             code: 1,
             message: "User Post Fetch Successfully",
-            error_code: 200,
+            status_code: 200,
             data: Followers
         })
     } catch (error) {
         return res.status(500).json({
             code: 0,
             message: "Server Error Please Try Again - (Get Route - /profile/public/:id/more-posts)",
-            error_code: 500,
+            status_code: 500,
             data: {}
         })
     }
@@ -184,14 +184,14 @@ ProfileRouter.get("/public/:userId/following", async (req, res) => {
         return res.status(200).json({
             code: 1,
             message: "User Post Fetch Successfully",
-            error_code: 200,
+            status_code: 200,
             data: Followers
         })
     } catch (error) {
         return res.status(500).json({
             code: 0,
             message: "Server Error Please Try Again - (Get Route - /profile/public/:id/more-posts)",
-            error_code: 500,
+            status_code: 500,
             data: {}
         })
     }
@@ -213,7 +213,7 @@ ProfileRouter.post("/follow/create", async (req, res) => {
             return res.status(404).json({
                 code: 0,
                 message: "Already Followed",
-                error_code: 404,
+                status_code: 404,
                 data: {}
             })
         }
@@ -227,14 +227,14 @@ ProfileRouter.post("/follow/create", async (req, res) => {
         return res.status(200).json({
             code: 1,
             message: "Followed Successfully",
-            error_code: 200,
+            status_code: 200,
             data: {}
         })
     } catch (error: any) {
         return res.status(500).json({
             code: 0,
             message: "Server Error Please Try Again (Post Route - /post/create)",
-            error_code: 500,
+            status_code: 500,
             data: {}
         })
     }
@@ -256,7 +256,7 @@ ProfileRouter.post("/follow/destroy", async (req, res) => {
             return res.status(404).json({
                 code: 0,
                 message: "Not Followed",
-                error_code: 404,
+                status_code: 404,
                 data: {}
             })
         }
@@ -267,14 +267,14 @@ ProfileRouter.post("/follow/destroy", async (req, res) => {
         return res.status(200).json({
             code: 1,
             message: "Unfollowed Successfully",
-            error_code: 200,
+            status_code: 200,
             data: {}
         })
     } catch (error: any) {
         return res.status(500).json({
             code: 0,
             message: "Server Error Please Try Again (Post Route - /post/create)",
-            error_code: 500,
+            status_code: 500,
             data: {}
         })
     }

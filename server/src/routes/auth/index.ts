@@ -23,7 +23,7 @@ AuthRouter.get("/login", async (req, res) => {
             return res.status(400).json({
                 code: 0,
                 message: "Email and password is required",
-                error_code: 400,
+                status_code: 400,
                 data: {}
             })
         }
@@ -33,7 +33,7 @@ AuthRouter.get("/login", async (req, res) => {
             return res.status(401).json({
                 code: 0,
                 message: "Email not found",
-                error_code: 401,
+                status_code: 401,
                 data: {}
             })
         }
@@ -43,7 +43,7 @@ AuthRouter.get("/login", async (req, res) => {
             const data = {
                 code: 0,
                 message: "Invalid credential",
-                error_code: 400,
+                status_code: 400,
                 data: {}
             }
             return res.status(401).json(data)
@@ -55,7 +55,7 @@ AuthRouter.get("/login", async (req, res) => {
             {
                 code: 1,
                 message: "Login successfully",
-                error_code: 200,
+                status_code: 200,
                 data: {
                     ...db_user[0],
                     token,
@@ -68,7 +68,7 @@ AuthRouter.get("/login", async (req, res) => {
         res.status(500).json({
             code: 0,
             message: "Server Error Please Try Again - login route",
-            error_code: 500,
+            status_code: 500,
             data: {}
         })
     }
@@ -82,7 +82,7 @@ AuthRouter.post("/register", ValidateMiddleware(zodUserSchema), async (req, res)
             return res.status(400).json({
                 code: 0,
                 message: "Email and password is required",
-                error_code: 400,
+                status_code: 400,
                 data: {}
             })
         }
@@ -92,7 +92,7 @@ AuthRouter.post("/register", ValidateMiddleware(zodUserSchema), async (req, res)
             return res.status(401).json({
                 code: 0,
                 message: "Email already exist",
-                error_code: 401,
+                status_code: 401,
                 data: {}
             })
         }
@@ -109,7 +109,7 @@ AuthRouter.post("/register", ValidateMiddleware(zodUserSchema), async (req, res)
         return res.status(200).json({
             code: 1,
             message: "Register successfully",
-            error_code: 200,
+            status_code: 200,
             data: {
                 ...newUser[0],
                 token,
@@ -121,7 +121,7 @@ AuthRouter.post("/register", ValidateMiddleware(zodUserSchema), async (req, res)
         res.status(500).json({
             code: 0,
             message: "Server Error Please Try Again - register route",
-            error_code: 500,
+            status_code: 500,
             data: {}
         })
     }
@@ -135,7 +135,7 @@ AuthRouter.get("/authorization", verifyToken, async (req, res) => {
             return res.status(404).json({
                 code: 0,
                 message: "Token is required",
-                error_code: 404,
+                status_code: 404,
                 data: {}
             })
         }
@@ -146,7 +146,7 @@ AuthRouter.get("/authorization", verifyToken, async (req, res) => {
             return res.status(404).json({
                 code: 0,
                 message: "Invalid token",
-                error_code: 404,
+                status_code: 404,
                 data: {}
             })
         }
@@ -170,7 +170,7 @@ AuthRouter.get("/authorization", verifyToken, async (req, res) => {
             return res.status(404).json({
                 code: 0,
                 message: "User not found",
-                error_code: 404,
+                status_code: 404,
                 data: {}
             })
         }
@@ -178,7 +178,7 @@ AuthRouter.get("/authorization", verifyToken, async (req, res) => {
         return res.status(200).json({
             code: 1,
             message: "Authorization successfully - user found",
-            error_code: 200,
+            status_code: 200,
             data: user
         })
     } catch (error: any) {
@@ -186,7 +186,7 @@ AuthRouter.get("/authorization", verifyToken, async (req, res) => {
         return res.status(500).json({
             code: 0,
             message: "Server Error Please Try Again - authorize route",
-            error_code: 500,
+            status_code: 500,
             data: {}
         })
     }

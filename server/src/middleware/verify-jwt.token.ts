@@ -7,7 +7,7 @@ function verifyToken(req: any, res: any, next: any) {
     if (!token) return res.status(401).json({
         code: 0,
         message: "Access Denied",
-        error_code: 401,
+        status_code: 401,
         data: {}
     });
     try {
@@ -18,7 +18,7 @@ function verifyToken(req: any, res: any, next: any) {
         res.status(401).json({
             code: 0,
             message: "Invalid token",
-            error_code: 404,
+            status_code: 404,
             data: {}
         });
     }

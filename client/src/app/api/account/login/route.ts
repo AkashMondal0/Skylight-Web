@@ -16,7 +16,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
       return NextResponse.json({
         code: 0,
         message: "Email and password is required",
-        error_code: 400,
+        status_code: 400,
         data: {}
       }, { status: 400 })
     }
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
       return NextResponse.json({
         code: 0,
         message: "Email not found",
-        error_code: 401,
+        status_code: 401,
         data: {}
       }, { status: 401 })
     }
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
       return NextResponse.json({
         code: 0,
         message: "Invalid credential",
-        error_code: 400,
+        status_code: 400,
         data: {}
       }, { status: 401 })
     }
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
     return NextResponse.json({
       code: 1,
       message: "Login successfully",
-      error_code: 200,
+      status_code: 200,
       data: {
         ...db_user[0],
         token,
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
     return NextResponse.json({
       code: 0,
       message: "Internal server error",
-      error_code: 500,
+      status_code: 500,
       data: {}
     }, { status: 500 })
   }

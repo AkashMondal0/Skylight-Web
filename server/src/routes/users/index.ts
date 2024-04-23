@@ -13,7 +13,7 @@ UserRouter.get("/all", async (req, res) => {
         return res.status(200).json({
             code: 1,
             message: "Success",
-            error_code: 200,
+            status_code: 200,
             data: data
         })
     } catch (error: any) {

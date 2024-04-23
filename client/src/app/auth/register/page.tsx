@@ -1,8 +1,7 @@
 'use client'
-import { useSession, signIn, signOut } from "next-auth/react"
-import { redirect } from "next/navigation"
+import { signIn} from "next-auth/react"
 import { useDispatch } from "react-redux";
-import { loginApi, registerApi } from "@/redux/slice/profile/api-functions";
+import {  registerApi } from "@/redux/slice/profile/api-functions";
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -37,7 +36,6 @@ const FormSchema = z.object({
 type FormData = z.infer<typeof FormSchema>;
 
 export default function LoginPage() {
-    const { data: session } = useSession()
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -66,9 +64,7 @@ export default function LoginPage() {
             toast.error(res.payload.message)
         }
     };
-    if (session) {
-        return redirect("/")
-    }
+   
     return (
         <div className="h-[100dvh] p-1 flex justify-center items-center">
             <Card className="md:w-96 md:h-auto w-full h-full pt-16 md:pt-0 rounded-3xl">

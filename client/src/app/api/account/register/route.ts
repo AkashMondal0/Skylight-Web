@@ -20,7 +20,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
       return NextResponse.json({
         code: 0,
         message: "Email and password is required",
-        error_code: 400,
+        status_code: 400,
         data: {}
       }, { status: 400 })
     }
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
       return NextResponse.json({
         code: 0,
         message: "Email already exist",
-        error_code: 400,
+        status_code: 400,
         data: {}
       }, { status: 400 })
     }
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
     return NextResponse.json({
       code: 1,
       message: "Register successfully",
-      error_code: 200,
+      status_code: 200,
       data: {
         ...newUser[0],
         token,
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
     return NextResponse.json({
       code: 0,
       message: "Internal server error",
-      error_code: 500,
+      status_code: 500,
       data: {}
     }, { status: 500 })
   }

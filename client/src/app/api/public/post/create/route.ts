@@ -12,7 +12,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
       return Response.json({
         code: 0,
         message: "Token not found",
-        error_code: 404,
+        status_code: 404,
         data: {}
       }, { status: 404 })
     }
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
       return Response.json({
         code: 0,
         message: "Invalid token",
-        error_code: 404,
+        status_code: 404,
         data: {}
       }, { status: 404 })
     }
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
     return NextResponse.json({
       code: 1,
       message: "Success",
-      error_code: 200,
+      status_code: 200,
       data: token
     }, { status: 200 })
 
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
     return NextResponse.json({
       code: 0,
       message: "Internal server error",
-      error_code: 500,
+      status_code: 500,
       data: {}
     }, { status: 500 })
   }

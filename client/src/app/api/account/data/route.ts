@@ -1,9 +1,9 @@
 import db from "@/lib/db/drizzle"
 import { NextRequest, NextResponse } from "next/server"
 import { users } from "../../../../../db/schema"
+import { eq } from "drizzle-orm"
 import { redirect } from "next/navigation"
 import jwt from "jsonwebtoken"
-import { eq } from "drizzle-orm"
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 
 
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
       return Response.json({
         code: 0,
         message: "Invalid token",
-        error_code: 404,
+        status_code: 404,
         data: {}
       }, { status: 404 })
     }
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
       return Response.json({
         code: 0,
         message: "User not found",
-        error_code: 404,
+        status_code: 404,
         data: {}
       }, { status: 404 })
     }
@@ -60,7 +60,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
     return NextResponse.json({
       code: 0,
       message: "Internal server error",
-      error_code: 500,
+      status_code: 500,
       data: {}
     }, { status: 500 })
   }

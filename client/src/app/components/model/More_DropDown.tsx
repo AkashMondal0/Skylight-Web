@@ -38,12 +38,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useTheme } from "next-themes"
 import { signOut } from "next-auth/react"
+import { useDispatch } from "react-redux"
+import { logoutApi } from "@/redux/slice/profile/api-functions"
 
 export default function MoreDropdownMenu({ children }: {
   children: React.ReactNode
 }) {
   const { setTheme, theme } = useTheme()
-
+  const dispatch = useDispatch()
   const changeTheme = (theme: string) => {
     setTheme(theme)
   }
@@ -83,7 +85,7 @@ export default function MoreDropdownMenu({ children }: {
           </DropdownMenuItem>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger className="rounded-xl">
-              <CurrentTheme/>
+              <CurrentTheme />
               <span>Switch Appearance</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
@@ -124,7 +126,10 @@ export default function MoreDropdownMenu({ children }: {
           <span>API</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="rounded-xl" onClick={() => signOut()}>
+        <DropdownMenuItem className="rounded-xl" onClick={() => {
+          signOut()
+          dispatch(logoutApi() as any)
+        }}>
           <LogOut className="mr-3 h-7 w-7" />
           <span>Log out</span>
           {/* <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut> */}

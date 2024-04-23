@@ -83,6 +83,6 @@ Learn more about the power of Turborepo:
 {
     "code": 0,
     "message": "Invalid email or password",
-    "error_code": 0001,
+    "status_code": 0001,
     "data": {}
 }

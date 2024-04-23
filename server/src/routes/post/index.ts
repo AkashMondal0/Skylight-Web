@@ -16,7 +16,7 @@ PostRouter.post("/create", async (req, res) => {
         return res.status(200).json({
             code: 1,
             message: "Post Created Successfully",
-            error_code: 200,
+            status_code: 200,
             data: {}
         })
     } catch (error: any) {
@@ -24,7 +24,7 @@ PostRouter.post("/create", async (req, res) => {
         return res.status(500).json({
             code: 0,
             message: "Server Error Please Try Again (Post Route - /post/create)",
-            error_code: 200,
+            status_code: 200,
             data: {}
         })
     }
@@ -42,7 +42,7 @@ PostRouter.patch("/update", async (req, res) => {
         return res.status(200).json({
             code: 1,
             message: "Post Updated Successfully",
-            error_code: 200,
+            status_code: 200,
             data: data
         })
     } catch (error: any) {
@@ -50,7 +50,7 @@ PostRouter.patch("/update", async (req, res) => {
         return res.status(500).json({
             code: 0,
             message: "Server Error Please Try Again (Post Route - /post/update)",
-            error_code: 200,
+            status_code: 200,
             data: {}
         })
     }
@@ -82,7 +82,7 @@ PostRouter.get("/get", async (req, res) => {
         return res.status(200).json({
             code: 1,
             message: "post Fetched Successfully",
-            error_code: 200,
+            status_code: 200,
             data: data
         })
     } catch (error: any) {
@@ -90,7 +90,7 @@ PostRouter.get("/get", async (req, res) => {
         return res.status(500).json({
             code: 0,
             message: "Server Error Please Try Again (Post Route - /post/get)",
-            error_code: 200,
+            status_code: 200,
             data: {}
         })
     }
@@ -141,7 +141,7 @@ PostRouter.get("/get/daily-feed", async (req, res) => {
         return res.status(200).json({
             code: 1,
             message: "post Fetched Successfully",
-            error_code: 200,
+            status_code: 200,
             data: data
         })
     } catch (error: any) {
@@ -149,7 +149,7 @@ PostRouter.get("/get/daily-feed", async (req, res) => {
         return res.status(500).json({
             code: 0,
             message: "Server Error Please Try Again (Post Route - /post/get)",
-            error_code: 200,
+            status_code: 200,
             data: {}
         })
     }
@@ -164,7 +164,7 @@ PostRouter.delete("/delete", async (req, res) => {
         return res.status(200).json({
             code: 1,
             message: "Post Deleted Successfully",
-            error_code: 200,
+            status_code: 200,
             data: {}
         })
     } catch (error: any) {
@@ -172,7 +172,7 @@ PostRouter.delete("/delete", async (req, res) => {
         return res.status(500).json({
             code: 0,
             message: "Server Error Please Try Again (Post Route - /post/delete)",
-            error_code: 200,
+            status_code: 200,
             data: {}
         })
     }
@@ -189,7 +189,7 @@ PostRouter.post("/create/comment", async (req, res) => {
         return res.status(200).json({
             code: 1,
             message: "Comment Created Successfully",
-            error_code: 200,
+            status_code: 200,
             data: {}
         })
     } catch (error: any) {
@@ -197,7 +197,7 @@ PostRouter.post("/create/comment", async (req, res) => {
         return res.status(500).json({
             code: 0,
             message: "Server Error Please Try Again (Post Route - /post/create/comment)",
-            error_code: 200,
+            status_code: 200,
             data: {}
         })
     }
@@ -225,7 +225,7 @@ PostRouter.get("/get/comments", async (req, res) => {
         return res.status(200).json({
             code: 1,
             message: "comment Fetched Successfully",
-            error_code: 200,
+            status_code: 200,
             data: data
         })
     } catch (error: any) {
@@ -233,7 +233,7 @@ PostRouter.get("/get/comments", async (req, res) => {
         return res.status(500).json({
             code: 0,
             message: "Server Error Please Try Again (Post Route - /post/get/comments)",
-            error_code: 200,
+            status_code: 200,
             data: {}
         })
     }
@@ -250,7 +250,7 @@ PostRouter.post("/create/like", async (req, res) => {
         return res.status(200).json({
             code: 1,
             message: "Like Created Successfully",
-            error_code: 200,
+            status_code: 200,
             data: data
         })
     } catch (error: any) {
@@ -258,7 +258,7 @@ PostRouter.post("/create/like", async (req, res) => {
         return res.status(500).json({
             code: 0,
             message: "Server Error Please Try Again (Post Route - /post/create/like)",
-            error_code: 200,
+            status_code: 200,
             data: {}
         })
     }
