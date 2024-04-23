@@ -19,14 +19,19 @@ export const postFilesApi = createAsyncThunk(
             var photoUrls: string[] = []
             for (let index = 0; index < isFile.length; index++) {
                 const { data, error } = await supabaseClient.storage.from('skymedia').upload(`${profile.id}/feedPosts/${isFile[index].name}`, isFile[index]);
-                photoUrls.push(`${configs.supabase.bucketUrl}${data?.path}`)
+                console.log(data, error)
+                if (!error) {
+                    photoUrls.push(`${configs.supabase.bucketUrl}${data?.path}`)
+                }else{
+                    photoUrls.push(`${configs.supabase.bucketUrl}${profile.id}/feedPosts/${isFile[index].name}`)
+                }
             }
-
-            // const res = await axios.get(`/api/account/login`, {
-
-            // })
-            console.log(photoUrls)
-            return photoUrls
+            const res = await axios.post(`/api/post/create`, {
+                caption: isCaption,
+                fileUrl: photoUrls,
+                authorId: profile.id
+            })
+            return res.data
         } catch (error: any) {
             return thunkApi.rejectWithValue({
                 ...error?.response?.data,

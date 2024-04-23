@@ -3,8 +3,9 @@ import db from "@/lib/db/drizzle";
 import { NextRequest, NextResponse } from "next/server"
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 import jwt from "jsonwebtoken"
+import { posts } from '../../../../../db/schema';
 
-export async function GET(request: NextRequest, response: NextResponse) {
+export async function POST(request: NextRequest, response: NextResponse) {
   try {
     const token = request.cookies.get("token-auth")
 
@@ -29,6 +30,26 @@ export async function GET(request: NextRequest, response: NextResponse) {
         data: {}
       }, { status: 404 })
     }
+    const {
+      caption,
+      fileUrl,
+      authorId
+    } = await request.json()
+
+    if (!fileUrl || !authorId) {
+      return NextResponse.json({
+        code: 0,
+        message: "Please provide all the required fields",
+        status_code: 400,
+        data: {}
+      }, { status: 400 })
+    }
+
+    await db.insert(posts).values({
+      caption,
+      fileUrl,
+      authorId
+    });
 
     return NextResponse.json({
       code: 1,

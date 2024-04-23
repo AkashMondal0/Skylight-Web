@@ -8,7 +8,7 @@ import {
     DialogClose
 } from "@/components/ui/dialog"
 import { ImageUp } from "lucide-react"
-import { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import {
     Carousel,
     CarouselContent,
@@ -30,7 +30,7 @@ export default function UploadPostDialog({
 }) {
     const dispatch = useDispatch()
     const [isFile, setIsFile] = useState<File[]>([])
-    const [isCaption, setIsCaption] = useState<string>('')
+    const isCaption = useRef<HTMLTextAreaElement>()
     const useProfile = useSelector((state: RootState) => state.profile)
 
     const onChangeFilePicker = (event: any) => {
@@ -51,15 +51,13 @@ export default function UploadPostDialog({
     }
 
     const handleUpload = async () => {
-        
         if (useProfile.profileData) {
-            const data = await dispatch(postFilesApi({
+            await dispatch(postFilesApi({
                 isFile,
-                isCaption,
+                isCaption: isCaption?.current?.value ? isCaption?.current?.value : "",
                 profile: useProfile.profileData
             }) as any)
             setIsFile([])
-            setIsCaption('')
         }
     }
 
@@ -87,7 +85,6 @@ export default function UploadPostDialog({
                         isFile.length > 0 ?
                             <ShowSelectedImages
                                 isCaption={isCaption}
-                                setIsCaption={setIsCaption}
                                 uploadFiles={handleUpload}
                                 handleDeleteImage={handleDeleteImage}
                                 images={isFile} />
@@ -113,14 +110,12 @@ const ShowSelectedImages = ({
     handleDeleteImage,
     uploadFiles,
     isCaption,
-    setIsCaption
 }: {
     images: File[]
     handleDeleteImage: (index: number) => void
     NextStep?: () => void
     uploadFiles?: () => void
-    isCaption: string
-    setIsCaption: (value: string) => void
+    isCaption: any
 }) => {
     const [api, setApi] = useState<CarouselApi>()
     const [current, setCurrent] = useState(0)
@@ -161,10 +156,9 @@ const ShowSelectedImages = ({
                     }
                 </ScrollArea>
                 <textarea
-                    value={isCaption}
                     className="border rounded-md p-2"
                     placeholder="Write a caption..."
-                    onChange={(e) => setIsCaption(e.target.value)}
+                    ref={isCaption}
                 />
                 <DialogClose asChild>
                     <Button variant={"default"}
