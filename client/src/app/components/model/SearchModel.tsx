@@ -14,6 +14,8 @@ import { searchProfileApi } from '@/redux/slice/users/api-functions';
 import { RootState } from '@/redux/store';
 import { User } from '@/types';
 import { removeAllUserFormSearch, removeUserFormSearch } from '@/redux/slice/users';
+import { SkeletonUserCard } from '@/app/(home)/components/loading-components/UserCard';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -54,7 +56,9 @@ const SearchModel = ({ children }: { children: React.ReactNode }) => {
                     <div className='font-semibold'>Recent</div>
                     <div className='text-primary text-blue-00 cursor-pointer' onClick={clearAll}>Clear All</div>
                 </div>
-                {searchResultUser.search_users.map((item, i) => <UserCard key={i} item={item} />)}
+                {searchResultUser.loading ?
+                    <div className='space-y-4'>{Array(10).fill(0).map((_, i) => <SkeletonUserCard key={i} />)}</div> :
+                    searchResultUser.search_users.map((item, i) => <UserCard key={i} item={item} />)}
             </DrawerContent>
         </Drawer>
     )
@@ -70,14 +74,20 @@ const UserCard = ({
 }) => {
 
     const dispatch = useDispatch();
+    const router = useRouter()
 
     const removeUser = useCallback(() => {
         dispatch(removeUserFormSearch(item.id) as any)
     }, []);
 
+    const navigateToProfile = useCallback(() => {
+        router.push(`/${item.email}`)
+    }, []);
+
     return (
         <>
-            <div className='flex justify-between p-2 hover:bg-secondary hover:text-secondary-foreground rounded-2xl my-1'>
+            <div className='flex justify-between p-2 hover:bg-secondary hover:text-secondary-foreground rounded-2xl my-1 cursor-pointer'
+            onClick={navigateToProfile}>
                 <div className='flex space-x-2 items-center'>
                     <Avatar className='h-12 w-12 mx-auto'>
                         <AvatarImage src={item.profilePicture ? item.profilePicture : "https://github.com/shadcn.png"}

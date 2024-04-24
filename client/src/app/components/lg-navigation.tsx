@@ -18,6 +18,8 @@ import NotificationModel from "./model/NotificationModel"
 import SearchModel from "./model/SearchModel"
 import MoreDropdownMenu from "./model/More_DropDown"
 import UploadPostDialog from "../(home)/components/dialog/upload-post"
+import { RootState } from "@/redux/store"
+import { useSelector } from "react-redux"
 
 
 export default function Lg_Navigation({
@@ -27,7 +29,7 @@ export default function Lg_Navigation({
 }) {
   const router = useRouter()
   const pageChange = (path: string) => router.push(path)
-
+  const profile = useSelector((state: RootState) => state.profile)
   const SideIconData = [
     { icon: Home, label: "Home", onClick: () => pageChange('/') },
     { icon: Search, label: "Search", onClick: () => { } },
@@ -36,7 +38,7 @@ export default function Lg_Navigation({
     { icon: MessageCircleCode, label: "Messages", onClick: () => pageChange('/message') },
     { icon: Heart, label: "Notifications", onClick: () => { } },
     { icon: CopyPlus, label: "Create", onClick: () => { } },
-    { icon: CircleUserRound, label: "Profile", onClick: () => pageChange('/profile') },
+    { icon: CircleUserRound, label: "Profile", onClick: () => pageChange(`/${profile.profileData?.email}`) },
   ]
 
   return (

@@ -52,6 +52,8 @@ ProfileRouter.get("/public/:userId", async (req, res) => {
                 bio: true,
                 profilePicture: true,
                 createdAt: true,
+                isPrivate: true,
+                isVerified: true,
             },
             with: {
                 posts: {

@@ -7,6 +7,14 @@ interface User {
     bio: string | null;
     createdAt: Date;
     updatedAt: Date;
+    followers: User[]
+    following: User[]
+    isVerified: false,
+    isPrivate: false,
+    postCount: number,
+    followersCount: number,
+    followingCount: number,
+    posts: Post[]
 }
 
 interface Message {

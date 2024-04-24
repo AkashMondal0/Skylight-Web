@@ -1,3 +1,4 @@
+
 interface User {
     id: string;
     username: string;
@@ -7,6 +8,14 @@ interface User {
     bio: string | null;
     createdAt: Date;
     updatedAt: Date;
+    isVerified: false,
+    isPrivate: false,
+    postCount: number,
+    followersCount: number,
+    followingCount: number,
+    posts: Post[]
+    followers: User[]
+    following: User[]
 }
 
 interface Message {

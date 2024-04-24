@@ -15,3 +15,18 @@ export const searchProfileApi = createAsyncThunk(
         }
     }
 );
+
+export const FetchUserProfileDataApi = createAsyncThunk(
+    'FetchUserProfileDataApi/post',
+    async ({ id }: { id: string }, thunkApi) => {
+        try {
+            const res = await axios.get(`/api/profile/${id}`)
+            return res.data.data
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
+        }
+    }
+);
+

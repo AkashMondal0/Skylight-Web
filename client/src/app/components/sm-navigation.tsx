@@ -6,17 +6,20 @@ import {
     MessageCircleCode, Search
 } from "lucide-react"
 import { useRouter } from 'next/navigation'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 
 
 const Sm_Navigation = () => {
     const router = useRouter()
     const pageChange = (path: string) => router.push(path)
+    const profile = useSelector((state: RootState) => state.profile)
     const SideIconData = [
         { icon: Home, label: "Home", onClick: () => pageChange('/') },
         { icon: Search, label: "Search", onClick: () => pageChange('/search') },
         { icon: Film, label: "Reels", onClick: () => pageChange('/reels') },
         { icon: MessageCircleCode, label: "Messages", onClick: () => pageChange('/message') },
-        { icon: CircleUserRound, label: "Profile", onClick: () => pageChange('/profile') },
+        { icon: CircleUserRound, label: "Profile", onClick: () => pageChange(`/${profile.profileData?.email}`) },
     ]
     return (
         <div className="md:hidden flex sticky bottom-0 z-10 border-t py-2 bg-background text-foreground h-[6dvh] items-center">

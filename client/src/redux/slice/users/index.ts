@@ -1,21 +1,27 @@
 import { RootState } from '@/redux/store'
-import { User } from '@/types'
+import { Post, User } from '@/types'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { searchProfileApi } from './api-functions'
+import { FetchUserProfileDataApi, searchProfileApi } from './api-functions'
 
 // Define a type for the slice state
 interface UsersState {
     search_users: User[]
     loading?: boolean
     error?: string | null
+    userProfileData:User | null
+    profileLoading: boolean
+    profileError: string | null
 }
 
 // Define the initial state using that type
 const UsersState: UsersState = {
     search_users: [],
     loading: false,
-    error: null
+    error: null,
+    userProfileData: null,
+    profileLoading: false,
+    profileError: null,
 }
 
 export const UsersSlice = createSlice({
@@ -44,6 +50,17 @@ export const UsersSlice = createSlice({
             })
             .addCase(searchProfileApi.rejected, (state, action) => {
                 state.loading = false
+                state.error = action.error.message || null
+            })
+            .addCase(FetchUserProfileDataApi.pending, (state) => {
+                state.profileLoading = true
+            })
+            .addCase(FetchUserProfileDataApi.fulfilled, (state, action: PayloadAction<UsersState["userProfileData"]>) => {
+                state.userProfileData = action.payload
+                state.profileLoading = false
+                state.profileError = null
+            })
+            .addCase(FetchUserProfileDataApi.rejected, (state, action) => {
                 state.error = action.error.message || null
             })
     },
