@@ -11,7 +11,7 @@ interface UsersState {
     error?: string | null
     userProfileData:User | null
     profileLoading: boolean
-    profileError: string | null
+    profileError: boolean
 }
 
 // Define the initial state using that type
@@ -21,7 +21,7 @@ const UsersState: UsersState = {
     error: null,
     userProfileData: null,
     profileLoading: false,
-    profileError: null,
+    profileError: false,
 }
 
 export const UsersSlice = createSlice({
@@ -50,18 +50,23 @@ export const UsersSlice = createSlice({
             })
             .addCase(searchProfileApi.rejected, (state, action) => {
                 state.loading = false
-                state.error = action.error.message || null
+                state.error = null
             })
+            // FetchUserProfileDataApi
             .addCase(FetchUserProfileDataApi.pending, (state) => {
                 state.profileLoading = true
+                state.profileError = false
+                state.userProfileData = null
             })
             .addCase(FetchUserProfileDataApi.fulfilled, (state, action: PayloadAction<UsersState["userProfileData"]>) => {
                 state.userProfileData = action.payload
                 state.profileLoading = false
-                state.profileError = null
+                state.profileError = false
             })
             .addCase(FetchUserProfileDataApi.rejected, (state, action) => {
-                state.error = action.error.message || null
+                state.profileError = true
+                state.profileLoading = false
+                state.userProfileData = null
             })
     },
 })

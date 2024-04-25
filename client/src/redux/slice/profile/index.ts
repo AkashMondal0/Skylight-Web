@@ -9,13 +9,15 @@ interface ProfileState {
     profileData: User | null
     loading: boolean
     error: string | null
+    AppStart: boolean
 }
 
 // Define the initial state using that type
 const profileState: ProfileState = {
     profileData: null,
     loading: false,
-    error: null
+    error: null,
+    AppStart: false
 }
 
 export const profileSlice = createSlice({
@@ -29,6 +31,7 @@ export const profileSlice = createSlice({
             .addCase(fetchProfileDataApi.pending, (state) => {
                 state.loading = true
                 state.error = null
+                state.AppStart = true
             })
             .addCase(fetchProfileDataApi.fulfilled, (state, action: PayloadAction<User>) => {
                 state.profileData = action.payload
