@@ -5,8 +5,22 @@ import { Card } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
 import React from 'react'
 import { Switch } from "@/components/ui/switch"
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import OptionAvatarDialog from '../../[profile]/dialog/options'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 
 const Page = () => {
+    const profile = useSelector((state: RootState) => state.profile)
+    if (!profile.profileData) return null
     return (
         <div className='w-full flex justify-center min-h-[100dvh] h-full'>
             <div className='max-w-[600px] w-full p-4 space-y-6'>
@@ -15,9 +29,9 @@ const Page = () => {
                 </h1>
                 <div className='flex justify-between p-4 my-4 bg-secondary text-secondary-foreground rounded-2xl'>
                     <div className='flex space-x-3'>
-                        <OptionAvatarDialog>
+                        <OptionAvatarDialog profile={profile.profileData}>
                             <Avatar className='h-12 w-12 mx-auto cursor-pointer'>
-                                <AvatarImage src={"https://github.com/shadcn.png"}
+                                <AvatarImage src={profile.profileData?.profilePicture || "/user.jpg"}
                                     alt="@shadcn" className='rounded-full' />
                             </Avatar>
                         </OptionAvatarDialog>
@@ -30,7 +44,7 @@ const Page = () => {
                         </div>
                     </div>
                     <div className='flex items-center'>
-                        <OptionAvatarDialog>
+                        <OptionAvatarDialog profile={profile.profileData}>
                             <Button variant={"default"} className="rounded-xl">
                                 change photo
                             </Button>
@@ -89,17 +103,6 @@ const Page = () => {
 }
 
 export default Page
-
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import OptionAvatarDialog from '../../profile/dialog/options'
 
 function SelectGender() {
     return (

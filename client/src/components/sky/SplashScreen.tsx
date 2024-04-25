@@ -9,7 +9,7 @@ export const SplashScreen = () => {
                 <div className='justify-center items-center flex' style={{ "height": "90vh" }}>
                     <img className='w-60 h-60' src='/logo.png' />
                 </div>
-                <div className='flex justify-center items-end font-semibold text-gray-600'>BY SKY INC</div>
+                <div className='flex justify-center items-end'>BY SKY INC</div>
             </div>
         </div>
     )

@@ -19,10 +19,11 @@ const Page = ({ params }: { params: { profile: string } }) => {
   const router = useRouter()
   const dispatch = useDispatch()
   const profileUserData = useSelector((state: RootState) => state.users)
+  const profile = useSelector((state: RootState) => state.profile)
 
   useEffect(() => {
     dispatch(FetchUserProfileDataApi({ id: params.profile }) as any)
-  }, [params.profile])
+  }, [])
 
 
   const userProfileData = useMemo(() => {
@@ -41,7 +42,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
   }
 
   if (profileUserData.profileLoading) {
-    return <SkeletonProfile/>
+    return <SkeletonProfile />
   }
 
   if (userProfileData) {
@@ -54,27 +55,17 @@ const Page = ({ params }: { params: { profile: string } }) => {
           <div className="hidden sm:block">
             {/* profile header */}
             <div className='flex items-center my-8 m-5'>
-              <OptionAvatarDialog>
-                {userProfileData.profilePicture ? <img src={userProfileData.profilePicture || ""} className='sm:w-36 object-cover 
+              {profile.profileData?.id === userProfileData.id ?
+                <OptionAvatarDialog profile={profile.profileData}>
+                  <img src={userProfileData.profilePicture || "/user.jpg"} className='sm:w-36 object-cover 
               bg-slate-400 sm:h-36 w-28 h-28 rounded-full sm:mr-8 cursor-pointer' />
-                  : <Skeleton className='sm:w-36 sm:h-36 w-28 h-28 rounded-full sm:mr-8' />}
-              </OptionAvatarDialog>
+                </OptionAvatarDialog> :
+                <img src={userProfileData.profilePicture || "/user.jpg"} className='sm:w-36 object-cover 
+              bg-slate-400 sm:h-36 w-28 h-28 rounded-full sm:mr-8 cursor-pointer' />
+              }
               <div className='flex flex-col justify-between gap-5'>
-                <div className='flex justify-between gap-2 items-center'>
-                  <p className='text-xl px-3'>{userProfileData.email}</p>
-                  <Button variant={"secondary"} className='rounded-xl' onClick={() => {
-                    router.push('/account/edit')
-                  }}>
-                    Edit Profile
-                  </Button>
-                  <Button variant={"secondary"} className='rounded-xl' onClick={() => {
-                    router.push('/account/archive')
-                  }}>
-                    View Archive
-                  </Button>
-                  <Settings className='w-8 h-8 cursor-pointer' />
-                </div>
-
+                <ActionButtons username={userProfileData.email}
+                  isProfile={profile.profileData?.id === userProfileData.id} />
                 <div className='flex justify-between px-3'>
                   <div className='flex gap-1'>
                     <p className='text-base font-semibold'>
@@ -131,7 +122,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
           <div className='sm:hidden'>
             {/* profile header */}
             <div className='flex gap-3 my-5 items-center px-2'>
-              <img src={userProfileData.profilePicture || 'https://github.com/shadcn.png'}
+              <img src={userProfileData.profilePicture || "/user.jpg"}
                 className='w-24 h-24 rounded-full object-cover bg-slate-400' />
               <div className='flex flex-col gap-4'>
                 <div className='flex gap-2'>
@@ -220,3 +211,44 @@ const Page = ({ params }: { params: { profile: string } }) => {
   }
 }
 export default Page
+
+
+const ActionButtons = ({
+  isProfile,
+  username
+}: {
+  isProfile?: boolean
+  username: string
+}) => {
+  const router = useRouter()
+  if (isProfile) {
+    return <div className='flex justify-between gap-2 items-center'>
+      <p className='text-xl px-3'>{username}</p>
+      <Button variant={"secondary"} className='rounded-xl' onClick={() => {
+        router.push('/account/edit')
+      }}>
+        Edit Profile
+      </Button>
+      <Button variant={"secondary"} className='rounded-xl' onClick={() => {
+        router.push('/account/archive')
+      }}>
+        View Archive
+      </Button>
+      <Settings className='w-8 h-8 cursor-pointer' />
+    </div>
+  }
+  return <div className='flex justify-between gap-2 items-center'>
+    <p className='text-xl px-3'>{username}</p>
+    <Button className='rounded-xl' onClick={() => {
+      router.push('/account/edit')
+    }}>
+      Follow
+    </Button>
+    <Button variant={"secondary"} className='rounded-xl' onClick={() => {
+      router.push('/account/archive')
+    }}>
+      Message
+    </Button>
+    <Settings className='w-8 h-8 cursor-pointer' />
+  </div>
+}

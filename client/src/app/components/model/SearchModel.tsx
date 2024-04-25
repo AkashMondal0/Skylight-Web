@@ -5,6 +5,7 @@ import {
     Drawer,
     DrawerContent,
     DrawerTrigger,
+    DrawerClose
 } from "@/components/ui/drawer"
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { X } from 'lucide-react'
@@ -85,7 +86,7 @@ const UserCard = ({
     }, []);
 
     return (
-        <>
+        <DrawerClose>
             <div className='flex justify-between p-2 hover:bg-secondary hover:text-secondary-foreground rounded-2xl my-1 cursor-pointer'
             onClick={navigateToProfile}>
                 <div className='flex space-x-2 items-center'>
@@ -104,6 +105,6 @@ const UserCard = ({
                     <X />
                 </div>
             </div>
-        </>
+        </DrawerClose>
     )
 }
