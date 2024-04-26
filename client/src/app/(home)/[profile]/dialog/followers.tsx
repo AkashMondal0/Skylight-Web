@@ -56,7 +56,7 @@ const UserCard = ({
                 </div>
                 <div className='flex items-center'>
                     <Button variant={"secondary"} className=" rounded-xl">
-                        Unfollow
+                        Remove
                     </Button>
                 </div>
             </div>

@@ -64,7 +64,9 @@ const Page = ({ params }: { params: { profile: string } }) => {
               bg-slate-400 sm:h-36 w-28 h-28 rounded-full sm:mr-8 cursor-pointer' />
               }
               <div className='flex flex-col justify-between gap-5'>
-                <ActionButtons username={userProfileData.email}
+                <ActionButtons
+                  isFollowing={userProfileData.isFollowing}
+                  username={userProfileData.email}
                   isProfile={profile.profileData?.id === userProfileData.id} />
                 <div className='flex justify-between px-3'>
                   <div className='flex gap-1'>
@@ -215,10 +217,12 @@ export default Page
 
 const ActionButtons = ({
   isProfile,
-  username
+  username,
+  isFollowing,
 }: {
   isProfile?: boolean
   username: string
+  isFollowing?: boolean
 }) => {
   const router = useRouter()
   if (isProfile) {
@@ -239,11 +243,12 @@ const ActionButtons = ({
   }
   return <div className='flex justify-between gap-2 items-center'>
     <p className='text-xl px-3'>{username}</p>
-    <Button className='rounded-xl' onClick={() => {
-      router.push('/account/edit')
-    }}>
+    {isFollowing ? <Button className='rounded-xl' onClick={() => { }}>
+      Unfollow
+    </Button> : <Button className='rounded-xl' onClick={() => { }}>
       Follow
-    </Button>
+    </Button>}
+
     <Button variant={"secondary"} className='rounded-xl' onClick={() => {
       router.push('/account/archive')
     }}>

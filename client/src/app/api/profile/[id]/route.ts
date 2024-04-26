@@ -3,7 +3,7 @@ import { redirect } from "next/navigation"
 import jwt from "jsonwebtoken"
 import db from "@/lib/db/drizzle";
 import { followers, posts, users } from "../../../../../db/schema";
-import { count, eq, like, or, desc } from "drizzle-orm";
+import { count, eq, like, or, desc, not, is, sql, exists } from "drizzle-orm";
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 
 
@@ -37,10 +37,11 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       isVerified: users.isVerified,
       isPrivate: users.isPrivate,
       postCount: count(eq(posts.authorId, users.id)),
+      isFollowing: exists(db.select().from(followers).where(eq(followers.followingUserId, users.id))),
     })
       .from(users)
       .leftJoin(posts, eq(posts.authorId, users.id))
-      .where(eq(users.email, params.id))
+      .where(eq(users.email, params.id)) // <-------------
       .groupBy(users.id)
       .limit(1)
 

@@ -2,7 +2,7 @@ import { RootState } from '@/redux/store'
 import { Post, User } from '@/types'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { FetchUserProfileDataApi, searchProfileApi } from './api-functions'
+import { FetchUserProfileDataApi, searchProfileApi, UserFollowingApi } from './api-functions'
 
 // Define a type for the slice state
 interface UsersState {
@@ -12,6 +12,8 @@ interface UsersState {
     userProfileData:User | null
     profileLoading: boolean
     profileError: boolean
+    followLoading?: boolean
+    followError?: string | null
 }
 
 // Define the initial state using that type
@@ -67,6 +69,26 @@ export const UsersSlice = createSlice({
                 state.profileError = true
                 state.profileLoading = false
                 state.userProfileData = null
+            })
+            // UserFollowingApi
+            .addCase(UserFollowingApi.pending, (state) => {
+                
+            })
+            .addCase(UserFollowingApi.fulfilled, (state, action: PayloadAction<User>) => {
+                
+            })
+            .addCase(UserFollowingApi.rejected, (state, action) => {
+                
+            })
+            // UserUnFollowingApi
+            .addCase(UserFollowingApi.pending, (state) => {
+                
+            })
+            .addCase(UserFollowingApi.fulfilled, (state, action: PayloadAction<User>) => {
+                
+            })
+            .addCase(UserFollowingApi.rejected, (state, action) => {
+                
             })
     },
 })
