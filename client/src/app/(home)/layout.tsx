@@ -15,7 +15,7 @@ export default function RootLayout({ children }: {
     <>
         <div>
           {/* sm device header*/}
-          {/* <Sm_Header /> */}
+          <Sm_Header />
           <div className="flex">
             {/* left side */}
             <Lg_Navigation />

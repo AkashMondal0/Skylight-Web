@@ -7,25 +7,17 @@ import {
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
+import { UsersState } from "@/redux/slice/users"
 import { User } from "@/types"
 
 export default function FollowingsDialog({
     children,
-    profile
+    users
 }: {
     children: React.ReactNode
-    profile:User
+    users: UsersState
 }) {
-    const FetchFollowingsUser = () => {
-        if (profile?.id) {
-        //   dispatch(FetchFollowingsUserDataApi({
-        //     profileId: userProfileData?.id,
-        //     skip: 0,
-        //     size: 12
-        //   }) as any)
-        }
-      }
-    
+
     return <Dialog>
         <DialogTrigger asChild>
             {children}
@@ -34,7 +26,7 @@ export default function FollowingsDialog({
             <h1 className="text-center font-semibold text-lg">Followings</h1>
             <Separator />
             <ScrollArea className="h-72 w-full rounded-md">
-                {/* {followings.map((user, i) => <UserCard key={i} user={user} />)} */}
+                {users.profileData.fetchFollow.followings.map((user, i) => <UserCard key={i} user={user} />)}
             </ScrollArea>
         </DialogContent>
     </Dialog>
@@ -61,7 +53,7 @@ const UserCard = ({
                             {user.username}
                         </div>
                         <div className='text-sm'>
-                          {user.email}
+                            {user.email}
                         </div>
                     </div>
                 </div>

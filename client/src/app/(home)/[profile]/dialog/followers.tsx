@@ -7,31 +7,16 @@ import {
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
+import { UsersState } from "@/redux/slice/users"
 import { User } from "@/types"
 
 export default function FollowersDialog({
     children,
-    profile,
-    error,
-    loading,
+    users
 }: {
     children: React.ReactNode
-    profile: User
-    error?: any
-    loading?: boolean
+    users: UsersState
 }) {
-
-    const FetchFollowersUser = () => {
-        if (profile?.id) {
-        //   dispatch(FetchFollowersUserDataApi({
-        //     profileId: userProfileData?.id,
-        //     skip: 0,
-        //     size: 12
-        //   }) as any)
-        }
-      }
-    
-
 
     return <Dialog>
         <DialogTrigger asChild>
@@ -41,7 +26,7 @@ export default function FollowersDialog({
             <h1 className="text-center font-semibold text-lg">Followers</h1>
             <Separator />
             <ScrollArea className="h-72 w-full rounded-md">
-                {/* {followers.map((user, i) => <UserCard key={i} user={user}/>)} */}
+            {users.profileData.fetchFollow.followers.map((user, i) => <UserCard key={i} user={user} />)}
             </ScrollArea>
         </DialogContent>
     </Dialog>

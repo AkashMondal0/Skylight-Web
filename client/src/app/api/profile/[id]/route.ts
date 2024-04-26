@@ -68,7 +68,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       .where(eq(followers.followingUserId, userProfile[0].id))
 
     // check if user is private
-    if (!userProfile[0].isPrivate && userProfile[0].isFollowing) {
+    if (!userProfile[0].isPrivate && userProfile[0].isFollowing || userProfile[0].id === verify.id) {
       // get post count
       const userPosts = await db.select()
         .from(posts)

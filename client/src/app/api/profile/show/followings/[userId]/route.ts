@@ -1,14 +1,11 @@
-import { eq } from 'drizzle-orm';
 import db from "@/lib/db/drizzle"
-import { NextRequest } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { followers, users } from "../../../../../../../db/schema"
-import { redirect } from 'next/navigation';
+import { eq } from "drizzle-orm"
+import { redirect } from "next/navigation"
 import jwt from "jsonwebtoken"
 const secret = process.env.NEXTAUTH_SECRET || "secret";
-
-
 export async function GET(request: NextRequest, { params }: { params: { userId: string } }) {
-
   try {
     const token = request.cookies.get("token-auth")
 
@@ -41,7 +38,7 @@ export async function GET(request: NextRequest, { params }: { params: { userId: 
       isPrivate: users.isPrivate,
     })
       .from(followers)
-      .where(eq(followers.followingUserId, params.userId)) // <------------- user id
+      .where(eq(followers.followerUserId, params.userId))
       .leftJoin(users, eq(followers.followingUserId, users.id))
       .limit(Number(size))
       .offset(Number(skip))
@@ -53,7 +50,6 @@ export async function GET(request: NextRequest, { params }: { params: { userId: 
       data: Followers
     }, { status: 200 })
   } catch (error) {
-    console.log(error)
     return Response.json({
       code: 0,
       message: "Internal server error",

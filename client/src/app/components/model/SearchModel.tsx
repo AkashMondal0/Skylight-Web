@@ -86,9 +86,9 @@ const UserCard = ({
     }, []);
 
     return (
-        <DrawerClose>
-            <div className='flex justify-between p-2 hover:bg-secondary hover:text-secondary-foreground rounded-2xl my-1 cursor-pointer'
+        <div className='flex justify-between p-2 hover:bg-secondary hover:text-secondary-foreground rounded-2xl my-1 cursor-pointer'
             onClick={navigateToProfile}>
+            <DrawerClose>
                 <div className='flex space-x-2 items-center'>
                     <Avatar className='h-12 w-12 mx-auto'>
                         <AvatarImage src={item.profilePicture ? item.profilePicture : "/user.jpg"}
@@ -101,10 +101,10 @@ const UserCard = ({
                         </div>
                     </div>
                 </div>
-                <div className='flex items-center cursor-pointer' onClick={removeUser}>
-                    <X />
-                </div>
+            </DrawerClose>
+            <div className='flex items-center cursor-pointer' onClick={removeUser}>
+                <X />
             </div>
-        </DrawerClose>
+        </div>
     )
 }

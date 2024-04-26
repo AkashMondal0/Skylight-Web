@@ -1,23 +1,33 @@
-import { RootState } from '@/redux/store'
 import { Post, User } from '@/types'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { FetchFollowersUserDataApi, FetchFollowingsUserDataApi, FetchUserProfileDataApi, searchProfileApi, UserFollowingApi, UserUnFollowingApi } from './api-functions'
 
 // Define a type for the slice state
-interface UsersState {
+export interface UsersState {
     search_users: User[]
     loading?: boolean
     error?: string | null
-    userProfileData: User | null
-    profileLoading: boolean
-    profileError: boolean
-    followLoading?: boolean
-    followError?: boolean
-    followersUserData: User[]
-    followingsUserData: User[]
-    fetchFollowLoading: boolean
-    fetchFollowError: boolean
+    profileData: {
+        user: User | null
+        loading: boolean
+        error: boolean
+        handleFollow: {
+            loading: boolean
+            error: boolean
+        }
+        fetchFollow: {
+            loading: boolean
+            error: boolean
+            followers: User[]
+            followings: User[]
+        }
+        fetchPosts: {
+            loading: boolean
+            error: boolean
+            posts: Post[]
+        }
+    }
 }
 
 // Define the initial state using that type
@@ -27,17 +37,26 @@ const UsersState: UsersState = {
     loading: false,
     error: null,
     //
-    userProfileData: null,
-    profileLoading: false,
-    profileError: false,
-    //
-    followLoading: false,
-    followError: false,
-    //
-    followersUserData: [],
-    followingsUserData: [],
-    fetchFollowLoading: false,
-    fetchFollowError: false
+    profileData: {
+        user: null,
+        loading: false,
+        error: false,
+        handleFollow: {
+            loading: false,
+            error: false
+        },
+        fetchFollow: {
+            loading: false,
+            error: false,
+            followers: [],
+            followings: []
+        },
+        fetchPosts: {
+            loading: false,
+            error: false,
+            posts: []
+        }
+    }
 }
 
 export const UsersSlice = createSlice({
@@ -70,78 +89,83 @@ export const UsersSlice = createSlice({
             })
             // FetchUserProfileDataApi
             .addCase(FetchUserProfileDataApi.pending, (state) => {
-                state.profileLoading = true
-                state.profileError = false
-                state.userProfileData = null
+                state.profileData.loading = true
+                state.profileData.error = false
+                state.profileData.user = null
             })
-            .addCase(FetchUserProfileDataApi.fulfilled, (state, action: PayloadAction<UsersState["userProfileData"]>) => {
-                state.userProfileData = action.payload
-                state.profileLoading = false
-                state.profileError = false
-                // clear followers and followings data
-                state.followersUserData = []
-                state.followingsUserData = []
+            .addCase(FetchUserProfileDataApi.fulfilled, (state, action: PayloadAction<User>) => {
+                state.profileData.user = action.payload
+                state.profileData.loading = false
+                state.profileData.error = false
             })
             .addCase(FetchUserProfileDataApi.rejected, (state, action) => {
-                state.profileError = true
-                state.profileLoading = false
-                state.userProfileData = null
+                state.profileData.loading = false
+                state.profileData.error = true
+                state.profileData.user = null
             })
             // UserFollowingApi
             .addCase(UserFollowingApi.pending, (state) => {
-                state.followLoading = true
-                state.followError = false
+                state.profileData.handleFollow.error = false
+                state.profileData.handleFollow.loading = true
             })
             .addCase(UserFollowingApi.fulfilled, (state, action: PayloadAction<User>) => {
-                state.followLoading = false
-                state.followError = false
-                if (state.userProfileData && state.userProfileData.isFollowing === false) {
-                    state.userProfileData.isFollowing = true
+                state.profileData.handleFollow.loading = false
+                state.profileData.handleFollow.error = false
+                if (state.profileData.user && state.profileData.user.isFollowing === false) {
+                    state.profileData.user.isFollowing = true
+                    state.profileData.user.followersCount += 1
                 }
             })
             .addCase(UserFollowingApi.rejected, (state, action) => {
-                state.followLoading = false
-                state.followError = true
+                state.profileData.handleFollow.loading = false
+                state.profileData.handleFollow.error = true
             })
             // UserUnFollowingApi
             .addCase(UserUnFollowingApi.pending, (state) => {
-                state.followLoading = true
-                state.followError = false
+                state.profileData.handleFollow.error = false
+                state.profileData.handleFollow.loading = true
             })
             .addCase(UserUnFollowingApi.fulfilled, (state, action: PayloadAction<User>) => {
-                state.followLoading = false
-                state.followError = false
-                if (state.userProfileData && state.userProfileData.isFollowing === true) {
-                    state.userProfileData.isFollowing = false
+                state.profileData.handleFollow.loading = false
+                state.profileData.handleFollow.error = false
+                if (state.profileData.user && state.profileData.user.isFollowing === true) {
+                    state.profileData.user.isFollowing = false
+                    state.profileData.user.followersCount -= 1
                 }
             })
             .addCase(UserUnFollowingApi.rejected, (state, action) => {
-                state.followLoading = false
-                state.followError = true
+                state.profileData.handleFollow.loading = false
+                state.profileData.handleFollow.error = true
             })
             // FetchUserUnFollowingApi
             .addCase(FetchFollowingsUserDataApi.pending, (state) => {
-                state.fetchFollowLoading = true
-                state.fetchFollowError = false
+                state.profileData.fetchFollow.followings = []
+                state.profileData.fetchFollow.loading = true
+                state.profileData.fetchFollow.error = false
             })
             .addCase(FetchFollowingsUserDataApi.fulfilled, (state, action: PayloadAction<User[]>) => {
-                state.followingsUserData = [...state.followingsUserData, ...action.payload]
+                state.profileData.fetchFollow.followings = action.payload
+                state.profileData.fetchFollow.loading = false
+                state.profileData.fetchFollow.error = false
             })
             .addCase(FetchFollowingsUserDataApi.rejected, (state, action) => {
-                state.fetchFollowLoading = false
-                state.fetchFollowError = true
+                state.profileData.fetchFollow.loading = false
+                state.profileData.fetchFollow.error = true
             })
             // FetchUserUnFollowingApi
             .addCase(FetchFollowersUserDataApi.pending, (state) => {
-                state.fetchFollowLoading = true
-                state.fetchFollowError = false
+                state.profileData.fetchFollow.loading = true
+                state.profileData.fetchFollow.error = false
+                state.profileData.fetchFollow.followers = []
             })
             .addCase(FetchFollowersUserDataApi.fulfilled, (state, action: PayloadAction<User[]>) => {
-                state.followersUserData = [...state.followersUserData, ...action.payload]
+                state.profileData.fetchFollow.followers = action.payload
+                state.profileData.fetchFollow.loading = false
+                state.profileData.fetchFollow.error = false
             })
             .addCase(FetchFollowersUserDataApi.rejected, (state, action) => {
-                state.fetchFollowLoading = false
-                state.fetchFollowError = true
+                state.profileData.fetchFollow.loading = false
+                state.profileData.fetchFollow.error = true
             })
     },
 })

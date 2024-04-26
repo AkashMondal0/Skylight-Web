@@ -2,9 +2,11 @@
 import { CopyPlus, Heart } from 'lucide-react'
 import React from 'react'
 import { useTheme } from "next-themes"
+import { useRouter } from 'next/navigation'
 
 const Sm_Header = () => {
     const { setTheme , theme} = useTheme()
+    const router = useRouter()
     const changeTheme = () => {
         if(theme === 'dark'){
             setTheme('light')
@@ -20,7 +22,9 @@ const Sm_Header = () => {
                 </div>
                 <div className="flex items-center gap-4">
                     <CopyPlus size={28} onClick={changeTheme} />
-                    <Heart size={28} />
+                    <Heart size={28} onClick={()=>{
+                        router.push('/search')
+                    }}/>
                 </div>
             </div>
         </div>
