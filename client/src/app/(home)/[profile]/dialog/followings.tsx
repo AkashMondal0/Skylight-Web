@@ -3,23 +3,29 @@ import { Button } from "@/components/ui/button"
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
-import Link from "next/link"
+import { User } from "@/types"
 
 export default function FollowingsDialog({
     children,
+    profile
 }: {
     children: React.ReactNode
+    profile:User
 }) {
+    const FetchFollowingsUser = () => {
+        if (profile?.id) {
+        //   dispatch(FetchFollowingsUserDataApi({
+        //     profileId: userProfileData?.id,
+        //     skip: 0,
+        //     size: 12
+        //   }) as any)
+        }
+      }
+    
     return <Dialog>
         <DialogTrigger asChild>
             {children}
@@ -28,34 +34,39 @@ export default function FollowingsDialog({
             <h1 className="text-center font-semibold text-lg">Followings</h1>
             <Separator />
             <ScrollArea className="h-72 w-full rounded-md">
-                {[...Array(50)].map((_, i) => <UserCard key={i} />)}
+                {/* {followings.map((user, i) => <UserCard key={i} user={user} />)} */}
             </ScrollArea>
         </DialogContent>
     </Dialog>
 }
 
 const UserCard = ({
-    url = "https://github.com/shadcn.png",
+    user,
+    action
 }: {
-    url?: string
+    user: User
+    action?: () => void
 }) => {
+    if (!user) return null
     return (
         <>
             <div className='flex justify-between px-2 my-4'>
                 <div className='flex space-x-2 items-center'>
                     <Avatar className='h-10 w-10 mx-auto'>
-                        <AvatarImage src={url}
-                            alt="@shadcn" className='rounded-full' />
+                        <AvatarImage src={user.profilePicture || "/user.jpg"}
+                            alt="@sky" className='rounded-full' />
                     </Avatar>
                     <div>
-                        <div className='font-semibold text-base'>Akash Mondal</div>
+                        <div className='font-semibold text-base'>
+                            {user.username}
+                        </div>
                         <div className='text-sm'>
-                            suggested for you
+                          {user.email}
                         </div>
                     </div>
                 </div>
                 <div className='flex items-center'>
-                    <Button variant={"secondary"} className=" rounded-xl">
+                    <Button variant={"secondary"} className=" rounded-xl" onClick={action}>
                         Unfollow
                     </Button>
                 </div>

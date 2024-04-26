@@ -4,16 +4,16 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import { Link2, Plus, Settings } from 'lucide-react'
-import React, { useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import OptionAvatarDialog from './dialog/options'
 import { useRouter } from 'next/navigation'
 import FollowingDialog from './dialog/followings'
 import FollowersDialog from './dialog/followers'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import { FetchUserProfileDataApi } from '@/redux/slice/users/api-functions'
-import { Skeleton } from '@/components/ui/skeleton'
+import { FetchUserProfileDataApi, UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions'
 import SkeletonProfile from './skeleton'
+import { User } from '@/types'
 
 const Page = ({ params }: { params: { profile: string } }) => {
   const router = useRouter()
@@ -24,7 +24,6 @@ const Page = ({ params }: { params: { profile: string } }) => {
   useEffect(() => {
     dispatch(FetchUserProfileDataApi({ id: params.profile }) as any)
   }, [])
-
 
   const userProfileData = useMemo(() => {
     return profileUserData.userProfileData
@@ -37,36 +36,56 @@ const Page = ({ params }: { params: { profile: string } }) => {
     router.push('/profile/akashmondal0/following')
   }
 
+  const handleFollow = useCallback(() => {
+    if (userProfileData?.id && profile?.profileData?.id) {
+      dispatch(UserFollowingApi({
+        followingUserId: userProfileData?.id,
+        followerUserId: profile.profileData?.id
+      }) as any)
+    }
+  }, [userProfileData?.id && profile?.profileData?.id])
+
+  const handleUnfollow = useCallback(() => {
+    if (userProfileData?.id && profile?.profileData?.id) {
+      dispatch(UserUnFollowingApi({
+        followingUserId: userProfileData?.id,
+        followerUserId: profile.profileData?.id
+      }) as any)
+    }
+  }, [userProfileData?.id && profile?.profileData?.id])
+
+
   if (profileUserData.profileError) {
     return <div>page not exits</div>
   }
-
   if (profileUserData.profileLoading) {
     return <SkeletonProfile />
   }
 
-  if (userProfileData) {
+  if (userProfileData && profile.profileData) {
 
     return (
       <div className='w-full min-h-[100dvh]'>
         <div className='mx-auto max-w-[960px] overflow-x-hidden'>
-
           {/* md ->>> */}
           <div className="hidden sm:block">
             {/* profile header */}
             <div className='flex items-center my-8 m-5'>
               {profile.profileData?.id === userProfileData.id ?
                 <OptionAvatarDialog profile={profile.profileData}>
-                  <img src={userProfileData.profilePicture || "/user.jpg"} className='sm:w-36 object-cover 
+                  <img src={userProfileData.profilePicture || "/user.jpg"}
+                    className='sm:w-36 object-cover 
               bg-slate-400 sm:h-36 w-28 h-28 rounded-full sm:mr-8 cursor-pointer' />
                 </OptionAvatarDialog> :
-                <img src={userProfileData.profilePicture || "/user.jpg"} className='sm:w-36 object-cover 
-              bg-slate-400 sm:h-36 w-28 h-28 rounded-full sm:mr-8 cursor-pointer' />
-              }
+                <img src={userProfileData.profilePicture || "/user.jpg"}
+                  className='sm:w-36 object-cover 
+              bg-slate-400 sm:h-36 w-28 h-28 rounded-full sm:mr-8 cursor-pointer' />}
               <div className='flex flex-col justify-between gap-5'>
                 <ActionButtons
+                  handleFollow={handleFollow}
+                  handleUnfollow={handleUnfollow}
                   isFollowing={userProfileData.isFollowing}
-                  username={userProfileData.email}
+                  user={userProfileData}
                   isProfile={profile.profileData?.id === userProfileData.id} />
                 <div className='flex justify-between px-3'>
                   <div className='flex gap-1'>
@@ -74,7 +93,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
                       {userProfileData.postCount}
                     </p> posts
                   </div>
-                  <FollowersDialog>
+                  <FollowersDialog profile={profile.profileData}>
                     <div className='sm:cursor-pointer flex gap-1'>
                       <p className='text-base font-semibold'>
                         {userProfileData.followersCount}
@@ -82,7 +101,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
                       followers
                     </div>
                   </FollowersDialog>
-                  <FollowingDialog>
+                  <FollowingDialog profile={profile.profileData}>
                     <div className='sm:cursor-pointer flex gap-1'>
                       <p className='text-base font-semibold'>
                         {userProfileData.followingCount}
@@ -106,17 +125,25 @@ const Page = ({ params }: { params: { profile: string } }) => {
             </div>
             {/* story */}
             <div className='flex gap-10 m-5 my-10'>
-              <img src={userProfileData.profilePicture || 'https://github.com/shadcn.png'} className='w-20 h-20 rounded-full object-cover cursor-pointer' />
+              <img src={userProfileData.profilePicture || '/user.jpg'} className='w-20 h-20 rounded-full object-cover cursor-pointer' />
               <div className='w-20 h-20 border-[2px] rounded-full flex justify-center items-center cursor-pointer'>
                 <Plus className='w-16 h-16' />
               </div>
             </div>
             {/* post */}
-            <div className="grid grid-cols-3 gap-2">
-              {userProfileData.posts.map((post, index) => (
-                <img key={index} src={post.fileUrl[0]} className='aspect-square w-full h-full object-cover' />
-              ))}
-            </div>
+            {userProfileData.isFollowing ?
+              <div className="grid grid-cols-3 gap-2">
+                {userProfileData.posts.map((post, index) => (
+                  <img key={index} src={post.fileUrl[0]} className='aspect-square w-full h-full object-cover' />
+                ))}
+              </div> : <>
+                <div className='flex justify-center items-center h-72'>
+                  <p className='text-xl font-semibold'>
+                    Account is private
+                  </p>
+                </div>
+              </>
+            }
             <div className='h-10 w-full'></div>
           </div>
 
@@ -160,7 +187,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
 
               {/* stories */}
               <div className='flex gap-5 my-5 px-2'>
-                <img src={userProfileData.profilePicture || 'https://github.com/shadcn.png'} className='w-16 h-16 rounded-full cursor-pointer' />
+                <img src={userProfileData.profilePicture || '/user.jpg'} className='w-16 h-16 rounded-full cursor-pointer' />
                 <div className='w-16 h-16 border-[2px] rounded-full flex justify-center items-center cursor-pointer'>
                   <Plus className='w-10 h-10' />
                 </div>
@@ -217,17 +244,23 @@ export default Page
 
 const ActionButtons = ({
   isProfile,
-  username,
+  user,
   isFollowing,
+  handleFollow,
+  handleUnfollow
 }: {
   isProfile?: boolean
-  username: string
+  user: User
   isFollowing?: boolean
+  handleFollow?: () => void
+  handleUnfollow?: () => void
 }) => {
   const router = useRouter()
+
+
   if (isProfile) {
     return <div className='flex justify-between gap-2 items-center'>
-      <p className='text-xl px-3'>{username}</p>
+      <p className='text-xl px-3'>{user.username}</p>
       <Button variant={"secondary"} className='rounded-xl' onClick={() => {
         router.push('/account/edit')
       }}>
@@ -242,10 +275,10 @@ const ActionButtons = ({
     </div>
   }
   return <div className='flex justify-between gap-2 items-center'>
-    <p className='text-xl px-3'>{username}</p>
-    {isFollowing ? <Button className='rounded-xl' onClick={() => { }}>
+    <p className='text-xl px-3'>{user.username}</p>
+    {isFollowing ? <Button className='rounded-xl' onClick={handleUnfollow}>
       Unfollow
-    </Button> : <Button className='rounded-xl' onClick={() => { }}>
+    </Button> : <Button className='rounded-xl' onClick={handleFollow}>
       Follow
     </Button>}
 

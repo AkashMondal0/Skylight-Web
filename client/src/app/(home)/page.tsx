@@ -1,8 +1,20 @@
-import ExploreSuggestion from "./components/Explore";
-import FeedPost from "./components/FeedPost";
-import Stories_bar from "./components/Storiesbar";
+'use client'
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import dynamic from 'next/dynamic';
 
-export default function Home() {
+const ExploreSuggestion = dynamic(() => import('./components/Explore'), {
+  loading: () => <p>Loading...</p>
+});
+const Stories_bar = dynamic(() => import('./components/Storiesbar'), {
+  loading: () => <p>Loading...</p>
+});
+const FeedPost = dynamic(() => import('./components/FeedPost'), {
+  loading: () => <p>Loading...</p>
+});
+
+export default function Page() {
+  const profile = useSelector((state: RootState) => state.profile);
   return (
     <>
       <div className="flex h-full
@@ -21,7 +33,7 @@ export default function Home() {
             hidden lg:flex lg:w-full 
             lg:max-w-[400px] ease-in-out 
             duration-300">
-            <ExploreSuggestion/>
+            <ExploreSuggestion user={profile.profileData} />
           </div>
         </div>
       </div>

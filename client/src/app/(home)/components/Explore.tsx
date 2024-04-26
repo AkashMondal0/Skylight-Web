@@ -1,11 +1,17 @@
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
+import { User } from '@/types'
 import Link from 'next/link'
 import React from 'react'
 
-const ExploreSuggestion = () => {
+const ExploreSuggestion = ({
+    user
+}: {
+    user: User | null
+}) => {
+    if(!user) return null
     return (
         <div className='my-4 space-y-4'>
-            <MyAccount />
+            <MyAccount user={user!} />
             <div className='flex justify-between px-2 max-w-sm w-72'>
                 <div className='font-semibold text-sm'>Suggestion for you</div>
                 <Link href={"/explore/people"} className='font-semibold text-xs hover:opacity-50 cursor-pointer'>See All</Link>
@@ -20,7 +26,7 @@ const ExploreSuggestion = () => {
 export default ExploreSuggestion
 
 const ExploreUserCard = ({
-    url = "https://github.com/shadcn.png",
+    url = "/user.jpg",
 }: {
     url?: string
 }) => {
@@ -40,8 +46,8 @@ const ExploreUserCard = ({
                     </div>
                 </div>
                 <div className='flex items-center'>
-                    <Link href={"/explore/people"} 
-                    className='text-sm text-blue-500 hover:text-white cursor-pointer hover:opacity-90'>
+                    <Link href={"/explore/people"}
+                        className='text-sm text-blue-500 hover:text-white cursor-pointer hover:opacity-90'>
                         Follow
                     </Link>
                 </div>
@@ -51,21 +57,21 @@ const ExploreUserCard = ({
 }
 
 const MyAccount = ({
-    url = "https://github.com/shadcn.png",
+    user
 }: {
-    url?: string
+    user: User
 }) => {
     return <div>
         <div className='flex justify-between px-2 max-w-sm w-72'>
             <div className='flex space-x-2 items-center'>
                 <Avatar className='h-10 w-10 mx-auto'>
-                    <AvatarImage src={url}
+                    <AvatarImage src={user?.profilePicture || "/user.jpg"}
                         alt="@shadcn" className='rounded-full' />
                 </Avatar>
                 <div>
-                    <div className='font-semibold text-base'>iamskysolo</div>
+                    <div className='font-semibold text-base'>{user?.email}</div>
                     <div className='text-sm'>
-                        Akash Mondal
+                        {user.username}
                     </div>
                 </div>
             </div>

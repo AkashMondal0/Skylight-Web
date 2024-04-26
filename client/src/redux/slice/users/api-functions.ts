@@ -54,7 +54,7 @@ export const UserFollowingApi = createAsyncThunk(
 );
 
 export const UserUnFollowingApi = createAsyncThunk(
-    'UserUnFollowingApi/delete',
+    'UserUnFollowingApi/post',
     async ({
         followingUserId,
         followerUserId
@@ -67,6 +67,50 @@ export const UserUnFollowingApi = createAsyncThunk(
                 followingUserId,
                 followerUserId
             })
+            return res.data.data
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
+        }
+    }
+);
+
+export const FetchFollowingsUserDataApi = createAsyncThunk(
+    'FetchFollowingsUserDataApi/get',
+    async ({
+        profileId,
+        skip,
+        size
+    }: {
+        profileId: string,
+        skip: number,
+        size: number
+    }, thunkApi) => {
+        try {
+            const res = await axios.get(`/api/profile/show/followings/${profileId}?skip=${skip}&size=${size}`)
+            return res.data.data
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
+        }
+    }
+);
+
+export const FetchFollowersUserDataApi = createAsyncThunk(
+    'FetchFollowersUserDataApi/get',
+    async ({
+        profileId,
+        skip,
+        size
+    }: {
+        profileId: string,
+        skip: number,
+        size: number
+    }, thunkApi) => {
+        try {
+            const res = await axios.get(`/api/profile/show/followers/${profileId}?skip=${skip}&size=${size}`)
             return res.data.data
         } catch (error: any) {
             return thunkApi.rejectWithValue({

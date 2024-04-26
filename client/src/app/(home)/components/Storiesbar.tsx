@@ -35,7 +35,7 @@ const Stories_bar = () => {
 }
 
 const StoryAvatar = ({
-  url = "https://github.com/shadcn.png",
+  url = "/user.jpg",
   label = "loading"
 }: {
   url?: string

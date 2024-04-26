@@ -19,7 +19,7 @@ const Page = () => {
 export default Page
 
 const UserCard = ({
-  url = "https://github.com/shadcn.png",
+  url = "/user.jpg",
 }: {
   url?: string
 }) => {

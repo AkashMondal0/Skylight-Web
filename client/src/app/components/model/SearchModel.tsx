@@ -91,11 +91,11 @@ const UserCard = ({
             onClick={navigateToProfile}>
                 <div className='flex space-x-2 items-center'>
                     <Avatar className='h-12 w-12 mx-auto'>
-                        <AvatarImage src={item.profilePicture ? item.profilePicture : "https://github.com/shadcn.png"}
+                        <AvatarImage src={item.profilePicture ? item.profilePicture : "/user.jpg"}
                             alt="@shadcn" className='rounded-full' />
                     </Avatar>
-                    <div>
-                        <div className='font-semibold text-base'>{item.username}</div>
+                    <div className='ml-2'>
+                        <div className='font-semibold text-base text-start'>{item.username}</div>
                         <div className='text-sm'>
                             {item.email}
                         </div>

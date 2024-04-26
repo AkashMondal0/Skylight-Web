@@ -19,7 +19,7 @@ const FeedPost = () => {
 }
 
 const PostItem = ({
-  url = "https://github.com/shadcn.png",
+  url = "/user.jpg",
 }: {
   url?: string
 }) => {
@@ -52,7 +52,7 @@ const PostItem = ({
           <CarouselContent>
             {Array.from({ length: 10 }).map((_, index) => (
               <CarouselItem key={index}> <img
-                src="https://github.com/shadcn.png"
+                src="/user.jpg"
                 width={500}
                 height={500}
                 alt="Picture of the author"
