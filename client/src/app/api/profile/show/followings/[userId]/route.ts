@@ -37,8 +37,8 @@ export async function GET(request: NextRequest, { params }: { params: { userId: 
       isVerified: users.isVerified,
       isPrivate: users.isPrivate,
       isFollowing: exists(db.select().from(followers).where(and(
-        eq(followers.followingUserId, verify.id),
-        eq(followers.followerUserId, users.id)
+        eq(followers.followerUserId, verify.id),
+        eq(followers.followingUserId, users.id)
       )))
     })
       .from(followers)

@@ -115,13 +115,8 @@ export const UsersSlice = createSlice({
             .addCase(FetchUserProfileDataApi.pending, (state) => {
                 state.profileData.loading = true
                 state.profileData.error = false
-                state.profileData.user = null
-
-            })
-            .addCase(FetchUserProfileDataApi.fulfilled, (state, action: PayloadAction<User>) => {
                 state.profileData = {
                     ...state.profileData,
-                    user: action.payload,
                     fetchFollow: {
                         loading: false,
                         error: false,
@@ -138,6 +133,12 @@ export const UsersSlice = createSlice({
                         size: 10,
                     }
                 }
+
+            })
+            .addCase(FetchUserProfileDataApi.fulfilled, (state, action: PayloadAction<User>) => {
+                state.profileData = {
+                    ...state.profileData,
+                    user: action.payload}
                 state.profileData.loading = false
                 state.profileData.error = false
             })

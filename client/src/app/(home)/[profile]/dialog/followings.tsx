@@ -38,10 +38,10 @@ export default function FollowingsDialog({
             }) as any)
         }
     }
-    const handleActionFollow = () => {
+    const handleActionFollow = (user: User) => {
         if (profile?.id) {
             dispatch(UserFollowingApi({
-                followingUserId: profile.id,
+                followingUserId: user.id,
                 followerUserId: profile.id
             }) as any)
         }
@@ -58,10 +58,13 @@ export default function FollowingsDialog({
             <h1 className="text-center font-semibold text-lg">Followings</h1>
             <Separator />
             <ScrollArea className="h-72 w-full rounded-md">
-                {users.profileData.fetchFollow.followings.map((user, i) => <UserCard 
-                key={i} user={user} 
-                pageRedirect={pageRedirect}
-                handleActionUnFollow={handleActionUnFollow} />)}
+                {users.profileData.fetchFollow.followings.map((user, i) => <UserCard
+                    key={i} user={user}
+                    isProfile={isProfile}
+                    itself={profile.id === user.id}
+                    pageRedirect={pageRedirect}
+                    handleActionFollow={handleActionFollow}
+                    handleActionUnFollow={handleActionUnFollow} />)}
                 {users.profileData.fetchFollow.loading ? <>{Array(10).fill(0).map((_, i) => <SkeletonUserCard key={i} />)}</> : <></>}
             </ScrollArea>
         </DialogContent>
@@ -71,17 +74,23 @@ export default function FollowingsDialog({
 const UserCard = ({
     user,
     pageRedirect,
-    handleActionUnFollow
+    handleActionUnFollow,
+    isProfile,
+    itself,
+    handleActionFollow
 }: {
     user: User
     pageRedirect: (user: User) => void
     handleActionUnFollow: (user: User) => void
+    isProfile?: boolean
+    itself?: boolean
+    handleActionFollow: (user: User) => void
 }) => {
     if (!user) return null
     return (
         <>
             <div className='flex justify-between px-2 my-4'>
-                <div className='flex space-x-2 items-center cursor-pointer'onClick={() => pageRedirect(user)}>
+                <div className='flex space-x-2 items-center cursor-pointer' onClick={() => pageRedirect(user)}>
                     <Avatar className='h-10 w-10 mx-auto'>
                         <AvatarImage src={user.profilePicture || "/user.jpg"}
                             alt="@sky" className='rounded-full' />
@@ -96,9 +105,24 @@ const UserCard = ({
                     </div>
                 </div>
                 <div className='flex items-center'>
-                    <Button variant={"secondary"} className=" rounded-xl" onClick={() => handleActionUnFollow(user)}>
-                        Unfollow
-                    </Button>
+                    {!itself && <>
+                        {isProfile ? <>
+                            <Button variant={"secondary"} className=" rounded-xl" onClick={() => handleActionUnFollow(user)}>
+                                Unfollow
+                            </Button>
+                        </> : <>
+                            {user.isFollowing ? <Button variant={"secondary"}
+                                className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
+                                Unfollow
+                            </Button> :
+                                <Button variant={"default"}
+                                    className="rounded-xl" onClick={() => handleActionFollow(user)}>
+                                    Follow
+                                </Button>
+                            }
+
+                        </>}
+                    </>}
                 </div>
             </div>
         </>

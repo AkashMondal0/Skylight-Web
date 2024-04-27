@@ -40,10 +40,10 @@ export default function FollowersDialog({
         }
     }
 
-    const handleActionFollow = () => {
+    const handleActionFollow = (user: User) => {
         if (profile?.id) {
             dispatch(UserFollowingApi({
-                followingUserId: profile.id,
+                followingUserId: user.id,
                 followerUserId: profile.id
             }) as any)
         }
@@ -64,6 +64,9 @@ export default function FollowersDialog({
                 {users.profileData.fetchFollow.followers.map((user, i) => <UserCard
                     pageRedirect={pageRedirect}
                     key={i} user={user}
+                    isProfile={isProfile}
+                    handleActionFollow={handleActionFollow}
+                    itself={profile.id === user.id}
                     handleActionUnFollow={handleActionUnFollow} />)}
                 {users.profileData.fetchFollow.loading ? <>{Array(10).fill(0).map((_, i) => <SkeletonUserCard key={i} />)}</> : <></>}
             </ScrollArea>
@@ -74,11 +77,17 @@ export default function FollowersDialog({
 const UserCard = ({
     user,
     pageRedirect,
-    handleActionUnFollow
+    handleActionUnFollow,
+    isProfile,
+    itself,
+    handleActionFollow
 }: {
     user: User
     pageRedirect: (user: User) => void
     handleActionUnFollow: (user: User) => void
+    isProfile?: boolean
+    itself?: boolean
+    handleActionFollow: (user: User) => void
 }) => {
     if (!user) return null
     return (
@@ -98,13 +107,24 @@ const UserCard = ({
                         </div>
                     </div>
                 </div>
-                {!user.isFollowing && <Button variant={"secondary"} className=" rounded-xl" onClick={() => handleActionUnFollow(user)}>
-                    follow back
-                </Button>}
-                <div className='flex items-center'>
-                    <Button variant={"secondary"} className=" rounded-xl" onClick={() => handleActionUnFollow(user)}>
-                        Remove
-                    </Button>
+                <div className='flex items-center space-x-2'>
+                    {!itself && <>
+                        {isProfile && user.isFollowing ?
+                            <Button variant={"secondary"}
+                                className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
+                                Remove
+                            </Button> :
+                            <Button variant={"default"}
+                                className="rounded-xl" onClick={() => handleActionFollow(user)}>
+                                Follow
+                            </Button>}
+                    </>}
+                    {/* {
+                        isProfile && <Button variant={"secondary"}
+                            className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
+                            Remove
+                        </Button>
+                    } */}
                 </div>
             </div>
         </>
