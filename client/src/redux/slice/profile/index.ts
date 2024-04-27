@@ -31,16 +31,17 @@ export const profileSlice = createSlice({
             .addCase(fetchProfileDataApi.pending, (state) => {
                 state.loading = true
                 state.error = null
-                state.AppStart = true
             })
             .addCase(fetchProfileDataApi.fulfilled, (state, action: PayloadAction<User>) => {
                 state.profileData = action.payload
                 state.loading = false
                 state.error = null
+                state.AppStart = true
             })
             .addCase(fetchProfileDataApi.rejected, (state, action) => {
                 state.loading = false
                 state.error = action.error.message || null
+                state.AppStart = true
             })
     },
 })

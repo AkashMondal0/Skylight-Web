@@ -52,7 +52,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
     if (users.profileData.user?.id) {
       dispatch(FetchFollowingsUserDataApi({
         profileId: users.profileData.user.id,
-        skip: 0,
+        skip: users.profileData.fetchFollow.skip,
         size: 12
       }) as any)
     }
@@ -61,11 +61,13 @@ const Page = ({ params }: { params: { profile: string } }) => {
     if (users?.profileData?.user?.id) {
       dispatch(FetchFollowersUserDataApi({
         profileId: users?.profileData?.user?.id,
-        skip: 0,
+        skip: users.profileData.fetchFollow.skip,
         size: 12
       }) as any)
     }
   }
+
+  const isProfile = useMemo(() => profile.profileData?.id === userProfileData?.id, [profile.profileData?.id, userProfileData?.id])
 
   if (users.profileData.error) {
     return <div>page not exits</div>
@@ -83,7 +85,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
           <div className="hidden sm:block">
             {/* profile header */}
             <div className='flex items-center my-8 m-5'>
-              {profile.profileData?.id === userProfileData.id ?
+              {isProfile ?
                 <OptionAvatarDialog profile={profile.profileData}>
                   <img src={userProfileData.profilePicture || "/user.jpg"}
                     className='sm:w-36 object-cover 
@@ -98,14 +100,14 @@ const Page = ({ params }: { params: { profile: string } }) => {
                   handleUnfollow={handleUnfollow}
                   isFollowing={userProfileData.isFollowing}
                   user={userProfileData}
-                  isProfile={profile.profileData?.id === userProfileData.id} />
+                  isProfile={isProfile} />
                 <div className='flex justify-between px-3'>
                   <div className='flex gap-1'>
                     <p className='text-base font-semibold'>
                       {userProfileData.postCount}
                     </p> posts
                   </div>
-                  <FollowersDialog users={users} >
+                  <FollowersDialog users={users} profile={profile.profileData} isProfile={isProfile}>
                     <div className='sm:cursor-pointer flex gap-1' onClick={FetchFollowersUser}>
                       <p className='text-base font-semibold'>
                         {userProfileData.followersCount}
@@ -113,7 +115,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
                       followers
                     </div>
                   </FollowersDialog>
-                  <FollowingDialog users={users}>
+                  <FollowingDialog users={users} profile={profile.profileData} isProfile={isProfile}>
                     <div className='sm:cursor-pointer flex gap-1' onClick={FetchFollowingsUser}>
                       <p className='text-base font-semibold'>
                         {userProfileData.followingCount}
@@ -173,7 +175,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
                   handleUnfollow={handleUnfollow}
                   isFollowing={userProfileData.isFollowing}
                   user={userProfileData}
-                  isProfile={profile.profileData?.id === userProfileData.id} />
+                  isProfile={isProfile} />
               </div>
             </div>
             {/*  */}

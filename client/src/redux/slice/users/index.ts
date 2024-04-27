@@ -21,11 +21,15 @@ export interface UsersState {
             error: boolean
             followers: User[]
             followings: User[]
+            skip: number
+            size: number
         }
         fetchPosts: {
             loading: boolean
             error: boolean
             posts: Post[]
+            skip: number
+            size: number
         }
     }
 }
@@ -48,13 +52,17 @@ const UsersState: UsersState = {
         fetchFollow: {
             loading: false,
             error: false,
+            skip: 0,
+            size: 10,
             followers: [],
             followings: []
         },
         fetchPosts: {
             loading: false,
             error: false,
-            posts: []
+            posts: [],
+            skip: 0,
+            size: 10,
         }
     }
 }
@@ -68,6 +76,22 @@ export const UsersSlice = createSlice({
         },
         removeAllUserFormSearch: (state) => {
             state.search_users = []
+        },
+        followersDataClear: (state) => {
+            state.profileData.fetchFollow = {
+                ...state.profileData.fetchFollow,
+                followers: [],
+                size: 12,
+                skip: 0,
+            }
+        },
+        followingsDataClear: (state) => {
+            state.profileData.fetchFollow = {
+                ...state.profileData.fetchFollow,
+                followings: [],
+                size: 12,
+                skip: 0,
+            }
         }
     },
     extraReducers: (builder) => {
@@ -92,9 +116,28 @@ export const UsersSlice = createSlice({
                 state.profileData.loading = true
                 state.profileData.error = false
                 state.profileData.user = null
+
             })
             .addCase(FetchUserProfileDataApi.fulfilled, (state, action: PayloadAction<User>) => {
-                state.profileData.user = action.payload
+                state.profileData = {
+                    ...state.profileData,
+                    user: action.payload,
+                    fetchFollow: {
+                        loading: false,
+                        error: false,
+                        skip: 0,
+                        size: 10,
+                        followers: [],
+                        followings: []
+                    },
+                    fetchPosts: {
+                        loading: false,
+                        error: false,
+                        posts: [],
+                        skip: 0,
+                        size: 10,
+                    }
+                }
                 state.profileData.loading = false
                 state.profileData.error = false
             })
@@ -138,15 +181,15 @@ export const UsersSlice = createSlice({
                 state.profileData.handleFollow.error = true
             })
             // FetchUserUnFollowingApi
-            .addCase(FetchFollowingsUserDataApi.pending, (state) => {
-                state.profileData.fetchFollow.followings = []
+            .addCase(FetchFollowingsUserDataApi.pending, (state, action) => {
                 state.profileData.fetchFollow.loading = true
                 state.profileData.fetchFollow.error = false
             })
             .addCase(FetchFollowingsUserDataApi.fulfilled, (state, action: PayloadAction<User[]>) => {
-                state.profileData.fetchFollow.followings = action.payload
+                state.profileData.fetchFollow.followings = [...state.profileData.fetchFollow.followings, ...action.payload]
                 state.profileData.fetchFollow.loading = false
                 state.profileData.fetchFollow.error = false
+                state.profileData.fetchFollow.skip += state.profileData.fetchFollow.size
             })
             .addCase(FetchFollowingsUserDataApi.rejected, (state, action) => {
                 state.profileData.fetchFollow.loading = false
@@ -156,12 +199,12 @@ export const UsersSlice = createSlice({
             .addCase(FetchFollowersUserDataApi.pending, (state) => {
                 state.profileData.fetchFollow.loading = true
                 state.profileData.fetchFollow.error = false
-                state.profileData.fetchFollow.followers = []
             })
             .addCase(FetchFollowersUserDataApi.fulfilled, (state, action: PayloadAction<User[]>) => {
-                state.profileData.fetchFollow.followers = action.payload
+                state.profileData.fetchFollow.followers = [...state.profileData.fetchFollow.followers, ...action.payload]
                 state.profileData.fetchFollow.loading = false
                 state.profileData.fetchFollow.error = false
+                state.profileData.fetchFollow.skip += state.profileData.fetchFollow.size
             })
             .addCase(FetchFollowersUserDataApi.rejected, (state, action) => {
                 state.profileData.fetchFollow.loading = false
@@ -172,7 +215,9 @@ export const UsersSlice = createSlice({
 
 export const {
     removeUserFormSearch,
-    removeAllUserFormSearch
+    removeAllUserFormSearch,
+    followersDataClear,
+    followingsDataClear
 } = UsersSlice.actions
 
 export default UsersSlice.reducer

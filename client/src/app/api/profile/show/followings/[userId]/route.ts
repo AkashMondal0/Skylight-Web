@@ -1,7 +1,7 @@
 import db from "@/lib/db/drizzle"
 import { NextRequest, NextResponse } from "next/server"
 import { followers, users } from "../../../../../../../db/schema"
-import { eq } from "drizzle-orm"
+import { and, eq, exists, sql } from "drizzle-orm"
 import { redirect } from "next/navigation"
 import jwt from "jsonwebtoken"
 const secret = process.env.NEXTAUTH_SECRET || "secret";
@@ -36,6 +36,10 @@ export async function GET(request: NextRequest, { params }: { params: { userId: 
       updatedAt: users.updatedAt,
       isVerified: users.isVerified,
       isPrivate: users.isPrivate,
+      isFollowing: exists(db.select().from(followers).where(and(
+        eq(followers.followingUserId, verify.id),
+        eq(followers.followerUserId, users.id)
+      )))
     })
       .from(followers)
       .where(eq(followers.followerUserId, params.userId))

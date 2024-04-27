@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, eq, exists, sql } from 'drizzle-orm';
 import db from "@/lib/db/drizzle"
 import { NextRequest } from "next/server"
 import { followers, users } from "../../../../../../../db/schema"
@@ -39,6 +39,10 @@ export async function GET(request: NextRequest, { params }: { params: { userId: 
       updatedAt: users.updatedAt,
       isVerified: users.isVerified,
       isPrivate: users.isPrivate,
+      isFollowing: exists(db.select().from(followers).where(and(
+        eq(followers.followerUserId, verify.id),
+        eq(followers.followingUserId, users.id)
+      )))
     })
       .from(followers)
       .where(eq(followers.followingUserId, params.userId)) // <------------- user id

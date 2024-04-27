@@ -1,3 +1,4 @@
+"use client"
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
@@ -7,18 +8,52 @@ import {
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
-import { UsersState } from "@/redux/slice/users"
+import { Skeleton } from "@/components/ui/skeleton"
+import { followersDataClear, UsersState } from "@/redux/slice/users"
+import { UserFollowingApi, UserUnFollowingApi } from "@/redux/slice/users/api-functions"
 import { User } from "@/types"
+import { useRouter } from "next/navigation"
+import { useDispatch } from "react-redux"
 
 export default function FollowersDialog({
     children,
-    users
+    users,
+    profile,
+    isProfile
 }: {
     children: React.ReactNode
     users: UsersState
+    profile: User
+    isProfile?: boolean
 }) {
+    const dispatch = useDispatch()
+    const router = useRouter()
+    const pageRedirect = (user: User) => {
+        router.push(`/${user?.email}`)
+    }
+    const handleActionUnFollow = (user: User) => {
+        if (profile?.id) {
+            dispatch(UserUnFollowingApi({
+                followingUserId: profile.id,
+                followerUserId: user.id
+            }) as any)
+        }
+    }
 
-    return <Dialog>
+    const handleActionFollow = () => {
+        if (profile?.id) {
+            dispatch(UserFollowingApi({
+                followingUserId: profile.id,
+                followerUserId: profile.id
+            }) as any)
+        }
+    }
+
+    return <Dialog onOpenChange={(isOpen) => {
+        if (!isOpen) {
+            dispatch(followersDataClear())
+        }
+    }}>
         <DialogTrigger asChild>
             {children}
         </DialogTrigger>
@@ -26,7 +61,11 @@ export default function FollowersDialog({
             <h1 className="text-center font-semibold text-lg">Followers</h1>
             <Separator />
             <ScrollArea className="h-72 w-full rounded-md">
-            {users.profileData.fetchFollow.followers.map((user, i) => <UserCard key={i} user={user} />)}
+                {users.profileData.fetchFollow.followers.map((user, i) => <UserCard
+                    pageRedirect={pageRedirect}
+                    key={i} user={user}
+                    handleActionUnFollow={handleActionUnFollow} />)}
+                {users.profileData.fetchFollow.loading ? <>{Array(10).fill(0).map((_, i) => <SkeletonUserCard key={i} />)}</> : <></>}
             </ScrollArea>
         </DialogContent>
     </Dialog>
@@ -34,16 +73,18 @@ export default function FollowersDialog({
 
 const UserCard = ({
     user,
-    action
+    pageRedirect,
+    handleActionUnFollow
 }: {
     user: User
-    action?: () => void
+    pageRedirect: (user: User) => void
+    handleActionUnFollow: (user: User) => void
 }) => {
     if (!user) return null
     return (
-        <>
+        <>{user.isFollowing}
             <div className='flex justify-between px-2 my-4'>
-                <div className='flex space-x-2 items-center'>
+                <div className='flex space-x-2 items-center cursor-pointer' onClick={() => pageRedirect(user)}>
                     <Avatar className='h-10 w-10 mx-auto'>
                         <AvatarImage src={user.profilePicture || "/user.jpg"}
                             alt="@sky" className='rounded-full' />
@@ -57,10 +98,37 @@ const UserCard = ({
                         </div>
                     </div>
                 </div>
+                {!user.isFollowing && <Button variant={"secondary"} className=" rounded-xl" onClick={() => handleActionUnFollow(user)}>
+                    follow back
+                </Button>}
                 <div className='flex items-center'>
-                    <Button variant={"secondary"} className=" rounded-xl" onClick={action}>
+                    <Button variant={"secondary"} className=" rounded-xl" onClick={() => handleActionUnFollow(user)}>
                         Remove
                     </Button>
+                </div>
+            </div>
+        </>
+    )
+}
+
+const SkeletonUserCard = () => {
+
+    return (
+        <>
+            <div className='flex justify-between px-2 my-4'>
+                <div className='flex space-x-2 items-center'>
+                    <Skeleton className='h-12 w-12 mx-auto rounded-full' />
+                    <div className='space-y-1'>
+                        <div className='font-semibold text-base'>
+                            <Skeleton className='w-28 h-4' />
+                        </div>
+                        <div className='text-sm'>
+                            <Skeleton className='w-16 h-3' />
+                        </div>
+                    </div>
+                </div>
+                <div className='flex items-center'>
+                    <Skeleton className='w-20 h-9 rounded-xl' />
                 </div>
             </div>
         </>

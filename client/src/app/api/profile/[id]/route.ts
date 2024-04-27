@@ -3,7 +3,7 @@ import { redirect } from "next/navigation"
 import jwt from "jsonwebtoken"
 import db from "@/lib/db/drizzle";
 import { followers, posts, users } from "../../../../../db/schema";
-import { count, eq, like, or, desc, not, is, sql, exists } from "drizzle-orm";
+import { count, eq, like, or, desc, not, is, sql, exists, and } from "drizzle-orm";
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 
 
@@ -37,7 +37,12 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       isVerified: users.isVerified,
       isPrivate: users.isPrivate,
       postCount: count(eq(posts.authorId, users.id)),
-      isFollowing: exists(db.select().from(followers).where(eq(followers.followingUserId, users.id))),
+      isFollowing: exists(db.select().from(followers).where(and(
+        and(
+          eq(followers.followerUserId, verify.id),
+          eq(followers.followingUserId, users.id)
+        )
+      )))
     })
       .from(users)
       .leftJoin(posts, eq(posts.authorId, users.id))
@@ -85,7 +90,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
           ...userProfile[0],
           followersCount: FollowingCount[0].followingCount,
           followingCount: FollowersCount[0].followersCount,
-          posts: userPosts
+          posts: userPosts,
         }
       }, { status: 200 })
     } else {
@@ -97,7 +102,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
           ...userProfile[0],
           followersCount: FollowingCount[0].followingCount,
           followingCount: FollowersCount[0].followersCount,
-          posts: []
+          posts: [],
         }
       }, { status: 200 })
     }
