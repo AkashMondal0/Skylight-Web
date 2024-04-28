@@ -99,40 +99,6 @@ const UserCard = ({
 }) => {
     if (!user) return null
 
-    // if (isProfile) {
-    //     return <>
-    //         <div className='flex justify-between px-2 my-4'>
-    //             <div className='flex space-x-2 items-center cursor-pointer' onClick={() => pageRedirect(user)}>
-    //                 <Avatar className='h-10 w-10 mx-auto'>
-    //                     <AvatarImage src={user.profilePicture || "/user.jpg"}
-    //                         alt="@sky" className='rounded-full' />
-    //                 </Avatar>
-    //                 <div>
-    //                     <div className='font-semibold text-base'>
-    //                         {user.username}
-    //                     </div>
-    //                     <div className='text-sm'>
-    //                         {user.email}
-    //                     </div>
-    //                 </div>
-    //             </div>{`${user.isFollowing}`}
-    //             <div className='flex items-center space-x-2'>
-    //                 {!itself ? <>
-    //                     {user.isFollowing && isProfile ?
-    //                         <Button variant={"secondary"}
-    //                             className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
-    //                             Remove
-    //                         </Button> :
-    //                         <Button variant={"default"}
-    //                             className="rounded-xl" onClick={() => handleActionFollow(user)}>
-    //                             Follow
-    //                         </Button>}
-    //                 </> : <></>}
-    //             </div>
-    //         </div>
-    //     </>
-    // }
-
     return (
         <>
             <div className='flex justify-between px-2 my-4'>
@@ -149,7 +115,7 @@ const UserCard = ({
                             {user.email}
                         </div>
                     </div>
-                </div>{`${user.isFollowing}`}
+                </div>
                 <div className='flex items-center space-x-2'>
                     {!itself && <>
                         {!user.isFollowing &&
