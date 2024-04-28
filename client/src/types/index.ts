@@ -7,6 +7,16 @@ interface User {
     bio: string | null;
     createdAt: Date;
     updatedAt: Date;
+    followers: User[]
+    following: User[]
+    isVerified: false,
+    isPrivate: false,
+    postCount: number,
+    followersCount: number,
+    followingCount: number,
+    posts: Post[]
+    isFollowing: boolean,
+    removeFollower: boolean,
 }
 
 interface Message {
@@ -128,6 +138,19 @@ interface SavedPost {
     updatedAt: Date;
 }
 
+interface PayloadData {
+    payload: {
+        code: number,
+        message: string,
+        data: {
+            email: string,
+            username: string,
+            id: string,
+            profilePicture: string,
+        }
+    }
+}
+
 
 export type {
     User,
@@ -143,5 +166,6 @@ export type {
     StoryView,
     StoryReply,
     StoryLike,
-    SavedPost
+    SavedPost,
+    PayloadData
 }

@@ -1,3 +1,4 @@
+
 interface User {
     id: string;
     username: string;
@@ -7,6 +8,14 @@ interface User {
     bio: string | null;
     createdAt: Date;
     updatedAt: Date;
+    isVerified: false,
+    isPrivate: false,
+    postCount: number,
+    followersCount: number,
+    followingCount: number,
+    posts: Post[]
+    followers: User[]
+    following: User[]
 }
 
 interface Message {
@@ -128,6 +137,23 @@ interface SavedPost {
     updatedAt: Date;
 }
 
+interface AccountProfile {
+    userDetails: User,
+}
+
+interface AccountSettings {
+
+}
+
+interface AccountFeedData {
+
+}
+interface loginData {
+    accountProfileDetails: AccountProfile,
+    accountSettings: AccountSettings,
+    accountFeedData: AccountFeedData
+}
+
 
 export type {
     User,
@@ -143,5 +169,9 @@ export type {
     StoryView,
     StoryReply,
     StoryLike,
-    SavedPost
+    SavedPost,
+    AccountProfile,
+    AccountSettings,
+    AccountFeedData,
+    loginData
 }

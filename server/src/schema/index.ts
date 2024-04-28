@@ -1,5 +1,5 @@
-import { sql } from "drizzle-orm";
-import { pgTable, varchar, uuid, timestamp, boolean } from "drizzle-orm/pg-core";
+import { relations, sql } from "drizzle-orm";
+import { pgTable, varchar, uuid, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
 
 export const users = pgTable('users', {
     id: uuid('id').primaryKey().defaultRandom(),
@@ -10,6 +10,11 @@ export const users = pgTable('users', {
     bio: varchar('bio'),
     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+    isVerified: boolean('is_verified').default(false),
+    isPrivate: boolean('is_private').default(false),
+    accessToken: varchar('access_token'),
+    refreshToken: varchar('refresh_token'),
+    loggedDevice: jsonb('logged_device').default([]),
 });
 
 export const messages = pgTable('messages', {
@@ -130,3 +135,28 @@ export const savedPosts = pgTable('saved_posts', {
     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
 })
+
+
+export const usersRelations = relations(users, ({ many }) => ({
+    posts: many(posts),
+}));
+
+export const postsRelations = relations(posts, ({ one, many }) => ({
+    author: one(users, { fields: [posts.authorId], references: [users.id] }),
+    comments: many(comments),
+}));
+
+export const commentsRelations = relations(comments, ({ one, many }) => ({
+    posts: one(posts, { fields: [comments.postId], references: [posts.id] }),
+    likes: many(likes),
+}));
+
+export const likesRelations = relations(likes, ({ one }) => ({
+    post: one(posts, { fields: [likes.postId], references: [posts.id] }),
+}));
+
+
+export const followersRelations = relations(followers, ({ one }) => ({
+    follower: one(users, { fields: [followers.followerUserId], references: [users.id] }),
+    following: one(users, { fields: [followers.followingUserId], references: [users.id] }),
+}));

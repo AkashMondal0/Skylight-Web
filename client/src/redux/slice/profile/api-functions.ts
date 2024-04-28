@@ -13,7 +13,7 @@ export const loginApi = createAsyncThunk(
         password: string,
     }, thunkApi) => {
         try {
-            const res = await axios.get(`${url}/auth/login`, {
+            const res = await axios.get(`/api/account/login`, {
                 headers: {
                     email,
                     password
@@ -21,7 +21,9 @@ export const loginApi = createAsyncThunk(
             })
             return res.data
         } catch (error: any) {
-            return thunkApi.rejectWithValue(error?.response?.data?.message ? error.response.data.message : error.message)
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
         }
     }
 );
@@ -38,14 +40,59 @@ export const registerApi = createAsyncThunk(
         name: string,
     }, thunkApi) => {
         try {
-            const res = await axios.post(`${url}/auth/register`, {
+            const res = await axios.post(`/api/account/register`, {
                 email: email,
                 password: password,
                 username: name
             })
             return res.data
         } catch (error: any) {
-            return thunkApi.rejectWithValue(error?.response?.data?.message ? error.response.data.message : error.message)
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
+        }
+    }
+);
+
+
+export const fetchProfileDataApi = createAsyncThunk(
+    'fetchProfileDataApi/get',
+    async (_, thunkApi) => {
+        try {
+            const res = await axios.get(`/api/account/data`)
+            return res.data
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
+        }
+    }
+);
+
+export const logoutApi = createAsyncThunk(
+    'logoutApi/post',
+    async (_, thunkApi) => {
+        try {
+            const res = await axios.get(`/api/account/logout`)
+            return res.data
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
+        }
+    }
+);
+
+export const FetchMyProfileDataApi = createAsyncThunk(
+    'FetchMyProfileDataApi/get',
+    async ({ id }: { id: string }, thunkApi) => {
+        try {
+            const res = await axios.get(`/api/profile/${id}`)
+            return res.data.data
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
         }
     }
 );

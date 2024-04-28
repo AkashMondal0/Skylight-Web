@@ -1,8 +1,7 @@
 'use client'
-import { useSession, signIn, signOut } from "next-auth/react"
-import { redirect } from "next/navigation"
+import { signIn } from "next-auth/react"
 import { useDispatch } from "react-redux";
-import { loginApi, registerApi } from "@/redux/slice/profile/api-functions";
+import { loginApi } from "@/redux/slice/profile/api-functions";
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -20,6 +19,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import { PayloadData } from "@/types";
 
 const FormSchema = z.object({
     password: z.string().min(6, {
@@ -33,7 +33,6 @@ const FormSchema = z.object({
 type FormData = z.infer<typeof FormSchema>;
 
 export default function LoginPage() {
-    const { data: session } = useSession()
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -47,30 +46,25 @@ export default function LoginPage() {
 
     const onSubmit = async (data: FormData) => {
         const { password, email } = data;
-        try {
-            const res = await dispatch(loginApi({ email, password }) as any)
-            if (res.payload?.id) {
-                signIn("credentials", {
-                    email: res.payload.email,
-                    name: res.payload.name,
-                    id: res.payload.id,
-                    image: res.payload.image || null,
-                    redirect: false,
-                });
-            }
-            else {
-                toast.error(`${res.payload}`)
-            }
-        } catch (error: any) {
-            console.error("Internal Failed", error);
-            toast.error("Internal Failed")
+        const res = await dispatch(loginApi({ email, password }) as any) as PayloadData
+
+        if (res.payload?.code === 1) {
+            reset();
+            signIn("credentials", {
+                email: res.payload.data.email,
+                name: res.payload.data.username,
+                id: res.payload.data.id,
+                image: res.payload.data.profilePicture,
+                redirect: true,
+            });
+        }
+        else {
+            toast.error(`${res.payload.message}`)
         }
     };
-    if (session) {
-        return redirect("/")
-    }
+
     return (
-        <div className="h-screen p-1 flex justify-center items-center">
+        <div className="h-[100dvh] p-1 flex justify-center items-center">
             <Card className="md:w-96 md:h-auto w-full h-full pt-16 md:pt-0 rounded-3xl">
                 <CardHeader className="space-y-1">
                     <CardTitle className="text-2xl">

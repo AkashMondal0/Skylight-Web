@@ -19,29 +19,58 @@ AuthRouter.get("/login", async (req, res) => {
         const password = req.headers['password'] as string;
 
         if (!email && !password) {
-            return res.status(400).json({ message: "email and password is required" })
+
+            return res.status(400).json({
+                code: 0,
+                message: "Email and password is required",
+                status_code: 400,
+                data: {}
+            })
         }
 
         const db_user = await db.select().from(users).where(eq(users.email, email));
         if (!db_user[0]) {
-            return res.status(401).json({ message: "email not found" })
+            return res.status(401).json({
+                code: 0,
+                message: "Email not found",
+                status_code: 401,
+                data: {}
+            })
         }
         const checkPassword = await bcrypt.compare(password, db_user[0].password)
 
         if (!checkPassword) {
-            return res.status(401).json({ message: "invalid credential" })
+            const data = {
+                code: 0,
+                message: "Invalid credential",
+                status_code: 400,
+                data: {}
+            }
+            return res.status(401).json(data)
         }
 
         const token = jwt.sign({ email: db_user[0].email, id: db_user[0].id }, secret as string, { expiresIn: '1h' })
 
-        return res.status(200).json({
-            ...db_user[0],
-            token,
-        })
+        return res.status(200).json(
+            {
+                code: 1,
+                message: "Login successfully",
+                status_code: 200,
+                data: {
+                    ...db_user[0],
+                    token,
+                }
+            }
+        )
 
     } catch (error: any) {
         console.log(error)
-        res.status(500).json({ message: "Server Error Please Try Again" })
+        res.status(500).json({
+            code: 0,
+            message: "Server Error Please Try Again - login route",
+            status_code: 500,
+            data: {}
+        })
     }
 })
 
@@ -50,12 +79,22 @@ AuthRouter.post("/register", ValidateMiddleware(zodUserSchema), async (req, res)
     try {
         const data = req.body
         if (!data.email && !data.password) {
-            return res.status(400).json({ message: "email and password is required" })
+            return res.status(400).json({
+                code: 0,
+                message: "Email and password is required",
+                status_code: 400,
+                data: {}
+            })
         }
         const alreadyUser = await db.select().from(users).where(eq(users.email, data.email));
 
         if (alreadyUser[0] && alreadyUser[0]?.email === data.email) {
-            return res.status(401).json({ message: "user already exist" })
+            return res.status(401).json({
+                code: 0,
+                message: "Email already exist",
+                status_code: 401,
+                data: {}
+            })
         }
 
         const salt = bcrypt.genSaltSync(saltRounds);
@@ -68,12 +107,23 @@ AuthRouter.post("/register", ValidateMiddleware(zodUserSchema), async (req, res)
         }).returning()
         const token = jwt.sign({ email: newUser[0].email, id: newUser[0].id }, secret as string, { expiresIn: '1h' })
         return res.status(200).json({
-            ...newUser[0],
-            token,
+            code: 1,
+            message: "Register successfully",
+            status_code: 200,
+            data: {
+                ...newUser[0],
+                token,
+            }
+
         })
     } catch (error: any) {
         console.log(error)
-        res.status(500).json({ message: "Server Error Please Try Again" })
+        res.status(500).json({
+            code: 0,
+            message: "Server Error Please Try Again - register route",
+            status_code: 500,
+            data: {}
+        })
     }
 })
 
@@ -82,21 +132,63 @@ AuthRouter.get("/authorization", verifyToken, async (req, res) => {
         const token = req.headers['authorization'];
 
         if (!token) {
-            return res.status(404).json({ message: "Token not found" })
+            return res.status(404).json({
+                code: 0,
+                message: "Token is required",
+                status_code: 404,
+                data: {}
+            })
         }
 
-        const verify = jwt.verify(token, secret as string) as { email: string };
+        const verify = jwt.verify(token, secret as string) as { email: string, id: string };
 
-        if (!verify?.email) {
-            return res.status(404).json({ message: "Invalid token" })
+        if (!verify?.id) {
+            return res.status(404).json({
+                code: 0,
+                message: "Invalid token",
+                status_code: 404,
+                data: {}
+            })
         }
 
-        const user = await db.select().from(users).where(eq(users.email, verify.email));
+        const user = await db.query.users.findFirst({
+            where(fields) {
+                return eq(fields.id, verify.id)
+            },
+            with: {
+                posts: {
+                    limit: 9,
+                    with:{
+                        comments: {
+                            limit: 3
+                        }
+                    }
+                }
+            }
+        })
+        if (!user) {
+            return res.status(404).json({
+                code: 0,
+                message: "User not found",
+                status_code: 404,
+                data: {}
+            })
+        }
 
-        return res.status(200).json(user[0])
+        return res.status(200).json({
+            code: 1,
+            message: "Authorization successfully - user found",
+            status_code: 200,
+            data: user
+        })
     } catch (error: any) {
         console.log(error)
-        res.status(500).json({ message: "Server Error Please Try Again" })
+        return res.status(500).json({
+            code: 0,
+            message: "Server Error Please Try Again - authorize route",
+            status_code: 500,
+            data: {}
+        })
     }
 })
 

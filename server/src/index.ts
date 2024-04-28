@@ -12,6 +12,8 @@ import { socketIO } from './services/socket';
 import AuthRouter from './routes/auth';
 import { config } from './config';
 import ProfileRouter from './routes/profile';
+import UserRouter from './routes/users';
+import PostRouter from './routes/post';
 
 const app = express();
 const httpServer = createServer(app);
@@ -38,6 +40,8 @@ server.start()
     app.use("/graphql", expressMiddleware(server));
     app.use("/auth", AuthRouter)
     app.use("/profile", ProfileRouter);
+    app.use("/users", UserRouter)
+    app.use("/post", PostRouter);
 
     app.get('/metrics', async (req, res) => {
       res.setHeader('Content-Type', client.register.contentType);
@@ -46,6 +50,7 @@ server.start()
     })
 
     app.get("/", (req, res) => {
+      console.log(req.headers['authorization'])
       res.send("Welcome to the Apollo Server");
     });
 

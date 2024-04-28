@@ -4,29 +4,31 @@ import NextAuth_Provider from "@/provider/NextAuth_Provider";
 import { Toaster } from "@/components/ui/sonner"
 import Redux_Provider from "@/provider/Redux_Provider";
 import type { Metadata } from 'next'
- 
+import AppStart_Provider from "@/provider/AppStart_Provider";
+
 export const metadata: Metadata = {
-  title: 'Sky Form',
-  description: `
-  `,
+  title: 'Sky Media',
+  description: `Sky Media is a social media platform that 
+  allows users to share their thoughts and ideas with the world.`,
 }
 export default function RootLayout({ children }: {
   children: React.ReactNode;
 }) {
   return (
     <>
-      <html lang="en" suppressHydrationWarning>
+      <html lang="en" suppressHydrationWarning={false}>
         <head />
-        <body>
+        <body className="ease-in-out duration-300">
           <Toaster />
           <Redux_Provider>
             <NextAuth_Provider>
               <ThemeProvider
                 attribute="class"
-                defaultTheme="system"
-                enableSystem
-              >
-                {children}
+                defaultTheme="dark"
+                enableSystem>
+                <AppStart_Provider>
+                  {children}
+                </AppStart_Provider>
               </ThemeProvider>
             </NextAuth_Provider>
           </Redux_Provider>
