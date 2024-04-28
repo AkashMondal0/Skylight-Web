@@ -15,6 +15,8 @@ const FeedPost = dynamic(() => import('./components/FeedPost'), {
 
 export default function Page() {
   const profile = useSelector((state: RootState) => state.profile);
+  const feeds = useSelector((state: RootState) => state.postFeed);
+  // console.log(feeds)
   return (
     <>
       <div className="flex h-full
@@ -25,7 +27,7 @@ export default function Page() {
             min-h-[100dvh] lg:px-3 mx-auto
             w-full max-w-[650px]">
             <Stories_bar />
-            <FeedPost />
+            <FeedPost feeds={feeds}/>
           </div>
           {/* suggestions */}
           <div className="h-full

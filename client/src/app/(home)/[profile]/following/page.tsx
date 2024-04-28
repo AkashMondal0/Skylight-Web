@@ -40,7 +40,9 @@ const Page = () => {
     if (profile.user?.id) {
       dispatch(UserUnFollowingApi({
         followingUserId: user.id,
-        followerUserId: profile.user?.id
+        followerUserId: profile.user?.id,
+        isProfile: isProfile,
+        type: null
       }) as any)
     }
   }
@@ -48,7 +50,9 @@ const Page = () => {
     if (profile.user?.id) {
       dispatch(UserFollowingApi({
         followingUserId: user.id,
-        followerUserId: profile.user?.id
+        followerUserId: profile.user?.id,
+        isProfile: isProfile,
+        type: null
       }) as any)
     }
   }

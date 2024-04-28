@@ -38,7 +38,7 @@ export interface followAndunFollow {
     followerUserId: string,
     isProfile: boolean
     type: 'followers' | 'following' | null
-    userId: User["id"]
+    userId?: User["id"]
 }
 // Define the initial state using that type
 const UsersState: UsersState = {

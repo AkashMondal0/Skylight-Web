@@ -34,21 +34,21 @@ export async function GET(request: NextRequest, response: NextResponse) {
     }
 
     const data = await db.select({
-      id: followers.followingUserId,
-      post: {
-        id: posts.id,
-        caption: posts.caption,
-        fileUrl: posts.fileUrl,
-        commentCount: count(eq(comments.postId, posts.id)),
-        likeCount: count(eq(likes.postId, posts.id)),
-        createdAt: posts.createdAt,
-        alreadyLiked: eq(likes.authorId, authorId)
-      },
-      userData: {
-          id: users.id,
-          username: users.username,
-          email: users.email,
-          profileUrl: users.profilePicture,
+      // id: followers.followingUserId,
+      // post: {
+      id: posts.id,
+      caption: posts.caption,
+      fileUrl: posts.fileUrl,
+      commentCount: count(eq(comments.postId, posts.id)),
+      likeCount: count(eq(likes.postId, posts.id)),
+      createdAt: posts.createdAt,
+      alreadyLiked: eq(likes.authorId, authorId),
+      // },
+      authorData: {
+        id: users.id,
+        username: users.username,
+        email: users.email,
+        profilePicture: users.profilePicture,
       },
     })
       .from(followers)

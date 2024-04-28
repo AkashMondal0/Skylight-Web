@@ -1,5 +1,6 @@
 'use client'
 import SplashScreen from '@/components/sky/SplashScreen'
+import { fetchProfileFeedsApi } from '@/redux/slice/post-feed/api-functions'
 import { fetchProfileDataApi } from '@/redux/slice/profile/api-functions'
 import { RootState } from '@/redux/store'
 import React, { useEffect } from 'react'
@@ -14,7 +15,10 @@ const AppStart_Provider = ({
 }) => {
     const dispatch = useDispatch()
     const profile = useSelector((state: RootState) => state.profile)
-    const StartApp = async () => { await dispatch(fetchProfileDataApi() as any) }
+    const StartApp = async () => { 
+        await dispatch(fetchProfileDataApi() as any)
+        await dispatch(fetchProfileFeedsApi() as any)
+    }
 
     useEffect(() => {
         StartApp()
