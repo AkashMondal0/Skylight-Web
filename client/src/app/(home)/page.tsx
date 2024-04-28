@@ -33,7 +33,7 @@ export default function Page() {
             hidden lg:flex lg:w-full 
             lg:max-w-[400px] ease-in-out 
             duration-300">
-            <ExploreSuggestion user={profile.profileData} />
+            <ExploreSuggestion user={profile.user} />
           </div>
         </div>
       </div>

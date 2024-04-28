@@ -19,7 +19,7 @@ const Sm_Navigation = () => {
         { icon: Search, label: "Search", onClick: () => pageChange('/search') },
         { icon: Film, label: "Reels", onClick: () => pageChange('/reels') },
         { icon: MessageCircleCode, label: "Messages", onClick: () => pageChange('/message') },
-        { icon: CircleUserRound, label: "Profile", onClick: () => pageChange(`/${profile.profileData?.email}`) },
+        { icon: CircleUserRound, label: "Profile", onClick: () => pageChange(`/${profile.user?.email}`) },
     ]
     return (
         <div className="md:hidden flex sticky bottom-0 z-10 border-t py-2 bg-background text-foreground h-[6dvh] items-center">

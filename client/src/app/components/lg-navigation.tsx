@@ -38,7 +38,7 @@ export default function Lg_Navigation({
     { icon: MessageCircleCode, label: "Messages", onClick: () => pageChange('/message') },
     { icon: Heart, label: "Notifications", onClick: () => { } },
     { icon: CopyPlus, label: "Create", onClick: () => { } },
-    { icon: CircleUserRound, label: "Profile", onClick: () => pageChange(`/${profile.profileData?.email}`) },
+    { icon: CircleUserRound, label: "Profile", onClick: () => pageChange(`/${profile.user?.email}`) },
   ]
 
   return (

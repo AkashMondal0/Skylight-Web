@@ -33,7 +33,13 @@ export interface UsersState {
         }
     }
 }
-
+export interface followAndunFollow {
+    followingUserId: string,
+    followerUserId: string,
+    isProfile: boolean
+    type: 'followers' | 'following' | null
+    userId: User["id"]
+}
 // Define the initial state using that type
 const UsersState: UsersState = {
     // 
@@ -92,7 +98,7 @@ export const UsersSlice = createSlice({
                 size: 12,
                 skip: 0,
             }
-        }
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -138,7 +144,8 @@ export const UsersSlice = createSlice({
             .addCase(FetchUserProfileDataApi.fulfilled, (state, action: PayloadAction<User>) => {
                 state.profileData = {
                     ...state.profileData,
-                    user: action.payload}
+                    user: action.payload
+                }
                 state.profileData.loading = false
                 state.profileData.error = false
             })
@@ -147,34 +154,65 @@ export const UsersSlice = createSlice({
                 state.profileData.error = true
                 state.profileData.user = null
             })
-            // UserFollowingApi
+            // UserFollowingApi create
             .addCase(UserFollowingApi.pending, (state) => {
                 state.profileData.handleFollow.error = false
                 state.profileData.handleFollow.loading = true
             })
-            .addCase(UserFollowingApi.fulfilled, (state, action: PayloadAction<User>) => {
+            .addCase(UserFollowingApi.fulfilled, (state, action: PayloadAction<followAndunFollow>) => {
                 state.profileData.handleFollow.loading = false
                 state.profileData.handleFollow.error = false
-                if (state.profileData.user && state.profileData.user.isFollowing === false) {
-                    state.profileData.user.isFollowing = true
-                    state.profileData.user.followersCount += 1
+                if (state.profileData.user) {
+                    if (action.payload.type === 'followers') {
+                        state.profileData.user.followingCount += 1
+                        const findUser = state.profileData.fetchFollow.followers.findIndex(item => item.id === action.payload.userId)
+                        if (findUser !== -1) {
+                            state.profileData.fetchFollow.followers[findUser].isFollowing = true
+                        }
+                    }
+                    else if (action.payload.type === 'following') {
+                        state.profileData.user.followingCount += 1
+                        const findUser = state.profileData.fetchFollow.followings.findIndex(item => item.id === action.payload.userId)
+                        if (findUser !== -1) {
+                            state.profileData.fetchFollow.followings[findUser].isFollowing = true
+                        }
+                    } else {
+                        state.profileData.user.followersCount += 1
+                        state.profileData.user.isFollowing = true
+                    }
                 }
             })
             .addCase(UserFollowingApi.rejected, (state, action) => {
                 state.profileData.handleFollow.loading = false
                 state.profileData.handleFollow.error = true
             })
-            // UserUnFollowingApi
+            // UserUnFollowingApi destroy
             .addCase(UserUnFollowingApi.pending, (state) => {
                 state.profileData.handleFollow.error = false
                 state.profileData.handleFollow.loading = true
             })
-            .addCase(UserUnFollowingApi.fulfilled, (state, action: PayloadAction<User>) => {
+            .addCase(UserUnFollowingApi.fulfilled, (state, action: PayloadAction<followAndunFollow>) => {
                 state.profileData.handleFollow.loading = false
                 state.profileData.handleFollow.error = false
-                if (state.profileData.user && state.profileData.user.isFollowing === true) {
-                    state.profileData.user.isFollowing = false
-                    state.profileData.user.followersCount -= 1
+                if (state.profileData.user) {
+                    if (action.payload.type === 'followers') {
+                        state.profileData.user.followersCount -= 1
+                        const findUser = state.profileData.fetchFollow.followers.findIndex(item => item.id === action.payload.userId)
+                        if (findUser !== -1) {
+                            state.profileData.fetchFollow.followers[findUser].removeFollower = true
+                        }
+                    }
+                    else if (action.payload.type === 'following') {
+                        state.profileData.user.followingCount -= 1
+                        const findUser = state.profileData.fetchFollow.followings.findIndex(item => item.id === action.payload.userId)
+                        if (findUser !== -1) {
+                            state.profileData.fetchFollow.followings[findUser].isFollowing = false
+                        }
+                    } else {
+                        state.profileData.user.followersCount -= 1
+                        state.profileData.user.isFollowing = false
+                    }
+
                 }
             })
             .addCase(UserUnFollowingApi.rejected, (state, action) => {
@@ -218,7 +256,7 @@ export const {
     removeUserFormSearch,
     removeAllUserFormSearch,
     followersDataClear,
-    followingsDataClear
+    followingsDataClear,
 } = UsersSlice.actions
 
 export default UsersSlice.reducer

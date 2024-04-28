@@ -51,11 +51,11 @@ export default function UploadPostDialog({
     }
 
     const handleUpload = async () => {
-        if (useProfile.profileData) {
+        if (useProfile.user) {
             await dispatch(postFilesApi({
                 isFile,
                 isCaption: isCaption?.current?.value ? isCaption?.current?.value : "",
-                profile: useProfile.profileData
+                profile: useProfile.user
             }) as any)
             setIsFile([])
         }

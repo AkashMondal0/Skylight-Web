@@ -1,6 +1,7 @@
 import { configs } from "@/configs";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { followAndunFollow } from ".";
 
 export const searchProfileApi = createAsyncThunk(
     'searchProfileApi/get',
@@ -34,17 +35,17 @@ export const UserFollowingApi = createAsyncThunk(
     'UserFollowingApi/post',
     async ({
         followingUserId,
-        followerUserId
-    }: {
-        followingUserId: string,
-        followerUserId: string
-    }, thunkApi) => {
+        followerUserId,
+        isProfile,
+        type,
+        userId
+    }: followAndunFollow, thunkApi) => {
         try {
             const res = await axios.post(`/api/profile/following/create`, {
                 followingUserId,
                 followerUserId
             })
-            return res.data.data
+            return { ...res.data.data, isProfile, type, userId }
         } catch (error: any) {
             return thunkApi.rejectWithValue({
                 ...error?.response?.data,
@@ -57,17 +58,17 @@ export const UserUnFollowingApi = createAsyncThunk(
     'UserUnFollowingApi/post',
     async ({
         followingUserId,
-        followerUserId
-    }: {
-        followingUserId: string,
-        followerUserId: string
-    }, thunkApi) => {
+        followerUserId,
+        isProfile,
+        type,
+        userId
+    }: followAndunFollow, thunkApi) => {
         try {
             const res = await axios.post(`/api/profile/following/destroy`, {
                 followingUserId,
                 followerUserId
             })
-            return res.data.data
+            return { ...res.data.data, isProfile, type, userId }
         } catch (error: any) {
             return thunkApi.rejectWithValue({
                 ...error?.response?.data,

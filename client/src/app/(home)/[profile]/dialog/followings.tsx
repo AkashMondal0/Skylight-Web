@@ -30,20 +30,28 @@ export default function FollowingsDialog({
     const pageRedirect = (user: User) => {
         router.push(`/${user?.email}`)
     }
-    const handleActionUnFollow = (user: User) => {
+    const handleActionUnFollow = async (user: User) => {
         if (profile?.id) {
-            dispatch(UserUnFollowingApi({
+            await dispatch(UserUnFollowingApi({
                 followingUserId: user.id,
-                followerUserId: profile.id
+                followerUserId: profile.id,
+                isProfile: isProfile as boolean,
+                type: "following",
+                userId: user.id
             }) as any)
+
         }
     }
-    const handleActionFollow = (user: User) => {
+    const handleActionFollow = async (user: User) => {
         if (profile?.id) {
-            dispatch(UserFollowingApi({
+            await dispatch(UserFollowingApi({
                 followingUserId: user.id,
-                followerUserId: profile.id
+                followerUserId: profile.id,
+                isProfile: isProfile as boolean,
+                type: "following",
+                userId: user.id
             }) as any)
+
         }
     }
     return <Dialog onOpenChange={(isOpen) => {
@@ -104,24 +112,17 @@ const UserCard = ({
                         </div>
                     </div>
                 </div>
+                {`${user.isFollowing}`}
                 <div className='flex items-center'>
                     {!itself && <>
-                        {isProfile ? <>
+                        {user.isFollowing ?
                             <Button variant={"secondary"} className=" rounded-xl" onClick={() => handleActionUnFollow(user)}>
                                 Unfollow
-                            </Button>
-                        </> : <>
-                            {user.isFollowing ? <Button variant={"secondary"}
-                                className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
-                                Unfollow
                             </Button> :
-                                <Button variant={"default"}
-                                    className="rounded-xl" onClick={() => handleActionFollow(user)}>
-                                    Follow
-                                </Button>
-                            }
-
-                        </>}
+                            <Button variant={"default"}
+                                className="rounded-xl" onClick={() => handleActionFollow(user)}>
+                                Follow
+                            </Button>}
                     </>}
                 </div>
             </div>

@@ -20,7 +20,7 @@ import { RootState } from '@/redux/store'
 
 const Page = () => {
     const profile = useSelector((state: RootState) => state.profile)
-    if (!profile.profileData) return null
+    if (!profile.user) return null
     return (
         <div className='w-full flex justify-center min-h-[100dvh] h-full'>
             <div className='max-w-[600px] w-full p-4 space-y-6'>
@@ -29,9 +29,9 @@ const Page = () => {
                 </h1>
                 <div className='flex justify-between p-4 my-4 bg-secondary text-secondary-foreground rounded-2xl'>
                     <div className='flex space-x-3'>
-                        <OptionAvatarDialog profile={profile.profileData}>
+                        <OptionAvatarDialog profile={profile.user}>
                             <Avatar className='h-12 w-12 mx-auto cursor-pointer'>
-                                <AvatarImage src={profile.profileData?.profilePicture || "/user.jpg"}
+                                <AvatarImage src={profile.user?.profilePicture || "/user.jpg"}
                                     alt="@shadcn" className='rounded-full' />
                             </Avatar>
                         </OptionAvatarDialog>
@@ -44,7 +44,7 @@ const Page = () => {
                         </div>
                     </div>
                     <div className='flex items-center'>
-                        <OptionAvatarDialog profile={profile.profileData}>
+                        <OptionAvatarDialog profile={profile.user}>
                             <Button variant={"default"} className="rounded-xl">
                                 change photo
                             </Button>

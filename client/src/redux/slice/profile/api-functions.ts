@@ -82,3 +82,17 @@ export const logoutApi = createAsyncThunk(
         }
     }
 );
+
+export const FetchMyProfileDataApi = createAsyncThunk(
+    'FetchMyProfileDataApi/get',
+    async ({ id }: { id: string }, thunkApi) => {
+        try {
+            const res = await axios.get(`/api/profile/${id}`)
+            return res.data.data
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
+        }
+    }
+);

@@ -16,7 +16,7 @@ const Page = () => {
   const router = useRouter()
   const users = useSelector((state: RootState) => state.users)
   const profile = useSelector((state: RootState) => state.profile)
-  const isProfile = profile.profileData?.id === users.profileData?.user?.id
+  const isProfile = profile.user?.id === users.profileData?.user?.id
 
   const pageRedirect = (user: User) => {
     router.push(`/${user?.email}`)
@@ -37,18 +37,18 @@ const Page = () => {
 
 
   const handleActionUnFollow = (user: User) => {
-    if (profile?.profileData?.id) {
+    if (profile.user?.id) {
       dispatch(UserUnFollowingApi({
         followingUserId: user.id,
-        followerUserId: profile?.profileData?.id
+        followerUserId: profile.user?.id
       }) as any)
     }
   }
   const handleActionFollow = (user: User) => {
-    if (profile?.profileData?.id) {
+    if (profile.user?.id) {
       dispatch(UserFollowingApi({
         followingUserId: user.id,
-        followerUserId: profile?.profileData?.id
+        followerUserId: profile.user?.id
       }) as any)
     }
   }
@@ -62,7 +62,7 @@ const Page = () => {
         {users.profileData.fetchFollow.followings.map((user, i) => <UserCard
           key={i} user={user}
           isProfile={isProfile}
-          itself={profile.profileData?.id === user.id}
+          itself={profile.user?.id === user.id}
           pageRedirect={pageRedirect}
           handleActionFollow={handleActionFollow}
           handleActionUnFollow={handleActionUnFollow} />)}

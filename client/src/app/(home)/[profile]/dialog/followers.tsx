@@ -13,6 +13,7 @@ import { followersDataClear, UsersState } from "@/redux/slice/users"
 import { UserFollowingApi, UserUnFollowingApi } from "@/redux/slice/users/api-functions"
 import { User } from "@/types"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
 import { useDispatch } from "react-redux"
 
 export default function FollowersDialog({
@@ -31,12 +32,16 @@ export default function FollowersDialog({
     const pageRedirect = (user: User) => {
         router.push(`/${user?.email}`)
     }
-    const handleActionUnFollow = (user: User) => {
+    const handleActionUnFollow = async (user: User) => {
         if (profile?.id) {
-            dispatch(UserUnFollowingApi({
+            await dispatch(UserUnFollowingApi({
                 followingUserId: profile.id,
-                followerUserId: user.id
+                followerUserId: user.id,
+                isProfile: isProfile as boolean,
+                type: "followers",
+                userId: user.id
             }) as any)
+            /// remove from list
         }
     }
 
@@ -44,7 +49,10 @@ export default function FollowersDialog({
         if (profile?.id) {
             dispatch(UserFollowingApi({
                 followingUserId: user.id,
-                followerUserId: profile.id
+                followerUserId: profile.id,
+                isProfile: isProfile as boolean,
+                type: "followers",
+                userId: user.id
             }) as any)
         }
     }
@@ -90,8 +98,43 @@ const UserCard = ({
     handleActionFollow: (user: User) => void
 }) => {
     if (!user) return null
+
+    // if (isProfile) {
+    //     return <>
+    //         <div className='flex justify-between px-2 my-4'>
+    //             <div className='flex space-x-2 items-center cursor-pointer' onClick={() => pageRedirect(user)}>
+    //                 <Avatar className='h-10 w-10 mx-auto'>
+    //                     <AvatarImage src={user.profilePicture || "/user.jpg"}
+    //                         alt="@sky" className='rounded-full' />
+    //                 </Avatar>
+    //                 <div>
+    //                     <div className='font-semibold text-base'>
+    //                         {user.username}
+    //                     </div>
+    //                     <div className='text-sm'>
+    //                         {user.email}
+    //                     </div>
+    //                 </div>
+    //             </div>{`${user.isFollowing}`}
+    //             <div className='flex items-center space-x-2'>
+    //                 {!itself ? <>
+    //                     {user.isFollowing && isProfile ?
+    //                         <Button variant={"secondary"}
+    //                             className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
+    //                             Remove
+    //                         </Button> :
+    //                         <Button variant={"default"}
+    //                             className="rounded-xl" onClick={() => handleActionFollow(user)}>
+    //                             Follow
+    //                         </Button>}
+    //                 </> : <></>}
+    //             </div>
+    //         </div>
+    //     </>
+    // }
+
     return (
-        <>{user.isFollowing}
+        <>
             <div className='flex justify-between px-2 my-4'>
                 <div className='flex space-x-2 items-center cursor-pointer' onClick={() => pageRedirect(user)}>
                     <Avatar className='h-10 w-10 mx-auto'>
@@ -106,25 +149,20 @@ const UserCard = ({
                             {user.email}
                         </div>
                     </div>
-                </div>
+                </div>{`${user.isFollowing}`}
                 <div className='flex items-center space-x-2'>
                     {!itself && <>
-                        {isProfile && user.isFollowing ?
-                            <Button variant={"secondary"}
-                                className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
-                                Remove
-                            </Button> :
+                        {!user.isFollowing &&
                             <Button variant={"default"}
                                 className="rounded-xl" onClick={() => handleActionFollow(user)}>
                                 Follow
                             </Button>}
                     </>}
-                    {/* {
-                        isProfile && <Button variant={"secondary"}
-                            className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
-                            Remove
-                        </Button>
-                    } */}
+                    {isProfile && <Button variant={"secondary"}
+                    disabled={user.removeFollower}
+                        className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
+                        Remove
+                    </Button>}
                 </div>
             </div>
         </>

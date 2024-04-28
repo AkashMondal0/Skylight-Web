@@ -29,20 +29,26 @@ const Page = ({ params }: { params: { profile: string } }) => {
     return users.profileData.user
   }, [users.profileData.user])
 
-  const handleFollow = () => {
-    if (userProfileData?.id && profile?.profileData?.id) {
-      dispatch(UserFollowingApi({
+  const isProfile = useMemo(() => profile.user?.id === userProfileData?.id, [profile.user?.id, userProfileData?.id])
+
+  const handleFollow = async () => {
+    if (userProfileData?.id && profile.user?.id) {
+      await dispatch(UserFollowingApi({
         followingUserId: userProfileData?.id,
-        followerUserId: profile.profileData?.id
+        followerUserId: profile.user?.id,
+        isProfile: isProfile as boolean,
+        type: null
       }) as any)
     }
   }
 
-  const handleUnfollow = () => {
-    if (userProfileData?.id && profile?.profileData?.id) {
-      dispatch(UserUnFollowingApi({
+  const handleUnfollow = async () => {
+    if (userProfileData?.id && profile.user?.id) {
+      await dispatch(UserUnFollowingApi({
         followingUserId: userProfileData?.id,
-        followerUserId: profile.profileData?.id
+        followerUserId: profile.user?.id,
+        isProfile: isProfile as boolean,
+        type: null
       }) as any)
     }
   }
@@ -67,7 +73,6 @@ const Page = ({ params }: { params: { profile: string } }) => {
     }
   }
 
-  const isProfile = useMemo(() => profile.profileData?.id === userProfileData?.id, [profile.profileData?.id, userProfileData?.id])
 
   if (users.profileData.error) {
     return <div>page not exits</div>
@@ -76,7 +81,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
     return <SkeletonProfile />
   }
 
-  if (userProfileData && profile.profileData) {
+  if (userProfileData && profile.user) {
 
     return (
       <div className='w-full min-h-[100dvh]'>
@@ -86,7 +91,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
             {/* profile header */}
             <div className='flex items-center my-8 m-5'>
               {isProfile ?
-                <OptionAvatarDialog profile={profile.profileData}>
+                <OptionAvatarDialog profile={profile.user}>
                   <img src={userProfileData.profilePicture || "/user.jpg"}
                     className='sm:w-36 object-cover 
               bg-slate-400 sm:h-36 w-28 h-28 rounded-full sm:mr-8 cursor-pointer' />
@@ -107,7 +112,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
                       {userProfileData.postCount}
                     </p> posts
                   </div>
-                  <FollowersDialog users={users} profile={profile.profileData} isProfile={isProfile}>
+                  <FollowersDialog users={users} profile={profile.user} isProfile={isProfile}>
                     <div className='sm:cursor-pointer flex gap-1' onClick={FetchFollowersUser}>
                       <p className='text-base font-semibold'>
                         {userProfileData.followersCount}
@@ -115,7 +120,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
                       followers
                     </div>
                   </FollowersDialog>
-                  <FollowingDialog users={users} profile={profile.profileData} isProfile={isProfile}>
+                  <FollowingDialog users={users} profile={profile.user} isProfile={isProfile}>
                     <div className='sm:cursor-pointer flex gap-1' onClick={FetchFollowingsUser}>
                       <p className='text-base font-semibold'>
                         {userProfileData.followingCount}
@@ -145,7 +150,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
               </div>
             </div>
             {/* post */}
-            {userProfileData.isFollowing || profile.profileData.id === userProfileData.id ?
+            {userProfileData.isFollowing || profile.user.id === userProfileData.id ?
               <div className="grid grid-cols-3 gap-2">
                 {userProfileData.posts.map((post, index) => (
                   <img key={index} src={post.fileUrl[0]} className='aspect-square w-full h-full object-cover' />

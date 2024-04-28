@@ -15,7 +15,8 @@ interface User {
     followersCount: number,
     followingCount: number,
     posts: Post[]
-    isFollowing: boolean
+    isFollowing: boolean,
+    removeFollower: boolean,
 }
 
 interface Message {
