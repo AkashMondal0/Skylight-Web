@@ -4,7 +4,7 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import { Link2, Plus, Settings } from 'lucide-react'
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import OptionAvatarDialog from './dialog/options'
 import { useRouter } from 'next/navigation'
 import FollowingDialog from './dialog/followings'
@@ -20,11 +20,17 @@ const Page = ({ params }: { params: { profile: string } }) => {
   const dispatch = useDispatch()
   const users = useSelector((state: RootState) => state.users)
   const profile = useSelector((state: RootState) => state.profile)
+  const loadedRef = useRef(false)
 
   useEffect(() => {
-    dispatch(FetchUserProfileDataApi({ id: params.profile }) as any)
-  }, [])
-
+    if (!loadedRef.current) {
+      const StartApp = async () => {
+        await dispatch(FetchUserProfileDataApi({ id: params.profile }) as any)
+      }
+      StartApp()
+      loadedRef.current = true;
+    }
+  }, []);
   const userProfileData = useMemo(() => {
     return users.profileData.user
   }, [users.profileData.user])

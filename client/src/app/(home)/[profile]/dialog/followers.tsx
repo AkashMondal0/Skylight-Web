@@ -13,7 +13,6 @@ import { followersDataClear, UsersState } from "@/redux/slice/users"
 import { UserFollowingApi, UserUnFollowingApi } from "@/redux/slice/users/api-functions"
 import { User } from "@/types"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
 import { useDispatch } from "react-redux"
 
 export default function FollowersDialog({
