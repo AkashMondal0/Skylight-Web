@@ -1,36 +1,53 @@
-"use client"
-import { Avatar, AvatarImage } from "@/components/ui/avatar"
+'use client'
+import React, { useEffect, useRef } from 'react'
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
     DialogContent,
-    DialogTrigger,
 } from "@/components/ui/dialog"
+import { Avatar, AvatarImage } from '@/components/ui/avatar'
+import { User } from '@/types'
+import { useParams, useRouter } from "next/navigation"
+import { useDispatch, useSelector } from "react-redux"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
-import { Skeleton } from "@/components/ui/skeleton"
-import { followersDataClear, UsersState } from "@/redux/slice/users"
-import { UserFollowingApi, UserUnFollowingApi } from "@/redux/slice/users/api-functions"
-import { User } from "@/types"
-import { useRouter } from "next/navigation"
-import { useDispatch } from "react-redux"
+import { RootState } from '@/redux/store'
+import { FetchFollowersUserDataApi, UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions'
+import { SkeletonFollowUserCard } from '../../skeleton'
+import { followersDataClear } from '@/redux/slice/users'
 
-export default function FollowersDialog({
-    children,
-    users,
-    profile,
-    isProfile
-}: {
-    children: React.ReactNode
-    users: UsersState
-    profile: User
-    isProfile?: boolean
-}) {
+
+
+const ModalFollowing = () => {
+    const id = useParams()
     const dispatch = useDispatch()
     const router = useRouter()
+    const users = useSelector((state: RootState) => state.users)
+    const profile = useSelector((state: RootState) => state.profile.user)
+    const isProfile = profile?.id === users.profileData?.user?.id
+    const loadedRef = useRef(false)
+
     const pageRedirect = (user: User) => {
         router.push(`/${user?.email}`)
     }
+
+    useEffect(() => {
+        if (!loadedRef.current && id?.profile) {
+            const FetchFollowingsUser = async () => {
+                if (id?.profile) {
+                    await dispatch(FetchFollowersUserDataApi({
+                        profileId: users.profileData?.user?.id as string,
+                        skip: 0,
+                        size: 12
+                    }) as any)
+                }
+            }
+            FetchFollowingsUser()
+            loadedRef.current = true;
+        }
+    }, [profile?.id]);
+
+
     const handleActionUnFollow = async (user: User) => {
         if (profile?.id) {
             await dispatch(UserUnFollowingApi({
@@ -56,30 +73,35 @@ export default function FollowersDialog({
         }
     }
 
-    return <Dialog onOpenChange={(isOpen) => {
+
+    const onOpenChange = (isOpen: boolean) => {
         if (!isOpen) {
             dispatch(followersDataClear())
+            router.back()
         }
-    }}>
-        <DialogTrigger asChild>
-            {children}
-        </DialogTrigger>
-        <DialogContent className="max-w-[425px] pb-0">
-            <h1 className="text-center font-semibold text-lg">Followers</h1>
-            <Separator />
-            <ScrollArea className="h-72 w-full rounded-md">
-                {users.profileData.fetchFollow.followers.map((user, i) => <UserCard
-                    pageRedirect={pageRedirect}
-                    key={i} user={user}
-                    isProfile={isProfile}
-                    handleActionFollow={handleActionFollow}
-                    itself={profile.id === user.id}
-                    handleActionUnFollow={handleActionUnFollow} />)}
-                {users.profileData.fetchFollow.loading ? <>{Array(10).fill(0).map((_, i) => <SkeletonUserCard key={i} />)}</> : <></>}
-            </ScrollArea>
-        </DialogContent>
-    </Dialog>
+    }
+    return (
+        <Dialog open onOpenChange={onOpenChange}>
+            <DialogContent className="max-w-[425px] pb-0">
+                <h1 className="text-center font-semibold text-lg">Followers</h1>
+                <Separator />
+                <ScrollArea className="h-72 w-full rounded-md">
+                    {users.profileData.fetchFollow.followers.map((user, i) => <UserCard
+                        pageRedirect={pageRedirect}
+                        key={i} user={user}
+                        isProfile={isProfile}
+                        handleActionFollow={handleActionFollow}
+                        itself={profile?.id === user.id}
+                        handleActionUnFollow={handleActionUnFollow} />)}
+                    {users.profileData.fetchFollow.loading ? <div className='space-y-2'>{Array(10).fill(0).map((_, i) => <SkeletonFollowUserCard key={i} />)}</div> : <></>}
+                </ScrollArea>
+            </DialogContent>
+        </Dialog>
+    )
 }
+
+export default ModalFollowing
+
 
 const UserCard = ({
     user,
@@ -124,34 +146,10 @@ const UserCard = ({
                             </Button>}
                     </>}
                     {isProfile && <Button variant={"secondary"}
-                    disabled={user.removeFollower}
+                        disabled={user.removeFollower}
                         className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
                         Remove
                     </Button>}
-                </div>
-            </div>
-        </>
-    )
-}
-
-const SkeletonUserCard = () => {
-
-    return (
-        <>
-            <div className='flex justify-between px-2 my-4'>
-                <div className='flex space-x-2 items-center'>
-                    <Skeleton className='h-12 w-12 mx-auto rounded-full' />
-                    <div className='space-y-1'>
-                        <div className='font-semibold text-base'>
-                            <Skeleton className='w-28 h-4' />
-                        </div>
-                        <div className='text-sm'>
-                            <Skeleton className='w-16 h-3' />
-                        </div>
-                    </div>
-                </div>
-                <div className='flex items-center'>
-                    <Skeleton className='w-20 h-9 rounded-xl' />
                 </div>
             </div>
         </>

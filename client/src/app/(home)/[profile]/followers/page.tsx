@@ -1,14 +1,14 @@
-'use client'
+"use client";
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { Skeleton } from '@/components/ui/skeleton'
-import { FetchFollowingsUserDataApi, UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions'
-import { RootState } from '@/redux/store'
-import { User } from '@/types'
+import { Skeleton } from '@/components/ui/skeleton';
+import { FetchFollowersUserDataApi, UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions';
+import { RootState } from '@/redux/store';
+import { User } from '@/types';
 import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux';
 
 const Page = () => {
   const id = useParams()
@@ -26,58 +26,57 @@ const Page = () => {
   useEffect(() => {
     if (!loadedRef.current && users.profileData?.user?.id) {
       const FetchFollowingsUser = async () => {
-          await dispatch(FetchFollowingsUserDataApi({
+          await dispatch(FetchFollowersUserDataApi({
             profileId: users.profileData?.user?.id as string,
             skip: 0,
             size: 12
           }) as any)
-      }
+        }
       FetchFollowingsUser()
       loadedRef.current = true;
     }
   }, [dispatch, users.profileData?.user?.id]);
 
 
-
   const handleActionUnFollow = async (user: User) => {
     if (profile?.id) {
       await dispatch(UserUnFollowingApi({
-        followingUserId: user.id,
-        followerUserId: profile.id,
+        followingUserId: profile.id,
+        followerUserId: user.id,
         isProfile: isProfile as boolean,
-        type: "following",
+        type: "followers",
         userId: user.id
       }) as any)
-
+      /// remove from list
     }
   }
-  const handleActionFollow = async (user: User) => {
+
+  const handleActionFollow = (user: User) => {
     if (profile?.id) {
-      await dispatch(UserFollowingApi({
+      dispatch(UserFollowingApi({
         followingUserId: user.id,
         followerUserId: profile.id,
         isProfile: isProfile as boolean,
-        type: "following",
+        type: "followers",
         userId: user.id
       }) as any)
-
     }
   }
+
   return (
     <div className='w-full flex justify-center min-h-[100dvh] h-full'>
       <div className='max-w-[600px] w-full p-4'>
-        <h1 className="font-semibold text-lg text-center mb-4">Followings</h1>
+        <h1 className="font-semibold text-lg text-center mb-4">Followers</h1>
         <Separator />
         <div className='h-5' />
-        {users.profileData.fetchFollow.followings.map((user, i) => <UserCard
+        {users.profileData.fetchFollow.followers.map((user, i) => <UserCard
+          pageRedirect={pageRedirect}
           key={i} user={user}
           isProfile={isProfile}
-          itself={profile?.id === user.id}
-          pageRedirect={pageRedirect}
           handleActionFollow={handleActionFollow}
+          itself={profile?.id === user.id}
           handleActionUnFollow={handleActionUnFollow} />)}
         {users.profileData.fetchFollow.loading ? <>{Array(10).fill(0).map((_, i) => <SkeletonUserCard key={i} />)}</> : <></>}
-
       </div>
     </div>
   )
@@ -102,6 +101,7 @@ const UserCard = ({
   handleActionFollow: (user: User) => void
 }) => {
   if (!user) return null
+
   return (
     <>
       <div className='flex justify-between px-2 my-4'>
@@ -119,23 +119,24 @@ const UserCard = ({
             </div>
           </div>
         </div>
-        <div className='flex items-center'>
+        <div className='flex items-center space-x-2'>
           {!itself && <>
-            {user.isFollowing ?
-              <Button variant={"secondary"} className=" rounded-xl" onClick={() => handleActionUnFollow(user)}>
-                Unfollow
-              </Button> :
+            {!user.isFollowing &&
               <Button variant={"default"}
                 className="rounded-xl" onClick={() => handleActionFollow(user)}>
                 Follow
               </Button>}
           </>}
+          {isProfile && <Button variant={"secondary"}
+            disabled={user.removeFollower}
+            className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
+            Remove
+          </Button>}
         </div>
       </div>
     </>
   )
 }
-
 
 const SkeletonUserCard = () => {
 
