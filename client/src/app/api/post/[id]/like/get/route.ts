@@ -1,15 +1,22 @@
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from "next/server"
-import { posts } from "../../../../../db/schema"
 import db from "@/lib/db/drizzle"
+import { likes, posts, users } from '../../../../../../../db/schema';
 
 export async function GET(request: NextRequest, { params }: { params: { profile: string } }) {
     try {
+        const postId = "c73a1e14-0647-4b6c-b196-b38c535c5d8c"
         const skip = request.nextUrl.searchParams.get("skip")
         const size = request.nextUrl.searchParams.get("size")
-        const PostsData = await db.select()
-            .from(posts)
-            .where(eq(posts.authorId, params.profile))
+        const PostsData = await db.select({
+            id: users.id,
+            name: users.username,
+            email: users.email,
+            profile: users.profilePicture,
+        })
+            .from(likes)
+            .leftJoin(users, eq(likes.authorId, users.id))
+            .where(eq(likes.postId, postId))
             .limit(Number(size))
             .offset(Number(skip))
         return Response.json({
