@@ -77,22 +77,29 @@ const PostItem = ({
 
       <div className=' mt-5 mb-1 mx-3 flex justify-between'>
         <div className='flex space-x-3'>
-          <Heart className='w-7 h-7 cursor-pointer' />
+          <Heart className={`w-7 h-7 cursor-pointer  ${feed.alreadyLiked ? "text-red-500 fill-red-500" : ""}`} />
           <MessageCircle className='w-7 h-7 cursor-pointer' onClick={OpenModal} />
           <Send className='w-7 h-7 cursor-pointer' />
         </div>
         <BookMarked className='w-7 h-7 cursor-pointer' />
       </div>
 
-      <div className='mx-3'>
-        <div className='font-semibold'>{feed.likeCount} likes</div>
+      <div className='mx-3 space-y-2'>
+        <div className='font-semibold cursor-pointer' onClick={() => {
+          router.push(`/post/${feed.id}/liked_by`)
+        }}>{feed.likeCount} likes</div>
         {/* close friend comments */}
         <div className='flex space-x-2'>
-          <div className='font-semibold'>Akash Mondal</div>
-          <div>Great work</div>
+          <div className='font-semibold cursor-pointer ' onClick={() => {
+            router.push(`/${feed.authorData.email}`)
+          }}>{feed.authorData.username}</div>
+          <div>{feed.caption}</div>
         </div>
         {/* load more */}
-        <div className='text-sm cursor-pointer' onClick={OpenModal}>View all {feed.commentCount} comments</div>
+        <div className='text-sm cursor-pointer'
+          onClick={() => {
+            router.push(`/post/${feed.id}/comments`)
+          }}>View all {feed.commentCount} comments</div>
       </div>
 
     </div>

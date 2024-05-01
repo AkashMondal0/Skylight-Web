@@ -1,12 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
-import { PostR } from "@/app/(home)/[profile]/post/[id]/page"
-import { Avatar, AvatarImage } from "@/components/ui/avatar"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import PostFeedModal from "@/app/(home)/components/dialog/PostFeedModal"
 import { RootState } from "@/redux/store"
 import { User } from "@/types"
-import Image from "next/image"
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
@@ -45,7 +41,7 @@ const ModalFollowing = () => {
       router.back()
     }
   }
-  return <PostR/>
+  return <PostFeedModal/>
 }
 
 export default ModalFollowing;
