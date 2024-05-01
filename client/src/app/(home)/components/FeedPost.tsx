@@ -10,6 +10,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { FeedPost, PostFeedState } from '@/redux/slice/post-feed';
+import { useRouter } from 'next/navigation';
 
 const FeedPostCard = ({ feeds }: { feeds: PostFeedState }) => {
   return (
@@ -24,12 +25,17 @@ const PostItem = ({
 }: {
   feed: FeedPost
 }) => {
+  const router = useRouter()
+  const OpenModal = () => {
+    console.log('open modal')
+    router.push(`/post/${feed.id}`)
+  }
   return (
     <div className='max-w-[480px] w-full mx-auto py-4 border-b'>
       <div className='flex justify-between px-2'>
         <div className='flex space-x-2 items-center'>
           <Avatar className='h-12 w-12 mx-auto border-fuchsia-500 border-[3px] p-[2px]'>
-            <AvatarImage src={feed.authorData.profilePicture||"/user.jpg"}
+            <AvatarImage src={feed.authorData.profilePicture || "/user.jpg"}
               alt="@shadcn" className='rounded-full' />
           </Avatar>
           <div>
@@ -71,11 +77,11 @@ const PostItem = ({
 
       <div className=' mt-5 mb-1 mx-3 flex justify-between'>
         <div className='flex space-x-3'>
-          <Heart className='w-7 h-7' />
-          <MessageCircle className='w-7 h-7' />
-          <Send className='w-7 h-7' />
+          <Heart className='w-7 h-7 cursor-pointer' />
+          <MessageCircle className='w-7 h-7 cursor-pointer' onClick={OpenModal} />
+          <Send className='w-7 h-7 cursor-pointer' />
         </div>
-        <BookMarked className='w-7 h-7' />
+        <BookMarked className='w-7 h-7 cursor-pointer' />
       </div>
 
       <div className='mx-3'>
@@ -86,7 +92,7 @@ const PostItem = ({
           <div>Great work</div>
         </div>
         {/* load more */}
-        <div className='text-sm'>View all {feed.commentCount} comments</div>
+        <div className='text-sm cursor-pointer' onClick={OpenModal}>View all {feed.commentCount} comments</div>
       </div>
 
     </div>
