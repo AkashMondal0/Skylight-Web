@@ -130,7 +130,9 @@ const Page = ({ params }: { params: { profile: string } }) => {
                         {userProfileData.isFollowing || profile.user.id === userProfileData.id ?
                             <div className="grid grid-cols-3 gap-2">
                                 {userProfileData.posts.map((post, index) => (
-                                    <img key={index} src={post.fileUrl[0]} className='aspect-square w-full h-full object-cover' />
+                                    <img key={index} src={post.fileUrl[0]} className='aspect-square w-full h-full object-cover cursor-default' onClick={() => {
+                                        router.push(`/${userProfileData.email}/post/${post.id}`)
+                                    }} />
                                 ))}
                             </div> : <>
                                 <div className='flex justify-center items-center h-72'>

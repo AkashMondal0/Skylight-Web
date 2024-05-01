@@ -12,6 +12,6 @@ export const config = {
     "/",
     '/api/profile/:path*',
     '/api/account/data/:path*',
-    // '/api/post/:path*',
+    '/api/post/:path*',
   ]
 }
