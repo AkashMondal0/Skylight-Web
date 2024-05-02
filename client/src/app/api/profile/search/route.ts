@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { redirect } from "next/navigation"
 import jwt from "jsonwebtoken"
 import db from "@/lib/db/drizzle";
-import { users } from "../../../../../db/schema";
+import { users } from "@/lib/db/schema";
 import { like, or } from "drizzle-orm";
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 

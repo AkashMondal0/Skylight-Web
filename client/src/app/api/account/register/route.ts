@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import db from "@/lib/db/drizzle";
 import { NextRequest, NextResponse } from "next/server"
-import { users } from "../../../../../db/schema";
+import { users } from "@/lib/db/schema";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { cookies } from 'next/headers';

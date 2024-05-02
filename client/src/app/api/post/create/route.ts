@@ -3,7 +3,7 @@ import db from "@/lib/db/drizzle";
 import { NextRequest, NextResponse } from "next/server"
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 import jwt from "jsonwebtoken"
-import { posts } from '../../../../../db/schema';
+import { posts } from '@/lib/db/schema';
 
 export async function POST(request: NextRequest, response: NextResponse) {
   try {

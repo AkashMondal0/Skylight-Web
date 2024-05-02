@@ -1,7 +1,7 @@
 import { and, eq, exists, sql } from 'drizzle-orm';
 import db from "@/lib/db/drizzle"
 import { NextRequest } from "next/server"
-import { followers, users } from "../../../../../../../db/schema"
+import { followers, users } from "@/lib/db/schema"
 import { redirect } from 'next/navigation';
 import jwt from "jsonwebtoken"
 const secret = process.env.NEXTAUTH_SECRET || "secret";

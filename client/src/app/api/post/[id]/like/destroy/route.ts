@@ -22,7 +22,7 @@
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from "next/server"
 import db from "@/lib/db/drizzle"
-import { posts } from '../../../../../../../db/schema';
+import { posts } from '@/lib/db/schema';
 
 export async function GET(request: NextRequest, { params }: { params: { profile: string } }) {
     try {

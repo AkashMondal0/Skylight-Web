@@ -3,7 +3,7 @@ import { redirect } from "next/navigation"
 import jwt from "jsonwebtoken"
 import db from "@/lib/db/drizzle";
 import { and, eq, like, or } from "drizzle-orm";
-import { followers } from "../../../../../../db/schema";
+import { followers } from "@/lib/db/schema";
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 
 

@@ -1,6 +1,6 @@
 import db from "@/lib/db/drizzle"
 import { NextRequest, NextResponse } from "next/server"
-import { users } from "../../../../../db/schema"
+import { users } from "@/lib/db/schema"
 
 export async function GET(request: NextRequest, response: NextResponse) {
 

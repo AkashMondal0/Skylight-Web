@@ -1,9 +1,9 @@
 import { NextRequest } from "next/server"
 import db from "@/lib/db/drizzle"
-import { comments } from '../../../../../../db/schema';
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 import jwt from "jsonwebtoken"
 import { redirect } from 'next/navigation';
+import { comments } from "@/lib/db/schema";
 
 export async function POST(request: NextRequest) {
     try {

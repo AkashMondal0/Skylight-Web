@@ -1,6 +1,6 @@
 import db from "@/lib/db/drizzle"
 import { NextRequest, NextResponse } from "next/server"
-import { followers, users } from "../../../../../../../db/schema"
+import { followers, users } from "@/lib/db/schema"
 import { and, eq, exists, sql } from "drizzle-orm"
 import { redirect } from "next/navigation"
 import jwt from "jsonwebtoken"

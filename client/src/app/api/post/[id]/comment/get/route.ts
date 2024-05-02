@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from "next/server"
 import db from "@/lib/db/drizzle"
-import { comments, posts, users } from '../../../../../../../db/schema';
+import { comments, posts, users } from '@/lib/db/schema';
 
 export async function GET(request: NextRequest, { params }: { params: { profile: string } }) {
     try {

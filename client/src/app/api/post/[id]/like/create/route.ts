@@ -4,7 +4,7 @@ const secret = process.env.NEXTAUTH_SECRET || "secret";
 import jwt from "jsonwebtoken"
 import { redirect } from 'next/navigation';
 import { and, eq } from "drizzle-orm";
-import { likes } from "../../../../../../../db/schema";
+import { likes } from "@/lib/db/schema";
 
 export async function POST(request: NextRequest) {
     try {

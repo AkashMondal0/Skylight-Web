@@ -1,6 +1,6 @@
 import db from "@/lib/db/drizzle"
 import { NextRequest, NextResponse } from "next/server"
-import { comments, followers, likes, posts, users } from "../../../../../db/schema"
+import { comments, followers, likes, posts, users } from "@/lib/db/schema"
 import jwt from "jsonwebtoken"
 import { count, desc, eq, sql } from "drizzle-orm"
 const secret = process.env.NEXTAUTH_SECRET || "secret";

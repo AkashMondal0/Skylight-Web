@@ -5,8 +5,8 @@ export default async function RootLayout({ children, modal }: {
 
   return (
     <>
-      {children}
       {modal}
+      {children}
     </>
   )
 }

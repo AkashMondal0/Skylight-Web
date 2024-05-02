@@ -22,16 +22,16 @@ const AppStart_Provider = ({
         if (!loadedRef.current) {
             const StartApp = async () => {
                 await dispatch(fetchProfileDataApi() as any)
-                await dispatch(fetchProfileFeedsApi() as any)
+                // await dispatch(fetchProfileFeedsApi() as any)
             }
             StartApp()
             loadedRef.current = true;
         }
     }, []);
 
-    if (!profile.AppStart) {
-        return <SplashScreen />
-    }
+    // if (!profile.AppStart) {
+    //     return <SplashScreen />
+    // }
 
 
     return (
