@@ -1,9 +1,8 @@
 import db from "@/lib/db/drizzle"
 import { NextRequest, NextResponse } from "next/server"
 import { comments, followers, likes, posts, users } from "../../../../../db/schema"
-import { redirect } from "next/navigation"
 import jwt from "jsonwebtoken"
-import { desc, eq, sql } from "drizzle-orm"
+import { count, desc, eq, sql } from "drizzle-orm"
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 
 
@@ -23,7 +22,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
 
     let verify_id = jwt.verify(token.value, secret) as { email: string, id: string } as any
 
-    verify_id = verify_id.id
+    const authorId = verify_id.id
 
     if (!verify_id) {
       return Response.json({
@@ -35,43 +34,42 @@ export async function GET(request: NextRequest, response: NextResponse) {
     }
 
     const data = await db.select({
-      id: followers.followingUserId,
-      post: {
-        id: posts.id,
-        caption: posts.caption,
-        fileUrl: posts.fileUrl,
-        commentCount: sql`COUNT(${comments.id})`,
-        likeCount: sql`COUNT(${likes.id})`,
-        alreadyLiked: eq(likes.authorId, verify_id)
-      },
-      userData: {
+      // id: followers.followingUserId,
+      // post: {
+      id: posts.id,
+      caption: posts.caption,
+      fileUrl: posts.fileUrl,
+      commentCount: count(eq(comments.postId, posts.id)),
+      likeCount: count(eq(likes.postId, posts.id)),
+      createdAt: posts.createdAt,
+      alreadyLiked: eq(likes.authorId, authorId),
+      // },
+      authorData: {
         id: users.id,
         username: users.username,
         email: users.email,
-        profileUrl: users.profilePicture,
+        profilePicture: users.profilePicture,
       },
     })
       .from(followers)
-      .where(eq(followers.followerUserId, verify_id))
+      .where(eq(followers.followerUserId, authorId))
       .limit(12)
       .offset(0)
-      .orderBy(desc(followers.createdAt))
-      .fullJoin(posts, eq(followers.followingUserId, posts.authorId))
+      .orderBy(desc(posts.createdAt))
+      .leftJoin(posts, eq(followers.followingUserId, posts.authorId))
       .leftJoin(comments, eq(posts.id, comments.postId))
       .leftJoin(likes, eq(posts.id, likes.postId))
       .innerJoin(users, eq(posts.authorId, users.id))
       .groupBy(
         posts.id,
         users.id,
+        posts.createdAt,
         followers.followingUserId,
-        followers.followerUserId,
         followers.createdAt,
-        followers.updatedAt,
-        followers.id,
-        comments.id,
-        likes.id,
+        comments.postId,
+        likes.postId,
+        likes.authorId,
       )
-
 
     return NextResponse.json({
       code: 1,

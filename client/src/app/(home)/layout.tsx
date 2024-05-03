@@ -8,8 +8,9 @@ export const metadata: Metadata = {
   description: `Sky Media is a social media platform that 
   allows users to share their thoughts and ideas with the world.`,
 }
-export default function RootLayout({ children }: {
+export default function RootLayout({ children,modal }: {
   children: React.ReactNode;
+  modal?: React.ReactNode;
 }) {
   return (
     <>
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: {
           {/* sm device footer*/}
           <Sm_Navigation />
         </div>
+        {modal}
     </>
   )
 }

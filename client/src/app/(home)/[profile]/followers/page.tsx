@@ -7,7 +7,7 @@ import { FetchFollowersUserDataApi, UserFollowingApi, UserUnFollowingApi } from 
 import { RootState } from '@/redux/store';
 import { User } from '@/types';
 import { useParams, useRouter } from 'next/navigation'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
 const Page = () => {
@@ -15,43 +15,50 @@ const Page = () => {
   const dispatch = useDispatch()
   const router = useRouter()
   const users = useSelector((state: RootState) => state.users)
-  const profile = useSelector((state: RootState) => state.profile)
-  const isProfile = profile.user?.id === users.profileData?.user?.id
+  const profile = useSelector((state: RootState) => state.profile.user)
+  const isProfile = profile?.id === users.profileData?.user?.id
+  const loadedRef = useRef(false)
+
   const pageRedirect = (user: User) => {
     router.push(`/${user?.email}`)
   }
-  const FetchFollowingsUser = () => {
-    if (id?.profile) {
-      dispatch(FetchFollowersUserDataApi({
-        profileId: id.profile as string,
-        skip: 0,
-        size: 12
-      }) as any)
-    }
-  }
 
   useEffect(() => {
-    FetchFollowingsUser()
-  }, [])
+    if (!loadedRef.current && users.profileData?.user?.id) {
+      const FetchFollowingsUser = async () => {
+          await dispatch(FetchFollowersUserDataApi({
+            profileId: users.profileData?.user?.id as string,
+            skip: 0,
+            size: 12
+          }) as any)
+        }
+      FetchFollowingsUser()
+      loadedRef.current = true;
+    }
+  }, [dispatch, users.profileData?.user?.id]);
 
 
-  const handleActionUnFollow = (user: User) => {
-    if (profile.user?.id) {
-      dispatch(UserUnFollowingApi({
-        followingUserId: user.id,
-        followerUserId: profile.user?.id,
+  const handleActionUnFollow = async (user: User) => {
+    if (profile?.id) {
+      await dispatch(UserUnFollowingApi({
+        followingUserId: profile.id,
+        followerUserId: user.id,
         isProfile: isProfile as boolean,
-        type: null
+        type: "followers",
+        userId: user.id
       }) as any)
+      /// remove from list
     }
   }
+
   const handleActionFollow = (user: User) => {
-    if (profile.user?.id) {
+    if (profile?.id) {
       dispatch(UserFollowingApi({
         followingUserId: user.id,
-        followerUserId: profile.user?.id,
+        followerUserId: profile.id,
         isProfile: isProfile as boolean,
-        type: null
+        type: "followers",
+        userId: user.id
       }) as any)
     }
   }
@@ -67,10 +74,9 @@ const Page = () => {
           key={i} user={user}
           isProfile={isProfile}
           handleActionFollow={handleActionFollow}
-          itself={profile.user?.id === user.id}
+          itself={profile?.id === user.id}
           handleActionUnFollow={handleActionUnFollow} />)}
         {users.profileData.fetchFollow.loading ? <>{Array(10).fill(0).map((_, i) => <SkeletonUserCard key={i} />)}</> : <></>}
-
       </div>
     </div>
   )
@@ -95,8 +101,9 @@ const UserCard = ({
   handleActionFollow: (user: User) => void
 }) => {
   if (!user) return null
+
   return (
-    <>{user.isFollowing}
+    <>
       <div className='flex justify-between px-2 my-4'>
         <div className='flex space-x-2 items-center cursor-pointer' onClick={() => pageRedirect(user)}>
           <Avatar className='h-10 w-10 mx-auto'>
@@ -114,22 +121,17 @@ const UserCard = ({
         </div>
         <div className='flex items-center space-x-2'>
           {!itself && <>
-            {isProfile && user.isFollowing ?
-              <Button variant={"secondary"}
-                className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
-                Remove
-              </Button> :
+            {!user.isFollowing &&
               <Button variant={"default"}
                 className="rounded-xl" onClick={() => handleActionFollow(user)}>
                 Follow
               </Button>}
           </>}
-          {/* {
-                      isProfile && <Button variant={"secondary"}
-                          className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
-                          Remove
-                      </Button>
-                  } */}
+          {isProfile && <Button variant={"secondary"}
+            disabled={user.removeFollower}
+            className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
+            Remove
+          </Button>}
         </div>
       </div>
     </>

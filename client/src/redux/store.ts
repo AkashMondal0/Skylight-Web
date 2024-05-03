@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit'
 import profileReducer from '@/redux/slice/profile'
 import authReducer from '@/redux/slice/auth'
 import usersReducer from '@/redux/slice/users'
+import postFeedReducer from '@/redux/slice/post-feed'
 
 export const store = configureStore({
   reducer: {
     profile: profileReducer,
     auth: authReducer,
     users: usersReducer,
+    postFeed: postFeedReducer,
   },
 })
 

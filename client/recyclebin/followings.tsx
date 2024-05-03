@@ -112,7 +112,6 @@ const UserCard = ({
                         </div>
                     </div>
                 </div>
-                {`${user.isFollowing}`}
                 <div className='flex items-center'>
                     {!itself && <>
                         {user.isFollowing ?

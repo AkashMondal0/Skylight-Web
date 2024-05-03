@@ -39,3 +39,16 @@ export const postFilesApi = createAsyncThunk(
         }
     }
 );
+
+
+export const fetchProfileFeedsApi = createAsyncThunk(
+    'fetchProfileFeedsApi/get',
+    async () => {
+        try {
+            const res = await axios.get(`/api/post/feeds`)
+            return res.data?.data
+        } catch (error: any) {
+            return error?.response?.data?.data
+        }
+    }
+);
