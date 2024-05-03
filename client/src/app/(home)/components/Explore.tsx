@@ -4,11 +4,10 @@ import Link from 'next/link'
 import React from 'react'
 
 const ExploreSuggestion = ({
-    user
 }: {
-    user: User | null
-}) => {
-    if(!user) return null
+    }) => {
+    const user = null
+    if (!user) return null
     return (
         <div className='my-4 space-y-4'>
             <MyAccount user={user!} />

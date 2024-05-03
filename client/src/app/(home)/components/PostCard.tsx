@@ -1,3 +1,4 @@
+"use client";
 /* eslint-disable @next/next/no-img-element */
 import React from 'react'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
@@ -9,16 +10,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { FeedPost, PostFeedState } from '@/redux/slice/post-feed';
+import { FeedPost } from '@/redux/slice/post-feed';
 import { useRouter } from 'next/navigation';
-
-const FeedPostCard = ({ feeds }: { feeds: PostFeedState }) => {
-  return (
-    <div>
-      {feeds.feedPosts?.map((feed, i) => <PostItem key={i} feed={feed} />)}
-    </div>
-  )
-}
 
 const PostItem = ({
   feed
@@ -106,4 +99,4 @@ const PostItem = ({
   )
 }
 
-export default FeedPostCard
+export default PostItem

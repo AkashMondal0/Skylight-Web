@@ -35,9 +35,7 @@ const AppStart_Provider = ({
 
 
     return (
-        <AppStart_context.Provider value={{
-
-        }}>
+        <AppStart_context.Provider value={{}}>
             {children}
         </AppStart_context.Provider>
     )

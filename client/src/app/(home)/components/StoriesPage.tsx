@@ -1,5 +1,4 @@
-'use client'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import React from 'react'
 import {
@@ -9,7 +8,11 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-const Stories_bar = () => {
+import StoryAvatar from './StoriesCard'
+
+export default async function StoriesPage() {
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+
   return (
     <>
       <Carousel
@@ -34,20 +37,3 @@ const Stories_bar = () => {
   )
 }
 
-const StoryAvatar = ({
-  url = "/user.jpg",
-  label = "loading"
-}: {
-  url?: string
-  label?: string
-}) => {
-  return <div>
-    <Avatar className='h-16 w-16 mx-auto border-fuchsia-500 border-[3px] p-[2px]'>
-      <AvatarImage src={url} alt="@shadcn" className='rounded-full' />
-      {/* <AvatarFallback>{label}</AvatarFallback> */}
-    </Avatar>
-    <div className="text-xs font-normal text-center">akash</div>
-  </div>
-}
-
-export default Stories_bar
