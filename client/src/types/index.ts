@@ -1,3 +1,5 @@
+import { FeedPost } from "@/redux/slice/post-feed";
+
 interface User {
     id: string;
     username: string;
@@ -14,7 +16,7 @@ interface User {
     postCount: number,
     followersCount: number,
     followingCount: number,
-    posts: Post[]
+    posts: FeedPost[]
     isFollowing: boolean,
     removeFollower: boolean,
 }

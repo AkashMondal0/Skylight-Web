@@ -1,4 +1,4 @@
-import SkeletonProfile from "./components/skeleton";
+import SkeletonProfile from "@/components/profile/loading/skeleton";
 
 export default function Loading() {
     // You can add any UI inside Loading, including a Skeleton.

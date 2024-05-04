@@ -3,18 +3,21 @@ import jwt from "jsonwebtoken"
 import db from "@/lib/db/drizzle";
 import { count, eq, desc, exists, and } from "drizzle-orm";
 import { cookies } from "next/headers";
-import { User } from "@/types";
 import { followers, posts, users } from "@/lib/db/schema";
-import SkeletonProfile from "./components/skeleton";
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 import dynamic from "next/dynamic";
+import SkeletonProfile from "@/components/profile/loading/skeleton";
 
-const Profile = dynamic(() => import("./components/Profile"), {
+const Lg_Device = dynamic(() => import('@/components/profile/Lg_Device'),{
+    loading: () => <SkeletonProfile />
+})
+const Sm_Device = dynamic(() => import('@/components/profile/Sm_Device'),{
     loading: () => <SkeletonProfile />
 })
 
+
+
 export default async function Page({ params }: { params: { profile: string } }) {
-    // await new Promise((resolve) => setTimeout(resolve, 5000));
 
     try {
         const token = cookies().get("token-auth")
@@ -75,36 +78,37 @@ export default async function Page({ params }: { params: { profile: string } }) 
         if (!FollowingCount[0] && !FollowersCount[0] && !userProfile[0]) {
             return notFound()
         }
-
         // check if user is private
-        // if (!userProfile[0].isPrivate && userProfile[0].isFollowing || userProfile[0].id === verify.id) {
-        // get post count
         const userPosts = await db.select()
             .from(posts)
             .where(eq(posts.authorId, userProfile[0].id))
             .limit(12)
             .offset(0)
             .orderBy(desc(posts.createdAt))
-        // document.title = `${userProfile[0].username} (@${userProfile[0].username}) | Instagram`
+            // console.log(userPosts)
         return <>
-            <Profile
-                isProfile={userProfile[0].id === verify.id}
-                UserProfile={{
-                    ...userProfile[0],
-                    followersCount: FollowingCount[0].followingCount,
-                    followingCount: FollowersCount[0].followersCount,
-                    posts: userPosts ?? [],
-                } as User} />
+            <div className='w-full min-h-[100dvh]'>
+                <div className='mx-auto max-w-[960px] overflow-x-hidden'>
+                    {/* md ->>> */}
+                    <Lg_Device
+                        isProfile={profileId === userProfile[0].id}
+                        user={{
+                            ...userProfile[0],
+                            followersCount: FollowersCount[0].followersCount,
+                            followingCount: FollowingCount[0].followingCount,
+                            posts: userPosts
+                        } as any} />
+                    {/* <<<- sm */}
+                    <Sm_Device isProfile={profileId === userProfile[0].id}
+                        user={{
+                            ...userProfile[0],
+                            followersCount: FollowersCount[0].followersCount,
+                            followingCount: FollowingCount[0].followingCount,
+                            posts: userPosts
+                        } as any} />
+                </div>
+            </div >
         </>
-
-        // } else {
-        //     return <Profile UserProfile={{
-        //         ...userProfile[0],
-        //         followersCount: FollowingCount[0].followingCount,
-        //         followingCount: FollowersCount[0].followersCount,
-        //         posts: [],
-        //     } as unknown as User} />
-        // }
     } catch (error) {
         return notFound()
     }
