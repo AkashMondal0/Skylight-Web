@@ -8,8 +8,8 @@ import { searchProfileApi } from '@/redux/slice/users/api-functions';
 import { RootState } from '@/redux/store';
 import { User } from '@/types';
 import { removeAllUserFormSearch, removeUserFormSearch } from '@/redux/slice/users';
-import { SkeletonUserCard } from '@/app/(home)/components/loading/UserCard';
 import { useRouter } from 'next/navigation';
+import { SkeletonUserCard } from '@/components/home/loading/UserCard';
 
 const SearchModel = () => {
   const dispatch = useDispatch();

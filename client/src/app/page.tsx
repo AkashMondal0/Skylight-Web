@@ -1,15 +1,15 @@
+import SkeletonPostCard from '@/components/home/loading/PostCard';
+import { SkeletonStoriesCard } from '@/components/home/loading/StoriesCard';
 import dynamic from 'next/dynamic';
-import SkeletonPostCard from './components/loading/PostCard';
-import { SkeletonStoriesCard } from './components/loading/StoriesCard';
 
-const ExploreSuggestion = dynamic(() => import('./components/Explore'), {
+const ExploreSuggestion = dynamic(() => import('@/components/home/Explore'), {
   loading: () => <p>Loading...</p>
 });
-const StoriesPage = dynamic(() => import('./components/StoriesPage'), {
+const StoriesPage = dynamic(() => import('@/components/home/StoriesPage'), {
   loading: () => <SkeletonStoriesCard />
 });
 
-const FeedsPage = dynamic(() => import('./components/FeedsPage'), {
+const FeedsPage = dynamic(() => import('@/components/home/FeedsPage'), {
   loading: () => <SkeletonPostCard />
 });
 

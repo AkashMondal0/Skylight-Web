@@ -10,11 +10,11 @@ const secret = process.env.NEXTAUTH_SECRET || "secret";
 import dynamic from "next/dynamic";
 
 const Profile = dynamic(() => import("./components/Profile"), {
-    loading: () => <></>
+    loading: () => <SkeletonProfile />
 })
 
 export default async function Page({ params }: { params: { profile: string } }) {
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    // await new Promise((resolve) => setTimeout(resolve, 5000));
 
     try {
         const token = cookies().get("token-auth")
@@ -93,7 +93,7 @@ export default async function Page({ params }: { params: { profile: string } }) 
                     ...userProfile[0],
                     followersCount: FollowingCount[0].followingCount,
                     followingCount: FollowersCount[0].followersCount,
-                    posts: userPosts || [],
+                    posts: userPosts ?? [],
                 } as User} />
         </>
 

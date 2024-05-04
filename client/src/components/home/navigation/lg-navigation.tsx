@@ -14,12 +14,12 @@ import {
 } from "@/components/ui/tooltip"
 import React from "react"
 import { useRouter } from "next/navigation"
-import NotificationModel from "./model/NotificationModel"
-import SearchModel from "./model/SearchModel"
-import MoreDropdownMenu from "./model/More_DropDown"
-import UploadPostDialog from "../(home)/components/dialog/upload-post"
+import NotificationModel from "../model/NotificationModel"
+import SearchModel from "../model/SearchModel"
+import MoreDropdownMenu from "../model/More_DropDown"
 import { RootState } from "@/redux/store"
 import { useSelector } from "react-redux"
+import UploadPostDialog from "@/components/home/dialog/upload-post"
 
 
 export default function Lg_Navigation({
@@ -101,20 +101,20 @@ const NavigationItem = ({ children, active, label, onClick, hideLabel }: {
   if (hideLabel) {
     return (
       <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            onClick={onClick}
-            variant={"ghost"}
-            className={`w-full justify-start gap-4 h-full py-2 rounded-xl`}>
-            {children}
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent side="right">
-          <p>{label}</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              onClick={onClick}
+              variant={"ghost"}
+              className={`w-full justify-start gap-4 h-full py-2 rounded-xl`}>
+              {children}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="right">
+            <p>{label}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     )
   }
   return (

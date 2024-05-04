@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
-import PostFeedModal from "@/app/(home)/components/dialog/PostFeedModal"
+import PostFeedModal from "@/components/home/dialog/PostFeedModal"
 import { RootState } from "@/redux/store"
 import { User } from "@/types"
 import { useParams, useRouter } from "next/navigation"

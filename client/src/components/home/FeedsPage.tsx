@@ -1,4 +1,4 @@
-import PostItem from "./PostCard";
+import PostItem from "./Card/PostCard";
 import { cookies } from 'next/headers';
 import { count, eq, desc } from "drizzle-orm";
 import { notFound, redirect } from 'next/navigation';
@@ -10,7 +10,7 @@ import db from '@/lib/db/drizzle';
 
 export default async function FeedsPage() {
   try {
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    // await new Promise((resolve) => setTimeout(resolve, 5000));
 
     const token = cookies().get("token-auth")
 

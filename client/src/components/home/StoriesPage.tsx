@@ -8,10 +8,10 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import StoryAvatar from './StoriesCard'
+import StoryAvatar from './Card/StoriesCard'
 
 export default async function StoriesPage() {
-  await new Promise((resolve) => setTimeout(resolve, 5000));
+  // await new Promise((resolve) => setTimeout(resolve, 5000));
 
   return (
     <>

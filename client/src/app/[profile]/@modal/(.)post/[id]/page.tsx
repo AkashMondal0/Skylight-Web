@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
-import PostFeedModal from "@/app/(home)/components/dialog/PostFeedModal"
+import PostFeedModal from "@/components/home/dialog/PostFeedModal"
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"

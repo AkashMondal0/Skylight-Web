@@ -1,5 +1,4 @@
-
-import PostFeedModal from '@/app/(home)/components/dialog/PostFeedModal'
+import PostFeedModal from '@/components/home/dialog/PostFeedModal'
 import React from 'react'
 
 const page = () => {
