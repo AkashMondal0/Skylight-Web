@@ -46,6 +46,8 @@ const Profile = ({
         }
     }
 
+
+
     return (
         <div className='w-full min-h-[100dvh]'>
             <div className='mx-auto max-w-[960px] overflow-x-hidden'>

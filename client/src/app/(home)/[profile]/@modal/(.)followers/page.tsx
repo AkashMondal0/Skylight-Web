@@ -13,8 +13,8 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { RootState } from '@/redux/store'
 import { FetchFollowersUserDataApi, UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions'
-import { SkeletonFollowUserCard } from '../../skeleton'
 import { followersDataClear } from '@/redux/slice/users'
+import { SkeletonFollowUserCard } from '../../components/skeleton'
 
 
 

@@ -13,7 +13,7 @@ import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { SkeletonFollowUserCard } from "../../skeleton"
+import { SkeletonFollowUserCard } from "../../components/skeleton"
 import { followingsDataClear } from "@/redux/slice/users"
 
 const ModalFollowing = () => {

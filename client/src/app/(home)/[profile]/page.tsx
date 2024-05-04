@@ -5,12 +5,12 @@ import { count, eq, desc, exists, and } from "drizzle-orm";
 import { cookies } from "next/headers";
 import { User } from "@/types";
 import { followers, posts, users } from "@/lib/db/schema";
-import SkeletonProfile from "./skeleton";
+import SkeletonProfile from "./components/skeleton";
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 import dynamic from "next/dynamic";
 
 const Profile = dynamic(() => import("./components/Profile"), {
-    loading: () => <SkeletonProfile />
+    loading: () => <></>
 })
 
 export default async function Page({ params }: { params: { profile: string } }) {
