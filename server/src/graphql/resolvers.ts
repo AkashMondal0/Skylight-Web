@@ -1,11 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { getProfile } from "../controller/profile";
 
 const resolvers = {
   Query: {
-    books: () => {
-      return [
-        { data: "dadu bara bokachoda" }
-      ];
-    },
+    getProfileByUsername: async (_: any, data: { username: string, profileId: string }) => await getProfile(data.username, data.profileId),
   },
 };
 

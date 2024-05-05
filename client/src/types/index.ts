@@ -151,6 +151,7 @@ interface PayloadData {
             id: string,
             profilePicture: string,
             token: string,
+            name: string
         }
     }
 }

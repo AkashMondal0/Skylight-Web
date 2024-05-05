@@ -14,20 +14,20 @@ const AppStart_Provider = ({
 }: {
     children: React.ReactNode
 }) => {
-    const dispatch = useDispatch()
-    const profile = useSelector((state: RootState) => state.profile)
-    const loadedRef = useRef(false)
+    // const dispatch = useDispatch()
+    // const profile = useSelector((state: RootState) => state.profile)
+    // const loadedRef = useRef(false)
 
-    useEffect(() => {
-        if (!loadedRef.current) {
-            const StartApp = async () => {
-                // await dispatch(fetchProfileDataApi() as any)
-                // await dispatch(fetchProfileFeedsApi() as any)
-            }
-            StartApp()
-            loadedRef.current = true;
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (!loadedRef.current) {
+    //         const StartApp = async () => {
+    //             await dispatch(fetchProfileDataApi() as any)
+    //             await dispatch(fetchProfileFeedsApi() as any)
+    //         }
+    //         StartApp()
+    //         loadedRef.current = true;
+    //     }
+    // }, []);
 
     // if (!profile.AppStart) {
     //     return <SplashScreen />

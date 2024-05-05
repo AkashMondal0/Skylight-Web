@@ -57,8 +57,8 @@ export default function LoginPage() {
         const res = await dispatch(registerApi({ email, password, name, username }) as any) as PayloadData
         if (res.payload?.code === 1) {
             signIn("credentials", {
-                email: res.payload.data.email,
-                name: res.payload.data.username,
+                email: res.payload.data.username,
+                name: res.payload.data.name,
                 id: res.payload.data.id,
                 image: res.payload.data.profilePicture,
                 token: res.payload.data.token,
