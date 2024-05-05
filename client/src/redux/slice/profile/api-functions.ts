@@ -13,7 +13,7 @@ export const loginApi = createAsyncThunk(
         password: string,
     }, thunkApi) => {
         try {
-            const res = await axios.get(`${url}/api/v1/auth/login`, {
+            const res = await axios.get(`/api/account/login`, {
                 headers: {
                     email,
                     password
@@ -42,7 +42,7 @@ export const registerApi = createAsyncThunk(
         username: string
     }, thunkApi) => {
         try {
-            const res = await axios.post(`${url}/api/v1/auth/register`, {
+            const res = await axios.post(`/api/account/register`, {
                 email: email,
                 password: password,
                 name: name,

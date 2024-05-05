@@ -1,5 +1,6 @@
 import SkeletonPostCard from '@/components/home/loading/PostCard';
 import { SkeletonStoriesCard } from '@/components/home/loading/StoriesCard';
+import { getServerSession } from 'next-auth';
 import dynamic from 'next/dynamic';
 
 const ExploreSuggestion = dynamic(() => import('@/components/home/Explore'), {
@@ -15,6 +16,8 @@ const FeedsPage = dynamic(() => import('@/components/home/FeedsPage'), {
 
 
 export default async function Page() {
+  const session = await getServerSession();
+  
   return (
     <>
       <div className="flex h-full

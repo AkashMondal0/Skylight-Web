@@ -19,6 +19,7 @@ const authOptions: NextAuthOptions = {
         image: { label: "Image", type: "text" },
         id: { label: "ID", type: "text" },
         token: { label: "Token", type: "text" },
+        username: { label: "Username", type: "text" },
       },
       async authorize(credentials, req) {
         try {
@@ -48,9 +49,23 @@ const authOptions: NextAuthOptions = {
       return baseUrl
     },
     async session({ session, token, user }) {
+      if (token.user) {
+        session.user = token.user as {
+          id: number;
+          username: string;
+          email: string;
+          name: string;
+        };
+      }
       return session
     },
     async jwt({ token, user, account, profile, isNewUser }) {
+      if (user) {
+        return {
+          ...token,
+          user: user,
+        };
+      }
       return token
     }
   },

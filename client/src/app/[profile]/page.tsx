@@ -1,9 +1,11 @@
-import { notFound, redirect } from "next/navigation"
-import { cookies } from "next/headers";
+"use client"
 import dynamic from "next/dynamic";
 import SkeletonProfile from "@/components/profile/loading/skeleton";
-import { configs } from "@/configs";
-import { getServerSession } from "next-auth";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useMemo, useRef } from "react";
+import { FetchUserProfileDataApi } from "@/redux/slice/users/api-functions";
+import { RootState } from "@/redux/store";
+import { useSession } from "next-auth/react";
 
 const Lg_Device = dynamic(() => import('@/components/profile/Lg_Device'), {
     loading: () => <SkeletonProfile />
@@ -12,67 +14,42 @@ const Sm_Device = dynamic(() => import('@/components/profile/Sm_Device'), {
     loading: () => <SkeletonProfile />
 })
 
-async function getProfileData(userEmail: string) {
-    try {
-        // const response = await fetch(`${configs.appUrl}/api/profile`, {
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //         "authorization": `${cookies().get("token-auth")?.value}`
-        //     },
-        //     cache: "no-store"
-        // });
-        // const data = await response.json();
-        // console.log(data)
-        // return data.data;
-        fetch('http://localhost:4000/graphql', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                "authorization": `${cookies().get("token-auth")?.value}`
-            },
-            body: JSON.stringify({
-                query: `{
-                    books {
-                      title
-                    }
-                  }`
-            })
-        })
-            .then(response => response.json())
-            .then(data => console.log(data))
-    } catch (error) {
-        console.log(error)
-        return notFound()
-    }
-}
+export default function Page({ params }: { params: { profile: string } }) {
+    const dispatch = useDispatch()
+    const session = useSession().data?.user
+    const users = useSelector((state: RootState) => state.users)
+    const loadedRef = useRef(false)
+    const isProfile = useMemo(() => session?.username === params.profile, [session?.username, params.profile])
 
-
-export default async function Page({ params }: { params: { profile: string } }) {
-
-    try {
-        const session = await getServerSession();
-        if (!session?.user) {
-            return redirect("/auth/login")
+    useEffect(() => {
+        if (!loadedRef.current) {
+            const StartApp = async () => {
+                await dispatch(FetchUserProfileDataApi({ id: params.profile }) as any)
+            }
+            StartApp()
+            loadedRef.current = true;
         }
+    }, [dispatch, params.profile]);
 
-        const isProfile = params.profile.replace(/%40/g, "@") === session.user.email;
-        const data = await getProfileData(params.profile) as any;
+    if (users.profileData.error) {
+        return <div>page not exits</div>
+    }
+    if (users.profileData.loading) {
+        return <SkeletonProfile />
+    }
 
+    if (users?.profileData.user) {
         return <>
-            {/* <div className='w-full min-h-[100dvh]'>
+            <div className='w-full min-h-[100dvh]'>
                 <div className='mx-auto max-w-[960px] overflow-x-hidden'>
                     <Lg_Device
                         isProfile={isProfile}
-                        user={data} />
+                        user={users.profileData.user} />
                     <Sm_Device isProfile={isProfile}
-                        user={data} />
+                        user={users.profileData.user} />
                 </div>
-            </div > */}
+            </div >
         </>
-    } catch (error) {
-        return notFound()
     }
+
 }
-
-

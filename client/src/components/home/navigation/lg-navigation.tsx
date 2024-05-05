@@ -20,6 +20,7 @@ import MoreDropdownMenu from "../model/More_DropDown"
 import { RootState } from "@/redux/store"
 import { useSelector } from "react-redux"
 import UploadPostDialog from "@/components/home/dialog/upload-post"
+import { useSession } from "next-auth/react"
 
 
 export default function Lg_Navigation({
@@ -29,7 +30,7 @@ export default function Lg_Navigation({
 }) {
   const router = useRouter()
   const pageChange = (path: string) => router.push(path)
-  const profile = useSelector((state: RootState) => state.profile)
+  const session = useSession().data?.user
   const SideIconData = [
     { icon: Home, label: "Home", onClick: () => pageChange('/') },
     { icon: Search, label: "Search", onClick: () => { } },
@@ -38,7 +39,7 @@ export default function Lg_Navigation({
     { icon: MessageCircleCode, label: "Messages", onClick: () => pageChange('/message') },
     { icon: Heart, label: "Notifications", onClick: () => { } },
     { icon: CopyPlus, label: "Create", onClick: () => { } },
-    { icon: CircleUserRound, label: "Profile", onClick: () => pageChange(`/${profile.user?.email}`) },
+    { icon: CircleUserRound, label: "Profile", onClick: () => pageChange(`/${session?.username}`) },
   ]
 
   return (

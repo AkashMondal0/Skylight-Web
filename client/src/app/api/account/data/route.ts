@@ -13,7 +13,12 @@ export async function GET(request: NextRequest, response: NextResponse) {
     const token = request.cookies.get("token-auth")
 
     if (!token) {
-      return redirect("/auth/error")
+      return Response.json({
+        code: 0,
+        message: "Unauthorized",
+        status_code: 401,
+        data: {}
+      }, { status: 401 })
     }
 
     const verify = jwt.verify(token.value, secret) as { email: string, id: string }

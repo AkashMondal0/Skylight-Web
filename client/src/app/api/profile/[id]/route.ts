@@ -5,23 +5,22 @@ import { followers, posts, users } from "@/lib/db/schema";
 import { count, eq, like, or, desc, not, is, sql, exists, and } from "drizzle-orm";
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 
-
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
 
   try {
-    const token = request.headers.get("authorization")
+    const token = request.cookies.get("token-auth")
 
     if (!token) {
-      console.log("token not found")
       return Response.json({
         code: 0,
-        message: "token not found",
-        status_code: 404,
+        message: "Unauthorized",
+        status_code: 401,
         data: {}
-      }, { status: 404 })
+      }, { status: 401 })
     }
 
-    const verify = jwt.verify(token, secret) as { email: string, id: string }
+    const verify = jwt.verify(token.value, secret) as { email: string, id: string }
+
 
     if (!verify?.id) {
       console.log("Invalid token")
@@ -54,7 +53,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     })
       .from(users)
       .leftJoin(posts, eq(posts.authorId, users.id))
-      .where(eq(users.email, params.id.replace(/%40/g, "@"))) // <-------------
+      .where(eq(users.username, params.id)) // <-------------
       .groupBy(users.id)
       .limit(1)
 
