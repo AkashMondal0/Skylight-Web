@@ -4,6 +4,11 @@ const zodUserSchema = z.object({
     username: z.string({required_error:"Name is required"})
     .min(3,{message:"Name must be at least 3 characters long"})
     .max(20,{message:"Name must be at most 20 characters long"}),
+
+    // name -->
+    name: z.string({required_error:"Username is required"})
+    .min(3,{message:"Username must be at least 3 characters long"})
+    .max(20,{message:"Username must be at most 20 characters long"}),
     // email -->
     email: z.string({required_error:"Email is required"}).email({message:"Invalid email"}),
     // password -->

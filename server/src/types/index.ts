@@ -1,3 +1,18 @@
+interface FeedPost {
+    id: string
+    caption: string
+    fileUrl: string[]
+    commentCount: number
+    likeCount: number
+    createdAt: Date
+    alreadyLiked: boolean | null
+    authorData: {
+        id: string
+        username: string
+        email: string
+        profilePicture: string
+    }
+}
 
 interface User {
     id: string;
@@ -8,14 +23,17 @@ interface User {
     bio: string | null;
     createdAt: Date;
     updatedAt: Date;
+    followers: User[]
+    following: User[]
     isVerified: false,
     isPrivate: false,
     postCount: number,
     followersCount: number,
     followingCount: number,
-    posts: Post[]
-    followers: User[]
-    following: User[]
+    posts: FeedPost[]
+    isFollowing: boolean,
+    removeFollower: boolean,
+    name: string
 }
 
 interface Message {
@@ -137,21 +155,18 @@ interface SavedPost {
     updatedAt: Date;
 }
 
-interface AccountProfile {
-    userDetails: User,
-}
-
-interface AccountSettings {
-
-}
-
-interface AccountFeedData {
-
-}
-interface loginData {
-    accountProfileDetails: AccountProfile,
-    accountSettings: AccountSettings,
-    accountFeedData: AccountFeedData
+interface PayloadData {
+    payload: {
+        code: number,
+        message: string,
+        data: {
+            email: string,
+            username: string,
+            id: string,
+            profilePicture: string,
+            token: string,
+        }
+    }
 }
 
 
@@ -170,8 +185,6 @@ export type {
     StoryReply,
     StoryLike,
     SavedPost,
-    AccountProfile,
-    AccountSettings,
-    AccountFeedData,
-    loginData
+    PayloadData,
+    FeedPost
 }

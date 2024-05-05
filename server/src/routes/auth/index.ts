@@ -28,7 +28,7 @@ AuthRouter.get("/login", async (req, res) => {
             })
         }
 
-        const db_user = await db.select().from(users).where(eq(users.email, email));
+        const db_user = await db.select().from(users).where(eq(users.email, email)).limit(1);
         if (!db_user[0]) {
             return res.status(401).json({
                 code: 0,
@@ -49,7 +49,7 @@ AuthRouter.get("/login", async (req, res) => {
             return res.status(401).json(data)
         }
 
-        const token = jwt.sign({ email: db_user[0].email, id: db_user[0].id }, secret as string, { expiresIn: '1h' })
+        const token = jwt.sign({ email: db_user[0].email, id: db_user[0].id }, secret as string, { expiresIn: '720h' })
 
         return res.status(200).json(
             {
@@ -74,11 +74,10 @@ AuthRouter.get("/login", async (req, res) => {
     }
 })
 
-
 AuthRouter.post("/register", ValidateMiddleware(zodUserSchema), async (req, res) => {
     try {
         const data = req.body
-        if (!data.email && !data.password) {
+        if (!data.email && !data.password && !data.username) {
             return res.status(400).json({
                 code: 0,
                 message: "Email and password is required",
@@ -104,8 +103,9 @@ AuthRouter.post("/register", ValidateMiddleware(zodUserSchema), async (req, res)
             email: data.email,
             password: hash,
             username: data.username,
+            name: data.name,
         }).returning()
-        const token = jwt.sign({ email: newUser[0].email, id: newUser[0].id }, secret as string, { expiresIn: '1h' })
+        const token = jwt.sign({ email: newUser[0].email, id: newUser[0].id }, secret as string, { expiresIn: '720h' })
         return res.status(200).json({
             code: 1,
             message: "Register successfully",

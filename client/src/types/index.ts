@@ -19,6 +19,7 @@ interface User {
     posts: FeedPost[]
     isFollowing: boolean,
     removeFollower: boolean,
+    name: string
 }
 
 interface Message {
@@ -149,6 +150,7 @@ interface PayloadData {
             username: string,
             id: string,
             profilePicture: string,
+            token: string,
         }
     }
 }

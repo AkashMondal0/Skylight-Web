@@ -55,6 +55,7 @@ export default function LoginPage() {
                 name: res.payload.data.username,
                 id: res.payload.data.id,
                 image: res.payload.data.profilePicture,
+                token: res.payload.data.token,
                 redirect: true,
             });
         }

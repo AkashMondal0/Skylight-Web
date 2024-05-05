@@ -1,6 +1,7 @@
 import NextAuth from "next-auth"
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from "next-auth/providers/credentials"
+import { cookies } from "next/headers";
 const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
@@ -17,9 +18,20 @@ const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "text" },
         image: { label: "Image", type: "text" },
         id: { label: "ID", type: "text" },
+        token: { label: "Token", type: "text" },
       },
       async authorize(credentials, req) {
         try {
+          if (!credentials?.token) return null
+          cookies().set({
+            name: 'token-auth',
+            value: credentials?.token,
+            httpOnly: true,
+            path: '/',
+            expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+            secure: true,
+            sameSite: "lax"
+          })
           return credentials as any
         } catch (error) {
           console.log("Error", error)

@@ -38,10 +38,11 @@ server.start()
     app.use(cors());
     app.use(express.json())
     app.use("/graphql", expressMiddleware(server));
-    app.use("/auth", AuthRouter)
-    app.use("/profile", ProfileRouter);
-    app.use("/users", UserRouter)
-    app.use("/post", PostRouter);
+    // my routes
+    app.use("/api/v1/auth", AuthRouter)
+    app.use("/api/v1/profile", ProfileRouter);
+    app.use("/api/v1/users", UserRouter)
+    app.use("/api/v1/post", PostRouter);
 
     app.get('/metrics', async (req, res) => {
       res.setHeader('Content-Type', client.register.contentType);

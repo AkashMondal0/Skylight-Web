@@ -31,7 +31,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
         data: {}
       }, { status: 404 })
     }
-
+    // profile verification
     const data = await db.select({
       // id: followers.followingUserId,
       // post: {
@@ -70,7 +70,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
         likes.authorId,
       )
 
-      // console.log(data,"data")
+    // console.log(data,"data")
 
     return NextResponse.json({
       code: 1,

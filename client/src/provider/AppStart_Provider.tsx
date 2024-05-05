@@ -21,7 +21,7 @@ const AppStart_Provider = ({
     useEffect(() => {
         if (!loadedRef.current) {
             const StartApp = async () => {
-                await dispatch(fetchProfileDataApi() as any)
+                // await dispatch(fetchProfileDataApi() as any)
                 // await dispatch(fetchProfileFeedsApi() as any)
             }
             StartApp()
