@@ -1,15 +1,14 @@
 import db from "@/lib/db/drizzle"
 import { NextRequest, NextResponse } from "next/server"
-import { comments, followers, likes, posts, users } from "@/lib/db/schema"
-import jwt from "jsonwebtoken"
-import { count, desc, eq, sql } from "drizzle-orm"
+import { count, eq, desc } from "drizzle-orm";
+import { followers, posts, users, comments, likes } from '@/lib/db/schema';
 const secret = process.env.NEXTAUTH_SECRET || "secret";
-
+import jwt from "jsonwebtoken"
 
 export async function GET(request: NextRequest, response: NextResponse) {
   try {
 
-    const token = request.cookies.get("token-auth")
+    const token = request.headers.get("authorization")
 
     if (!token) {
       return Response.json({
@@ -20,7 +19,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
       }, { status: 404 })
     }
 
-    let verify_id = jwt.verify(token.value, secret) as { email: string, id: string } as any
+    let verify_id = jwt.verify(token, secret) as { email: string, id: string } as any
 
     const authorId = verify_id.id
 
