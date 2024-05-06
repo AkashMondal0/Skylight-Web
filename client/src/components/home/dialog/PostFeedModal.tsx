@@ -43,8 +43,8 @@ const PostFeedModal = () => {
               ))}
             </CarouselContent>
             <div className='flex'>
-              <CarouselPrevious className='md:flex hidden left-2' />
-              <CarouselNext className='md:flex hidden  right-2' />
+              <CarouselPrevious variant={"default"} className='md:flex hidden left-2' />
+              <CarouselNext variant={"default"} className='md:flex hidden  right-2' />
             </div>
           </Carousel>
         </div>

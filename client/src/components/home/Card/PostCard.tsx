@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
 import React from 'react'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { Heart, Send, MessageCircle, BookMarked } from 'lucide-react';
@@ -20,9 +19,7 @@ const PostItem = ({
   feed: FeedPost
 }) => {
   const router = useRouter()
-  const OpenModal = () => {
-    router.push(`/post/${feed.id}`)
-  }
+
   return (
     <div className='max-w-[480px] w-full mx-auto py-4 border-b'>
       <div className='flex justify-between px-2'>
@@ -53,7 +50,7 @@ const PostItem = ({
         <Carousel>
           <CarouselContent>
             {feed.fileUrl.map((url, index) => (
-              <CarouselItem key={index} className='flex flex-col m-auto' onClick={OpenModal}>
+              <CarouselItem key={index} className='flex flex-col m-auto'>
                 <Image
                   loading='lazy'
                   src={url}
@@ -67,8 +64,8 @@ const PostItem = ({
             ))}
           </CarouselContent>
           <div className='flex'>
-            <CarouselPrevious className='md:flex hidden' />
-            <CarouselNext className='md:flex hidden' />
+            <CarouselPrevious variant={"default"} className='md:flex hidden left-2' />
+            <CarouselNext variant={"default"} className='md:flex hidden right-2' />
           </div>
         </Carousel>
       </div>
@@ -76,7 +73,7 @@ const PostItem = ({
       <div className=' mt-5 mb-1 mx-3 flex justify-between'>
         <div className='flex space-x-3'>
           <Heart className={`w-7 h-7 cursor-pointer  ${feed.alreadyLiked ? "text-red-500 fill-red-500" : ""}`} />
-          <MessageCircle className='w-7 h-7 cursor-pointer' onClick={OpenModal} />
+          <MessageCircle className='w-7 h-7 cursor-pointer' onClick={() => router.push(`/post/${feed.id}`)} />
           <Send className='w-7 h-7 cursor-pointer' />
         </div>
         <BookMarked className='w-7 h-7 cursor-pointer' />
