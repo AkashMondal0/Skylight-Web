@@ -13,20 +13,21 @@ import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { SkeletonFollowUserCard } from "../../components/skeleton"
 import { followingsDataClear } from "@/redux/slice/users"
+import { SkeletonFollowUserCard } from "@/components/profile/loading/skeleton"
+import { useSession } from "next-auth/react"
 
 const ModalFollowing = () => {
   const id = useParams()
   const dispatch = useDispatch()
   const router = useRouter()
   const users = useSelector((state: RootState) => state.users)
-  const profile = useSelector((state: RootState) => state.profile.user)
+  const profile = useSession().data?.user
   const isProfile = profile?.id === users.profileData?.user?.id
   const loadedRef = useRef(false)
 
   const pageRedirect = (user: User) => {
-    router.push(`/${user?.email}`)
+    router.push(`/${user?.username}`)
   }
 
   useEffect(() => {
@@ -43,7 +44,7 @@ const ModalFollowing = () => {
       FetchFollowingsUser()
       loadedRef.current = true;
     }
-  }, [profile?.id]);
+  }, [dispatch, id?.profile, profile?.id, users.profileData?.user?.id]);
 
 
 

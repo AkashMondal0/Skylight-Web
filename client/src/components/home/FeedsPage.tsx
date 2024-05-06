@@ -22,10 +22,10 @@ async function getFeeds() {
 
 export default async function FeedsPage() {
   try {
-
+    const data = await getFeeds()
     return (
       <div>
-        {/* {data?.map((feed, i) => <PostItem key={i} feed={feed as any} />)} */}
+        {data?.map((feed:any, i:number) => <PostItem key={i} feed={feed as any} />)}
       </div>
     )
   } catch (error) {

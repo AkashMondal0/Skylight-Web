@@ -1,24 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 import { User } from '@/types'
 import React from 'react'
 import { ActionButtonsLg } from './client/button'
 import Link from 'next/link'
 import { Link2 } from 'lucide-react'
-import Dynamic from 'next/dynamic'
-import { Skeleton } from '../ui/skeleton'
-
-const StoriesComponent = Dynamic(() => import('./Stories'), {
-    loading: () => <div className='flex gap-10 m-5 my-10'>
-        <Skeleton className='w-20 h-20 rounded-full' />
-    </div>
-})
-const PostComponent = Dynamic(() => import('./Post'), {
-    loading: () => <div className="grid grid-cols-3 gap-2 p-1">
-        {Array(9).fill(0).map((post, index) => (
-            <Skeleton key={index} className='aspect-square w-full h-full object-cover' />
-        ))}
-    </div>
-})
-
+import StoriesComponent from './Stories'
+import PostComponent from './Post'
 
 interface Props {
     isProfile: boolean
@@ -53,13 +40,13 @@ const Lg_Device = ({
                                 {userProfileData.postCount}
                             </p> posts
                         </div>
-                        <Link href={`/${userProfileData.email}/followers`} className='sm:cursor-pointer flex gap-1'>
+                        <Link href={`/${userProfileData.username}/followers`} className='sm:cursor-pointer flex gap-1'>
                             <p className='text-base font-semibold'>
                                 {userProfileData.followersCount}
                             </p>
                             followers
                         </Link>
-                        <Link href={`/${userProfileData.email}/following`} className='sm:cursor-pointer flex gap-1'>
+                        <Link href={`/${userProfileData.username}/following`} className='sm:cursor-pointer flex gap-1'>
                             <p className='text-base font-semibold'>
                                 {userProfileData.followingCount}
                             </p>
@@ -80,9 +67,9 @@ const Lg_Device = ({
                 </div>
             </div>
             {/* story */}
-            <StoriesComponent user={userProfileData} />
+                <StoriesComponent user={userProfileData} />
             {/* post */}
-            <PostComponent posts={userProfileData.posts} />
+                <PostComponent posts={userProfileData.posts} />
             <div className='h-10 w-full'></div>
         </div>
     )

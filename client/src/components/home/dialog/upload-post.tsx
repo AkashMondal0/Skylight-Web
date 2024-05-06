@@ -20,7 +20,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useDispatch, useSelector } from "react-redux"
 import { postFilesApi } from "@/redux/slice/post-feed/api-functions"
-import { RootState } from "@/redux/store"
+import { useSession } from "next-auth/react"
 
 
 export default function UploadPostDialog({
@@ -31,7 +31,7 @@ export default function UploadPostDialog({
     const dispatch = useDispatch()
     const [isFile, setIsFile] = useState<File[]>([])
     const isCaption = useRef<HTMLTextAreaElement>()
-    const useProfile = useSelector((state: RootState) => state.profile)
+    const session = useSession().data?.user
 
     const onChangeFilePicker = (event: any) => {
         var fileArray = []
@@ -51,11 +51,11 @@ export default function UploadPostDialog({
     }
 
     const handleUpload = async () => {
-        if (useProfile.user) {
+        if (session?.id) {
             await dispatch(postFilesApi({
                 isFile,
                 isCaption: isCaption?.current?.value ? isCaption?.current?.value : "",
-                profile: useProfile.user
+                profileId: session?.id
             }) as any)
             setIsFile([])
         }

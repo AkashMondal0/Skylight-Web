@@ -82,7 +82,7 @@ const UserCard = ({
     }, []);
 
     const navigateToProfile = useCallback(() => {
-        router.push(`/${item.email}`)
+        router.push(`/${item.username}`)
     }, []);
 
     return (

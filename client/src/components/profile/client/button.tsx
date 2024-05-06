@@ -1,8 +1,11 @@
 "use client"
 import { Button } from "@/components/ui/button"
+import { UserFollowingApi, UserUnFollowingApi } from "@/redux/slice/users/api-functions"
 import { User } from "@/types"
 import { Settings } from "lucide-react"
+import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { useDispatch } from "react-redux"
 
 const ActionButtonsLg = ({
     isProfile,
@@ -14,27 +17,32 @@ const ActionButtonsLg = ({
     isFollowing?: boolean
 }) => {
     const router = useRouter()
+    const dispatch = useDispatch()
+    const session = useSession().data?.user
     const handleFollow = async () => {
-        // if (userProfileData?.id && profile.user?.id) {
-        //     await dispatch(UserFollowingApi({
-        //         followingUserId: userProfileData?.id,
-        //         followerUserId: profile.user?.id,
-        //         isProfile: isProfile as boolean,
-        //         type: null
-        //     }) as any)
-        // }
+        if (user?.id && session?.id) {
+            await dispatch(UserFollowingApi({
+                followingUserId: user?.id,
+                followerUserId: session?.id,
+                isProfile: isProfile as boolean,
+                type: null
+            }) as any)
+        } else {
+            console.log('no user id from follow button')
+        }
     }
 
     const handleUnfollow = async () => {
-        // if (userProfileData?.id && profile.user?.id) {
-        //     await dispatch(UserUnFollowingApi({
-        //         followingUserId: userProfileData?.id,
-        //         followerUserId: profile.user?.id,
-        //         isProfile: isProfile as boolean,
-        //         type: null
-        //     }) as any)
-        // }
+        if (user?.id && session?.id) {
+            await dispatch(UserUnFollowingApi({
+                followingUserId: user?.id,
+                followerUserId: session?.id,
+                isProfile: isProfile as boolean,
+                type: null
+            }) as any)
+        }
     }
+
 
     if (isProfile) {
         return <div className='flex justify-between gap-2 items-center'>
@@ -52,6 +60,7 @@ const ActionButtonsLg = ({
             <Settings className='w-8 h-8 cursor-pointer' />
         </div>
     }
+
     return <div className='flex justify-between gap-2 items-center'>
         <p className='text-xl px-3'>{user.username}</p>
         {isFollowing ? <Button className='rounded-xl' onClick={handleUnfollow}>
@@ -79,26 +88,30 @@ const ActionButtonsSM = ({
     isFollowing?: boolean
 }) => {
     const router = useRouter()
+    const dispatch = useDispatch()
+    const session = useSession().data?.user
     const handleFollow = async () => {
-        // if (userProfileData?.id && profile.user?.id) {
-        //     await dispatch(UserFollowingApi({
-        //         followingUserId: userProfileData?.id,
-        //         followerUserId: profile.user?.id,
-        //         isProfile: isProfile as boolean,
-        //         type: null
-        //     }) as any)
-        // }
+        if (user?.id && session?.id) {
+            await dispatch(UserFollowingApi({
+                followingUserId: user?.id,
+                followerUserId: session?.id,
+                isProfile: isProfile as boolean,
+                type: null
+            }) as any)
+        } else {
+            console.log('no user id from follow button')
+        }
     }
 
     const handleUnfollow = async () => {
-        // if (userProfileData?.id && profile.user?.id) {
-        //     await dispatch(UserUnFollowingApi({
-        //         followingUserId: userProfileData?.id,
-        //         followerUserId: profile.user?.id,
-        //         isProfile: isProfile as boolean,
-        //         type: null
-        //     }) as any)
-        // }
+        if (user?.id && session?.id) {
+            await dispatch(UserUnFollowingApi({
+                followingUserId: user?.id,
+                followerUserId: session?.id,
+                isProfile: isProfile as boolean,
+                type: null
+            }) as any)
+        }
     }
 
     if (isProfile) {

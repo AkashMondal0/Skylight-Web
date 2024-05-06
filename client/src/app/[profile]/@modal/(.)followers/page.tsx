@@ -14,7 +14,8 @@ import { Separator } from "@/components/ui/separator"
 import { RootState } from '@/redux/store'
 import { FetchFollowersUserDataApi, UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions'
 import { followersDataClear } from '@/redux/slice/users'
-import { SkeletonFollowUserCard } from '../../components/skeleton'
+import { SkeletonFollowUserCard } from '@/components/profile/loading/skeleton'
+import { useSession } from 'next-auth/react'
 
 
 
@@ -23,12 +24,12 @@ const ModalFollowing = () => {
     const dispatch = useDispatch()
     const router = useRouter()
     const users = useSelector((state: RootState) => state.users)
-    const profile = useSelector((state: RootState) => state.profile.user)
+    const profile = useSession().data?.user
     const isProfile = profile?.id === users.profileData?.user?.id
     const loadedRef = useRef(false)
 
     const pageRedirect = (user: User) => {
-        router.push(`/${user?.email}`)
+        router.push(`/${user?.username}`)
     }
 
     useEffect(() => {
@@ -45,7 +46,7 @@ const ModalFollowing = () => {
             FetchFollowingsUser()
             loadedRef.current = true;
         }
-    }, [profile?.id]);
+    }, [dispatch, id?.profile, profile?.id, users.profileData?.user?.id]);
 
 
     const handleActionUnFollow = async (user: User) => {
@@ -133,7 +134,7 @@ const UserCard = ({
                             {user.username}
                         </div>
                         <div className='text-sm'>
-                            {user.email}
+                            {user.name}
                         </div>
                     </div>
                 </div>

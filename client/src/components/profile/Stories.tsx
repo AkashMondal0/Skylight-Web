@@ -2,12 +2,12 @@ import { User } from '@/types'
 import { Plus } from 'lucide-react'
 import React from 'react'
 
-const StoriesComponent = async ({
+const StoriesComponent = ({
     user
 }: {
     user: User
 }) => {
-    await new Promise((resolve) => setTimeout(resolve, 5000))
+    // await new Promise((resolve) => setTimeout(resolve, 5000))
     return (
         <div className='flex sm:gap-10 m-5 sm:my-10 gap-5 my-5 px-2'>
             <img src={user.profilePicture || '/user.jpg'}

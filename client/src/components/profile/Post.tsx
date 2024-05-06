@@ -2,12 +2,12 @@
 import { FeedPost } from '@/redux/slice/post-feed'
 import React from 'react'
 
-const PostComponent = async ({
+const PostComponent = ({
     posts
 }: {
     posts: FeedPost[]
 }) => {
-    await new Promise((resolve) => setTimeout(resolve, 5000))
+    // await new Promise((resolve) => setTimeout(resolve, 100))
     return (
         <div className="grid grid-cols-3 gap-2 sm:gap-1 sm:w-full">
             {posts.map((post, index) => (

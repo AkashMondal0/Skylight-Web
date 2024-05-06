@@ -6,6 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { FetchFollowersUserDataApi, UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions';
 import { RootState } from '@/redux/store';
 import { User } from '@/types';
+import { useSession } from 'next-auth/react';
 import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,12 +16,12 @@ const Page = () => {
   const dispatch = useDispatch()
   const router = useRouter()
   const users = useSelector((state: RootState) => state.users)
-  const profile = useSelector((state: RootState) => state.profile.user)
+  const profile = useSession().data?.user
   const isProfile = profile?.id === users.profileData?.user?.id
   const loadedRef = useRef(false)
 
   const pageRedirect = (user: User) => {
-    router.push(`/${user?.email}`)
+    router.push(`/${user?.username}`)
   }
 
   useEffect(() => {

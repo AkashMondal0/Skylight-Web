@@ -1,18 +1,16 @@
+"use client";
 import Link from 'next/link'
 import React from 'react'
-import { getServerSession } from "next-auth/next"
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import ExploreUserCard from './Card/ExploreCard'
+import { useSession } from 'next-auth/react';
 
 
-export default async function Page() {
-    const session = await getServerSession()
-
-    if (!session?.user) return null
+export default function Page() {
 
     return (
         <div className='my-4 space-y-4'>
-            <MyAccount user={session.user} />
+            <MyAccount />
             <div className='flex justify-between px-2 max-w-sm w-72'>
                 <div className='font-semibold text-sm'>Suggestion for you</div>
                 <Link href={"/explore/people"} className='font-semibold text-xs hover:opacity-50 cursor-pointer'>See All</Link>
@@ -25,30 +23,20 @@ export default async function Page() {
 }
 
 
-const MyAccount = ({
-    user: {
-        name = "Error",
-        image = "/user.jpg",
-        email = "Error",
-    }
-}: {
-    user: {
-        name?: string | null
-        image?: string | null
-        email?: string | null
-    }
-}) => {
+const MyAccount = () => {
+    const session = useSession().data?.user
+    if (!session) return null
     return <div>
         <div className='flex justify-between px-2 max-w-sm w-72'>
             <div className='flex space-x-2 items-center'>
                 <Avatar className='h-10 w-10 mx-auto'>
-                    <AvatarImage src={image || "/user.jpg"}
+                    <AvatarImage src={session?.image === "null" ? "/user.jpg" : session?.image || "/user.jpg"}
                         alt="@shadcn" className='rounded-full' />
                 </Avatar>
                 <div>
-                    <div className='font-semibold text-base'>{email}</div>
+                    <div className='font-semibold text-base'>{session?.username}</div>
                     <div className='text-sm'>
-                        {name}
+                        {session.name}
                     </div>
                 </div>
             </div>

@@ -6,6 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { FetchFollowingsUserDataApi, UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions'
 import { RootState } from '@/redux/store'
 import { User } from '@/types'
+import { useSession } from 'next-auth/react'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -15,25 +16,27 @@ const Page = () => {
   const dispatch = useDispatch()
   const router = useRouter()
   const users = useSelector((state: RootState) => state.users)
-  const profile = useSelector((state: RootState) => state.profile.user)
+  const profile = useSession().data?.user
   const isProfile = profile?.id === users.profileData?.user?.id
   const loadedRef = useRef(false)
 
   const pageRedirect = (user: User) => {
-    router.push(`/${user?.email}`)
+    router.push(`/${user?.username}`)
   }
 
   useEffect(() => {
     if (!loadedRef.current && users.profileData?.user?.id) {
       const FetchFollowingsUser = async () => {
-          await dispatch(FetchFollowingsUserDataApi({
-            profileId: users.profileData?.user?.id as string,
-            skip: 0,
-            size: 12
-          }) as any)
+        await dispatch(FetchFollowingsUserDataApi({
+          profileId: users.profileData?.user?.id as string,
+          skip: 0,
+          size: 12
+        }) as any)
       }
       FetchFollowingsUser()
       loadedRef.current = true;
+    }else{
+      console.log("id not found")
     }
   }, [dispatch, users.profileData?.user?.id]);
 

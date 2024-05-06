@@ -1,25 +1,28 @@
+/* eslint-disable @next/next/no-img-element */
 import { User } from '@/types'
-import React from 'react'
+import React, { Suspense } from 'react'
 import { ActionButtonsSM } from './client/button'
 import { Link2, Plus } from 'lucide-react'
 import Link from 'next/link'
 import Dynamic from 'next/dynamic'
 import { Skeleton } from '../ui/skeleton'
+import StoriesComponent from './Stories'
+import PostComponent from './Post'
 
-const StoriesComponent = Dynamic(() => import('./Stories'), {
-    loading: () => <div className='flex gap-5 my-5 px-2'>
-        <Skeleton className='w-16 h-16 rounded-full' />
-        <Skeleton className='w-16 h-16 rounded-full' />
-        <Skeleton className='w-16 h-16 rounded-full' />
-    </div>
-})
-const PostComponent = Dynamic(() => import('./Post'), {
-    loading: () => <div className="grid grid-cols-3 gap-1 w-full p-1">
-        {Array(9).fill(0).map((post, index) => (
-            <Skeleton key={index} className='aspect-square w-full h-full object-cover' />
-        ))}
-    </div>
-})
+// const StoriesComponent = Dynamic(() => import('./Stories'), {
+//     loading: () => <div className='flex gap-5 my-5 px-2'>
+//         <Skeleton className='w-16 h-16 rounded-full' />
+//         <Skeleton className='w-16 h-16 rounded-full' />
+//         <Skeleton className='w-16 h-16 rounded-full' />
+//     </div>
+// })
+// const PostComponent = Dynamic(() => import('./Post'), {
+//     loading: () => <div className="grid grid-cols-3 gap-1 w-full p-1">
+//         {Array(9).fill(0).map((post, index) => (
+//             <Skeleton key={index} className='aspect-square w-full h-full object-cover' />
+//         ))}
+//     </div>
+// })
 
 interface Props {
     isProfile: boolean
@@ -60,7 +63,9 @@ const Sm_Device = ({
                 </div>
 
                 {/* stories */}
-                <StoriesComponent user={userProfileData} />
+                <Suspense fallback={<>Loading...</>}>
+                    <StoriesComponent user={userProfileData} />
+                </Suspense>
 
                 {/* followers and following */}
                 <div className='flex justify-around p-2 border-y'>
@@ -73,7 +78,7 @@ const Sm_Device = ({
                         </div>
                     </div>
 
-                    <Link className='cursor-pointer text-center' href={`/${userProfileData.id}/follower`}>
+                    <Link className='cursor-pointer text-center' href={`/${userProfileData.username}/follower`}>
                         <p className='text-base font-semibold'>
                             {userProfileData.followersCount}
                         </p>
@@ -82,7 +87,7 @@ const Sm_Device = ({
                         </div>
                     </Link>
 
-                    <Link className='cursor-pointer text-center' href={`/${userProfileData.id}/following`}>
+                    <Link className='cursor-pointer text-center' href={`/${userProfileData.username}/following`}>
                         <p className='text-base font-semibold'>
                             {userProfileData.followingCount}
                         </p>
@@ -95,7 +100,9 @@ const Sm_Device = ({
 
             </>
             {/* posts */}
-            <PostComponent posts={userProfileData.posts} />
+            <Suspense fallback={<>Loading...</>}>
+                <PostComponent posts={userProfileData.posts} />
+            </Suspense>
             <div className='h-10 w-full'></div>
         </div>
     )
