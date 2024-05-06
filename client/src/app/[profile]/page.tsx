@@ -1,5 +1,4 @@
 "use client"
-import dynamic from "next/dynamic";
 import SkeletonProfile from "@/components/profile/loading/skeleton";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useRef } from "react";
@@ -8,13 +7,6 @@ import { RootState } from "@/redux/store";
 import { useSession } from "next-auth/react";
 import Lg_Device from "@/components/profile/Lg_Device";
 import Sm_Device from "@/components/profile/Sm_Device";
-
-// const Lg_Device = dynamic(() => import('@/components/profile/Lg_Device'), {
-//     loading: () => <SkeletonProfile />
-// })
-// const Sm_Device = dynamic(() => import('@/components/profile/Sm_Device'), {
-//     loading: () => <SkeletonProfile />
-// })
 
 export default function Page({ params }: { params: { profile: string } }) {
     const dispatch = useDispatch()
@@ -30,7 +22,6 @@ export default function Page({ params }: { params: { profile: string } }) {
             }
             StartApp()
             loadedRef.current = true;
-            console.log('start app')
         }
     }, [dispatch, params.profile]);
 
