@@ -55,7 +55,7 @@ export default function UploadPostDialog({
             await dispatch(postFilesApi({
                 isFile,
                 isCaption: isCaption?.current?.value ? isCaption?.current?.value : "",
-                profileId: session?.id
+                profileId: session?.username
             }) as any)
             setIsFile([])
         }

@@ -1,4 +1,3 @@
-import { RootState } from '@/redux/store'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { fetchProfileFeedsApi, postFilesApi } from './api-functions'

@@ -1,4 +1,23 @@
-import { FeedPost } from "@/redux/slice/post-feed";
+interface FeedPost {
+    id: string
+    caption: string
+    fileUrl: string[]
+    commentCount: number
+    likeCount: number
+    createdAt: Date
+    alreadyLiked: boolean | null
+    authorData: AuthorData
+    comments: Comment[]
+    likes: Like[]
+}
+
+interface AuthorData {
+    id: string
+    username: string
+    email: string
+    name: string
+    profilePicture: string
+}
 
 interface User {
     id: string;
@@ -62,6 +81,7 @@ interface Comment {
     postId: string;
     createdAt: Date;
     updatedAt: Date;
+    authorData: AuthorData
 }
 
 interface Like {
