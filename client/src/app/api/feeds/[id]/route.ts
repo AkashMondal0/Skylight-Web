@@ -8,7 +8,7 @@ import jwt from "jsonwebtoken"
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
     try {
 
-        const token = request.cookies.get("token-auth")
+        const token = request.headers.get("authorization")
 
         if (!token) {
             return Response.json({
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
             }, { status: 404 })
         }
 
-        let verify_id = jwt.verify(token.value, secret) as { email: string, id: string } as any
+        let verify_id = jwt.verify(token, secret) as { email: string, id: string } as any
 
         const authorId = verify_id.id
 
@@ -45,6 +45,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
                 id: users.id,
                 username: users.username,
                 email: users.email,
+                name: users.name,
                 profilePicture: users.profilePicture,
             },
         })
@@ -88,7 +89,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
             code: 1,
             message: "post Fetched Successfully",
             status_code: 200,
-            data: { ...data, comments: post_comments }
+            data: { ...data[0], comments: post_comments }
         }, { status: 200 })
 
     } catch (error) {

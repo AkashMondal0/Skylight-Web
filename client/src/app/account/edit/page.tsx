@@ -14,9 +14,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import OptionAvatarDialog from '../../[profile]/dialog/options'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
+import OptionAvatarDialog from '@/components/profile/dialog/options'
 
 const Page = () => {
     const profile = useSelector((state: RootState) => state.profile)

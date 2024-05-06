@@ -192,5 +192,6 @@ export type {
     StoryReply,
     StoryLike,
     SavedPost,
-    PayloadData
+    PayloadData,
+    FeedPost
 }

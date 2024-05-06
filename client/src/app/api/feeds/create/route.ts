@@ -54,7 +54,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
       code: 1,
       message: "Success",
       status_code: 200,
-      data: token
+      data: {}
     }, { status: 200 })
 
   } catch (error) {

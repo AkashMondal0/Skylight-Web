@@ -51,7 +51,7 @@ const authOptions: NextAuthOptions = {
     async session({ session, token, user }) {
       if (token.user) {
         session.user = token.user as {
-          id: number;
+          id: string; // Change the type of id from number to string
           username: string;
           email: string;
           name: string;

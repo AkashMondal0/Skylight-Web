@@ -73,7 +73,10 @@ const PostItem = ({
       <div className=' mt-5 mb-1 mx-3 flex justify-between'>
         <div className='flex space-x-3'>
           <Heart className={`w-7 h-7 cursor-pointer  ${feed.alreadyLiked ? "text-red-500 fill-red-500" : ""}`} />
-          <MessageCircle className='w-7 h-7 cursor-pointer' onClick={() => router.push(`/post/${feed.id}`)} />
+          <MessageCircle className='w-7 h-7 cursor-pointer hidden sm:block' onClick={() => router.push(`/post/${feed.id}`)} />
+          {/* sm */}
+          <MessageCircle className='w-7 h-7 cursor-pointer sm:hidden block' onClick={() => router.push(`/post/${feed.id}/comments`)} />
+
           <Send className='w-7 h-7 cursor-pointer' />
         </div>
         <BookMarked className='w-7 h-7 cursor-pointer' />
@@ -91,7 +94,12 @@ const PostItem = ({
           <div>{feed.caption}</div>
         </div>
         {/* load more */}
-        <div className='text-sm cursor-pointer'
+        <div className='text-sm cursor-pointer hidden sm:block'
+          onClick={() => {
+            router.push(`/post/${feed.id}`)
+          }}>View all {feed.commentCount} comments</div>
+          {/* sm */}
+          <div className='text-sm cursor-pointer sm:hidden block'
           onClick={() => {
             router.push(`/post/${feed.id}/comments`)
           }}>View all {feed.commentCount} comments</div>
