@@ -1,13 +1,21 @@
 /* eslint-disable @next/next/no-img-element */
-
+"use client"
 import React from 'react'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { useRouter } from 'next/navigation'
+
 const PostFeedModal = () => {
+  const router = useRouter()
+  const onOpenChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      router.back()
+    }
+  }
   return (
-    <Dialog open>
+    <Dialog open onOpenChange={onOpenChange}>
       <DialogContent className="p-0 flex max-w-none w-[75dvw] h-[90dvh] overflow-y-auto">
         <div className='aspect-video w-full h-full'>
           <Carousel >

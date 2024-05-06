@@ -4,7 +4,15 @@ const nextConfig = {
     output: "standalone",
     images: {
         formats: ["image/avif", "image/webp"],
-        domains: ["nngujjeumggzpchjxdpn.supabase.co"],
+        // domains: ["nngujjeumggzpchjxdpn.supabase.co"],
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'nngujjeumggzpchjxdpn.supabase.co',
+                port: '',
+                pathname: '/storage/v1/object/public/skymedia/**',
+            }
+        ],
     },
     env: {
         // API

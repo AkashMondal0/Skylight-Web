@@ -1,6 +1,7 @@
 // "use client"
 import { FeedPost } from '@/redux/slice/post-feed'
 import React from 'react'
+import Image from 'next/image'
 
 const PostComponent = ({
     posts
@@ -9,9 +10,19 @@ const PostComponent = ({
 }) => {
     // await new Promise((resolve) => setTimeout(resolve, 100))
     return (
-        <div className="grid grid-cols-3 gap-2 sm:gap-1 sm:w-full">
+        <div className="grid grid-cols-3 gap-1 w-full">
             {posts.map((post, index) => (
-                <img key={index} src={post.fileUrl[0]} className='aspect-square w-full h-full object-cover cursor-default' />
+                <div key={index}>
+                    <Image
+                        loading='lazy'
+                        src={post.fileUrl[0]}
+                        width={300}
+                        height={300}
+                        alt="Picture of the author"
+                        sizes="100vw"
+                        className='aspect-square w-full h-full object-cover cursor-default rounded-xl userNotSelectImg'
+                    />
+                </div>
             ))}
         </div>
     )

@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/carousel"
 import { FeedPost } from '@/redux/slice/post-feed';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const PostItem = ({
   feed
@@ -20,13 +21,14 @@ const PostItem = ({
 }) => {
   const router = useRouter()
   const OpenModal = () => {
-    console.log('open modal')
     router.push(`/post/${feed.id}`)
   }
   return (
     <div className='max-w-[480px] w-full mx-auto py-4 border-b'>
       <div className='flex justify-between px-2'>
-        <div className='flex space-x-2 items-center'>
+        <div className='flex space-x-2 items-center cursor-pointer' onClick={() => {
+          router.push(`/${feed.authorData.username}`)
+        }}>
           <Avatar className='h-12 w-12 mx-auto border-fuchsia-500 border-[3px] p-[2px]'>
             <AvatarImage src={feed.authorData.profilePicture || "/user.jpg"}
               alt="@shadcn" className='rounded-full' />
@@ -51,14 +53,17 @@ const PostItem = ({
         <Carousel>
           <CarouselContent>
             {feed.fileUrl.map((url, index) => (
-              <CarouselItem key={index} className='h-[500px]'>
-                <img
+              <CarouselItem key={index} className='flex flex-col m-auto' onClick={OpenModal}>
+                <Image
+                  loading='lazy'
                   src={url}
                   width={500}
                   height={500}
-                  className='object-cover w-full h-full'
                   alt="Picture of the author"
-                /></CarouselItem>
+                  sizes="100vw"
+                  className='rounded-lg border h-auto w-full cursor-pointer userNotSelectImg'
+                />
+              </CarouselItem>
             ))}
           </CarouselContent>
           <div className='flex'>

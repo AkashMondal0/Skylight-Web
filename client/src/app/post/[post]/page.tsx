@@ -1,6 +1,7 @@
-import React from 'react'
 
-const Page = () => {
+export default async function Page({ params }: { params: { id: string } }) {
+  console.log(params)
+
   return (
     <div>
       post
@@ -8,4 +9,3 @@ const Page = () => {
   )
 }
 
-export default Page
