@@ -25,21 +25,22 @@ export default PostComponent
 
 
 const ImageComponent = ({ url }: { url: string }) => {
-    const [load, setLoad] = React.useState(false)
+    // const [load, setLoad] = React.useState(false)
 
     return <>
         <Image
-            loading='lazy'
             src={url}
             width={100}
             height={100}
             alt="Picture of the author"
-            sizes="20vw"
-            onLoad={(e) => {
-                setLoad(true)
+            quality={100}
+            priority={true}
+            sizes="(min-width: 808px) 50vw, 100vw"
+            style={{
+                objectFit: 'cover', // cover, contain, none
             }}
             className={cn(`aspect-square w-full h-full object-cover cursor-default rounded-xl 
-            userNotSelectImg bg-muted ${!load && "animate-pulse"}`)}
+            userNotSelectImg bg-muted`)}
         />
     </>
 }

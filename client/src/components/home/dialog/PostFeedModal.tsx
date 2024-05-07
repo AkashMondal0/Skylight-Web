@@ -13,6 +13,7 @@ import {
   Smile,
   Heart, MessageCircle, Send, BookMarked
 } from 'lucide-react'
+import SkyAvatar from '@/components/sky/SkyAvatar'
 
 
 const PostFeedModal = ({ data }: {
@@ -32,20 +33,20 @@ const PostFeedModal = ({ data }: {
             <CarouselContent>
               {data?.fileUrl?.map((url, index) => (
                 <CarouselItem key={index} className='m-auto'>
-                  {
-                    url ? <Image
-                      loading='lazy'
-                      src={url}
-                      width={300}
-                      height={300}
-                      alt="Picture of the author"
-                      sizes="100vw"
-                      quality={100}
-                      className='w-auto h-auto cursor-default border m-auto rounded-lg userNotSelectImg'
-                    /> : <div className='w-[500px] h-[500px] 
-                  cursor-default border rounded-lg userNotSelectImg'>
-                    </div>
-                  }
+                  <Image
+                    src={url}
+                    width={300}
+                    height={300}
+                    alt="Picture of the author"
+                    quality={100}
+                    sizes="(min-width: 808px) 50vw, 100vw"
+                    // (max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw
+                    style={{
+                      objectFit: 'cover', // cover, contain, none
+                    }}
+                    priority={true}
+                    className='w-auto h-auto min-h-96 min-w-full cursor-default border m-auto rounded-lg userNotSelectImg'
+                  />
                 </CarouselItem>
               ))}
             </CarouselContent>
@@ -58,10 +59,11 @@ const PostFeedModal = ({ data }: {
         <div className="flex flex-col max-w-[500px] w-full flex-1 border-l">
           <div className="flex justify-between bg-background items-center p-4 border-b h-20 z-10 sticky top-0 rounded-lg">
             <div className="flex gap-2 items-center">
-              <Avatar className='h-12 w-12 border-fuchsia-500 border-[3px] p-[2px]'>
+              {/* <Avatar className='h-12 w-12 '>
                 <AvatarImage src={data?.authorData?.profilePicture || "/user.jpg"}
                   alt="@shadcn" className='rounded-full' />
-              </Avatar>
+              </Avatar> */}
+              <SkyAvatar url={data?.authorData?.profilePicture || "/user.jpg"} className='h-12 w-12 border-fuchsia-500 border-[3px] p-[2px]' />
               <div className="font-semibold text-lg">{data?.authorData?.name}</div>
             </div>
             <div className="flex items-center">
@@ -75,10 +77,11 @@ const PostFeedModal = ({ data }: {
 
           <ScrollArea className='h-auto'>
             <div className="flex p-4 my-auto">
-              <Avatar className='h-12 w-12 border-fuchsia-500 border-[3px] p-[2px]'>
+              {/* <Avatar className='h-12 w-12 border-fuchsia-500 border-[3px] p-[2px]'>
                 <AvatarImage src={data?.authorData?.profilePicture || "/user.jpg"}
                   alt="@shadcn" className='rounded-full' />
-              </Avatar>
+              </Avatar> */}
+              <SkyAvatar url={data?.authorData?.profilePicture || "/user.jpg"} className='h-12 w-12 border-fuchsia-500 border-[3px] p-[2px]' />
               <div className="flex flex-col ml-4">
                 <p className="break-all"><span className='font-semibold text-lg'>
                   {data?.authorData?.username}</span> {data?.caption}
@@ -96,10 +99,11 @@ const PostFeedModal = ({ data }: {
                 <>
                   {data?.comments?.map((comment, index) => (
                     <div key={index} className="flex p-4 my-auto">
-                      <Avatar className='h-12 w-12 border-fuchsia-500 border-[3px] p-[2px]'>
+                      {/* <Avatar className='h-12 w-12 border-fuchsia-500 border-[3px] p-[2px]'>
                         <AvatarImage src={comment?.authorData?.profilePicture || "/user.jpg"}
                           alt="@shadcn" className='rounded-full' />
-                      </Avatar>
+                      </Avatar> */}
+                      <SkyAvatar url={comment?.authorData?.profilePicture || "/user.jpg"} className='h-12 w-12 border-fuchsia-500 border-[3px] p-[2px]' />
                       <div className="flex flex-col ml-4">
                         <p className="break-all"><span className='font-semibold text-lg'>
                           {comment?.authorData?.username}</span> {comment?.comment}

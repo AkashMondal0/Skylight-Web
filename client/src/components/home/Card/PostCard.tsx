@@ -12,6 +12,8 @@ import {
 import { FeedPost } from '@/redux/slice/post-feed';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { cn } from '@/lib/utils';
+import SkyAvatar from '@/components/sky/SkyAvatar';
 
 const PostItem = ({
   feed
@@ -26,10 +28,11 @@ const PostItem = ({
         <div className='flex space-x-2 items-center cursor-pointer' onClick={() => {
           router.push(`/${feed.authorData.username}`)
         }}>
-          <Avatar className='h-12 w-12 mx-auto border-fuchsia-500 border-[3px] p-[2px]'>
+          {/* <Avatar className='h-12 w-12 mx-auto border-fuchsia-500 border-[3px] p-[2px]'>
             <AvatarImage src={feed.authorData.profilePicture || "/user.jpg"}
               alt="@shadcn" className='rounded-full' />
-          </Avatar>
+          </Avatar> */}
+          <SkyAvatar url={feed.authorData.profilePicture || "/user.jpg"} className='h-12 w-12 mx-auto border-fuchsia-500 border-[3px] p-[2px]' />
           <div>
             <div className='font-semibold text-base'>{feed.authorData.username} .
               <span className='font-light text-base'>1d</span>
@@ -52,14 +55,17 @@ const PostItem = ({
             {feed.fileUrl.map((url, index) => (
               <CarouselItem key={index} className='flex flex-col m-auto'>
                 <Image
-                  loading='lazy'
                   src={url}
                   width={300}
                   height={300}
                   alt="Picture of the author"
-                  sizes="40vw"
-                  onLoad={(e) => <>loading</>}
-                  className='rounded-lg border h-auto w-full cursor-pointer userNotSelectImg'
+                  quality={100}
+                  priority={true}
+                  sizes="(min-width: 808px) 50vw, 100vw"
+                  style={{
+                      objectFit: 'cover', // cover, contain, none
+                  }}
+                  className={cn('rounded-lg border h-auto w-full cursor-pointer userNotSelectImg bg-muted')}
                 />
               </CarouselItem>
             ))}
