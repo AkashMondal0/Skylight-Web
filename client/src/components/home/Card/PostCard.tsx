@@ -54,10 +54,11 @@ const PostItem = ({
                 <Image
                   loading='lazy'
                   src={url}
-                  width={500}
-                  height={500}
+                  width={300}
+                  height={300}
                   alt="Picture of the author"
-                  sizes="100vw"
+                  sizes="40vw"
+                  onLoad={(e) => <>loading</>}
                   className='rounded-lg border h-auto w-full cursor-pointer userNotSelectImg'
                 />
               </CarouselItem>
