@@ -4,6 +4,7 @@ import React from 'react'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import ExploreUserCard from './Card/ExploreCard'
 import { useSession } from 'next-auth/react';
+import SkyAvatar from '../sky/SkyAvatar';
 
 
 export default function Page() {
@@ -29,10 +30,11 @@ const MyAccount = () => {
     return <div>
         <div className='flex justify-between px-2 max-w-sm w-72'>
             <div className='flex space-x-2 items-center'>
-                <Avatar className='h-10 w-10 mx-auto'>
+                {/* <Avatar className='h-10 w-10 mx-auto'>
                     <AvatarImage src={session?.image === "null" ? "/user.jpg" : session?.image || "/user.jpg"}
                         alt="@shadcn" className='rounded-full' />
-                </Avatar>
+                </Avatar> */}
+                <SkyAvatar className='h-10 w-10 mx-auto' url={session?.image === "null" ? "/user.jpg" : session?.image || "/user.jpg"} />
                 <div>
                     <div className='font-semibold text-base'>{session?.username}</div>
                     <div className='text-sm'>

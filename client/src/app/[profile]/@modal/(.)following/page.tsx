@@ -16,6 +16,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { followingsDataClear } from "@/redux/slice/users"
 import { SkeletonFollowUserCard } from "@/components/profile/loading/skeleton"
 import { useSession } from "next-auth/react"
+import SkyAvatar from "@/components/sky/SkyAvatar"
 
 const ModalFollowing = () => {
   const id = useParams()
@@ -122,10 +123,11 @@ const UserCard = ({
     <>
       <div className='flex justify-between px-2 my-4'>
         <div className='flex space-x-2 items-center cursor-pointer' onClick={() => pageRedirect(user)}>
-          <Avatar className='h-10 w-10 mx-auto'>
+          {/* <Avatar className='h-10 w-10 mx-auto'>
             <AvatarImage src={user.profilePicture || "/user.jpg"}
               alt="@sky" className='rounded-full' />
-          </Avatar>
+          </Avatar> */}
+          <SkyAvatar url={user.profilePicture || "/user.jpg"} className='h-10 w-10 mx-auto' />
           <div>
             <div className='font-semibold text-base'>
               {user.username}

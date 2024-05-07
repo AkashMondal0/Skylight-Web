@@ -1,3 +1,4 @@
+import SkyAvatar from '@/components/sky/SkyAvatar'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -27,10 +28,11 @@ const UserCard = ({
       <>
           <div className='flex justify-between px-2 my-4'>
               <div className='flex space-x-2 items-center'>
-                  <Avatar className='h-12 w-12 mx-auto'>
+                  {/* <Avatar className='h-12 w-12 mx-auto'>
                       <AvatarImage src={url}
                           alt="@shadcn" className='rounded-full' />
-                  </Avatar>
+                  </Avatar> */}
+                  <SkyAvatar url={url} className='h-12 w-12 mx-auto' />
                   <div>
                       <div className='font-semibold text-base'>Akash Mondal</div>
                       <div className='text-sm'>

@@ -17,6 +17,7 @@ import {
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import OptionAvatarDialog from '@/components/profile/dialog/options'
+import SkyAvatar from '@/components/sky/SkyAvatar'
 
 const Page = () => {
     const profile = useSelector((state: RootState) => state.profile)
@@ -30,10 +31,11 @@ const Page = () => {
                 <div className='flex justify-between p-4 my-4 bg-secondary text-secondary-foreground rounded-2xl'>
                     <div className='flex space-x-3'>
                         <OptionAvatarDialog profile={profile.user}>
-                            <Avatar className='h-12 w-12 mx-auto cursor-pointer'>
+                            {/* <Avatar className='h-12 w-12 mx-auto cursor-pointer'>
                                 <AvatarImage src={profile.user?.profilePicture || "/user.jpg"}
                                     alt="@shadcn" className='rounded-full' />
-                            </Avatar>
+                            </Avatar> */}
+                            <SkyAvatar className='h-12 w-12 mx-auto' url={profile.user?.profilePicture || "/user.jpg"} />
                         </OptionAvatarDialog>
 
                         <div>

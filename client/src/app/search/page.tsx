@@ -10,6 +10,7 @@ import { User } from '@/types';
 import { removeAllUserFormSearch, removeUserFormSearch } from '@/redux/slice/users';
 import { useRouter } from 'next/navigation';
 import { SkeletonUserCard } from '@/components/home/loading/UserCard';
+import SkyAvatar from '@/components/sky/SkyAvatar';
 
 const SearchModel = () => {
   const dispatch = useDispatch();
@@ -76,10 +77,11 @@ const UserCard = ({
       <div className='flex justify-between p-2  cursor-pointer
       hover:bg-secondary hover:text-secondary-foreground rounded-2xl my-1'>
         <div className='flex space-x-2 items-center' onClick={navigateToProfile}>
-          <Avatar className='h-12 w-12 mx-auto'>
+          {/* <Avatar className='h-12 w-12 mx-auto'>
             <AvatarImage src={item.profilePicture ? item.profilePicture : "/user.jpg"}
               alt="@shadcn" className='rounded-full' />
-          </Avatar>
+          </Avatar> */}
+          <SkyAvatar url={item.profilePicture ? item.profilePicture : "/user.jpg"} className='h-12 w-12 mx-auto' />
           <div className='ml-2'>
             <div className='font-semibold text-base text-start'>{item.username}</div>
             <div className='text-sm'>
