@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import jwt from "jsonwebtoken"
 import db from "@/lib/db/drizzle";
-import { followers, posts, users } from "@/lib/db/schema";
-import { count, eq, like, or, desc, not, is, sql, exists, and } from "drizzle-orm";
+import { comments, followers, likes, posts, users } from "@/lib/db/schema";
+import { count, eq, like, or, desc, not, is, sql, exists, and, asc } from "drizzle-orm";
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
@@ -80,9 +80,19 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       .where(eq(followers.followingUserId, userProfile[0].id))
 
     // get post count
-    const userPosts = await db.select()
+    const userPosts = await db.select({
+      id: posts.id,
+      authorId: posts.authorId,
+      fileUrl: posts.fileUrl,
+      likeCount: count(likes.id),
+      commentCount: count(comments.id),
+      createdAt: posts.createdAt
+    })
       .from(posts)
       .where(eq(posts.authorId, userProfile[0].id))
+      .leftJoin(likes, eq(likes.postId, posts.id))
+      .leftJoin(comments, eq(comments.postId, posts.id))
+      .groupBy(posts.id, likes.id, comments.id)
       .limit(12)
       .offset(0)
       .orderBy(desc(posts.createdAt))

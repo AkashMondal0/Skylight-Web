@@ -27,7 +27,12 @@ const PostFeedModal = ({ data }: {
   }
   return (
     <Dialog open onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 flex max-w-none w-auto h-[90dvh] ">
+      <DialogContent className="p-0 flex overflow-y-auto" style={{
+        width: '90dvw',
+        maxWidth: '90vw',
+        height: '95vh',
+        maxHeight: '800px',
+      }}>
         <div className='flex-1 m-auto ml-4'>
           <Carousel >
             <CarouselContent>
@@ -39,8 +44,8 @@ const PostFeedModal = ({ data }: {
                     height={300}
                     alt="Picture of the author"
                     quality={100}
-                    sizes="(min-width: 808px) 50vw, 100vw"
-                    // (max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    //(min-width: 808px) 50vw, 100vw 
                     style={{
                       objectFit: 'cover', // cover, contain, none
                     }}
@@ -56,7 +61,7 @@ const PostFeedModal = ({ data }: {
             </div>
           </Carousel>
         </div>
-        <div className="flex flex-col max-w-[500px] w-full flex-1 border-l">
+        <div className="flex h-auto flex-col justify-between max-w-[500px] w-full flex-1 border-l">
           <div className="flex justify-between bg-background items-center p-4 border-b h-20 z-10 sticky top-0 rounded-lg">
             <div className="flex gap-2 items-center">
               {/* <Avatar className='h-12 w-12 '>
@@ -74,7 +79,6 @@ const PostFeedModal = ({ data }: {
               </svg>
             </div>
           </div>
-
           <ScrollArea className='h-auto'>
             <div className="flex p-4 my-auto">
               {/* <Avatar className='h-12 w-12 border-fuchsia-500 border-[3px] p-[2px]'>
@@ -115,8 +119,7 @@ const PostFeedModal = ({ data }: {
                 </>
             }
           </ScrollArea>
-
-          <div className='w-full bg-background p-2 border-t'>
+          <div className='w-full bg-background p-2 border-t sticky bottom-0'>
             <div className='my-2 mx-3 flex justify-between'>
               <div className='flex space-x-3'>
                 <Heart className={`w-7 h-7 cursor-pointer  ${data.alreadyLiked ? "text-red-500 fill-red-500" : ""}`} />
