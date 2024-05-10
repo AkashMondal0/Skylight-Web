@@ -27,13 +27,13 @@ const PostFeedModal = ({ data }: {
   }
   return (
     <Dialog open onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 flex overflow-y-auto" style={{
-        width: '90dvw',
-        maxWidth: '90vw',
+      <DialogContent className="p-0 flex overflow-y-auto max-w-none" style={{
         height: '95vh',
         maxHeight: '800px',
+        width:"auto",
+        maxWidth: '90vw',
       }}>
-        <div className='flex-1 m-auto ml-4'>
+        <div className='flex-1 m-auto ml-4 w-full h-auto'>
           <Carousel >
             <CarouselContent>
               {data?.fileUrl?.map((url, index) => (
@@ -50,7 +50,7 @@ const PostFeedModal = ({ data }: {
                       objectFit: 'cover', // cover, contain, none
                     }}
                     priority={true}
-                    className='w-auto h-auto min-h-96 min-w-full cursor-default border m-auto rounded-lg userNotSelectImg'
+                    className='w-auto h-auto cursor-default border m-auto rounded-lg userNotSelectImg'
                   />
                 </CarouselItem>
               ))}

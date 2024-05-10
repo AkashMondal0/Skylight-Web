@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Link2 } from 'lucide-react'
 import StoriesComponent from './Stories'
 import PostComponent from './Post'
+import SkyAvatar from '../sky/SkyAvatar'
 
 interface Props {
     isProfile: boolean
@@ -19,16 +20,8 @@ const Lg_Device = ({
         <div className="hidden sm:block">
             {/* profile header */}
             <div className='flex items-center my-8 m-5'>
-                {/* {isProfile ?
-                    <OptionAvatarDialog profile={user as any}>
-                        <Image src={userProfileData.profilePicture || "/user.jpg"}
-                            alt='profile'
-                            className='sm:w-36 object-cover bg-slate-400 sm:h-36 w-28 h-28 rounded-full sm:mr-8 cursor-pointer' />
-                    </OptionAvatarDialog> : */}
-                <img src={userProfileData.profilePicture || "/user.jpg"}
-                    alt='profile'
-                    className='sm:w-36 object-cover bg-slate-400 sm:h-36 w-28 h-28 rounded-full sm:mr-8 cursor-pointer' />
-                {/* } */}
+                <SkyAvatar url={userProfileData.profilePicture || "/user.jpg"} 
+                className={'sm:w-36 object-cover bg-slate-400 sm:h-36 w-28 h-28 rounded-full sm:mr-8'} />
                 <div className='flex flex-col justify-between gap-5'>
                     <ActionButtonsLg
                         isFollowing={userProfileData.isFollowing}
@@ -67,9 +60,9 @@ const Lg_Device = ({
                 </div>
             </div>
             {/* story */}
-                <StoriesComponent user={userProfileData} />
+            <StoriesComponent user={userProfileData} />
             {/* post */}
-                <PostComponent posts={userProfileData.posts} />
+            <PostComponent posts={userProfileData.posts} />
             <div className='h-10 w-full'></div>
         </div>
     )

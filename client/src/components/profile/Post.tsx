@@ -15,7 +15,7 @@ const PostComponent = ({
     const router = useRouter()
     return (
         <div className="grid grid-cols-3 gap-1 w-full p-1" >
-            {posts.map((post, index) => (
+            {posts?.map((post, index) => (
                 <div key={index} onClick={() => router.push(`/post/${post.id}`)}>
                     <ImageComponent
                         totalPostsCount={post.fileUrl.length ?? 0}

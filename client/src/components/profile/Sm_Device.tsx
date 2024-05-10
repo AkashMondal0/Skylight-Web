@@ -4,10 +4,9 @@ import React, { Suspense } from 'react'
 import { ActionButtonsSM } from './client/button'
 import { Link2, Plus } from 'lucide-react'
 import Link from 'next/link'
-import Dynamic from 'next/dynamic'
-import { Skeleton } from '../ui/skeleton'
 import StoriesComponent from './Stories'
 import PostComponent from './Post'
+import SkyAvatar from '../sky/SkyAvatar'
 
 // const StoriesComponent = Dynamic(() => import('./Stories'), {
 //     loading: () => <div className='flex gap-5 my-5 px-2'>
@@ -36,9 +35,10 @@ const Sm_Device = ({
         <div className='sm:hidden block'>
             {/* profile header */}
             <div className='flex gap-3 my-5 items-center px-2'>
-                <img src={userProfileData.profilePicture || "/user.jpg"}
-                    className='w-24 h-24 rounded-full object-cover bg-slate-400'
-                    alt={'no image'} />
+
+                <SkyAvatar url={userProfileData.profilePicture || "/user.jpg"}
+                    className={'w-24 h-24 rounded-full object-cover bg-slate-400'} />
+
                 <div className='flex flex-col gap-4'>
                     <div className='flex gap-2'>
                         <p className='text-xl px-3'>{userProfileData.email}</p>

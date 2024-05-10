@@ -28,10 +28,6 @@ const PostItem = ({
         <div className='flex space-x-2 items-center cursor-pointer' onClick={() => {
           router.push(`/${feed.authorData.username}`)
         }}>
-          {/* <Avatar className='h-12 w-12 mx-auto border-fuchsia-500 border-[3px] p-[2px]'>
-            <AvatarImage src={feed.authorData.profilePicture || "/user.jpg"}
-              alt="@shadcn" className='rounded-full' />
-          </Avatar> */}
           <SkyAvatar url={feed.authorData.profilePicture || "/user.jpg"} className='h-12 w-12 mx-auto border-fuchsia-500 border-[3px] p-[2px]' />
           <div>
             <div className='font-semibold text-base'>{feed.authorData.username} .
