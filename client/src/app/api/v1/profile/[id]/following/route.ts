@@ -4,7 +4,7 @@ import { followers, users } from "@/lib/db/schema"
 import { and, eq, exists } from "drizzle-orm"
 import jwt from "jsonwebtoken"
 const secret = process.env.NEXTAUTH_SECRET || "secret";
-export async function GET(request: NextRequest, { params }: { params: { userId: string } }) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const token = request.headers.get("authorization")
 
@@ -47,7 +47,7 @@ export async function GET(request: NextRequest, { params }: { params: { userId: 
       )))
     })
       .from(followers)
-      .where(eq(followers.followerUserId, params.userId))
+      .where(eq(followers.followerUsername, params.id))
       .leftJoin(users, eq(followers.followingUserId, users.id))
       .limit(Number(size))
       .offset(Number(skip))
@@ -59,6 +59,7 @@ export async function GET(request: NextRequest, { params }: { params: { userId: 
       data: Followers
     }, { status: 200 })
   } catch (error) {
+    console.log(error)
     return Response.json({
       code: 0,
       message: "Internal server error",

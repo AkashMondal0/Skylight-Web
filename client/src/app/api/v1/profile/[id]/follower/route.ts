@@ -50,7 +50,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       )))
     })
       .from(followers)
-      .where(eq(followers.followingUserId, params.id)) // <------------- user id
+      .where(eq(followers.followingUsername, params.id)) // <------------- user id
       .leftJoin(users, eq(followers.followerUserId, users.id))
       .limit(Number(size))
       .offset(Number(skip))

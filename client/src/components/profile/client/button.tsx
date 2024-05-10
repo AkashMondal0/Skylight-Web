@@ -1,5 +1,6 @@
 "use client"
 import { Button } from "@/components/ui/button"
+import { Skeleton } from "@/components/ui/skeleton"
 import { UserFollowingApi, UserUnFollowingApi } from "@/redux/slice/users/api-functions"
 import { User } from "@/types"
 import { Settings } from "lucide-react"
@@ -44,6 +45,13 @@ const ActionButtonsLg = ({
             }) as any)
         }
     }
+
+    if (!user) return <div className='flex justify-between gap-2 items-center'>
+        <Skeleton className='w-32 h-6 rounded-xl' />
+        <Skeleton className='w-32 h-10 rounded-xl' />
+        <Skeleton className='w-32 h-10 rounded-xl' />
+        <Skeleton className='w-8 h-8 rounded-xl' />
+    </div>
 
 
     if (isProfile) {
@@ -117,6 +125,13 @@ const ActionButtonsSM = ({
             }) as any)
         }
     }
+
+    if (!user) return <div className='flex justify-between gap-2 items-center'>
+        <Skeleton className='w-32 h-6 rounded-xl' />
+        <Skeleton className='w-32 h-10 rounded-xl' />
+        <Skeleton className='w-32 h-10 rounded-xl' />
+        <Skeleton className='w-8 h-8 rounded-xl' />
+    </div>
 
     if (isProfile) {
         return <div className='flex justify-between gap-2 px-3'>

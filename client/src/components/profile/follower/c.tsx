@@ -18,7 +18,7 @@ import UserCard from './UserCard'
 
 
 
-const ModalFollowing = ({ data }: { data: User[] }) => {
+const ModalFollower = ({ data }: { data: User[] }) => {
     const dispatch = useDispatch()
     const router = useRouter()
     const users = useSelector((state: RootState) => state.users)
@@ -60,6 +60,8 @@ const ModalFollowing = ({ data }: { data: User[] }) => {
             dispatch(UserFollowingApi({
                 followingUserId: user.id,
                 followerUserId: profile.id,
+                followerUsername: user.username,
+                followingUsername: profile.username,
                 isProfile: isProfile as boolean,
                 type: "followers",
                 userId: user.id
@@ -96,7 +98,7 @@ const ModalFollowing = ({ data }: { data: User[] }) => {
     )
 }
 
-export default ModalFollowing
+export default ModalFollower
 
 
 

@@ -1,12 +1,18 @@
 import { Suspense } from "react";
-import SkeletonProfile from "@/components/profile/loading/skeleton";
+import SkeletonProfile, { SkeletonFollowUserCard } from "@/components/profile/loading/skeleton";
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { configs } from '@/configs';
 import { User } from '@/types';
-import ModalFollowing from "@/components/profile/follower/c";
+import ModalFollower from "@/components/profile/follower/c";
+import {
+    Dialog,
+    DialogContent,
+} from "@/components/ui/dialog"
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-async function getProfile(id: string) {
+async function getProfileFollower(id: string) {
     try {
         const response = await fetch(`${configs.appUrl}/api/v1/profile/${id}/follower`, {
             headers: {
@@ -24,10 +30,8 @@ async function getProfile(id: string) {
 }
 async function PageComponent({ params }: { params: { profile: string } }) {
     try {
-        const data = await getProfile(params.profile) as User[]
-        console.log(data)
-        // return <ModalFollowing data={data} />
-        return <></>
+        const data = await getProfileFollower(params.profile) as User[]
+        return <ModalFollower data={data} />
     } catch (error) {
         console.log(error)
         return notFound()
@@ -35,9 +39,10 @@ async function PageComponent({ params }: { params: { profile: string } }) {
 }
 
 export default async function Page({ params }: { params: { profile: string } }) {
-    return <div className="w-full h-full">
-        <Suspense fallback={<SkeletonProfile />}>
+    return <>
+
+        <Suspense fallback={<></>}>
             <PageComponent params={params} />
         </Suspense>
-    </div>
+    </>
 }

@@ -1,12 +1,11 @@
 import { Suspense } from "react";
-import SkeletonProfile from "@/components/profile/loading/skeleton";
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { configs } from '@/configs';
-import MainLayout from '@/components/profile/MainLayout';
 import { User } from '@/types';
+import ModalFollowing from "@/components/profile/following/c";
 
-async function getProfile(id: string) {
+async function getProfileFollowing(id: string) {
     try {
         const response = await fetch(`${configs.appUrl}/api/v1/profile/${id}/following`, {
             headers: {
@@ -24,8 +23,8 @@ async function getProfile(id: string) {
 }
 async function PageComponent({ params }: { params: { profile: string } }) {
     try {
-        const data = await getProfile(params.profile) as User
-        return <MainLayout data={data} />
+        const data = await getProfileFollowing(params.profile) as User[]
+        return <ModalFollowing data={data} />
     } catch (error) {
         console.log(error)
         return notFound()
@@ -33,9 +32,9 @@ async function PageComponent({ params }: { params: { profile: string } }) {
 }
 
 export default async function Page({ params }: { params: { profile: string } }) {
-    return <div className="w-full h-full">
-        <Suspense fallback={<SkeletonProfile />}>
+    return <>
+        <Suspense fallback={<></>}>
             <PageComponent params={params} />
         </Suspense>
-    </div>
+    </>
 }

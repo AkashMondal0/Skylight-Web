@@ -8,21 +8,20 @@ import { FetchFollowingsUserDataApi, UserFollowingApi, UserUnFollowingApi } from
 import { RootState } from '@/redux/store'
 import { User } from '@/types'
 import { useParams, useRouter } from 'next/navigation'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { followingsDataClear } from "@/redux/slice/users"
+import { followingsDataClear, setFollowingsUsers } from "@/redux/slice/users"
 import { SkeletonFollowUserCard } from "@/components/profile/loading/skeleton"
 import { useSession } from "next-auth/react"
 import UserCard from "./UserCard"
 
-const ModalFollowing = () => {
-  const id = useParams()
+const ModalFollowing = ({ data }: { data: User[] }) => {
   const dispatch = useDispatch()
   const router = useRouter()
   const users = useSelector((state: RootState) => state.users)
   const profile = useSession().data?.user
-  const isProfile = profile?.id === users.profileData?.user?.id
+  const isProfile = useMemo(() => profile?.id === users.profileData?.user?.id, [profile?.id, users.profileData?.user?.id])
   const loadedRef = useRef(false)
 
   const pageRedirect = (user: User) => {
@@ -30,20 +29,15 @@ const ModalFollowing = () => {
   }
 
   useEffect(() => {
-    if (!loadedRef.current && id?.profile && profile?.id) {
-      const FetchFollowingsUser = async () => {
-        if (id?.profile) {
-          await dispatch(FetchFollowingsUserDataApi({
-            profileId: users.profileData?.user?.id as string,
+    if (!loadedRef.current) {
+        dispatch(setFollowingsUsers({
+            Users: data,
             skip: 0,
             size: 12
-          }) as any)
-        }
-      }
-      FetchFollowingsUser()
-      loadedRef.current = true;
+        }) as any)
+        loadedRef.current = true;
     }
-  }, [dispatch, id?.profile, profile?.id, users.profileData?.user?.id]);
+}, [data, dispatch]);
 
 
 
@@ -64,6 +58,8 @@ const ModalFollowing = () => {
       await dispatch(UserFollowingApi({
         followingUserId: user.id,
         followerUserId: profile.id,
+        followerUsername: user.username,
+        followingUsername: profile.username,
         isProfile: isProfile as boolean,
         type: "following",
         userId: user.id
@@ -91,7 +87,6 @@ const ModalFollowing = () => {
             pageRedirect={pageRedirect}
             handleActionFollow={handleActionFollow}
             handleActionUnFollow={handleActionUnFollow} />)}
-          {users.profileData.fetchFollow.loading ? <div className='space-y-2'>{Array(10).fill(0).map((_, i) => <SkeletonFollowUserCard key={i} />)}</div> : <></>}
         </ScrollArea>
       </DialogContent>
     </Dialog>
