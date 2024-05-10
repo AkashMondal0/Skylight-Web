@@ -1,9 +1,22 @@
-// import "dotenv/config"
-// import { migrate } from "drizzle-orm/mysql2/migrator"
-// import { db, connection } from "./db"
- 
-// // This will run migrations on the database, skipping the ones already applied
-// await migrate(db, { migrationsFolder: "./drizzle" })
- 
-// // Don't forget to close the connection, otherwise the script will hang
-// await connection.end()
+import "dotenv/config"
+import { dataBaseUrl } from "./keys";
+import { drizzle } from 'drizzle-orm/postgres-js';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
+import postgres from 'postgres';
+
+const connectionString = dataBaseUrl;
+const postgresClient = postgres(connectionString, { max: 1 });
+const postgresDb = drizzle(postgresClient);
+
+const main = async () => {
+    try {
+        await migrate(postgresDb, { migrationsFolder: 'drizzle' });
+        await postgresClient.end();
+        console.log('Migration completed')
+    } catch (error) {
+        console.error(error);
+        await postgresClient.end();
+    }
+}
+
+main()

@@ -36,7 +36,9 @@ export interface UsersState {
 export interface followAndunFollow {
     followingUserId: string,
     followerUserId: string,
-    isProfile: boolean
+    followingUsername?: string,
+    followerUsername?: string,
+    isProfile: boolean,
     type: 'followers' | 'following' | null
     userId?: User["id"]
 }

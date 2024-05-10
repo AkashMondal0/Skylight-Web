@@ -120,6 +120,7 @@ CREATE TABLE IF NOT EXISTS "story_views" (
 CREATE TABLE IF NOT EXISTS "users" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"username" varchar NOT NULL,
+	"name" varchar NOT NULL,
 	"email" varchar NOT NULL,
 	"password" varchar NOT NULL,
 	"profile_picture" varchar,
@@ -130,7 +131,9 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"is_private" boolean DEFAULT false,
 	"access_token" varchar,
 	"refresh_token" varchar,
-	"logged_device" jsonb DEFAULT '[]'::jsonb
+	"logged_device" jsonb DEFAULT '[]'::jsonb,
+	CONSTRAINT "users_username_unique" UNIQUE("username"),
+	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
 DO $$ BEGIN

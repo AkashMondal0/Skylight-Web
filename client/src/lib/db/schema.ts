@@ -72,6 +72,8 @@ export const followers = pgTable('followers', {
     id: uuid('id').primaryKey().defaultRandom(),
     followerUserId: uuid('follower_id').notNull().references(() => users.id),
     followingUserId: uuid('following_id').notNull().references(() => users.id),
+    followerUsername: varchar('follower_username').notNull().references(() => users.username),
+    followingUsername: varchar('following_username').notNull().references(() => users.username),
     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
 })

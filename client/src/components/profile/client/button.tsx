@@ -24,6 +24,8 @@ const ActionButtonsLg = ({
             await dispatch(UserFollowingApi({
                 followingUserId: user?.id,
                 followerUserId: session?.id,
+                followingUsername: user.username,
+                followerUsername: session.username,
                 isProfile: isProfile as boolean,
                 type: null
             }) as any)
@@ -95,6 +97,8 @@ const ActionButtonsSM = ({
             await dispatch(UserFollowingApi({
                 followingUserId: user?.id,
                 followerUserId: session?.id,
+                followingUsername: user.username,
+                followerUsername: session.username,
                 isProfile: isProfile as boolean,
                 type: null
             }) as any)

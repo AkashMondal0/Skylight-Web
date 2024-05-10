@@ -1,6 +1,6 @@
 {
-  "id": "575c28ec-6543-41ec-85cd-3dc8de12c8ac",
-  "prevId": "e3e51015-e829-4634-9455-a2a3841e2f79",
+  "id": "8b09abf3-cd62-45e7-b624-cb0373026fdc",
+  "prevId": "dbed8190-0681-44e8-9c44-ed679438f46d",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -261,6 +261,18 @@
           "primaryKey": false,
           "notNull": true
         },
+        "follower_username": {
+          "name": "follower_username",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "following_username": {
+          "name": "following_username",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -300,6 +312,32 @@
           ],
           "columnsTo": [
             "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "followers_follower_username_users_username_fk": {
+          "name": "followers_follower_username_users_username_fk",
+          "tableFrom": "followers",
+          "tableTo": "users",
+          "columnsFrom": [
+            "follower_username"
+          ],
+          "columnsTo": [
+            "username"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "followers_following_username_users_username_fk": {
+          "name": "followers_following_username_users_username_fk",
+          "tableFrom": "followers",
+          "tableTo": "users",
+          "columnsFrom": [
+            "following_username"
+          ],
+          "columnsTo": [
+            "username"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"

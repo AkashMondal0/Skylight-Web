@@ -36,14 +36,18 @@ export const UserFollowingApi = createAsyncThunk(
     async ({
         followingUserId,
         followerUserId,
+        followingUsername,
+        followerUsername,
         isProfile,
         type,
         userId
     }: followAndunFollow, thunkApi) => {
         try {
-            const res = await axios.post(`/api/profile/following/create`, {
+            const res = await axios.post(`/api/v1/profile/follow/create`, {
                 followingUserId,
-                followerUserId
+                followerUserId,
+                followingUsername,
+                followerUsername
             })
             return { ...res.data.data, isProfile, type, userId }
         } catch (error: any) {
