@@ -3,7 +3,7 @@ import dotEvn from "dotenv";
 dotEvn.config();
 
 export default {
-  schema: "./db/schema.ts",
+  schema: "./src/lib/db/schema.ts",
   out: "./drizzle",
   driver: "pg",
   dbCredentials: {
