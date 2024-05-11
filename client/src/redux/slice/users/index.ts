@@ -1,4 +1,4 @@
-import { Post, User } from '@/types'
+import { FeedPost, Post, User } from '@/types'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { FetchFollowersUserDataApi, FetchFollowingsUserDataApi, FetchUserProfileDataApi, searchProfileApi, UserFollowingApi, UserUnFollowingApi } from './api-functions'
@@ -27,7 +27,7 @@ export interface UsersState {
         fetchPosts: {
             loading: boolean
             error: boolean
-            posts: Post[]
+            posts: FeedPost[]
             skip: number
             size: number
         }

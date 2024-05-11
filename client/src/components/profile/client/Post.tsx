@@ -1,36 +1,10 @@
 "use client"
-import { FeedPost } from '@/redux/slice/post-feed'
 import React from 'react'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
-import { useRouter } from 'next/navigation'
 import { Copy, Heart, MessageCircle } from 'lucide-react'
 
-const PostComponent = ({
-    posts
-}: {
-    posts: FeedPost[]
-}) => {
-    // await new Promise((resolve) => setTimeout(resolve, 100))
-    const router = useRouter()
-    return (
-        <div className="grid grid-cols-3 gap-1 w-full p-1" >
-            {posts?.map((post, index) => (
-                <div key={index} onClick={() => router.push(`/post/${post.id}`)}>
-                    <ImageComponent
-                        totalPostsCount={post.fileUrl.length ?? 0}
-                        totalLikesCount={post.likeCount}
-                        totalCommentsCount={post.commentCount}
-                        url={post.fileUrl[0]} />
-                </div>
-            ))}
-        </div>
-    )
-}
-export default PostComponent
-
-
-const ImageComponent = ({
+export const ImageComponent = ({
     url,
     totalLikesCount,
     totalCommentsCount,
@@ -66,7 +40,7 @@ const ImageComponent = ({
                     alt="Picture of the author"
                     quality={100}
                     priority={true}
-                    sizes="(min-width: 808px) 50vw, 100vw"
+                    sizes="(min-width: 808px) 10vw, 30vw"
                     style={{
                         objectFit: 'cover', // cover, contain, none
                     }}

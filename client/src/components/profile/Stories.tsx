@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable @next/next/no-img-element */
 import { User } from '@/types'
 import { Plus } from 'lucide-react'
 import React from 'react'

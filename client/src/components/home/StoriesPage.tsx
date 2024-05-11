@@ -10,15 +10,15 @@ import {
 import StoryAvatar from './Card/StoriesCard'
 
 export default async function StoriesPage() {
-  await new Promise((resolve) => setTimeout(resolve, 5000));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 
   return (
     <>
       <Carousel
-        className="w-full max-w-sm mx-auto mt-4 mb-2 md:flex hidden">
+        className="w-full max-w-[580px] mx-auto mt-4 mb-2 md:flex hidden">
         <CarouselContent>
-          {Array.from({ length: 50 }).map((_, index) => (
-            <CarouselItem key={index} className="basis-1/5">
+          {Array(100).fill(0).map((_, index) => (
+            <CarouselItem key={index} className="basis-1/7">
               <StoryAvatar />
             </CarouselItem>
           ))}

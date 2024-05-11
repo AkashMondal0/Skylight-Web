@@ -13,9 +13,11 @@ export function SkeletonStoriesCard() {
     return (
         <div>
             <Carousel
-                className="w-full max-w-sm mx-auto mt-4 mb-2 md:flex hidden justify-around">
-                {Array.from({ length: 5 }).map((_, i) => (
-                    <Skeleton className="h-16 w-16 border-fuchsia-500 border-[3px] p-[2px] rounded-full my-3" key={i} />
+                className="w-full max-w-[580px] mx-auto mt-4
+                 mb-2 md:flex hidden justify-around space-x-2">
+                {Array.from({ length: 8 }).map((_, i) => (
+                    <Skeleton className="h-16 w-16 border-fuchsia-500 
+                    border-[3px] p-[2px] rounded-full my-3" key={i} />
                 ))}
                 <CarouselPrevious />
                 <CarouselNext />

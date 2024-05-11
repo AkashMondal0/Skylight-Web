@@ -56,11 +56,12 @@ const PostItem = ({
                   alt="Picture of the author"
                   quality={100}
                   priority={true}
-                  sizes="(min-width: 808px) 50vw, 100vw"
+                  fetchPriority="high"
+                  sizes="(min-width: 808px) 30vw, 30vw"
                   style={{
                     objectFit: 'cover', // cover, contain, none
                   }}
-                  className={cn('rounded-lg border h-auto w-full cursor-pointer userNotSelectImg bg-muted')}
+                  className={cn('border h-auto w-full cursor-pointer userNotSelectImg bg-muted')}
                 />
               </CarouselItem>
             ))}

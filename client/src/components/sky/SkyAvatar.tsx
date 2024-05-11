@@ -17,6 +17,7 @@ const SkyAvatar = ({
         style={{
             objectFit: 'cover', // cover, contain, none
         }}
+        fetchPriority="high"
         priority={true}
         className={cn('w-12 h-12 cursor-pointer rounded-full userNotSelectImg bg-muted', className)}
     />
