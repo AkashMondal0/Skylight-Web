@@ -33,10 +33,10 @@ export default function RootLayout({ children,
                 defaultTheme="dark"
                 enableSystem>
                 {/* <AppStart_Provider> */}
-                  <div>
+                  <div className="flex flex-col h-full">
                     {/* sm device header*/}
                     <Sm_Header />
-                    <div className="flex min-h-dvh">
+                    <div className="flex h-full">
                       {/* left side */}
                       <Lg_Navigation />
                       {children}

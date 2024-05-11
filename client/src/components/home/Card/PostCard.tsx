@@ -1,6 +1,5 @@
 "use client";
 import React from 'react'
-import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { Heart, Send, MessageCircle, BookMarked } from 'lucide-react';
 import {
   Carousel,
@@ -16,7 +15,7 @@ import { cn } from '@/lib/utils';
 import SkyAvatar from '@/components/sky/SkyAvatar';
 
 const PostItem = ({
-  feed
+  feed,
 }: {
   feed: FeedPost
 }) => {
@@ -59,7 +58,7 @@ const PostItem = ({
                   priority={true}
                   sizes="(min-width: 808px) 50vw, 100vw"
                   style={{
-                      objectFit: 'cover', // cover, contain, none
+                    objectFit: 'cover', // cover, contain, none
                   }}
                   className={cn('rounded-lg border h-auto w-full cursor-pointer userNotSelectImg bg-muted')}
                 />
@@ -101,8 +100,8 @@ const PostItem = ({
           onClick={() => {
             router.push(`/post/${feed.id}`)
           }}>View all {feed.commentCount} comments</div>
-          {/* sm */}
-          <div className='text-sm cursor-pointer sm:hidden block'
+        {/* sm */}
+        <div className='text-sm cursor-pointer sm:hidden block'
           onClick={() => {
             router.push(`/post/${feed.id}/comments`)
           }}>View all {feed.commentCount} comments</div>

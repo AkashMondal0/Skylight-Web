@@ -1,4 +1,3 @@
-
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import React from 'react'
 import {
@@ -11,7 +10,7 @@ import {
 import StoryAvatar from './Card/StoriesCard'
 
 export default async function StoriesPage() {
-  // await new Promise((resolve) => setTimeout(resolve, 5000));
+  await new Promise((resolve) => setTimeout(resolve, 5000));
 
   return (
     <>

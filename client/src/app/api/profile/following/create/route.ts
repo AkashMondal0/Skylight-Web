@@ -54,6 +54,8 @@ export async function POST(request: NextRequest, response: NextResponse) {
     await db.insert(followers).values({
       followerUserId: followerUserId,
       followingUserId: followingUserId,
+      followerUsername: verify.email,
+      followingUsername: verify.email
     })
 
 
