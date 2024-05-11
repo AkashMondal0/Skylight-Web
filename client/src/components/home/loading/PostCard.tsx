@@ -1,9 +1,11 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import React from 'react'
+import { SkeletonStoriesCard } from './StoriesCard'
 
 const SkeletonPostCard = () => {
     return (
         <div className='w-full h-full'>
+            <SkeletonStoriesCard />
             <div className='max-w-[480px] w-full mx-auto py-2'>
                 <div className='flex justify-between px-2'>
                     <div className='flex space-x-2 items-center'>

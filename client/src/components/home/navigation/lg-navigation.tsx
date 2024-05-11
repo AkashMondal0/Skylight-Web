@@ -17,16 +17,17 @@ import { useRouter } from "next/navigation"
 import NotificationModel from "../model/NotificationModel"
 import SearchModel from "../model/SearchModel"
 import MoreDropdownMenu from "../model/More_DropDown"
-import { RootState } from "@/redux/store"
-import { useSelector } from "react-redux"
 import UploadPostDialog from "@/components/home/dialog/upload-post"
 import { useSession } from "next-auth/react"
 
 
+
 export default function Lg_Navigation({
-  hideLabel = false
+  hideLabel = false,
+  hideNavigation = false
 }: {
   hideLabel?: boolean
+  hideNavigation?: boolean
 }) {
   const router = useRouter()
   const pageChange = (path: string) => router.push(path)
@@ -39,8 +40,16 @@ export default function Lg_Navigation({
     { icon: MessageCircleCode, label: "Messages", onClick: () => pageChange('/message') },
     { icon: Heart, label: "Notifications", onClick: () => { } },
     { icon: CopyPlus, label: "Create", onClick: () => { } },
-    { icon: CircleUserRound, label: "Profile", onClick: () => pageChange(`/${session?.username||""}`) },
+    { icon: CircleUserRound, label: "Profile", onClick: () => pageChange(`/${session?.username || ""}`) },
   ]
+
+  if (!session) return <div className={cn(`
+ scroll-smooth hideScrollbar
+  h-[100dvh] overflow-y-auto md:flex
+  hidden ease-in-out sticky top-0
+  duration-300`,
+    hideLabel ? "w-20" : "w-72 2xl:w-96 max-w-[20rem] md:w-20 xl:w-72"
+  )}></div>
 
   return (
     <div className={cn(`

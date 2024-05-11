@@ -66,7 +66,7 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="h-[100dvh] p-1 flex justify-center items-center">
+        <div className="h-[100dvh] p-1 flex justify-center items-center w-full">
             <Card className="md:w-96 md:h-auto w-full h-full pt-16 md:pt-0 rounded-3xl">
                 <CardHeader className="space-y-1">
                     <CardTitle className="text-2xl">

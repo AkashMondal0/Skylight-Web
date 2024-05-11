@@ -20,6 +20,10 @@ const Sm_Navigation = () => {
         { icon: MessageCircleCode, label: "Messages", onClick: () => pageChange('/message') },
         { icon: CircleUserRound, label: "Profile", onClick: () => pageChange(`/${session?.username || ""}`) },
     ]
+    if (!session) return <div className="md:hidden w-full sticky
+    flex bottom-0 z-10 py-2 bg-background 
+    text-foreground h-[6dvh] items-center"></div>
+
     return (
         <div className="md:hidden w-full sticky
         flex bottom-0 z-10 border-t py-2 bg-background 

@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { configs } from '@/configs';;
 import { FeedPost } from '@/types';
 import VirtualizePost from '@/components/home/VirtualizePost';
+import { Suspense } from 'react';
+import SkeletonPostCard from '@/components/home/loading/PostCard';
 
 async function getFeeds() {
   try {
@@ -21,10 +23,18 @@ async function getFeeds() {
   }
 }
 
+
+async function Render() {
+  const data = await getFeeds() as FeedPost[];
+  return <VirtualizePost data={data} />
+}
+
 export default async function Page() {
   try {
-    const data = await getFeeds() as FeedPost[];
-    return <VirtualizePost data={data} />
+    return (
+      <Suspense fallback={<SkeletonPostCard/>}>
+        <Render />
+      </Suspense>)
   } catch (error) {
     console.log(error)
     return notFound()
