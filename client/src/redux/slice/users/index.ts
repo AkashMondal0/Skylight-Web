@@ -1,4 +1,4 @@
-import { Post, User } from '@/types'
+import { FeedPost, Post, User } from '@/types'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { FetchFollowersUserDataApi, FetchFollowingsUserDataApi, FetchUserProfileDataApi, searchProfileApi, UserFollowingApi, UserUnFollowingApi } from './api-functions'
@@ -27,7 +27,7 @@ export interface UsersState {
         fetchPosts: {
             loading: boolean
             error: boolean
-            posts: Post[]
+            posts: FeedPost[]
             skip: number
             size: number
         }
@@ -36,7 +36,9 @@ export interface UsersState {
 export interface followAndunFollow {
     followingUserId: string,
     followerUserId: string,
-    isProfile: boolean
+    followingUsername?: string,
+    followerUsername?: string,
+    isProfile: boolean,
     type: 'followers' | 'following' | null
     userId?: User["id"]
 }
@@ -77,6 +79,19 @@ export const UsersSlice = createSlice({
     name: 'Users',
     initialState: UsersState,
     reducers: {
+        setUsers: (state, action: PayloadAction<User>) => {
+            state.profileData.user = action.payload
+        },
+        setFollowersUsers: (state, action: PayloadAction<{ Users: User[], skip: number, size: number }>) => {
+            state.profileData.fetchFollow.followers = action.payload.Users
+            state.profileData.fetchFollow.skip = action.payload.skip
+            state.profileData.fetchFollow.size = action.payload.size
+        },
+        setFollowingsUsers: (state, action: PayloadAction<{ Users: User[], skip: number, size: number }>) => {
+            state.profileData.fetchFollow.followings = action.payload.Users
+            state.profileData.fetchFollow.skip = action.payload.skip
+            state.profileData.fetchFollow.size = action.payload.size
+        },
         removeUserFormSearch: (state, action: PayloadAction<User["id"]>) => {
             state.search_users = state.search_users.filter(item => item.id !== action.payload)
         },
@@ -257,6 +272,9 @@ export const {
     removeAllUserFormSearch,
     followersDataClear,
     followingsDataClear,
+    setUsers,
+    setFollowersUsers,
+    setFollowingsUsers,
 } = UsersSlice.actions
 
 export default UsersSlice.reducer

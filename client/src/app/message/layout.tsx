@@ -1,5 +1,5 @@
+import Lg_Navigation from '@/components/home/navigation/lg-navigation';
 import type { Metadata } from 'next'
-import Lg_Navigation from '../components/lg-navigation';
 export const metadata: Metadata = {
   title: 'Message',
   description: `Sky Media is a social media platform that 

@@ -3,8 +3,9 @@ import { pgTable, varchar, uuid, timestamp, boolean, jsonb } from "drizzle-orm/p
 
 export const users = pgTable('users', {
     id: uuid('id').primaryKey().defaultRandom(),
-    username: varchar('username').notNull(),
-    email: varchar('email').notNull(),
+    username: varchar('username').notNull().unique(),
+    name: varchar('name').notNull(),
+    email: varchar('email').notNull().unique(),
     password: varchar('password').notNull(),
     profilePicture: varchar('profile_picture'),
     bio: varchar('bio'),

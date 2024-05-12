@@ -1,7 +1,7 @@
 'use client'
-import { signIn} from "next-auth/react"
+import { signIn } from "next-auth/react"
 import { useDispatch } from "react-redux";
-import {  registerApi } from "@/redux/slice/profile/api-functions";
+import { registerApi } from "@/redux/slice/profile/api-functions";
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -31,6 +31,9 @@ const FormSchema = z.object({
     email: z.string().email({
         message: "Please enter a valid email.",
     }),
+    name: z.string().min(2, {
+        message: "Name must be at least 2 characters.",
+    }),
 });
 
 type FormData = z.infer<typeof FormSchema>;
@@ -45,18 +48,20 @@ export default function LoginPage() {
             username: "",
             password: "",
             email: "",
+            name: "",
         },
     });
 
     const onSubmit = async (data: FormData) => {
-        const { username: name, password, email } = data;
-        const res = await dispatch(registerApi({ email, password, name }) as any) as PayloadData
+        const { name, username, password, email } = data;
+        const res = await dispatch(registerApi({ email, password, name, username }) as any) as PayloadData
         if (res.payload?.code === 1) {
             signIn("credentials", {
-                email: res.payload.data.email,
-                name: res.payload.data.username,
+                email: res.payload.data.username,
+                name: res.payload.data.name,
                 id: res.payload.data.id,
-                image: res.payload.data.profilePicture,
+                image: res.payload.data.profilePicture??"/user.jpg",
+                token: res.payload.data.token,
                 redirect: true,
             });
         }
@@ -64,9 +69,9 @@ export default function LoginPage() {
             toast.error(res.payload.message)
         }
     };
-   
+
     return (
-        <div className="h-[100dvh] p-1 flex justify-center items-center">
+        <div className="h-[100dvh] p-1 flex justify-center items-center w-full">
             <Card className="md:w-96 md:h-auto w-full h-full pt-16 md:pt-0 rounded-3xl">
                 <CardHeader className="space-y-1">
                     <CardTitle className="text-2xl">
@@ -104,7 +109,14 @@ export default function LoginPage() {
                     </div> */}
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>
-                        <Input id="name" type="name" placeholder="example name" {...register("username", { required: true })} />
+                        <Input id="name" type="name" placeholder="example name" {...register("name", { required: true })} />
+                        <div className="h-4 w-full text-center mb-2">
+                            {errors.username ? <span className="text-red-500">{errors.username?.message}</span> : <></>}
+                        </div>
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="username">User Name</Label>
+                        <Input id="username" type="username" placeholder="example username" {...register("username", { required: true })} />
                         <div className="h-4 w-full text-center mb-2">
                             {errors.username ? <span className="text-red-500">{errors.username?.message}</span> : <></>}
                         </div>

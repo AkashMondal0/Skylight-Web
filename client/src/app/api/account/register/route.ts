@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import db from "@/lib/db/drizzle";
 import { NextRequest, NextResponse } from "next/server"
-import { users } from "../../../../../db/schema";
+import { users } from "@/lib/db/schema";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { cookies } from 'next/headers';
@@ -10,11 +10,11 @@ const saltRounds = 10
 
 export async function POST(request: NextRequest, response: NextResponse) {
   try {
-
     const {
       email,
       password,
-      username
+      username,
+      name
     } = await request.json();
     if (!email && !password) {
       return NextResponse.json({
@@ -42,8 +42,16 @@ export async function POST(request: NextRequest, response: NextResponse) {
       email: email,
       password: hash,
       username: username,
+      name: name
     }).returning()
-    const token = jwt.sign({ email: newUser[0].email, id: newUser[0].id }, secret as string, { expiresIn: '720h' })
+    const token = jwt.sign({
+      email: newUser[0].email,
+      id: newUser[0].id,
+      name: newUser[0].name,
+      username: newUser[0].username,
+      image: newUser[0].profilePicture
+    }, secret as string, { expiresIn: '720h' })
+    
     cookies().set({
       name: 'token-auth',
       value: token,

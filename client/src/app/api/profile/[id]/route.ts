@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
-import { redirect } from "next/navigation"
 import jwt from "jsonwebtoken"
 import db from "@/lib/db/drizzle";
-import { followers, posts, users } from "../../../../../db/schema";
-import { count, eq, like, or, desc, not, is, sql, exists, and } from "drizzle-orm";
+import { comments, followers, likes, posts, users } from "@/lib/db/schema";
+import { count, eq, like, or, desc, not, is, sql, exists, and, asc } from "drizzle-orm";
 const secret = process.env.NEXTAUTH_SECRET || "secret";
-
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
 
@@ -13,12 +11,19 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     const token = request.cookies.get("token-auth")
 
     if (!token) {
-      return redirect("/auth/error")
+      return Response.json({
+        code: 0,
+        message: "Unauthorized",
+        status_code: 401,
+        data: {}
+      }, { status: 401 })
     }
 
     const verify = jwt.verify(token.value, secret) as { email: string, id: string }
 
+
     if (!verify?.id) {
+      console.log("Invalid token")
       return Response.json({
         code: 0,
         message: "Invalid token",
@@ -26,6 +31,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         data: {}
       }, { status: 404 })
     }
+
+    // profile verification
 
     // get user profile
     const userProfile = await db.select({
@@ -46,7 +53,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     })
       .from(users)
       .leftJoin(posts, eq(posts.authorId, users.id))
-      .where(eq(users.email, params.id)) // <-------------
+      .where(eq(users.username, params.id)) // <-------------
       .groupBy(users.id)
       .limit(1)
 
@@ -72,40 +79,36 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       .from(followers)
       .where(eq(followers.followingUserId, userProfile[0].id))
 
-    // check if user is private
-    if (!userProfile[0].isPrivate && userProfile[0].isFollowing || userProfile[0].id === verify.id) {
-      // get post count
-      const userPosts = await db.select()
-        .from(posts)
-        .where(eq(posts.authorId, userProfile[0].id))
-        .limit(12)
-        .offset(0)
-        .orderBy(desc(posts.createdAt))
+    // get post count
+    const userPosts = await db.select({
+      id: posts.id,
+      authorId: posts.authorId,
+      fileUrl: posts.fileUrl,
+      likeCount: count(likes.id),
+      commentCount: count(comments.id),
+      createdAt: posts.createdAt
+    })
+      .from(posts)
+      .where(eq(posts.authorId, userProfile[0].id))
+      .leftJoin(likes, eq(likes.postId, posts.id))
+      .leftJoin(comments, eq(comments.postId, posts.id))
+      .groupBy(posts.id, likes.id, comments.id)
+      .limit(12)
+      .offset(0)
+      .orderBy(desc(posts.createdAt))
 
-      return Response.json({
-        code: 1,
-        message: "User is private",
-        status_code: 200,
-        data: {
-          ...userProfile[0],
-          followersCount: FollowingCount[0].followingCount,
-          followingCount: FollowersCount[0].followersCount,
-          posts: userPosts,
-        }
-      }, { status: 200 })
-    } else {
-      return Response.json({
-        code: 1,
-        message: "Data fetched successfully",
-        status_code: 200,
-        data: {
-          ...userProfile[0],
-          followersCount: FollowingCount[0].followingCount,
-          followingCount: FollowersCount[0].followersCount,
-          posts: [],
-        }
-      }, { status: 200 })
-    }
+    return Response.json({
+      code: 1,
+      message: "User profile fetched successfully",
+      status_code: 200,
+      data: {
+        ...userProfile[0],
+        followersCount: FollowingCount[0].followingCount,
+        followingCount: FollowersCount[0].followersCount,
+        posts: userPosts,
+      }
+    }, { status: 200 })
+
   } catch (error) {
     console.log(error)
     return Response.json({
@@ -116,3 +119,4 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     }, { status: 500 })
   }
 }
+

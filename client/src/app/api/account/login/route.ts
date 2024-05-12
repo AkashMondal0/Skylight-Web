@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import db from "@/lib/db/drizzle";
 import { NextRequest, NextResponse } from "next/server"
-import { users } from "../../../../../db/schema";
+import { users } from "@/lib/db/schema";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { cookies } from 'next/headers';
@@ -41,7 +41,14 @@ export async function GET(request: NextRequest, response: NextResponse) {
       }, { status: 401 })
     }
 
-    const token = jwt.sign({ email: db_user[0].email, id: db_user[0].id }, secret as string, { expiresIn: '720h' })
+    const token = jwt.sign({
+      email: db_user[0].email,
+      id: db_user[0].id,
+      name: db_user[0].name,
+      username: db_user[0].username,
+      image: db_user[0].profilePicture
+    }, secret as string, { expiresIn: '720h' })
+    
     cookies().set({
       name: 'token-auth',
       value: token,

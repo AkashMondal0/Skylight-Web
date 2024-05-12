@@ -4,7 +4,15 @@ const nextConfig = {
     output: "standalone",
     images: {
         formats: ["image/avif", "image/webp"],
-        domains: ["nngujjeumggzpchjxdpn.supabase.co"],
+        // domains: ["nngujjeumggzpchjxdpn.supabase.co"],
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'nngujjeumggzpchjxdpn.supabase.co',
+                port: '',
+                pathname: '/storage/v1/object/public/skymedia/**',
+            }
+        ],
     },
     env: {
         // API
@@ -13,6 +21,7 @@ const nextConfig = {
         // NextAuth
         NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
         NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+        AUTH_DRIZZLE_URL: process.env.AUTH_DRIZZLE_URL,
         // OAuth
         GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
         GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,

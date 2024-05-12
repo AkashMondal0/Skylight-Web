@@ -34,16 +34,19 @@ export const registerApi = createAsyncThunk(
         email,
         password,
         name,
+        username
     }: {
         email: string,
         password: string,
         name: string,
+        username: string
     }, thunkApi) => {
         try {
             const res = await axios.post(`/api/account/register`, {
                 email: email,
                 password: password,
-                username: name
+                name: name,
+                username: username
             })
             return res.data
         } catch (error: any) {
@@ -83,16 +86,3 @@ export const logoutApi = createAsyncThunk(
     }
 );
 
-export const FetchMyProfileDataApi = createAsyncThunk(
-    'FetchMyProfileDataApi/get',
-    async ({ id }: { id: string }, thunkApi) => {
-        try {
-            const res = await axios.get(`/api/profile/${id}`)
-            return res.data.data
-        } catch (error: any) {
-            return thunkApi.rejectWithValue({
-                ...error?.response?.data,
-            })
-        }
-    }
-);
