@@ -50,18 +50,19 @@ const PostItem = ({
             {feed.fileUrl.map((url, index) => (
               <CarouselItem key={index} className='flex flex-col m-auto'>
                 <Image
+                  loading="lazy"
                   src={url}
                   width={300}
                   height={300}
                   alt="Picture of the author"
                   quality={100}
-                  priority={true}
+                  // priority={true}
                   fetchPriority="high"
-                  sizes="(min-width: 808px) 30vw, 30vw"
-                  style={{
-                    objectFit: 'cover', // cover, contain, none
-                  }}
-                  className={cn('border h-auto w-full cursor-pointer userNotSelectImg bg-muted')}
+                  sizes="(min-width: 60em) 24vw,
+                    (min-width: 28em) 45vw,
+                    100vw"
+                  // sizes="(min-width: 808px) 50vw, 50vw"
+                  className={cn('h-auto w-full cursor-pointer userNotSelectImg bg-muted')}
                 />
               </CarouselItem>
             ))}

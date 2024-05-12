@@ -19,6 +19,7 @@ import SearchModel from "../model/SearchModel"
 import MoreDropdownMenu from "../model/More_DropDown"
 import UploadPostDialog from "@/components/home/dialog/upload-post"
 import { useSession } from "next-auth/react"
+import SkyAvatar from "@/components/sky/SkyAvatar"
 
 
 
@@ -85,6 +86,12 @@ export default function Lg_Navigation({
                     {React.createElement(icon, { size: 28 })}
                   </NavigationItem>
                 </UploadPostDialog>
+              }
+              if (label === "Profile") {
+                return <NavigationItem key={index} label={label} hideLabel={hideLabel}
+                  onClick={onClick}>
+                  <SkyAvatar url={session.image || null} className="h-full w-full max-h-8 max-w-8" />
+                </NavigationItem>
               }
               return <NavigationItem key={index} label={label} hideLabel={hideLabel}
                 onClick={onClick}>

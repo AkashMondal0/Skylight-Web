@@ -75,6 +75,7 @@ function Virtualized({
                                         display: "flex",
                                         flexWrap: "wrap",
                                         margin: "0 auto",
+                                        justifyContent:"center",
                                         ...style,
                                     }}>
                                     {children}
@@ -86,7 +87,7 @@ function Virtualized({
                         <div
                             {...props}
                             style={{
-                                padding: "0.2rem",
+                                padding: "0.1rem",
                                 width: "33%",
                                 display: "flex",
                                 flex: "none",
@@ -98,27 +99,10 @@ function Virtualized({
                         </div>
                     )
                 }}
-                itemContent={(index) => <ItemWrapper>
-                    <ImageComponent
-                        url={user.posts[index].fileUrl[0]}
-                        totalLikesCount={user.posts[index].likeCount}
-                        totalCommentsCount={user.posts[index].commentCount}
-                        totalPostsCount={user.postCount} />
-                </ItemWrapper>}
+                itemContent={(index) => <ImageComponent data={user.posts[index]} />}
             />
             <style>{`html, body, #root { height: 100% }`}</style>
         </>
 
     );
 }
-
-const ItemWrapper = ({ children, ...props }: any) => (
-    <div
-        {...props}
-        style={{
-            width: "100%",
-        }}
-    >
-        {children}
-    </div>
-);

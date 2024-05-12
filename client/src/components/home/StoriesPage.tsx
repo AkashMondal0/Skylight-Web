@@ -10,7 +10,7 @@ import {
 import StoryAvatar from './Card/StoriesCard'
 
 export default async function StoriesPage() {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 5000));
 
   return (
     <>

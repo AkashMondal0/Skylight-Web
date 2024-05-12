@@ -123,15 +123,15 @@ const SkeletonProfile = () => {
                     {/* followers and following */}
                     <div className='flex justify-around p-2 border-y'>
                         <div className='text-center'>
-                            <Skeleton className='w-20 h-6 rounded-xl' />
+                            <Skeleton className='w-24 h-12 rounded-xl' />
                         </div>
 
                         <div className='cursor-pointer text-center' >
-                            <Skeleton className='w-20 h-6 rounded-xl' />
+                            <Skeleton className='w-24 h-12 rounded-xl' />
                         </div>
 
                         <div className='cursor-pointer text-center'>
-                            <Skeleton className='w-20 h-6 rounded-xl' />
+                            <Skeleton className='w-24 h-12 rounded-xl' />
                         </div>
 
                     </div>

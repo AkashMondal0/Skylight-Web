@@ -7,7 +7,6 @@ import {
     DrawerTrigger,
     DrawerClose
 } from "@/components/ui/drawer"
-import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { X } from 'lucide-react'
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';

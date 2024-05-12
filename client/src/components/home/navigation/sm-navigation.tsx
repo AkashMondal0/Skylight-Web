@@ -7,6 +7,7 @@ import {
 } from "lucide-react"
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
+import SkyAvatar from '@/components/sky/SkyAvatar'
 
 
 const Sm_Navigation = () => {
@@ -29,12 +30,18 @@ const Sm_Navigation = () => {
         flex bottom-0 z-10 border-t py-2 bg-background 
         text-foreground h-[6dvh] items-center">
             <div className="p-2 w-full flex justify-around">
-                {SideIconData.map(({ icon, label, onClick }, index) => (
-                    <NavigationItem key={index} label={label}
+                {SideIconData.map(({ icon, label, onClick }, index) => {
+                    if (label === "Profile") {
+                        return <NavigationItem key={index} label={label}
+                            onClick={onClick} active={label === "Profile"}>
+                            <SkyAvatar url={session?.image || null} className="h-full w-full max-h-8 max-w-8" />
+                        </NavigationItem>
+                    }
+                    return <NavigationItem key={index} label={label}
                         onClick={onClick} active={label === "Home"}>
                         {React.createElement(icon, { size: 28 })}
                     </NavigationItem>
-                ))}
+                })}
             </div>
         </div>
     )

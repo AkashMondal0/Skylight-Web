@@ -1,5 +1,4 @@
 'use client'
-import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
@@ -14,14 +13,17 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import OptionAvatarDialog from '@/components/profile/dialog/options'
 import SkyAvatar from '@/components/sky/SkyAvatar'
+import { signOut, useSession } from 'next-auth/react'
+import { logoutApi } from '@/redux/slice/profile/api-functions'
 
 const Page = () => {
-    const profile = useSelector((state: RootState) => state.profile)
-    if (!profile.user) return null
+    const profile = useSession().data
+    const dispatch = useDispatch()
+    if (!profile?.user) return null
     return (
         <div className='w-full flex justify-center min-h-[100dvh] h-full'>
             <div className='max-w-[600px] w-full p-4 space-y-6'>
@@ -30,27 +32,27 @@ const Page = () => {
                 </h1>
                 <div className='flex justify-between p-4 my-4 bg-secondary text-secondary-foreground rounded-2xl'>
                     <div className='flex space-x-3'>
-                        <OptionAvatarDialog profile={profile.user}>
-                            {/* <Avatar className='h-12 w-12 mx-auto cursor-pointer'>
+                        {/* <OptionAvatarDialog profile={profile.user}> */}
+                        {/* <Avatar className='h-12 w-12 mx-auto cursor-pointer'>
                                 <AvatarImage src={profile.user?.profilePicture || "/user.jpg"}
                                     alt="@shadcn" className='rounded-full' />
                             </Avatar> */}
-                            <SkyAvatar className='h-12 w-12 mx-auto' url={profile.user?.profilePicture || "/user.jpg"} />
-                        </OptionAvatarDialog>
+                        <SkyAvatar className='h-12 w-12 mx-auto' url={profile.user?.image || null} />
+                        {/* </OptionAvatarDialog> */}
 
                         <div>
-                            <div className='font-semibold text-base'>akashmondal0</div>
+                            <div className='font-semibold text-base'>{profile.user.username}</div>
                             <div className='text-sm'>
-                                Akash Mondal
+                                {profile.user.name}
                             </div>
                         </div>
                     </div>
                     <div className='flex items-center'>
-                        <OptionAvatarDialog profile={profile.user}>
-                            <Button variant={"default"} className="rounded-xl">
-                                change photo
-                            </Button>
-                        </OptionAvatarDialog>
+                        {/* <OptionAvatarDialog profile={profile.user}> */}
+                        <Button variant={"default"} className="rounded-xl">
+                            change photo
+                        </Button>
+                        {/* </OptionAvatarDialog> */}
 
                     </div>
                 </div>
@@ -93,11 +95,18 @@ const Page = () => {
                     </div>
                     <Switch />
                 </Card>
-                <div className='flex justify-end'>
-                    <Button variant={"default"}
+                <div className='flex justify-around gap-4' onClick={() => {
+                    signOut()
+                    dispatch(logoutApi() as any)
+                }}>
+                    <Button variant={"secondary"}
+                        className="rounded-xl w-full">
+                        logout
+                    </Button>
+                    {/* <Button variant={"default"}
                         className="rounded-xl w-1/2">
                         Submit
-                    </Button>
+                    </Button> */}
                 </div>
             </div>
         </div>

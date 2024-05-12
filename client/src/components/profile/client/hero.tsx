@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Link2 } from 'lucide-react'
 import { User } from '@/types'
 import SkyAvatar from '@/components/sky/SkyAvatar'
-import StoriesComponent from '../Stories'
+import StoriesComponent from './Stories'
 import { ActionButtonsLg, ActionButtonsSM } from './button'
 
 
@@ -112,7 +112,7 @@ const HeroSection = ({
                             </div>
                         </div>
 
-                        <Link className='cursor-pointer text-center' href={`/${userProfileData.username}/follower`}>
+                        <Link className='cursor-pointer text-center' href={`/${userProfileData.username}/followers`}>
                             <p className='text-base font-semibold'>
                                 {userProfileData.followersCount}
                             </p>

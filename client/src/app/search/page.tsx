@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 'use client';
 import React, { useCallback } from 'react'
-import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { X } from 'lucide-react'
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
@@ -69,7 +70,7 @@ const UserCard = ({
   }, []);
 
   const navigateToProfile = useCallback(() => {
-    router.push(`/${item.email}`)
+    router.push(`/${item.username}`)
   }, []);
 
   return (
