@@ -5,12 +5,12 @@ import {
     DialogContent,
 } from "@/components/ui/dialog"
 import { User } from '@/types'
-import { useParams, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { useDispatch, useSelector } from "react-redux"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { RootState } from '@/redux/store'
-import { FetchFollowersUserDataApi, UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions'
+import { UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions'
 import { followersDataClear, setFollowersUsers } from '@/redux/slice/users'
 import { SkeletonFollowUserCard } from '@/components/profile/loading/skeleton'
 import { useSession } from 'next-auth/react'
@@ -18,12 +18,12 @@ import UserCard from './UserCard'
 
 
 
-const ModalFollower = ({ data }: { data: User[] }) => {
+const ModalFollower = ({ data,profileId }: { data: User[],profileId:string }) => {
     const dispatch = useDispatch()
     const router = useRouter()
     const users = useSelector((state: RootState) => state.users)
     const profile = useSession().data?.user
-    const isProfile = useMemo(() => profile?.id === users.profileData?.user?.id, [profile?.id, users.profileData?.user?.id])
+    const isProfile = useMemo(() => profile?.username === profileId, [profile?.username, profileId])
     const loadedRef = useRef(false)
 
     const pageRedirect = (user: User) => {
@@ -59,9 +59,9 @@ const ModalFollower = ({ data }: { data: User[] }) => {
         if (profile?.id) {
             dispatch(UserFollowingApi({
                 followingUserId: user.id,
+                followingUsername: user.username,
                 followerUserId: profile.id,
-                followerUsername: user.username,
-                followingUsername: profile.username,
+                followerUsername: profile.username,
                 isProfile: isProfile as boolean,
                 type: "followers",
                 userId: user.id

@@ -25,7 +25,7 @@ async function getProfileFollower(id: string) {
 async function PageComponent({ params }: { params: { profile: string } }) {
     try {
         const data = await getProfileFollower(params.profile) as User[]
-        return <PageFollower data={data} />
+        return <PageFollower data={data} profileId={params.profile}/>
     } catch (error) {
         console.log(error)
         return notFound()

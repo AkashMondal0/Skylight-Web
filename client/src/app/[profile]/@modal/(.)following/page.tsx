@@ -24,7 +24,7 @@ async function getProfileFollowing(id: string) {
 async function PageComponent({ params }: { params: { profile: string } }) {
     try {
         const data = await getProfileFollowing(params.profile) as User[]
-        return <ModalFollowing data={data} />
+        return <ModalFollowing data={data} profileId={params.profile}/>
     } catch (error) {
         console.log(error)
         return notFound()

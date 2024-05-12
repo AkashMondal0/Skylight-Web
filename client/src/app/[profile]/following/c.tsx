@@ -1,24 +1,22 @@
 'use client'
-import SkyAvatar from '@/components/sky/SkyAvatar'
-import { Avatar, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import UserCardFollowing from '@/components/profile/following/UserCard'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { setFollowingsUsers } from '@/redux/slice/users'
-import { FetchFollowingsUserDataApi, UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions'
+import {  UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions'
 import { RootState } from '@/redux/store'
 import { User } from '@/types'
 import { useSession } from 'next-auth/react'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-const PageFollowing = ({ data }: { data: User[] }) => {
+const PageFollowing = ({ data,profileId }: { data: User[],profileId:string }) => {
   const dispatch = useDispatch()
   const router = useRouter()
   const users = useSelector((state: RootState) => state.users)
   const profile = useSession().data?.user
-  const isProfile = useMemo(() => profile?.id === users.profileData?.user?.id, [profile?.id, users.profileData?.user?.id])
+  const isProfile = useMemo(() => profile?.username === profileId, [profile?.username, profileId])
   const loadedRef = useRef(false)
 
 const pageRedirect = (user: User) => {
@@ -54,9 +52,10 @@ useEffect(() => {
     if (profile?.id) {
       await dispatch(UserFollowingApi({
         followingUserId: user.id,
+        followingUsername: user.username,
         followerUserId: profile.id,
-        followerUsername: user.username,
-        followingUsername: profile.username,
+        followerUsername: profile.username,
+
         isProfile: isProfile as boolean,
         type: "following",
         userId: user.id
@@ -70,7 +69,7 @@ useEffect(() => {
         <h1 className="font-semibold text-lg text-center mb-4">Followings</h1>
         <Separator />
         <div className='h-5' />
-        {users.profileData.fetchFollow.followings.map((user, i) => <UserCard
+        {users.profileData.fetchFollow.followings.map((user, i) => <UserCardFollowing
           key={i} user={user}
           isProfile={isProfile}
           itself={profile?.id === user.id}
@@ -87,56 +86,56 @@ useEffect(() => {
 export default PageFollowing
 
 
-const UserCard = ({
-  user,
-  pageRedirect,
-  handleActionUnFollow,
-  isProfile,
-  itself,
-  handleActionFollow
-}: {
-  user: User
-  pageRedirect: (user: User) => void
-  handleActionUnFollow: (user: User) => void
-  isProfile?: boolean
-  itself?: boolean
-  handleActionFollow: (user: User) => void
-}) => {
-  if (!user) return null
-  return (
-    <>
-      <div className='flex justify-between px-2 my-4'>
-        <div className='flex space-x-2 items-center cursor-pointer' onClick={() => pageRedirect(user)}>
-          {/* <Avatar className='h-10 w-10 mx-auto'>
-            <AvatarImage src={user.profilePicture || "/user.jpg"}
-              alt="@sky" className='rounded-full' />
-          </Avatar> */}
-          <SkyAvatar url={user.profilePicture || "/user.jpg"} className='h-12 w-12 mx-auto ' />
-          <div>
-            <div className='font-semibold text-base'>
-              {user.username}
-            </div>
-            <div className='text-sm'>
-              {user.email}
-            </div>
-          </div>
-        </div>
-        <div className='flex items-center'>
-          {!itself && <>
-            {user.isFollowing ?
-              <Button variant={"secondary"} className=" rounded-xl" onClick={() => handleActionUnFollow(user)}>
-                Unfollow
-              </Button> :
-              <Button variant={"default"}
-                className="rounded-xl" onClick={() => handleActionFollow(user)}>
-                Follow
-              </Button>}
-          </>}
-        </div>
-      </div>
-    </>
-  )
-}
+// const UserCard = ({
+//   user,
+//   pageRedirect,
+//   handleActionUnFollow,
+//   isProfile,
+//   itself,
+//   handleActionFollow
+// }: {
+//   user: User
+//   pageRedirect: (user: User) => void
+//   handleActionUnFollow: (user: User) => void
+//   isProfile?: boolean
+//   itself?: boolean
+//   handleActionFollow: (user: User) => void
+// }) => {
+//   if (!user) return null
+//   return (
+//     <>
+//       <div className='flex justify-between px-2 my-4'>
+//         <div className='flex space-x-2 items-center cursor-pointer' onClick={() => pageRedirect(user)}>
+//           {/* <Avatar className='h-10 w-10 mx-auto'>
+//             <AvatarImage src={user.profilePicture || "/user.jpg"}
+//               alt="@sky" className='rounded-full' />
+//           </Avatar> */}
+//           <SkyAvatar url={user.profilePicture || "/user.jpg"} className='h-12 w-12 mx-auto ' />
+//           <div>
+//             <div className='font-semibold text-base'>
+//               {user.username}
+//             </div>
+//             <div className='text-sm'>
+//               {user.email}
+//             </div>
+//           </div>
+//         </div>
+//         <div className='flex items-center'>
+//           {!itself && <>
+//             {user.isFollowing ?
+//               <Button variant={"secondary"} className=" rounded-xl" onClick={() => handleActionUnFollow(user)}>
+//                 Unfollow
+//               </Button> :
+//               <Button variant={"default"}
+//                 className="rounded-xl" onClick={() => handleActionFollow(user)}>
+//                 Follow
+//               </Button>}
+//           </>}
+//         </div>
+//       </div>
+//     </>
+//   )
+// }
 
 
 const SkeletonUserCard = () => {

@@ -74,8 +74,7 @@ function Virtualized({
                                     style={{
                                         display: "flex",
                                         flexWrap: "wrap",
-                                        margin: "0 auto",
-                                        justifyContent:"center",
+                                        flexDirection: "row",
                                         ...style,
                                     }}>
                                     {children}
@@ -88,7 +87,7 @@ function Virtualized({
                             {...props}
                             style={{
                                 padding: "0.1rem",
-                                width: "33%",
+                                width: "33.3%",
                                 display: "flex",
                                 flex: "none",
                                 alignContent: "stretch",

@@ -31,13 +31,13 @@ async function getProfileFollower(id: string) {
 async function PageComponent({ params }: { params: { profile: string } }) {
     try {
         const data = await getProfileFollower(params.profile) as User[]
-        return <ModalFollower data={data} />
+        return <ModalFollower data={data} profileId={params.profile}/>
     } catch (error) {
         console.log(error)
         return notFound()
     }
 }
-
+ 
 export default async function Page({ params }: { params: { profile: string } }) {
     return <>
 

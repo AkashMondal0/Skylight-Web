@@ -4,24 +4,23 @@ import {
   DialogContent,
 } from "@/components/ui/dialog"
 import { Separator } from '@/components/ui/separator'
-import { FetchFollowingsUserDataApi, UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions'
+import {UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions'
 import { RootState } from '@/redux/store'
 import { User } from '@/types'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { followingsDataClear, setFollowingsUsers } from "@/redux/slice/users"
-import { SkeletonFollowUserCard } from "@/components/profile/loading/skeleton"
 import { useSession } from "next-auth/react"
 import UserCard from "./UserCard"
 
-const ModalFollowing = ({ data }: { data: User[] }) => {
+const ModalFollowing = ({ data,profileId }: { data: User[],profileId:string }) => {
   const dispatch = useDispatch()
   const router = useRouter()
   const users = useSelector((state: RootState) => state.users)
   const profile = useSession().data?.user
-  const isProfile = useMemo(() => profile?.id === users.profileData?.user?.id, [profile?.id, users.profileData?.user?.id])
+  const isProfile = useMemo(() => profile?.username === profileId, [profile?.username, profileId])
   const loadedRef = useRef(false)
 
   const pageRedirect = (user: User) => {
@@ -57,14 +56,13 @@ const ModalFollowing = ({ data }: { data: User[] }) => {
     if (profile?.id) {
       await dispatch(UserFollowingApi({
         followingUserId: user.id,
+        followingUsername: user.username,
         followerUserId: profile.id,
-        followerUsername: user.username,
-        followingUsername: profile.username,
+        followerUsername: profile.username,
         isProfile: isProfile as boolean,
         type: "following",
         userId: user.id
       }) as any)
-
     }
   }
 

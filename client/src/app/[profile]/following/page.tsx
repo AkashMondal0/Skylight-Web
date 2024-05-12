@@ -3,7 +3,6 @@ import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { configs } from '@/configs';
 import { User } from '@/types';
-import ModalFollowing from "@/components/profile/following/c";
 import PageFollowing from "./c";
 import { SkeletonUserCardFollowPage } from "@/components/profile/loading/skeleton";
 
@@ -26,7 +25,7 @@ async function getProfileFollowing(id: string) {
 async function PageComponent({ params }: { params: { profile: string } }) {
     try {
         const data = await getProfileFollowing(params.profile) as User[]
-        return <PageFollowing data={data} />
+        return <PageFollowing data={data} profileId={params.profile}/>
     } catch (error) {
         console.log(error)
         return notFound()

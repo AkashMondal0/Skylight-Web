@@ -2,7 +2,7 @@ import SkyAvatar from "@/components/sky/SkyAvatar"
 import { Button } from "@/components/ui/button"
 import { User } from "@/types"
 
-const UserCard = ({
+const UserCardFollower = ({
     user,
     pageRedirect,
     handleActionUnFollow,
@@ -52,4 +52,4 @@ const UserCard = ({
     )
 }
 
-export default UserCard
+export default UserCardFollower
