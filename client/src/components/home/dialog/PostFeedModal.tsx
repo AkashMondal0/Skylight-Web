@@ -27,11 +27,9 @@ const PostFeedModal = ({ data }: {
   }
   return (
     <Dialog open onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 flex overflow-y-auto max-w-none" style={{
+      <DialogContent className="p-0 flex overflow-y-auto max-w-[960px] min-h-min" style={{
         height: '95vh',
         maxHeight: '800px',
-        width:"auto",
-        maxWidth: '90vw',
       }}>
         <div className='flex-1 m-auto ml-4 w-full h-auto'>
           <Carousel >
@@ -44,7 +42,7 @@ const PostFeedModal = ({ data }: {
                     height={300}
                     alt="Picture of the author"
                     quality={100}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 50vw, 33vw"
                     //(min-width: 808px) 50vw, 100vw 
                     style={{
                       objectFit: 'cover', // cover, contain, none

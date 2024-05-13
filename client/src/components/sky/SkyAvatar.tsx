@@ -4,16 +4,21 @@ import { cn } from '@/lib/utils'
 
 const SkyAvatar = ({
     url,
-    className
+    className,
+    sizeImage,
 }:
-    { url: string | null, className: string }) => {
+    {
+        url: string | null,
+        className: string
+        sizeImage?: string
+    }) => {
     return <Image
         src={url || "/user.jpg"}
         width={40}
         height={40}
         alt="Picture of the author"
         quality={100}
-        sizes="10vw"
+        sizes={sizeImage || "10vw"}
         loading="lazy"
         // (max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw
         style={{
