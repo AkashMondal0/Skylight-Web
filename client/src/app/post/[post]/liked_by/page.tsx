@@ -1,52 +1,40 @@
-import SkyAvatar from '@/components/sky/SkyAvatar'
-import { Avatar, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
-import { User } from '@/types'
-import React from 'react'
+import { cookies } from 'next/headers';
+import { notFound } from 'next/navigation';
+import { configs } from '@/configs';
+import { Suspense } from 'react';
+import PostLikedPage from './c';
+import { SkeletonLikedPage } from '@/components/home/loading/LikedPage';
 
-const Page = () => {
-  return (
-    <div className='w-full flex justify-center min-h-[100dvh] h-full'>
-      <div className='max-w-[600px] w-full p-4'>
-        <h1 className="font-semibold text-lg text-center mb-4">Likes</h1>
-        <Separator/>
-        <div className='h-5'/>
-        {[...Array(50)].map((_, i) => <UserCard key={i} />)}
-      </div>
-    </div>
-  )
+async function getData(id: string) {
+  try {
+    const response = await fetch(`${configs.appUrl}/api/v1/post/${id}/like/get`, {
+      headers: {
+        "Content-Type": "application/json",
+        "authorization": `${cookies().get("token-auth")?.value}`
+      },
+      cache: "no-store"
+    });
+    const data = await response.json();
+    return data.data;
+  } catch (error) {
+    console.log(error)
+    return notFound()
+  }
+}
+async function PageComponent({ params }: { params: { post: string } }) {
+  try {
+    const data = await getData(params?.post)
+    return <PostLikedPage postId={params?.post} data={data} />
+  } catch (error) {
+    console.log(error)
+    return notFound()
+  }
 }
 
-export default Page
+export default async function Page({ params }: { params: { post: string } }) {
 
-const UserCard = ({
-  user
-}: {
-  user?: User
-}) => {
-  return (
-      <>
-          <div className='flex justify-between px-2 my-4'>
-              <div className='flex space-x-2 items-center'>
-                  {/* <Avatar className='h-12 w-12 mx-auto'>
-                      <AvatarImage src={user?.profilePicture||"/user.jpg"}
-                          alt="@shadcn" className='rounded-full' />
-                  </Avatar> */}
-                  <SkyAvatar url={user?.profilePicture||"/user.jpg"} className='h-12 w-12 mx-auto ' />
-                  <div>
-                      <div className='font-semibold text-base'>{user?.username}</div>
-                      <div className='text-sm'>
-                          {user?.email}
-                      </div>
-                  </div>
-              </div>
-              <div className='flex items-center'>
-                  <Button variant={"default"} className=" rounded-xl">
-                      follow
-                  </Button>
-              </div>
-          </div>
-      </>
-  )
+  return <Suspense fallback={<SkeletonLikedPage/>}>
+    <PageComponent params={params} />
+  </Suspense>
+
 }

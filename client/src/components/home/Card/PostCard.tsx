@@ -8,11 +8,13 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { FeedPost } from '@/redux/slice/post-feed';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import SkyAvatar from '@/components/sky/SkyAvatar';
+import { useDispatch } from 'react-redux';
+import { openModal } from '@/redux/slice/modal';
+import { FeedPost } from '@/types';
 
 const PostItem = ({
   feed,
@@ -20,6 +22,7 @@ const PostItem = ({
   feed: FeedPost
 }) => {
   const router = useRouter()
+  const dispatch = useDispatch()
 
   return (
     <div className='max-w-[480px] w-full mx-auto py-4 border-b'>
@@ -50,13 +53,13 @@ const PostItem = ({
             {feed.fileUrl.map((url, index) => (
               <CarouselItem key={index} className='flex flex-col m-auto'>
                 <Image
-                  loading="lazy"
+                  // loading="lazy"
                   src={url}
                   width={300}
                   height={300}
                   alt="Picture of the author"
                   quality={100}
-                  // priority={true}
+                  priority={true}
                   fetchPriority="high"
                   sizes="(min-width: 60em) 24vw,
                     (min-width: 28em) 45vw,
@@ -87,9 +90,20 @@ const PostItem = ({
       </div>
 
       <div className='mx-3 space-y-2'>
-        <div className='font-semibold cursor-pointer' onClick={() => {
+        {/* lg*/}
+        <div className='font-semibold cursor-pointer sm:hidden block' onClick={() => {
           router.push(`/post/${feed.id}/liked_by`)
         }}>{feed.likeCount} likes</div>
+        {/* sm */}
+        <div className='font-semibold cursor-pointer hidden sm:block' onClick={() => {
+          dispatch(openModal({
+            modalName: "Liked",
+            modalData: {
+              postId: feed.id
+            }
+          }))
+        }}>{feed.likeCount} likes</div>
+
         {/* close friend comments */}
         <div className='flex space-x-2'>
           <div className='font-semibold cursor-pointer ' onClick={() => {
@@ -98,6 +112,8 @@ const PostItem = ({
           <div>{feed.caption}</div>
         </div>
         {/* load more */}
+
+        {/* lg*/}
         <div className='text-sm cursor-pointer hidden sm:block'
           onClick={() => {
             router.push(`/post/${feed.id}`)

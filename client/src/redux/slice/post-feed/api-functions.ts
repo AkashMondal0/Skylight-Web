@@ -52,3 +52,15 @@ export const fetchProfileFeedsApi = createAsyncThunk(
         }
     }
 );
+
+export const fetchPostLikesApi = createAsyncThunk(
+    'fetchPostLikesApi/get',
+    async (postId: string) => {
+        try {
+            const res = await axios.get(`/api/v1/post/${postId}/like/get`)
+            return { users: res.data?.data, postId: postId }
+        } catch (error: any) {
+            return error?.response?.data?.data
+        }
+    }
+);

@@ -92,7 +92,7 @@ const PostFeedModal = ({ data }: {
               </div>
             </div>
             {
-              data.comments.length === 0 ? <div className='flex justify-center items-center h-96'>
+              data?.comments?.length === 0 ? <div className='flex justify-center items-center h-96'>
                 <div>
                   <p className='font-bold text-2xl text-center'>No comments yet</p>
                   <p className='text-center'>Start the conversation.</p>

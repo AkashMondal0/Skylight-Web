@@ -8,7 +8,7 @@ interface FeedPost {
     alreadyLiked: boolean | null
     authorData: AuthorData
     comments: Comment[]
-    likes: Like[]
+    likes: AuthorData[]
 }
 
 interface AuthorData {
@@ -17,6 +17,7 @@ interface AuthorData {
     email: string
     name: string
     profilePicture: string
+    isFollowing: boolean,
 }
 
 interface User {
@@ -90,6 +91,7 @@ interface Like {
     postId: string;
     createdAt: Date;
     updatedAt: Date;
+    authorData: AuthorData
 }
 
 interface Follower {
@@ -193,5 +195,6 @@ export type {
     StoryLike,
     SavedPost,
     PayloadData,
-    FeedPost
+    FeedPost,
+    AuthorData
 }

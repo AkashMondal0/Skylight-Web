@@ -1,13 +1,25 @@
 "use client";
 import { FeedPost } from '@/types';
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect, useMemo, useRef } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 import PostItem from './Card/PostCard';
 import StoriesPage from './StoriesPage';
 import { SkeletonStoriesCard } from './loading/StoriesCard';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { setFeedPosts } from '@/redux/slice/post-feed';
 
 const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
-    const [posts, setPosts] = React.useState<FeedPost[]>(data)
+    const dispatch = useDispatch()
+    const posts = useSelector((state: RootState) => state.postFeed.feed)
+    const loadedRef = useRef(false)
+
+    useEffect(() => {
+        if (!loadedRef.current) {
+            dispatch(setFeedPosts(data) as any)
+            loadedRef.current = true;
+        }
+    }, [dispatch, data]);
 
     return (
         <div className='w-full flex'>
@@ -20,7 +32,7 @@ const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
                     style={{
                         height: '100%',
                     }}
-                    data={posts}
+                    data={posts.Posts}
                     // context={{ loading, loadMore }}
                     increaseViewportBy={200}
                     itemContent={(index, post) => (

@@ -3,6 +3,7 @@ import profileReducer from '@/redux/slice/profile'
 import authReducer from '@/redux/slice/auth'
 import usersReducer from '@/redux/slice/users'
 import postFeedReducer from '@/redux/slice/post-feed'
+import modalReducer from '@/redux/slice/modal'
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     auth: authReducer,
     users: usersReducer,
     postFeed: postFeedReducer,
+    modal: modalReducer
   },
 })
 
