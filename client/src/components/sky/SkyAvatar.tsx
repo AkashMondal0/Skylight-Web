@@ -18,7 +18,7 @@ const SkyAvatar = ({
         height={40}
         alt="Picture of the author"
         quality={100}
-        sizes={sizeImage || "10vw"}
+        sizes={"(min-width: 808px) 50vw, 100vw"}
         loading="lazy"
         // (max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw
         style={{

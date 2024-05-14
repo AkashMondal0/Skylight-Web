@@ -61,10 +61,7 @@ const PostItem = ({
                   quality={100}
                   priority={true}
                   fetchPriority="high"
-                  sizes="(min-width: 60em) 24vw,
-                    (min-width: 28em) 45vw,
-                    100vw"
-                  // sizes="(min-width: 808px) 50vw, 50vw"
+                  sizes="(min-width: 808px) 50vw, 100vw"
                   className={cn('h-auto w-full cursor-pointer userNotSelectImg bg-muted')}
                 />
               </CarouselItem>

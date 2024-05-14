@@ -1,6 +1,6 @@
 import db from "@/lib/db/drizzle"
 import { NextRequest, NextResponse } from "next/server"
-import { count, eq, desc } from "drizzle-orm";
+import { count, eq, desc, exists, and } from "drizzle-orm";
 import { posts, users, comments, likes } from '@/lib/db/schema';
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 import jwt from "jsonwebtoken"
@@ -18,9 +18,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
             }, { status: 404 })
         }
 
-        let verify_id = jwt.verify(token, secret) as { email: string, id: string } as any
-
-        const authorId = verify_id.id
+        let verify_id = jwt.verify(token, secret) as { email: string, id: string }
 
         if (!verify_id) {
             //   console.log("Invalid token")
@@ -39,7 +37,10 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
             commentCount: count(eq(comments.postId, posts.id)),
             likeCount: count(eq(likes.postId, posts.id)),
             createdAt: posts.createdAt,
-            alreadyLiked: eq(likes.authorId, authorId),
+            alreadyLiked: exists(db.select().from(likes).where(and(
+                eq(likes.authorId, verify_id.id),
+                eq(likes.postId, posts.id)
+            ))),
             authorData: {
                 id: users.id,
                 username: users.username,
@@ -53,15 +54,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
             .limit(1)
             .leftJoin(comments, eq(posts.id, comments.postId))
             .leftJoin(likes, eq(posts.id, likes.postId))
-            .innerJoin(users, eq(posts.authorId, users.id))
-            .groupBy(
-                posts.id,
-                users.id,
-                posts.createdAt,
-                comments.postId,
-                likes.postId,
-                likes.authorId,
-            )
+            .leftJoin(users, eq(posts.authorId, users.id))
+            .groupBy(posts.id,users.id)
+
         const post_comments = await db.select({
             id: comments.id,
             comment: comments.comment,

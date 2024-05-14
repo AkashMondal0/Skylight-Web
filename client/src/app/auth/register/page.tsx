@@ -68,6 +68,7 @@ export default function LoginPage() {
         else {
             toast.error(res.payload.message)
         }
+        reset();
     };
 
     return (

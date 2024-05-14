@@ -27,26 +27,28 @@ const PostFeedModal = ({ data }: {
   }
   return (
     <Dialog open onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 flex overflow-y-auto max-w-[960px] min-h-min" style={{
-        height: '95vh',
-        maxHeight: '800px',
-      }}>
-        <div className='flex-1 m-auto ml-4 w-full h-auto'>
-          <Carousel >
+      <DialogContent className="p-0 flex 
+      overflow-y-auto flex-wrap 
+      max-w-[960px] min-h-min"
+        style={{
+          height: '95vh',
+          maxHeight: '800px',
+        }}>
+
+        {/* left side */}
+        <div className='m-auto w-96 h-auto'>
+          <Carousel>
             <CarouselContent>
               {data?.fileUrl?.map((url, index) => (
-                <CarouselItem key={index} className='m-auto'>
+                <CarouselItem key={index}>
                   <Image
                     src={url}
                     width={300}
                     height={300}
                     alt="Picture of the author"
                     quality={100}
-                    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 50vw, 33vw"
+                    sizes="(min-width: 808px) 50vw, 100vw"
                     //(min-width: 808px) 50vw, 100vw 
-                    style={{
-                      objectFit: 'cover', // cover, contain, none
-                    }}
                     priority={true}
                     className='w-auto h-auto cursor-default border m-auto rounded-lg userNotSelectImg'
                   />
@@ -54,18 +56,16 @@ const PostFeedModal = ({ data }: {
               ))}
             </CarouselContent>
             <div className='flex'>
-              <CarouselPrevious variant={"default"} className='md:flex hidden left-2' />
-              <CarouselNext variant={"default"} className='md:flex hidden  right-2' />
+              <CarouselPrevious variant={"default"} className='left-2' />
+              <CarouselNext variant={"default"} className=' right-2' />
             </div>
           </Carousel>
         </div>
+        {/* right side */}
         <div className="flex h-auto flex-col justify-between max-w-[500px] w-full flex-1 border-l">
+          {/* header comment input  */}
           <div className="flex justify-between bg-background items-center p-4 border-b h-20 z-10 sticky top-0 rounded-lg">
             <div className="flex gap-2 items-center">
-              {/* <Avatar className='h-12 w-12 '>
-                <AvatarImage src={data?.authorData?.profilePicture || "/user.jpg"}
-                  alt="@shadcn" className='rounded-full' />
-              </Avatar> */}
               <SkyAvatar url={data?.authorData?.profilePicture || "/user.jpg"} className='h-12 w-12 border-fuchsia-500 border-[3px] p-[2px]' />
               <div className="font-semibold text-lg">{data?.authorData?.name}</div>
             </div>
@@ -77,12 +77,9 @@ const PostFeedModal = ({ data }: {
               </svg>
             </div>
           </div>
-          <ScrollArea className='h-auto'>
-            <div className="flex p-4 my-auto">
-              {/* <Avatar className='h-12 w-12 border-fuchsia-500 border-[3px] p-[2px]'>
-                <AvatarImage src={data?.authorData?.profilePicture || "/user.jpg"}
-                  alt="@shadcn" className='rounded-full' />
-              </Avatar> */}
+          {/* body comments list  */}
+          <ScrollArea className='h-auto flex-1'>
+            <div className="flex p-4">
               <SkyAvatar url={data?.authorData?.profilePicture || "/user.jpg"} className='h-12 w-12 border-fuchsia-500 border-[3px] p-[2px]' />
               <div className="flex flex-col ml-4">
                 <p className="break-all"><span className='font-semibold text-lg'>
@@ -101,10 +98,6 @@ const PostFeedModal = ({ data }: {
                 <>
                   {data?.comments?.map((comment, index) => (
                     <div key={index} className="flex p-4 my-auto">
-                      {/* <Avatar className='h-12 w-12 border-fuchsia-500 border-[3px] p-[2px]'>
-                        <AvatarImage src={comment?.authorData?.profilePicture || "/user.jpg"}
-                          alt="@shadcn" className='rounded-full' />
-                      </Avatar> */}
                       <SkyAvatar url={comment?.authorData?.profilePicture || "/user.jpg"} className='h-12 w-12 border-fuchsia-500 border-[3px] p-[2px]' />
                       <div className="flex flex-col ml-4">
                         <p className="break-all"><span className='font-semibold text-lg'>
@@ -117,6 +110,7 @@ const PostFeedModal = ({ data }: {
                 </>
             }
           </ScrollArea>
+          {/* footer comment input  */}
           <div className='w-full bg-background p-2 border-t sticky bottom-0'>
             <div className='my-2 mx-3 flex justify-between'>
               <div className='flex space-x-3'>
@@ -144,6 +138,7 @@ const PostFeedModal = ({ data }: {
             </div>
           </div>
         </div>
+
       </DialogContent>
     </Dialog>
   )

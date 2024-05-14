@@ -49,7 +49,6 @@ export default function LoginPage() {
         const res = await dispatch(loginApi({ email, password }) as any) as PayloadData
 
         if (res.payload?.code === 1) {
-            reset();
             signIn("credentials", {
                 email: res.payload.data.email,
                 username: res.payload.data.username,
@@ -63,6 +62,7 @@ export default function LoginPage() {
         else {
             toast.error(`${res.payload.message}`)
         }
+        reset();
     };
 
     return (

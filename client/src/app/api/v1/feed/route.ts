@@ -58,15 +58,15 @@ export async function GET(request: NextRequest, response: NextResponse) {
       .leftJoin(posts, eq(followers.followingUserId, posts.authorId))
       .leftJoin(comments, eq(posts.id, comments.postId))
       .leftJoin(likes, eq(posts.id, likes.postId))
-      .innerJoin(users, eq(posts.authorId, users.id))
+      .leftJoin(users, eq(posts.authorId, users.id))
       .groupBy(
         posts.id,
         users.id,
-        posts.createdAt,
-        followers.followingUserId,
-        followers.createdAt,
-        comments.postId,
-        likes.postId,
+        // posts.createdAt,
+        // followers.followingUserId,
+        // followers.createdAt,
+        // comments.postId,
+        // likes.postId,
       )
 
     // console.log(data,"data")
