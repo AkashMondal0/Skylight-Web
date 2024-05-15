@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { fetchPostLikesApi, fetchProfileFeedsApi, postFilesApi } from './api-functions'
+import { createPostLikeApi, destroyPostLikeApi, fetchPostLikesApi, fetchProfileFeedsApi, postFilesApi } from './api-functions'
 import { AuthorData, FeedPost } from '@/types'
 
 // Define a type for the slice state
@@ -16,6 +16,8 @@ export interface PostFeedState {
     },
     fetchLoading?: boolean
     fetchError?: string | null
+    likeLoading?: boolean
+    likeError?: string | null
 }
 
 // Define the initial state using that type
@@ -30,7 +32,9 @@ const PostFeedState: PostFeedState = {
         error: null
     },
     fetchLoading: false,
-    fetchError: null
+    fetchError: null,
+    likeLoading: false,
+    likeError: null
 }
 
 export const PostFeedSlice = createSlice({
@@ -50,21 +54,6 @@ export const PostFeedSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            // .addCase(postFilesApi.pending, (state) => { })
-            // .addCase(postFilesApi.fulfilled, (state, action: PayloadAction<any>) => { })
-            // .addCase(postFilesApi.rejected, (state, action) => { })
-            // .addCase(fetchProfileFeedsApi.pending, (state) => {
-            //     state.fetchFeedsLoading = true
-            //     state.fetchFeedsError = null
-            // })
-            // .addCase(fetchProfileFeedsApi.fulfilled, (state, action: PayloadAction<FeedPost[]>) => {
-            //     state.fetchFeedsLoading = false
-            //     state.feedPosts = action.payload
-            // })
-            // .addCase(fetchProfileFeedsApi.rejected, (state, action) => {
-            //     state.fetchFeedsLoading = false
-            //     state.fetchFeedsError = action.error.message || 'Failed to fetch feeds'
-            // })
             .addCase(fetchPostLikesApi.pending, (state) => {
                 state.fetchLoading = true
                 state.fetchError = null
@@ -79,6 +68,50 @@ export const PostFeedSlice = createSlice({
             .addCase(fetchPostLikesApi.rejected, (state, action) => {
                 state.fetchLoading = false
                 state.fetchError = action.error.message || 'Failed to fetch likes'
+            })
+            // 
+            .addCase(createPostLikeApi.pending, (state) => {
+                state.likeLoading = true
+                state.likeError = null
+            })
+            .addCase(createPostLikeApi.fulfilled, (state, action: PayloadAction<{ user: AuthorData, postId: string }>) => {
+                if (action.payload.postId) {
+                    const postIndex = state.feed.Posts.findIndex(post => post.id === action.payload.postId)
+                    if (state.feed.Posts[postIndex].likes) {
+                        if (state.feed.Posts[postIndex].likes.findIndex(user => user.id === action.payload.user.id) === -1) {
+                            state.feed.Posts[postIndex].likes = [...state.feed.Posts[postIndex].likes, action.payload.user]
+                        }
+                    } else {
+                        state.feed.Posts[postIndex].likes = [action.payload.user]
+                    }
+                    state.feed.Posts[postIndex].alreadyLiked = true
+                    state.feed.Posts[postIndex].likeCount += 1
+                    state.likeLoading = false
+                }
+            })
+            .addCase(createPostLikeApi.rejected, (state, action) => {
+                state.likeLoading = false
+                state.likeError = action.error.message || 'Failed to like post'
+            })
+            // 
+            .addCase(destroyPostLikeApi.pending, (state) => {
+                state.likeLoading = true
+                state.likeError = null
+            })
+            .addCase(destroyPostLikeApi.fulfilled, (state, action: PayloadAction<{ user: AuthorData, postId: string }>) => {
+                if (action.payload.postId) {
+                    const postIndex = state.feed.Posts.findIndex(post => post.id === action.payload.postId)
+                    if (state.feed.Posts[postIndex].likes && state.feed.Posts[postIndex].likes.findIndex(user => user.id === action.payload.user.id) !== -1) {
+                        state.feed.Posts[postIndex].likes = state.feed.Posts[postIndex].likes.filter(like => like.id !== action.payload.user.id)
+                    }
+                    state.feed.Posts[postIndex].alreadyLiked = false
+                    state.feed.Posts[postIndex].likeCount -= 1
+                    state.likeLoading = false
+                }
+            })
+            .addCase(destroyPostLikeApi.rejected, (state, action) => {
+                state.likeLoading = false
+                state.likeError = action.error.message || 'Failed to unlike post'
             })
     },
 })

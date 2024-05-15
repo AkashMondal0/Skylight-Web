@@ -2,43 +2,42 @@ import { NextRequest } from "next/server"
 import db from "@/lib/db/drizzle"
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 import jwt from "jsonwebtoken"
-import { redirect } from 'next/navigation';
 import { and, eq } from "drizzle-orm";
 import { likes } from "@/lib/db/schema";
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
     try {
-        // const token = request.cookies.get("token-auth")
+        const token = request.cookies.get("token-auth")
 
-        // if (!token) {
-        //     return Response.json({
-        //         code: 0,
-        //         message: "not found token",
-        //         status_code: 404,
-        //         data: {}
-        //     }, { status: 404 })
-        // }
-
-        // const verify = jwt.verify(token.value, secret) as { email: string, id: string }
-
-        // if (!verify?.id) {
-        //     return Response.json({
-        //         code: 0,
-        //         message: "Invalid token",
-        //         status_code: 404,
-        //         data: {}
-        //     }, { status: 404 })
-        // }
-
-        const {
-            postId,
-            authorId
-        } = await request.json()
-
-        if (!postId || !authorId) {
+        if (!token) {
             return Response.json({
                 code: 0,
-                message: "Invalid request",
+                message: "not found token",
+                status_code: 404,
+                data: {}
+            }, { status: 404 })
+        }
+
+        const verify = jwt.verify(token.value, secret) as { email: string, id: string }
+
+        if (!verify?.id) {
+            return Response.json({
+                code: 0,
+                message: "Invalid token",
+                status_code: 404,
+                data: {}
+            }, { status: 404 })
+        }
+
+        // const {
+        //     postId,
+        //     authorId
+        // } = await request.json()
+
+        if (!params.id || !verify?.id) {
+            return Response.json({
+                code: 0,
+                message: "missing required fields",
                 status_code: 400,
                 data: {}
             }, { status: 400 })
@@ -49,8 +48,8 @@ export async function POST(request: NextRequest) {
         })
             .from(likes)
             .where(and(
-                eq(likes.authorId, authorId),
-                eq(likes.postId, postId)
+                eq(likes.authorId, verify?.id), // authorId
+                eq(likes.postId, params.id) // postId
             ))
             .limit(1)
 
@@ -64,8 +63,8 @@ export async function POST(request: NextRequest) {
         }
 
         await db.insert(likes).values({
-            authorId: authorId,
-            postId: postId
+            authorId: verify?.id, // authorId
+            postId: params.id // postId
         })
 
         return Response.json({

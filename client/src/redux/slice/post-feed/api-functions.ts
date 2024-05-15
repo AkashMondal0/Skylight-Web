@@ -2,7 +2,7 @@ import { configs } from "@/configs";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { supabaseClient } from "@/lib/supa-base"
-import { User } from "@/types";
+import { AuthorData, User } from "@/types";
 
 export const postFilesApi = createAsyncThunk(
     'postFilesApi/post',
@@ -40,7 +40,6 @@ export const postFilesApi = createAsyncThunk(
     }
 );
 
-
 export const fetchProfileFeedsApi = createAsyncThunk(
     'fetchProfileFeedsApi/get',
     async () => {
@@ -59,6 +58,42 @@ export const fetchPostLikesApi = createAsyncThunk(
         try {
             const res = await axios.get(`/api/v1/post/${postId}/like/get`)
             return { users: res.data?.data, postId: postId }
+        } catch (error: any) {
+            return error?.response?.data?.data
+        }
+    }
+);
+
+export const createPostLikeApi = createAsyncThunk(
+    'createPostLikeApi/post',
+    async ({
+        postId,
+        user
+    }: {
+        postId: string,
+        user: AuthorData
+    }, thunkApi) => {
+        try {
+            await axios.post(`/api/v1/post/${postId}/like/create`)
+            return { user, postId }
+        } catch (error: any) {
+            return error?.response?.data?.data
+        }
+    }
+);
+
+export const destroyPostLikeApi = createAsyncThunk(
+    'destroyPostLikeApi/delete',
+    async ({
+        postId,
+        user
+    }: {
+        postId: string,
+        user: AuthorData
+    }, thunkApi) => {
+        try {
+            await axios.delete(`/api/v1/post/${postId}/like/destroy`)
+            return { user, postId }
         } catch (error: any) {
             return error?.response?.data?.data
         }

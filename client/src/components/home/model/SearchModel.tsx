@@ -95,10 +95,12 @@ const UserCard = ({
                             alt="@shadcn" className='rounded-full' />
                     </Avatar> */}
                     <SkyAvatar className='h-12 w-12 mx-auto' url={item.profilePicture ? item.profilePicture : "/user.jpg"} />
-                    <div className='ml-2'>
-                        <div className='font-semibold text-base text-start'>{item.username}</div>
+                    <div className='ml-2 text-start'>
+                        <div className='font-semibold text-base'>
+                            {item.name}
+                        </div>
                         <div className='text-sm'>
-                            {item.email}
+                            {item.username}
                         </div>
                     </div>
                 </div>

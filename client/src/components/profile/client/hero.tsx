@@ -77,7 +77,7 @@ const HeroSection = ({
 
                     <div className='flex flex-col gap-4'>
                         <div className='flex gap-2'>
-                            <p className='text-xl px-3'>{userProfileData.email}</p>
+                            <p className='text-xl px-3'>{userProfileData.username}</p>
                         </div>
                         <ActionButtonsSM
                             isFollowing={userProfileData.isFollowing}

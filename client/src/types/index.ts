@@ -16,8 +16,8 @@ interface AuthorData {
     username: string
     email: string
     name: string
-    profilePicture: string
-    isFollowing: boolean,
+    profilePicture?: string
+    isFollowing?: boolean,
 }
 
 interface User {

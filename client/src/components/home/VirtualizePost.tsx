@@ -39,11 +39,7 @@ const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
                         <PostItem feed={post} />
                     )}
                     components={{
-                        Header: () => (
-                            <Suspense fallback={<SkeletonStoriesCard />}>
-                                <StoriesPage />
-                            </Suspense>
-                        ),
+                        Header: () => <StoriesPage />,
                         Footer: () => <div className='h-20'></div>,
                     }}
 

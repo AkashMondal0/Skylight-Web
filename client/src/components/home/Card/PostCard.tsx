@@ -15,6 +15,8 @@ import SkyAvatar from '@/components/sky/SkyAvatar';
 import { useDispatch } from 'react-redux';
 import { openModal } from '@/redux/slice/modal';
 import { FeedPost } from '@/types';
+import { createPostLikeApi, destroyPostLikeApi } from '@/redux/slice/post-feed/api-functions';
+import { useSession } from 'next-auth/react';
 
 const PostItem = ({
   feed,
@@ -23,6 +25,29 @@ const PostItem = ({
 }) => {
   const router = useRouter()
   const dispatch = useDispatch()
+  const session = useSession().data?.user
+
+  const handleLikeAndUndoLike = () => {
+    if (session && feed) {
+
+      const data = {
+        postId: feed.id,
+        user: {
+          ...session,
+          profilePicture: session?.image ?? "/user.jpg",
+          isFollowing: false,
+        }
+      }
+
+      if (feed.alreadyLiked) {
+        // unlike
+        dispatch(destroyPostLikeApi(data) as any)
+      } else {
+        // like
+        dispatch(createPostLikeApi(data) as any)
+      }
+    }
+  }
 
   return (
     <div className='max-w-[480px] w-full mx-auto py-4 border-b'>
@@ -52,7 +77,7 @@ const PostItem = ({
           <CarouselContent>
             {feed.fileUrl.map((url, index) => (
               <CarouselItem key={index} className='flex flex-col m-auto'>
-                <Image
+                <Image onDoubleClick={handleLikeAndUndoLike}
                   // loading="lazy"
                   src={url}
                   width={300}
@@ -76,7 +101,7 @@ const PostItem = ({
 
       <div className=' mt-5 mb-1 mx-3 flex justify-between'>
         <div className='flex space-x-3'>
-          <Heart className={`w-7 h-7 cursor-pointer  ${feed.alreadyLiked ? "text-red-500 fill-red-500" : ""}`} />
+          <Heart className={`w-7 h-7 cursor-pointer  ${feed.alreadyLiked ? "text-red-500 fill-red-500" : ""}`} onClick={handleLikeAndUndoLike} />
           <MessageCircle className='w-7 h-7 cursor-pointer hidden sm:block' onClick={() => router.push(`/post/${feed.id}`)} />
           {/* sm */}
           <MessageCircle className='w-7 h-7 cursor-pointer sm:hidden block' onClick={() => router.push(`/post/${feed.id}/comments`)} />
