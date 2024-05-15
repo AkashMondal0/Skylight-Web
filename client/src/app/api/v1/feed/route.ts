@@ -1,6 +1,6 @@
 import db from "@/lib/db/drizzle"
 import { NextRequest, NextResponse } from "next/server"
-import { count, eq, desc, exists, and } from "drizzle-orm";
+import { count, eq, desc, exists, and, countDistinct } from "drizzle-orm";
 import { followers, posts, users, comments, likes } from '@/lib/db/schema';
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 import jwt from "jsonwebtoken"
@@ -8,7 +8,7 @@ import jwt from "jsonwebtoken"
 export async function GET(request: NextRequest, response: NextResponse) {
   try {
 
-    const token = request.headers.get("authorization")
+    const token = request.headers.get("authorization") ||  request.cookies.get("token-auth")?.value
     if (!token) {
       return Response.json({
         code: 0,
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
       caption: posts.caption,
       fileUrl: posts.fileUrl,
       commentCount: count(eq(comments.postId, posts.id)),
-      likeCount: count(eq(likes.postId, posts.id)),
+      likeCount: countDistinct(eq(likes.postId, posts.id)),
       createdAt: posts.createdAt,
       alreadyLiked: exists(db.select().from(likes).where(and(
         eq(likes.authorId, verify_id),

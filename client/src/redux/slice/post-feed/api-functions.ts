@@ -99,3 +99,45 @@ export const destroyPostLikeApi = createAsyncThunk(
         }
     }
 );
+
+export const createPostCommentApi = createAsyncThunk(
+    'createPostCommentApi/post',
+    async ({
+        postId,
+        userId,
+        comment
+    }: {
+        postId: string,
+        comment: string,
+        userId: string
+    }, thunkApi) => {
+        try {
+            const data = await axios.post(`/api/v1/post/${postId}/comments/create`, {
+                postId,
+                authorId: userId,
+                comment
+            })
+            return { authorId: userId, postId, comment: data.data.data }
+        } catch (error: any) {
+            return error?.response?.data?.data
+        }
+    }
+);
+
+export const destroyPostCommentApi = createAsyncThunk(
+    'destroyPostCommentApi/delete',
+    async ({
+        postId,
+        user
+    }: {
+        postId: string,
+        user: AuthorData
+    }, thunkApi) => {
+        try {
+            await axios.delete(`/api/v1/post/${postId}/comment/destroy`)
+            return { user, postId }
+        } catch (error: any) {
+            return error?.response?.data?.data
+        }
+    }
+);

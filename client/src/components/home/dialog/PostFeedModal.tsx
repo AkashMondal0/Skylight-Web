@@ -1,7 +1,6 @@
 
 "use client"
-import React from 'react'
-import { Avatar, AvatarImage } from '@/components/ui/avatar'
+import React, { RefObject, useRef } from 'react'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -14,12 +13,31 @@ import {
   Heart, MessageCircle, Send, BookMarked
 } from 'lucide-react'
 import SkyAvatar from '@/components/sky/SkyAvatar'
+import { useDispatch } from 'react-redux'
+import { createPostCommentApi } from '@/redux/slice/post-feed/api-functions'
+import { useSession } from 'next-auth/react'
 
 
 const PostFeedModal = ({ data }: {
   data: FeedPost
 }) => {
   const router = useRouter()
+  const dispatch = useDispatch()
+  const inputRef = useRef<HTMLInputElement>(null)
+  const session = useSession().data?.user
+
+  const handleComment = async () => {
+    if (session) {
+      await dispatch(createPostCommentApi({
+        postId: data.id,
+        userId: session?.id,
+        comment: inputRef.current?.value ?? ""
+      }) as any)
+      if (inputRef.current) {
+        inputRef.current.value = ""
+      }
+    }
+  }
   const onOpenChange = (isOpen: boolean) => {
     if (!isOpen) {
       router.back()
@@ -133,8 +151,9 @@ const PostFeedModal = ({ data }: {
               <input type="text"
                 placeholder='Add a comment'
                 multiple
+                ref={inputRef}
                 className='w-full h-12 p-4 outline-none rounded-2xl border' />
-              <Button variant={"default"} className='w-full h-12 flex-1 rounded-2xl'>Post</Button>
+              <Button variant={"default"} onClick={handleComment} className='w-full h-12 flex-1 rounded-2xl'>Post</Button>
             </div>
           </div>
         </div>
