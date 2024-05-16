@@ -1,28 +1,7 @@
-// try {
-//     await db.insert(comments).values({
-//         authorId: req.body.authorId,
-//         postId: req.body.postId,
-//         comment: req.body.comment
-//     });
-//     return res.status(200).json({
-//         code: 1,
-//         message: "Comment Created Successfully",
-//         status_code: 200,
-//         data: {}
-//     })
-// } catch (error: any) {
-//     console.log(error)
-//     return res.status(500).json({
-//         code: 0,
-//         message: "Server Error Please Try Again (Post Route - /post/create/comment)",
-//         status_code: 200,
-//         data: {}
-//     })
-// }
 import { and, eq } from 'drizzle-orm';
 import { NextRequest } from "next/server"
 import db from "@/lib/db/drizzle"
-import { likes } from '@/lib/db/schema';
+import { comments, likes, posts } from '@/lib/db/schema';
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 import jwt from "jsonwebtoken"
 
@@ -50,12 +29,11 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
             }, { status: 404 })
         }
 
-        // const {
-        //     postId,
-        //     authorId
-        // } = await request.json()
+        const {
+            commentId
+        } = await request.json()
 
-        if (!params.id || !verify.id) {
+        if (!params.id || !verify.id || !commentId) {
             return Response.json({
                 code: 0,
                 message: "Invalid request",
@@ -64,9 +42,9 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
             }, { status: 400 })
         }
 
-        await db.delete(likes).where(and(
-            eq(likes.authorId, verify.id),
-            eq(likes.postId, params.id)
+        await db.delete(comments).where(and(
+            eq(comments.id, commentId),
+            eq(posts.id, params.id)
         ))
 
         return Response.json({

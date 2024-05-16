@@ -53,7 +53,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
             code: 1,
             message: "comment created successfully",
             status_code: 200,
-            data: data
+            data: data[0]
         }, { status: 200 })
     } catch (error) {
         console.log(error)

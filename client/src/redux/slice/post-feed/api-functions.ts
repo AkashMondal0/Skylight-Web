@@ -2,7 +2,8 @@ import { configs } from "@/configs";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { supabaseClient } from "@/lib/supa-base"
-import { AuthorData, User } from "@/types";
+import { AuthorData } from "@/types";
+import { TypeActionLike } from ".";
 
 export const postFilesApi = createAsyncThunk(
     'postFilesApi/post',
@@ -68,14 +69,16 @@ export const createPostLikeApi = createAsyncThunk(
     'createPostLikeApi/post',
     async ({
         postId,
-        user
+        user,
+        type
     }: {
         postId: string,
-        user: AuthorData
+        user: AuthorData,
+        type: TypeActionLike
     }, thunkApi) => {
         try {
             await axios.post(`/api/v1/post/${postId}/like/create`)
-            return { user, postId }
+            return { user, postId, type }
         } catch (error: any) {
             return error?.response?.data?.data
         }
@@ -86,14 +89,16 @@ export const destroyPostLikeApi = createAsyncThunk(
     'destroyPostLikeApi/delete',
     async ({
         postId,
-        user
+        user,
+        type
     }: {
         postId: string,
-        user: AuthorData
+        user: AuthorData,
+        type: TypeActionLike
     }, thunkApi) => {
         try {
             await axios.delete(`/api/v1/post/${postId}/like/destroy`)
-            return { user, postId }
+            return { postId, type }
         } catch (error: any) {
             return error?.response?.data?.data
         }
@@ -104,20 +109,23 @@ export const createPostCommentApi = createAsyncThunk(
     'createPostCommentApi/post',
     async ({
         postId,
-        userId,
-        comment
+        user,
+        comment,
+        type
     }: {
         postId: string,
         comment: string,
-        userId: string
+        user: AuthorData
+        type: TypeActionLike
     }, thunkApi) => {
         try {
             const data = await axios.post(`/api/v1/post/${postId}/comments/create`, {
                 postId,
-                authorId: userId,
+                authorId: user.id,
                 comment
             })
-            return { authorId: userId, postId, comment: data.data.data }
+
+            return { postId, comment: { ...data.data.data, authorData: user }, type }
         } catch (error: any) {
             return error?.response?.data?.data
         }
@@ -128,14 +136,22 @@ export const destroyPostCommentApi = createAsyncThunk(
     'destroyPostCommentApi/delete',
     async ({
         postId,
-        user
+        user,
+        type,
+        commentId
     }: {
         postId: string,
-        user: AuthorData
+        user: AuthorData,
+        type: TypeActionLike,
+        commentId: string
     }, thunkApi) => {
         try {
-            await axios.delete(`/api/v1/post/${postId}/comment/destroy`)
-            return { user, postId }
+            await axios.delete(`/api/v1/post/${postId}/comment/destroy`, {
+                data: {
+                    commentId
+                }
+            })
+            return { postId, type, commentId }
         } catch (error: any) {
             return error?.response?.data?.data
         }

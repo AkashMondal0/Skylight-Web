@@ -31,13 +31,12 @@ const Page = () => {
     // }
   }
   return (
-    <div className='w-full flex flex-col justify-center h-dvh'>
-      <ScrollArea className='max-w-[600px] w-full p-4 h-auto flex-1'>
-        <h1 className="font-semibold text-lg text-center mb-4">Comments</h1>
-        <Separator />
-        <div className='h-5' />
-        {[...Array(50)].map((_, i) => <UserCard key={i} />)}
-      </ScrollArea>
+    <>
+      <div className='w-full flex flex-col justify-center min-h-dvh px-2'>
+        <div className='h-auto'>
+          {[...Array(50)].map((_, i) => <UserCard key={i} />)}
+        </div>
+      </div>
       <div className='w-auto h-auto rounded-2xl gap-1 bg-background flex items-center m-2 sticky bottom-0'>
         <div> <Smile className="w-6 h-6" /></div>
         <input type="text"
@@ -47,7 +46,7 @@ const Page = () => {
           className='w-full h-12 p-4 outline-none rounded-2xl border' />
         <Button variant={"default"} onClick={handleComment} className='w-full h-12 flex-1 rounded-2xl'>Post</Button>
       </div>
-    </div>
+    </>
   )
 }
 

@@ -41,10 +41,10 @@ const PostItem = ({
 
       if (feed.alreadyLiked) {
         // unlike
-        dispatch(destroyPostLikeApi(data) as any)
+        dispatch(destroyPostLikeApi({ ...data, type: "feeds" }) as any)
       } else {
         // like
-        dispatch(createPostLikeApi(data) as any)
+        dispatch(createPostLikeApi({ ...data, type: "feeds" }) as any)
       }
     }
   }

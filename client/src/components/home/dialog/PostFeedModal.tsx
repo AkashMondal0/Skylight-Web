@@ -1,6 +1,6 @@
 
 "use client"
-import React, { RefObject, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -13,28 +13,69 @@ import {
   Heart, MessageCircle, Send, BookMarked
 } from 'lucide-react'
 import SkyAvatar from '@/components/sky/SkyAvatar'
-import { useDispatch } from 'react-redux'
-import { createPostCommentApi } from '@/redux/slice/post-feed/api-functions'
+import { useDispatch, useSelector } from 'react-redux'
+import { createPostCommentApi, createPostLikeApi, destroyPostLikeApi } from '@/redux/slice/post-feed/api-functions'
 import { useSession } from 'next-auth/react'
+import { setSinglePost } from '@/redux/slice/post-feed'
+import { RootState } from '@/redux/store'
 
 
-const PostFeedModal = ({ data }: {
+const PostFeedModal = ({ data: ApiFeed }: {
   data: FeedPost
 }) => {
   const router = useRouter()
   const dispatch = useDispatch()
+  const data = useSelector((state: RootState) => state.postFeed.singlePost)
   const inputRef = useRef<HTMLInputElement>(null)
   const session = useSession().data?.user
+  const loadedRef = useRef(false)
+
+
+  useEffect(() => {
+    if (!loadedRef.current) {
+      dispatch(setSinglePost(ApiFeed) as any)
+      loadedRef.current = true;
+    }
+  }, [dispatch, ApiFeed]);
 
   const handleComment = async () => {
-    if (session) {
+    if (session && data) {
       await dispatch(createPostCommentApi({
         postId: data.id,
-        userId: session?.id,
-        comment: inputRef.current?.value ?? ""
+        user: session,
+        comment: inputRef.current?.value ?? "",
+        type: 'singleFeed'
       }) as any)
       if (inputRef.current) {
         inputRef.current.value = ""
+      }
+    }
+  }
+
+  const handleLikeAndUndoLike = () => {
+    if (session && data) {
+
+      const _data = {
+        postId: data.id,
+        user: {
+          ...session,
+          profilePicture: session?.image ?? "/user.jpg",
+          isFollowing: false,
+        }
+      }
+
+      if (data.alreadyLiked) {
+        // unlike
+        dispatch(destroyPostLikeApi({
+          ..._data,
+          type: "singleFeed"
+        }) as any)
+      } else {
+        // like
+        dispatch(createPostLikeApi({
+          ..._data,
+          type: "singleFeed"
+        }) as any)
       }
     }
   }
@@ -43,6 +84,11 @@ const PostFeedModal = ({ data }: {
       router.back()
     }
   }
+
+  if (!data) {
+    return <></>
+  }
+
   return (
     <Dialog open onOpenChange={onOpenChange}>
       <DialogContent className="p-0 flex 
@@ -132,7 +178,7 @@ const PostFeedModal = ({ data }: {
           <div className='w-full bg-background p-2 border-t sticky bottom-0'>
             <div className='my-2 mx-3 flex justify-between'>
               <div className='flex space-x-3'>
-                <Heart className={`w-7 h-7 cursor-pointer  ${data.alreadyLiked ? "text-red-500 fill-red-500" : ""}`} />
+                <Heart onClick={handleLikeAndUndoLike} className={`w-7 h-7 cursor-pointer  ${data.alreadyLiked ? "text-red-500 fill-red-500" : ""}`} />
                 <MessageCircle className='w-7 h-7 cursor-pointer' onClick={() => { }} />
                 <Send className='w-7 h-7 cursor-pointer' />
               </div>
