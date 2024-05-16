@@ -54,7 +54,7 @@ const PostFeedModal = ({ data }: {
         }}>
 
         {/* left side */}
-        <div className='m-auto w-96 h-auto'>
+        <div className='w-96 h-auto m-auto'>
           <Carousel>
             <CarouselContent>
               {data?.fileUrl?.map((url, index) => (
@@ -80,7 +80,7 @@ const PostFeedModal = ({ data }: {
           </Carousel>
         </div>
         {/* right side */}
-        <div className="flex h-auto flex-col justify-between max-w-[500px] w-full flex-1 border-l">
+        <div className="flex h-full flex-col justify-between w-80 flex-1 border-l">
           {/* header comment input  */}
           <div className="flex justify-between bg-background items-center p-4 border-b h-20 z-10 sticky top-0 rounded-lg">
             <div className="flex gap-2 items-center">
