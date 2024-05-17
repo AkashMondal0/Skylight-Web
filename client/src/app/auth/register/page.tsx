@@ -54,19 +54,24 @@ export default function LoginPage() {
 
     const onSubmit = async (data: FormData) => {
         const { name, username, password, email } = data;
+        if (username.includes(" ") || username.includes("@")){
+            toast.error("Username must not contain spaces or @ symbol")
+            return
+        }
         const res = await dispatch(registerApi({ email, password, name, username }) as any) as PayloadData
         if (res.payload?.code === 1) {
             signIn("credentials", {
-                email: res.payload.data.username,
+                email: res.payload.data.email,
+                username: res.payload.data.username,
                 name: res.payload.data.name,
                 id: res.payload.data.id,
-                image: res.payload.data.profilePicture??"/user.jpg",
+                image: res.payload.data.profilePicture ?? "/user.jpg",
                 token: res.payload.data.token,
                 redirect: true,
             });
         }
         else {
-            toast.error(res.payload.message)
+            toast.error(`${res.payload.message}`)
         }
         reset();
     };

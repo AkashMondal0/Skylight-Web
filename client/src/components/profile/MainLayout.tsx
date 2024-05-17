@@ -14,6 +14,7 @@ import { VirtuosoGrid } from 'react-virtuoso'
 import React, { forwardRef } from 'react'
 import { ImageComponent } from './client/Post'
 import HeroSection from './client/hero'
+import { Button } from "../ui/button";
 interface Props {
     isProfile: boolean
     user: User
@@ -89,6 +90,11 @@ function Virtualized({
                     Header: forwardRef(function HeaderComponent() {
                         return (
                             <HeroSection isProfile={isProfile} user={user} />
+                        );
+                    }),
+                    Footer: forwardRef(function FooterComponent() {
+                        return (
+                            <div className='flex justify-center'><Button onClick={loadMore}>Load Dummy Posts</Button></div>
                         );
                     }),
                     List: forwardRef(function ListComponent({ style, children, ...props }, ref) {

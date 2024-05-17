@@ -7,6 +7,7 @@ import StoriesPage from './StoriesPage';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { loadMoreData, setFeedPosts } from '@/redux/slice/post-feed';
+import { Button } from '../ui/button';
 
 const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
     const dispatch = useDispatch()
@@ -67,7 +68,7 @@ const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
                     }}
                     components={{
                         Header: () => <StoriesPage />,
-                        Footer: () => <div className='h-20'></div>,
+                        Footer: () => <div className='flex justify-center'><Button onClick={loadMore}>Load Dummy Posts</Button></div>
                     }}
 
                 />
