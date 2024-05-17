@@ -83,27 +83,21 @@ export const PostFeedSlice = createSlice({
                 state.likeError = null
             })
             .addCase(createPostLikeApi.fulfilled, (state, action: PayloadAction<{ user: AuthorData, postId: string, type: TypeActionLike }>) => {
-                const run = () => {
-                    if (action.payload.postId && state.feed.Posts) {
-                        const postIndex = state.feed.Posts.findIndex(post => post.id === action.payload.postId)
-                        if (state.feed.Posts[postIndex].likes && state.feed.Posts[postIndex].likes.findIndex(user => user.id === action.payload.user.id) === -1) {
-                            state.feed.Posts[postIndex].likes.push(action.payload.user)
-                        }
-                        state.feed.Posts[postIndex].alreadyLiked = true
-                        state.feed.Posts[postIndex].likeCount += 1
-                        state.likeLoading = false
+
+                // feeds 
+                if (action.payload.postId && state.feed.Posts.length > 0) {
+                    const postIndex = state.feed.Posts.findIndex(post => post.id === action.payload.postId)
+                    if (state.feed.Posts[postIndex]?.likes && state.feed.Posts[postIndex]?.likes.findIndex(user => user.id === action.payload.user.id) === -1) {
+                        state.feed.Posts[postIndex].likes.push(action.payload.user)
                     }
+                    state.feed.Posts[postIndex].alreadyLiked = true
+                    state.feed.Posts[postIndex].likeCount += 1
+                    state.likeLoading = false
                 }
-                if (action.payload.type === "feeds") {
-                    run()
-                }
-                if (action.payload.type === "singleFeed") {
-                    if (state.singlePost?.id === action.payload.postId) {
-                        state.singlePost.alreadyLiked = true
-                        state.singlePost.likeCount += 1
-                        state.likeLoading = false
-                        run()
-                    }
+                if (state.singlePost?.id === action.payload.postId) {
+                    state.singlePost.alreadyLiked = true
+                    state.singlePost.likeCount += 1
+                    state.likeLoading = false
                 }
             })
             .addCase(createPostLikeApi.rejected, (state, action) => {
@@ -116,28 +110,22 @@ export const PostFeedSlice = createSlice({
                 state.likeError = null
             })
             .addCase(destroyPostLikeApi.fulfilled, (state, action: PayloadAction<{ user: AuthorData, postId: string, type: TypeActionLike }>) => {
-                const run = () => {
-                    if (action.payload.postId && state.feed.Posts) {
-                        const postIndex = state.feed.Posts.findIndex(post => post.id === action.payload.postId)
-                        if (state.feed.Posts[postIndex].likes && state.feed.Posts[postIndex].likes.findIndex(user => user.id === action.payload.user.id) !== -1) {
-                            state.feed.Posts[postIndex].likes = state.feed.Posts[postIndex].likes.filter(like => like.id !== action.payload.user.id)
-                        }
-                        state.feed.Posts[postIndex].alreadyLiked = false
-                        state.feed.Posts[postIndex].likeCount -= 1
-                        state.likeLoading = false
+
+                if (action.payload.postId && state.feed.Posts.length > 0) {
+                    const postIndex = state.feed.Posts.findIndex(post => post.id === action.payload.postId)
+                    if (state.feed.Posts[postIndex]?.likes && state.feed.Posts[postIndex]?.likes.findIndex(user => user.id === action.payload.user.id) !== -1) {
+                        state.feed.Posts[postIndex].likes = state.feed.Posts[postIndex].likes.filter(like => like.id !== action.payload.user.id)
                     }
+                    state.feed.Posts[postIndex].alreadyLiked = false
+                    state.feed.Posts[postIndex].likeCount -= 1
+                    state.likeLoading = false
                 }
-                if (action.payload.type === "feeds") {
-                    run()
+                if (state.singlePost?.id === action.payload.postId) {
+                    state.singlePost.alreadyLiked = false
+                    state.singlePost.likeCount -= 1
+                    state.likeLoading = false
                 }
-                if (action.payload.type === "singleFeed") {
-                    if (state.singlePost?.id === action.payload.postId) {
-                        state.singlePost.alreadyLiked = false
-                        state.singlePost.likeCount -= 1
-                        state.likeLoading = false
-                        run()
-                    }
-                }
+
             })
             .addCase(destroyPostLikeApi.rejected, (state, action) => {
                 state.likeLoading = false

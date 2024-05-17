@@ -37,7 +37,7 @@ export const ImageComponent = ({
                     alt="Picture of the author"
                     quality={100}
                     loading="lazy"
-                    sizes="(min-width: 808px) 50vw, 100vw"
+                    sizes="(min-width: 808px) 20vw, 40vw"
                     style={{
                         objectFit: 'cover', // cover, contain, none
                     }}

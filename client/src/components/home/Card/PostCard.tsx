@@ -86,7 +86,7 @@ const PostItem = ({
                   quality={100}
                   priority={true}
                   fetchPriority="high"
-                  sizes="(min-width: 808px) 50vw, 100vw"
+                  sizes="(min-width: 808px) 30vw, 50vw"
                   className={cn('h-auto w-full cursor-pointer userNotSelectImg bg-muted')}
                 />
               </CarouselItem>
@@ -104,7 +104,7 @@ const PostItem = ({
           <Heart className={`w-7 h-7 cursor-pointer  ${feed.alreadyLiked ? "text-red-500 fill-red-500" : ""}`} onClick={handleLikeAndUndoLike} />
           <MessageCircle className='w-7 h-7 cursor-pointer hidden sm:block' onClick={() => router.push(`/post/${feed.id}`)} />
           {/* sm */}
-          <MessageCircle className='w-7 h-7 cursor-pointer sm:hidden block' onClick={() => router.push(`/post/${feed.id}/comments`)} />
+          <MessageCircle className='w-7 h-7 cursor-pointer sm:hidden block' onClick={() => router.push(`/post/${feed.id}`)} />
 
           <Send className='w-7 h-7 cursor-pointer' />
         </div>

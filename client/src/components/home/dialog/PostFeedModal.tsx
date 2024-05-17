@@ -2,7 +2,7 @@
 "use client"
 import React, { useEffect, useRef } from 'react'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { Dialog, DialogClose, DialogContent } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
@@ -28,14 +28,11 @@ const PostFeedModal = ({ data: ApiFeed }: {
   const data = useSelector((state: RootState) => state.postFeed.singlePost)
   const inputRef = useRef<HTMLInputElement>(null)
   const session = useSession().data?.user
-  const loadedRef = useRef(false)
+  // const loadedRef = useRef(false)
 
 
   useEffect(() => {
-    if (!loadedRef.current) {
-      dispatch(setSinglePost(ApiFeed) as any)
-      loadedRef.current = true;
-    }
+    dispatch(setSinglePost(ApiFeed) as any)
   }, [dispatch, ApiFeed]);
 
   const handleComment = async () => {
@@ -111,7 +108,7 @@ const PostFeedModal = ({ data: ApiFeed }: {
                     height={300}
                     alt="Picture of the author"
                     quality={100}
-                    sizes="(min-width: 808px) 50vw, 100vw"
+                    sizes="(min-width: 808px) 30vw, 50vw"
                     //(min-width: 808px) 50vw, 100vw 
                     priority={true}
                     className='w-auto h-auto cursor-default border m-auto rounded-lg userNotSelectImg'
@@ -134,11 +131,19 @@ const PostFeedModal = ({ data: ApiFeed }: {
               <div className="font-semibold text-lg">{data?.authorData?.name}</div>
             </div>
             <div className="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24}
+              <DialogClose className='w-8 h-8 cursor-pointer' >
+                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24}
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}
+                  strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x">
+                  <line x1={18} y1={6} x2={6} y2={18} />
+                  <line x1={6} y1={6} x2={18} y2={18} />
+                </svg>
+              </DialogClose>
+              {/* <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24}
                 viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}
                 strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-ellipsis">
                 <circle cx={12} cy={12} r={1} /><circle cx={19} cy={12} r={1} /><circle cx={5} cy={12} r={1} />
-              </svg>
+              </svg> */}
             </div>
           </div>
           {/* body comments list  */}
