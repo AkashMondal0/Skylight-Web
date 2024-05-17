@@ -20,7 +20,9 @@ const HeroSection = ({
             <div className="hidden sm:block mx-auto max-w-[960px]">
                 {/* profile header */}
                 <div className='flex items-center my-8 m-5'>
-                    <SkyAvatar url={userProfileData.profilePicture || "/user.jpg"}
+                    <SkyAvatar 
+                    sizeImage='20vw'
+                    url={userProfileData.profilePicture || "/user.jpg"}
                         className={'sm:w-36 object-cover bg-slate-400 sm:h-36 w-28 h-28 rounded-full sm:mr-8'} />
                     <div className='flex flex-col justify-between gap-5'>
                         <ActionButtonsLg
@@ -75,7 +77,7 @@ const HeroSection = ({
 
                     <div className='flex flex-col gap-4'>
                         <div className='flex gap-2'>
-                            <p className='text-xl px-3'>{userProfileData.email}</p>
+                            <p className='text-xl px-3'>{userProfileData.username}</p>
                         </div>
                         <ActionButtonsSM
                             isFollowing={userProfileData.isFollowing}

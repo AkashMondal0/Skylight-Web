@@ -5,10 +5,11 @@ import { FeedPost } from '@/types';
 import VirtualizePost from '@/components/home/VirtualizePost';
 import { Suspense } from 'react';
 import SkeletonPostCard from '@/components/home/loading/PostCard';
+import LikeViewModal from '@/components/home/dialog/LikeViewModal';
 
 async function getFeeds() {
   try {
-    const response = await fetch(`${configs.appUrl}/api/feeds`, {
+    const response = await fetch(`${configs.appUrl}/api/v1/feed`, {
       headers: {
         "Content-Type": "application/json",
         "authorization": `${cookies().get("token-auth")?.value}`
@@ -32,7 +33,8 @@ async function Render() {
 export default async function Page() {
   try {
     return (
-      <Suspense fallback={<SkeletonPostCard/>}>
+      <Suspense fallback={<SkeletonPostCard />}>
+        <LikeViewModal />
         <Render />
       </Suspense>)
   } catch (error) {

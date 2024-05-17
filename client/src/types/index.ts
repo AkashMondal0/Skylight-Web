@@ -4,11 +4,12 @@ interface FeedPost {
     fileUrl: string[]
     commentCount: number
     likeCount: number
-    createdAt: Date
+    createdAt: Date | string
     alreadyLiked: boolean | null
     authorData: AuthorData
     comments: Comment[]
-    likes: Like[]
+    likes: AuthorData[]
+    isDummy?: boolean
 }
 
 interface AuthorData {
@@ -16,7 +17,8 @@ interface AuthorData {
     username: string
     email: string
     name: string
-    profilePicture: string
+    profilePicture?: string
+    isFollowing?: boolean,
 }
 
 interface User {
@@ -90,6 +92,7 @@ interface Like {
     postId: string;
     createdAt: Date;
     updatedAt: Date;
+    authorData: AuthorData
 }
 
 interface Follower {
@@ -193,5 +196,6 @@ export type {
     StoryLike,
     SavedPost,
     PayloadData,
-    FeedPost
+    FeedPost,
+    AuthorData
 }

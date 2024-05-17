@@ -11,6 +11,12 @@ const nextConfig = {
                 hostname: 'nngujjeumggzpchjxdpn.supabase.co',
                 port: '',
                 pathname: '/storage/v1/object/public/skymedia/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'picsum.photos',
+                port: '',
+                pathname: '/seed/**',
             }
         ],
     },

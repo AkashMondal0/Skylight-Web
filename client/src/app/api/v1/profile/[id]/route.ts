@@ -84,15 +84,19 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       id: posts.id,
       authorId: posts.authorId,
       fileUrl: posts.fileUrl,
-      likeCount: count(likes.id),
-      commentCount: count(comments.id),
+      likeCount: count(eq(likes.postId, posts.id)),
+      commentCount: count(eq(comments.postId, posts.id)),
       createdAt: posts.createdAt
     })
       .from(posts)
       .where(eq(posts.authorId, userProfile[0].id))
       .leftJoin(likes, eq(likes.postId, posts.id))
       .leftJoin(comments, eq(comments.postId, posts.id))
-      .groupBy(posts.id, likes.id, comments.id)
+      .groupBy(
+        posts.id,
+        likes.postId,
+        comments.postId
+      )
       .limit(12)
       .offset(0)
       .orderBy(desc(posts.createdAt))

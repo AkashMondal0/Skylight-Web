@@ -32,6 +32,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
       id: users.id,
       username: users.username,
       email: users.email,
+      name: users.name,
       profilePicture: users.profilePicture,
       bio: users.bio,
       isVerified: users.isVerified,
@@ -39,7 +40,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
     }).from(users).where(
       or(
         like(users.username, `%${keywords}%`),
-        like(users.email, `%${keywords}%`)
+        like(users.name, `%${keywords}%`)
       )
     )
       .limit(20)

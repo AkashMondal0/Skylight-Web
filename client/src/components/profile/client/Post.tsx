@@ -15,7 +15,11 @@ export const ImageComponent = ({
 
     return (
         <>
-            <figure className='relative transition-all duration-300 ease-in-out w-full h-full cursor-pointer' onClick={() => router.push(`/post/${data.id}`)}>
+            <figure className='relative transition-all duration-300 ease-in-out w-full h-full cursor-pointer' onClick={() => {
+                if (!data?.isDummy) {
+                    router.push(`/post/${data.id}`)
+                }
+            }}>
                 {data.fileUrl.length > 1 ? <Copy className='absolute top-2 right-2' /> : <></>}
 
                 <div className='absolute top-0 left-0 right-0 hover:bg-black/50
@@ -37,9 +41,7 @@ export const ImageComponent = ({
                     alt="Picture of the author"
                     quality={100}
                     loading="lazy"
-                    sizes="(min-width: 60em) 24vw,
-                (min-width: 28em) 45vw,
-                100vw"
+                    sizes="(min-width: 808px) 20vw, 40vw"
                     style={{
                         objectFit: 'cover', // cover, contain, none
                     }}

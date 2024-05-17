@@ -1,18 +1,20 @@
 "use client";
 import { setUsers } from "@/redux/slice/users";
 import { RootState } from "@/redux/store";
-import { User } from "@/types";
+import { FeedPost, User } from "@/types";
 import { useSession } from "next-auth/react";
 import {
     useEffect,
     useMemo,
-    useRef
+    useRef,
+    useState
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { VirtuosoGrid } from 'react-virtuoso'
 import React, { forwardRef } from 'react'
 import { ImageComponent } from './client/Post'
 import HeroSection from './client/hero'
+import { Button } from "../ui/button";
 interface Props {
     isProfile: boolean
     user: User
@@ -52,17 +54,47 @@ function Virtualized({
     isProfile,
     user
 }: Props) {
+    const [size, setSize] = useState(0)
+    const [userPosts, setUserPosts] = useState<FeedPost[]>(user.posts)
+    const loadMore = () => {
+        const _posts: FeedPost[] = Array.from({ length: 10 }, (_, i) => ({
+            id: `${i + size}`,
+            caption: `Caption ${i + size}`,
+            fileUrl: [`https://picsum.photos/seed/${i + size}/500/500`],
+            commentCount: 10,
+            likeCount: 10,
+            createdAt: new Date().toDateString(),
+            alreadyLiked: false,
+            authorData: {
+                id: `user-${i + size}`,
+                username: `user-${i + size}`,
+                email: `user-${i} @gmail.com`,
+                name: `User ${i + size}`,
+            },
+            comments: [],
+            likes: [],
+            isDummy: true
+        }))
+        setUserPosts([...userPosts, ..._posts])
+        setSize(size + 10)
+    }
     return (
         <>
             <VirtuosoGrid
                 style={{
                     height: '100%',
                 }}
-                totalCount={user.posts.length}
+                endReached={loadMore}
+                totalCount={userPosts.length}
                 components={{
                     Header: forwardRef(function HeaderComponent() {
                         return (
                             <HeroSection isProfile={isProfile} user={user} />
+                        );
+                    }),
+                    Footer: forwardRef(function FooterComponent() {
+                        return (
+                            <div className='flex justify-center'><Button onClick={loadMore}>Load Dummy Posts</Button></div>
                         );
                     }),
                     List: forwardRef(function ListComponent({ style, children, ...props }, ref) {
@@ -98,7 +130,7 @@ function Virtualized({
                         </div>
                     )
                 }}
-                itemContent={(index) => <ImageComponent data={user.posts[index]} />}
+                itemContent={(index) => <ImageComponent data={userPosts[index]} />}
             />
             <style>{`html, body, #root { height: 100% }`}</style>
         </>

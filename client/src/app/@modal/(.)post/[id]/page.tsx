@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 
 async function getFeed(id: string) {
   try {
-    const response = await fetch(`${configs.appUrl}/api/feeds/${id}`, {
+    const response = await fetch(`${configs.appUrl}/api/v1/feed/${id}`, {
       headers: {
         "Content-Type": "application/json",
         "authorization": `${cookies().get("token-auth")?.value}`
@@ -22,7 +22,6 @@ async function getFeed(id: string) {
 }
 
 export default async function Page({ params }: { params: { id: string } }) {
-
   const data = await getFeed(params.id) as FeedPost
   
   return <PostFeedModal data={data} />

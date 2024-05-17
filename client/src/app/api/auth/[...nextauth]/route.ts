@@ -33,7 +33,7 @@ const authOptions: NextAuthOptions = {
             secure: true,
             sameSite: "lax"
           })
-          return credentials as any
+          return {...credentials, profilePicture:credentials.image} as any
         } catch (error) {
           console.log("Error", error)
           return null
