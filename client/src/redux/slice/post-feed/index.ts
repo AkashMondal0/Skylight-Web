@@ -49,6 +49,9 @@ export const PostFeedSlice = createSlice({
         setFeedPosts: (state, action: PayloadAction<FeedPost[]>) => {
             state.feed.Posts = action.payload
         },
+        loadMoreData: (state, action: PayloadAction<FeedPost[]>) => {
+            state.feed.Posts = [...state.feed.Posts, ...action.payload]
+        },
         setPostLikes: (state, action: PayloadAction<{ users: AuthorData[], postId: string }>) => {
             if (action.payload?.users && action.payload.postId) {
                 const postIndex = state.feed.Posts.findIndex(post => post.id === action.payload.postId)
@@ -163,7 +166,8 @@ export const PostFeedSlice = createSlice({
 export const {
     setFeedPosts,
     setPostLikes,
-    setSinglePost
+    setSinglePost,
+    loadMoreData
 } = PostFeedSlice.actions
 
 export default PostFeedSlice.reducer

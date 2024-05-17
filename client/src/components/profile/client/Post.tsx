@@ -15,7 +15,11 @@ export const ImageComponent = ({
 
     return (
         <>
-            <figure className='relative transition-all duration-300 ease-in-out w-full h-full cursor-pointer' onClick={() => router.push(`/post/${data.id}`)}>
+            <figure className='relative transition-all duration-300 ease-in-out w-full h-full cursor-pointer' onClick={() => {
+                if (!data?.isDummy) {
+                    router.push(`/post/${data.id}`)
+                }
+            }}>
                 {data.fileUrl.length > 1 ? <Copy className='absolute top-2 right-2' /> : <></>}
 
                 <div className='absolute top-0 left-0 right-0 hover:bg-black/50

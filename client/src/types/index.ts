@@ -4,11 +4,12 @@ interface FeedPost {
     fileUrl: string[]
     commentCount: number
     likeCount: number
-    createdAt: Date
+    createdAt: Date | string
     alreadyLiked: boolean | null
     authorData: AuthorData
     comments: Comment[]
     likes: AuthorData[]
+    isDummy?: boolean
 }
 
 interface AuthorData {
