@@ -5,7 +5,6 @@ import { cn } from '@/lib/utils'
 const SkyAvatar = ({
     url,
     className,
-    sizeImage,
 }:
     {
         url: string | null,
@@ -14,15 +13,14 @@ const SkyAvatar = ({
     }) => {
     return <Image
         src={url || "/user.jpg"}
-        width={40}
-        height={40}
+        width={50}
+        height={50}
         alt="Picture of the author"
-        quality={100}
-        sizes={"(min-width: 808px) 50vw, 100vw"}
-        loading="lazy"
-        // (max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw
+        sizes={"(min-width: 808px) 20vw, 30vw"}
+        quality={75}
+        priority={true}
         style={{
-            objectFit: 'cover', // cover, contain, none
+            objectFit: 'cover',
         }}
         fetchPriority="high"
         className={cn('w-12 h-12 cursor-pointer rounded-full userNotSelectImg bg-muted', className)}

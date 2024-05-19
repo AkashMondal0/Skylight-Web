@@ -23,24 +23,28 @@ const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
     }, [dispatch, data]);
 
     const loadMore = useCallback(() => {
-        const _posts: FeedPost[] = Array.from({ length: 10 }, (_, i) => ({
-            id: `${i + size}`,
-            caption: `Caption ${i + size}`,
-            fileUrl: [`https://picsum.photos/seed/${i + size}/500/500`],
-            commentCount: 10,
-            likeCount: 10,
-            createdAt: new Date().toDateString(),
-            alreadyLiked: false,
-            authorData: {
-                id: `user-${i + size}`,
-                username: `user-${i + size}`,
-                email: `user-${i} @gmail.com`,
-                name: `User ${i + size}`,
-            },
-            comments: [],
-            likes: [],
-            isDummy: true
-        }))
+        const _posts: FeedPost[] = Array.from({ length: 10 }, (_, i) => {
+            const generate_img = `https://source.unsplash.com/random/600x900?sig=${i + size}`
+            return {
+                id: `${i + size}`,
+                caption: `Caption ${i + size}`,
+                fileUrl: [generate_img],
+                commentCount: 10,
+                likeCount: 10,
+                createdAt: new Date().toDateString(),
+                alreadyLiked: false,
+                authorData: {
+                    id: `user-${i + size}`,
+                    username: `user-${i + size}`,
+                    email: `user-${i} @gmail.com`,
+                    name: `User ${i + size}`,
+                    profilePicture: generate_img,
+                },
+                comments: [],
+                likes: [],
+                isDummy: true
+            }
+        })
         setSize(size + 10)
         dispatch(loadMoreData(_posts) as any)
     }, [dispatch, size])
@@ -58,7 +62,7 @@ const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
                     }}
                     data={posts.Posts}
                     endReached={loadMore}
-                    increaseViewportBy={200}
+                    increaseViewportBy={3000}
                     itemContent={(index, post) => {
                         if (post?.isDummy) {
                             return <PostItemDummy feed={post} />
@@ -68,7 +72,9 @@ const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
                     }}
                     components={{
                         Header: () => <StoriesPage />,
-                        Footer: () => <div className='flex justify-center'><Button onClick={loadMore}>Load Dummy Posts</Button></div>
+                        Footer: () => <div className='flex justify-center'>
+                            <Button onClick={loadMore}>Load Dummy Posts</Button>
+                        </div>
                     }}
 
                 />

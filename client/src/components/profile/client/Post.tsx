@@ -36,11 +36,11 @@ export const ImageComponent = ({
                 <Image
                     fetchPriority="high"
                     src={data.fileUrl[0]}
-                    width={100}
-                    height={100}
+                    width={300}
+                    height={300}
                     alt="Picture of the author"
-                    quality={100}
-                    loading="lazy"
+                    quality={75}
+                    priority={true}
                     sizes="(min-width: 808px) 20vw, 40vw"
                     style={{
                         objectFit: 'cover', // cover, contain, none

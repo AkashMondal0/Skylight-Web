@@ -60,7 +60,7 @@ function Virtualized({
         const _posts: FeedPost[] = Array.from({ length: 10 }, (_, i) => ({
             id: `${i + size}`,
             caption: `Caption ${i + size}`,
-            fileUrl: [`https://picsum.photos/seed/${i + size}/500/500`],
+            fileUrl: [`https://source.unsplash.com/random/300x300?sig=${i + size}`],
             commentCount: 10,
             likeCount: 10,
             createdAt: new Date().toDateString(),
@@ -85,6 +85,7 @@ function Virtualized({
                     height: '100%',
                 }}
                 endReached={loadMore}
+                overscan={500}
                 totalCount={userPosts.length}
                 components={{
                     Header: forwardRef(function HeaderComponent() {

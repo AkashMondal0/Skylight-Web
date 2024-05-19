@@ -107,10 +107,11 @@ const PostFeedModal = ({ data: ApiFeed }: {
                     width={300}
                     height={300}
                     alt="Picture of the author"
-                    quality={100}
-                    sizes="(min-width: 808px) 30vw, 50vw"
+                    quality={75}
+                  priority={true}
+                  fetchPriority="high"
+                    sizes="(min-width: 808px) 50vw, 100vw"
                     //(min-width: 808px) 50vw, 100vw 
-                    priority={true}
                     className='w-auto h-auto cursor-default border m-auto rounded-lg userNotSelectImg'
                   />
                 </CarouselItem>

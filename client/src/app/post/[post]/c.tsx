@@ -14,7 +14,6 @@ import SkyAvatar from '@/components/sky/SkyAvatar'
 import { useDispatch, useSelector } from 'react-redux'
 import { createPostCommentApi, createPostLikeApi, destroyPostLikeApi } from '@/redux/slice/post-feed/api-functions'
 import { useSession } from 'next-auth/react'
-import PostItem from '@/components/home/Card/PostCard'
 import { setSinglePost } from '@/redux/slice/post-feed'
 import { RootState } from '@/redux/store'
 
@@ -92,12 +91,12 @@ const PostPage = ({ data: ApiFeed }: {
                                 <CarouselItem key={index}>
                                     <Image
                                         src={url}
-                                        width={300}
-                                        height={300}
+                                        width={500}
+                                        height={500}
                                         alt="Picture of the author"
-                                        quality={100}
+                                        quality={75}
                                         sizes="(min-width: 808px) 50vw, 100vw"
-                                        //(min-width: 808px) 50vw, 100vw 
+                                        fetchPriority="high"
                                         priority={true}
                                         className='w-auto h-auto cursor-default border m-auto rounded-lg userNotSelectImg'
                                     />

@@ -83,7 +83,7 @@ const PostItem = ({
                   width={300}
                   height={300}
                   alt="Picture of the author"
-                  quality={100}
+                  quality={75}
                   priority={true}
                   fetchPriority="high"
                   sizes="(min-width: 808px) 50vw, 50vw"
@@ -187,15 +187,14 @@ export const PostItemDummy = ({
             {feed.fileUrl.map((url, index) => (
               <CarouselItem key={index} className='flex flex-col m-auto'>
                 <Image
-                  // loading="lazy"
                   src={url}
-                  width={300}
-                  height={300}
+                  width={500}
+                  height={500}
                   alt="Picture of the author"
-                  quality={100}
+                  quality={75}
                   priority={true}
                   fetchPriority="high"
-                  sizes="(min-width: 808px) 50vw, 50vw"
+                  sizes="(min-width: 808px) 50vw, 100vw"
                   className={cn('h-auto w-full cursor-pointer userNotSelectImg bg-muted')}
                 />
               </CarouselItem>
