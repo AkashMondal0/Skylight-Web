@@ -12,6 +12,7 @@ import { removeAllUserFormSearch, removeUserFormSearch } from '@/redux/slice/use
 import { useRouter } from 'next/navigation';
 import { SkeletonUserCard } from '@/components/home/loading/UserCard';
 import SkyAvatar from '@/components/sky/SkyAvatar';
+import Sm_Navigation from '@/components/home/navigation/sm-navigation';
 
 const SearchModel = () => {
   const dispatch = useDispatch();
@@ -51,6 +52,7 @@ const SearchModel = () => {
             Array(10).fill(0).map((_, i) => <SkeletonUserCard key={i} />)}</div> :
           searchResultUser.search_users.map((item, i) => <UserCard key={i} item={item} />)}
       </div>
+      <Sm_Navigation />
     </>
   )
 }

@@ -5,6 +5,7 @@ import { configs } from '@/configs';
 import { User } from '@/types';
 import PageFollowing from "./c";
 import { SkeletonUserCardFollowPage } from "@/components/profile/loading/skeleton";
+import Sm_Navigation from "@/components/home/navigation/sm-navigation";
 
 async function getProfileFollowing(id: string) {
     try {
@@ -37,5 +38,6 @@ export default async function Page({ params }: { params: { profile: string } }) 
         <Suspense fallback={<SkeletonUserCardFollowPage title="Following"/>}>
             <PageComponent params={params} />
         </Suspense>
+        <Sm_Navigation/>
     </>
 }

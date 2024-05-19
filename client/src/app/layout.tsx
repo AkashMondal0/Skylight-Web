@@ -33,18 +33,16 @@ export default function RootLayout({ children,
                 defaultTheme="dark"
                 enableSystem>
                 {/* <AppStart_Provider> */}
-                  <div className="flex flex-col h-full">
-                    {/* sm device header*/}
-                    <Sm_Header />
-                    <div className="flex h-full">
-                      {/* left side */}
-                      <Lg_Navigation />
-                      {children}
-                    </div>
-                    {/* sm device footer*/}
-                    <Sm_Navigation />
+                <div className="flex flex-col h-full">
+                  {/* sm device header*/}
+                  <div className="flex h-full">
+                    {/* left side */}
+                    <Lg_Navigation />
+                    {children}
                   </div>
-                  {modal}
+                  {/* sm device footer*/}
+                </div>
+                {modal}
                 {/* </AppStart_Provider> */}
               </ThemeProvider>
             </NextAuth_Provider>

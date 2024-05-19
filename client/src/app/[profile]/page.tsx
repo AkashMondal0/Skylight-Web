@@ -5,6 +5,8 @@ import { notFound } from 'next/navigation';
 import { configs } from '@/configs';
 import MainLayout from '@/components/profile/MainLayout';
 import { User } from '@/types';
+import Sm_Navigation from "@/components/home/navigation/sm-navigation";
+import ProfileHeader from "@/components/profile/client/header";
 
 async function getProfile(id: string) {
     try {
@@ -29,6 +31,7 @@ async function PageComponent({ params }: { params: { profile: string } }) {
     try {
         const data = await getProfile(params.profile) as User
         return <MainLayout data={data} />
+
     } catch (error) {
         console.log(error)
         return notFound()
@@ -36,9 +39,15 @@ async function PageComponent({ params }: { params: { profile: string } }) {
 }
 
 export default async function Page({ params }: { params: { profile: string } }) {
-    return <div className="w-full h-full">
-        <Suspense fallback={<SkeletonProfile />}>
-            <PageComponent params={params} />
-        </Suspense>
-    </div>
+    return (
+        <>
+            <ProfileHeader name={params.profile} />
+            <div className="w-full h-full min-dvh">
+                <Suspense fallback={<SkeletonProfile />}>
+                    <PageComponent params={params} />
+                </Suspense>
+            </div>
+            <Sm_Navigation />
+        </>
+    )
 }

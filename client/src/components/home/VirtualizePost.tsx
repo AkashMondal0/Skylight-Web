@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { loadMoreData, setFeedPosts } from '@/redux/slice/post-feed';
 import { Button } from '../ui/button';
+import Sm_Navigation from './navigation/sm-navigation';
+import Sm_Header from './navigation/sm-header';
 
 const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
     const dispatch = useDispatch()
@@ -56,6 +58,7 @@ const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
                 overflow: "hidden",
             }}
                 className='w-dvw md:w-full'>
+                <Sm_Header />
                 <Virtuoso
                     style={{
                         height: '100%',
@@ -78,6 +81,7 @@ const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
                     }}
 
                 />
+                <Sm_Navigation />
                 <style>{`html, body, #root { height: 100% }`}</style>
             </div>
         </div>
