@@ -81,7 +81,7 @@ function Virtualized({
                 style={{
                     height: '100%',
                 }}
-                // endReached={loadMore}
+                endReached={loadMore}
                 overscan={500}
                 totalCount={userPosts.length}
                 components={{

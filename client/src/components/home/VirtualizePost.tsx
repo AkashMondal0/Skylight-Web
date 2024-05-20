@@ -10,6 +10,7 @@ import { loadMoreData, setFeedPosts } from '@/redux/slice/post-feed';
 import { Button } from '../ui/button';
 import Sm_Navigation from './navigation/sm-navigation';
 import Sm_Header from './navigation/sm-header';
+import ShowUpload from './alert/show-upload';
 
 const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
     const dispatch = useDispatch()
@@ -66,7 +67,7 @@ const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
                     }
                 }}
                 components={{
-                    Header: () => <StoriesPage />,
+                    Header: () => <><StoriesPage /><ShowUpload /></>,
                     Footer: () => <div className='flex justify-center'>
                         <Button onClick={loadMore}>Load Dummy Posts</Button>
                     </div>
