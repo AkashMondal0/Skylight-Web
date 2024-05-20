@@ -33,7 +33,7 @@ const SearchModel = () => {
 
   return (
     <>
-      <div className='w-full h-[100dvh] overflow-y-auto p-4'>
+      <div className='w-full p-4'>
         <div className='w-full space-y-4'>
           <div className={`w-full p-2 px-4 border bg-secondary
                     text-secondary-foreground rounded-xl focus:outline-none focus:ring-0`}>

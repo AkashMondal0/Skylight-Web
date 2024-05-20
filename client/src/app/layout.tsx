@@ -24,7 +24,7 @@ export default function RootLayout({ children,
     <>
       <html lang="en" suppressHydrationWarning={false}>
         <head />
-        <body className="ease-in-out duration-300">
+        <body className="ease-in-out duration-300 overflow-y-hidden">
           <Toaster />
           <Redux_Provider>
             <NextAuth_Provider>
@@ -32,18 +32,8 @@ export default function RootLayout({ children,
                 attribute="class"
                 defaultTheme="dark"
                 enableSystem>
-                {/* <AppStart_Provider> */}
-                <div className="flex flex-col h-full">
-                  {/* sm device header*/}
-                  <div className="flex h-full">
-                    {/* left side */}
-                    <Lg_Navigation />
-                    {children}
-                  </div>
-                  {/* sm device footer*/}
-                </div>
+                {children}
                 {modal}
-                {/* </AppStart_Provider> */}
               </ThemeProvider>
             </NextAuth_Provider>
           </Redux_Provider>

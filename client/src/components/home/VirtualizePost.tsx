@@ -52,13 +52,12 @@ const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
     }, [dispatch, size])
 
     return (
-        <div className='w-full flex'>
+        <div className='w-full h-full'>
             <div style={{
                 height: "100%",
                 overflow: "hidden",
             }}
                 className='w-dvw md:w-full'>
-                <Sm_Header />
                 <Virtuoso
                     style={{
                         height: '100%',
@@ -81,7 +80,6 @@ const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
                     }}
 
                 />
-                <Sm_Navigation />
                 <style>{`html, body, #root { height: 100% }`}</style>
             </div>
         </div>

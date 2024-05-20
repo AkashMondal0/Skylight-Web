@@ -44,14 +44,6 @@ export default function Lg_Navigation({
     { icon: CircleUserRound, label: "Profile", onClick: () => pageChange(`/${session?.username || ""}`) },
   ]
 
-  if (!session) return <div className={cn(`
- scroll-smooth hideScrollbar
-  h-[100dvh] overflow-y-auto md:flex
-  hidden ease-in-out sticky top-0
-  duration-300`,
-    hideLabel ? "w-20" : "w-72 2xl:w-96 max-w-[20rem] md:w-20 xl:w-72"
-  )}></div>
-
   return (
     <div className={cn(`
         border-r scroll-smooth hideScrollbar
@@ -90,7 +82,7 @@ export default function Lg_Navigation({
               if (label === "Profile") {
                 return <NavigationItem key={index} label={label} hideLabel={hideLabel}
                   onClick={onClick}>
-                  <SkyAvatar url={session.image || null} className="h-full w-full max-h-8 max-w-8" />
+                  <SkyAvatar url={session?.image || null} className="h-full w-full max-h-8 max-w-8" />
                 </NavigationItem>
               }
               return <NavigationItem key={index} label={label} hideLabel={hideLabel}

@@ -1,3 +1,4 @@
+import Sm_Navigation from '@/components/home/navigation/sm-navigation';
 import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Reels',
@@ -10,6 +11,7 @@ export default function RootLayout({ children }: {
   return (
     <>
       {children}
+      <Sm_Navigation/>
     </>
   )
 }

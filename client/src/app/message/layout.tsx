@@ -1,4 +1,5 @@
 import Lg_Navigation from '@/components/home/navigation/lg-navigation';
+import Sm_Navigation from '@/components/home/navigation/sm-navigation';
 import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Message',
@@ -9,9 +10,10 @@ export default function RootLayout({ children }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className='flex'>
+    <>
       <Lg_Navigation hideLabel/>
       {children}
-    </div>
+      <Sm_Navigation/>
+    </>
   )
 }

@@ -40,14 +40,11 @@ async function PageComponent({ params }: { params: { profile: string } }) {
 
 export default async function Page({ params }: { params: { profile: string } }) {
     return (
-        <>
+        <div className="w-full h-full">
             <ProfileHeader name={params.profile} />
-            <div className="w-full h-full min-dvh">
-                <Suspense fallback={<SkeletonProfile />}>
-                    <PageComponent params={params} />
-                </Suspense>
-            </div>
-            <Sm_Navigation />
-        </>
+            <Suspense fallback={<SkeletonProfile />}>
+                <PageComponent params={params} />
+            </Suspense>
+        </div>
     )
 }
