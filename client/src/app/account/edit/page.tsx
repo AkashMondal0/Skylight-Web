@@ -13,11 +13,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import { signOut, useSession } from 'next-auth/react'
 import { logoutApi } from '@/redux/slice/profile/api-functions'
-import Sm_Navigation from '@/components/home/navigation/sm-navigation'
 
 const Page = () => {
     const profile = useSession().data
@@ -99,7 +98,6 @@ const Page = () => {
                     </div>
                 </div>
             </div>
-            <Sm_Navigation />
         </>
     )
 }

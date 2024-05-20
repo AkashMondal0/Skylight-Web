@@ -7,7 +7,7 @@ export default async function RootLayout({ children, modal }: {
 
   return (
     <>
-      <div className="flex h-full py-14">
+      <div className="flex h-full md:py-0 py-14">
         <Lg_Navigation />
         {children}
         {modal}

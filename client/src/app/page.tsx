@@ -40,7 +40,7 @@ export default async function Page() {
         <LikeViewModal />
         <div className='w-full h-full flex'>
           <Lg_Navigation />
-          <div className='w-full py-14'>
+          <div className='w-full md:py-0 py-14'>
             <Sm_Header />
             <Suspense fallback={<SkeletonPostCard />}>
               <Render />
