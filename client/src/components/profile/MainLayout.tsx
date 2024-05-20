@@ -37,13 +37,9 @@ const MainLayout = ({ data }: {
 
     if (users?.profileData.user) {
         return <>
-            <div className='w-full flex h-full'>
-                <div className='mx-auto w-full overflow-x-hidden h-auto'>
-                    <Virtualized
-                        isProfile={isProfile}
-                        user={users.profileData.user} />
-                </div>
-            </div >
+            <Virtualized
+                isProfile={isProfile}
+                user={users.profileData.user} />
         </>
     }
 }
@@ -56,6 +52,7 @@ function Virtualized({
 }: Props) {
     const [size, setSize] = useState(0)
     const [userPosts, setUserPosts] = useState<FeedPost[]>(user.posts)
+
     const loadMore = () => {
         const _posts: FeedPost[] = Array.from({ length: 10 }, (_, i) => ({
             id: `${i + size}`,
@@ -84,7 +81,7 @@ function Virtualized({
                 style={{
                     height: '100%',
                 }}
-                endReached={loadMore}
+                // endReached={loadMore}
                 overscan={500}
                 totalCount={userPosts.length}
                 components={{
@@ -95,7 +92,11 @@ function Virtualized({
                     }),
                     Footer: forwardRef(function FooterComponent() {
                         return (
-                            <div className='flex justify-center'><Button onClick={loadMore}>Load Dummy Posts</Button></div>
+                            <div className='flex justify-center h-28'>
+                                <Button onClick={loadMore}>
+                                    Load Dummy Posts
+                                </Button>
+                            </div>
                         );
                     }),
                     List: forwardRef(function ListComponent({ style, children, ...props }, ref) {
@@ -115,24 +116,24 @@ function Virtualized({
                             </div>
                         );
                     }),
-                    Item: ({ children, ...props }) => (
-                        <div
-                            {...props}
-                            style={{
-                                padding: "0.1rem",
-                                width: "33.3%",
-                                display: "flex",
-                                flex: "none",
-                                alignContent: "stretch",
-                                boxSizing: "border-box",
-                            }}
-                        >
-                            {children}
-                        </div>
-                    )
+                    Item: forwardRef(function ItemComponent({ style, children, ...props }, ref) {
+                        return (
+                            <div
+                                {...props}
+                                style={{
+                                    padding: "0.1rem",
+                                    width: "33.3%",
+                                    display: "flex",
+                                    flex: "none",
+                                    alignContent: "stretch",
+                                    boxSizing: "border-box",
+                                }}>
+                                {children}
+                            </div>
+                        );
+                    }),
                 }}
-                itemContent={(index) => <ImageComponent data={userPosts[index]} />}
-            />
+                itemContent={(index) => <ImageComponent data={userPosts[index]} />} />
             <style>{`html, body, #root { height: 100% }`}</style>
         </>
 

@@ -52,37 +52,29 @@ const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
     }, [dispatch, size])
 
     return (
-        <div className='w-full h-full'>
-            <div style={{
-                height: "100%",
-                overflow: "hidden",
-            }}
-                className='w-dvw md:w-full'>
-                <Virtuoso
-                    style={{
-                        height: '100%',
-                    }}
-                    data={posts.Posts}
-                    endReached={loadMore}
-                    increaseViewportBy={3000}
-                    itemContent={(index, post) => {
-                        if (post?.isDummy) {
-                            return <PostItemDummy feed={post} />
-                        } else {
-                            return <PostItem feed={post} />
-                        }
-                    }}
-                    components={{
-                        Header: () => <StoriesPage />,
-                        Footer: () => <div className='flex justify-center'>
-                            <Button onClick={loadMore}>Load Dummy Posts</Button>
-                        </div>
-                    }}
+        <>
+            <Virtuoso
+                className='h-full w-full'
+                data={posts.Posts}
+                endReached={loadMore}
+                increaseViewportBy={3000}
+                itemContent={(index, post) => {
+                    if (post?.isDummy) {
+                        return <PostItemDummy feed={post} />
+                    } else {
+                        return <PostItem feed={post} />
+                    }
+                }}
+                components={{
+                    Header: () => <StoriesPage />,
+                    Footer: () => <div className='flex justify-center'>
+                        <Button onClick={loadMore}>Load Dummy Posts</Button>
+                    </div>
+                }}
+            />
+            <style>{`html, body, #root { height: 100% }`}</style>
+        </>
 
-                />
-                <style>{`html, body, #root { height: 100% }`}</style>
-            </div>
-        </div>
     )
 }
 

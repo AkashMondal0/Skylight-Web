@@ -15,7 +15,7 @@ const Sm_Header = () => {
         }
     }
     return (
-        <div className="md:hidden flex sticky top-0 z-10 w-full
+        <div className="md:hidden flex fixed top-0 z-10 w-full
          border-b h-14 bg-background text-foreground">
             <div className="p-4 w-full flex justify-between">
                 <div className="flex items-center gap-2">

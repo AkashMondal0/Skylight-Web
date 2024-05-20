@@ -37,15 +37,17 @@ export default async function Page() {
   try {
     return (
       <>
-        <Sm_Header />
+        <LikeViewModal />
         <div className='w-full h-full flex'>
           <Lg_Navigation />
-          <Suspense fallback={<SkeletonPostCard />}>
-            <LikeViewModal />
-            <Render />
-          </Suspense>
+          <div className='w-full py-14'>
+            <Sm_Header />
+            <Suspense fallback={<SkeletonPostCard />}>
+              <Render />
+            </Suspense>
+            <Sm_Navigation />
+          </div>
         </div>
-        <Sm_Navigation />
       </>
     )
   } catch (error) {

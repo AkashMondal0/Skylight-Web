@@ -24,7 +24,7 @@ export default function RootLayout({ children,
     <>
       <html lang="en" suppressHydrationWarning={false}>
         <head />
-        <body className="ease-in-out duration-300 overflow-y-hidden">
+        <body className="ease-in-out duration-300 ">
           <Toaster />
           <Redux_Provider>
             <NextAuth_Provider>
