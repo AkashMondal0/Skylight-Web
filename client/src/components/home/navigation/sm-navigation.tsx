@@ -1,8 +1,7 @@
 'use client'
 import React from 'react'
 import {
-    CircleUserRound, Compass,
-    CopyPlus, Film, Heart, Home, Menu,
+    CircleUserRound, Film, Home,
     MessageCircleCode, Search
 } from "lucide-react"
 import { useRouter } from 'next/navigation'
@@ -23,9 +22,7 @@ const Sm_Navigation = () => {
     ]
 
     return (
-        <div className="md:hidden w-full sticky
-        flex bottom-0 z-10 border-t py-2 bg-background 
-        text-foreground h-[6dvh] items-center">
+        <div className={`md:hidden w-full fixed flex bottom-0 z-10 border-t py-2 bg-background text-foreground h-14 items-center`}>
             <div className="p-2 w-full flex justify-around">
                 {SideIconData.map(({ icon, label, onClick }, index) => {
                     if (label === "Profile") {

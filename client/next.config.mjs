@@ -23,6 +23,11 @@ const nextConfig = {
                 hostname: 'source.unsplash.com',
                 port: '',
                 pathname: '/random/**',
+            }, {
+                protocol: 'https',
+                hostname: 'firebasestorage.googleapis.com',
+                port: '',
+                pathname: `/v0/b/${process.env.STORAGE_BUCKET}/o/**`,
             }
         ],
     },
@@ -43,6 +48,13 @@ const nextConfig = {
         SUPABASE_CLIENT: process.env.SUPABASE_CLIENT,
         SUPABASE_CLIENT_KEY: process.env.SUPABASE_CLIENT_KEY,
         SUPABASE_BUCKET_URL: process.env.SUPABASE_BUCKET_URL,
+        // firebase
+        apiKey: process.env.API_KEY,
+        authDomain: process.env.AUTH_DOMAIN,
+        projectId: process.env.PROJECT_ID,
+        storageBucket: process.env.STORAGE_BUCKET,
+        messagingSenderId: process.env.MESSAGING_SENDER_ID,
+        appId: process.env.APP_ID
     }
 };
 

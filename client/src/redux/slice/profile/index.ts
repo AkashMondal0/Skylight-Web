@@ -1,7 +1,6 @@
-import { RootState } from '@/redux/store'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import {fetchProfileDataApi } from './api-functions'
+import { fetchProfileDataApi, UploadImagesFireBaseApi } from './api-functions'
 import { User } from '@/types'
 
 // Define a type for the slice state
@@ -10,6 +9,12 @@ interface ProfileState {
     loading: boolean
     error: string | null
     AppStart: boolean
+    UploadFiles: {
+        loading: boolean
+        error: string | null
+        uploadImages: File[]
+        currentUploadImg: File | null | any
+    }
 }
 
 // Define the initial state using that type
@@ -17,14 +22,23 @@ const profileState: ProfileState = {
     user: null,
     loading: false,
     error: null,
-    AppStart: false
+    AppStart: false,
+    UploadFiles: {
+        loading: false,
+        error: null,
+        currentUploadImg: null,
+        uploadImages: []
+    }
 }
 
 export const profileSlice = createSlice({
     name: 'Profile',
     initialState: profileState,
     reducers: {
-
+        setShowUploadImage: (state, action: PayloadAction<File>) => {
+            state.UploadFiles.currentUploadImg = action.payload
+            // state.UploadFiles.uploadImages.push(action.payload)
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -43,11 +57,28 @@ export const profileSlice = createSlice({
                 state.error = action.error.message || null
                 state.AppStart = true
             })
+            // upload image
+            .addCase(UploadImagesFireBaseApi.pending, (state) => {
+                state.UploadFiles.loading = true
+                state.UploadFiles.error = null
+                state.UploadFiles.currentUploadImg = null
+                state.UploadFiles.uploadImages = []
+            })
+            .addCase(UploadImagesFireBaseApi.fulfilled, (state, action: PayloadAction<User>) => {
+                state.UploadFiles.loading = false
+                state.UploadFiles.error = null
+            })
+            .addCase(UploadImagesFireBaseApi.rejected, (state, action) => {
+                state.UploadFiles.loading = false
+                state.UploadFiles.currentUploadImg = null
+                state.UploadFiles.uploadImages = []
+                state.UploadFiles.error = "Failed to upload images"
+            })
     },
 })
 
 export const {
-
+    setShowUploadImage
 } = profileSlice.actions
 
 export default profileSlice.reducer

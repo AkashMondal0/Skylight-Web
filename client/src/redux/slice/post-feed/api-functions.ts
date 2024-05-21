@@ -1,45 +1,7 @@
-import { configs } from "@/configs";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { supabaseClient } from "@/lib/supa-base"
 import { AuthorData } from "@/types";
 import { TypeActionLike } from ".";
-
-export const postFilesApi = createAsyncThunk(
-    'postFilesApi/post',
-    async ({
-        isFile,
-        isCaption,
-        profileId,
-    }: {
-        isFile: File[],
-        isCaption: string,
-        profileId: string
-    }, thunkApi) => {
-        try {
-            var photoUrls: string[] = []
-            for (let index = 0; index < isFile.length; index++) {
-                const { data, error } = await supabaseClient.storage.from('skymedia').upload(`${profileId}/feedPosts/${isFile[index].name}`, isFile[index]);
-                console.log(data, error)
-                if (!error) {
-                    photoUrls.push(`${configs.supabase.bucketUrl}${data?.path}`)
-                } else {
-                    photoUrls.push(`${configs.supabase.bucketUrl}${profileId}/feedPosts/${isFile[index].name}`)
-                }
-            }
-            const res = await axios.post(`/api/feeds/create`, {
-                caption: isCaption,
-                fileUrl: photoUrls,
-                authorId: profileId
-            })
-            return res.data
-        } catch (error: any) {
-            return thunkApi.rejectWithValue({
-                ...error?.response?.data,
-            })
-        }
-    }
-);
 
 export const fetchProfileFeedsApi = createAsyncThunk(
     'fetchProfileFeedsApi/get',

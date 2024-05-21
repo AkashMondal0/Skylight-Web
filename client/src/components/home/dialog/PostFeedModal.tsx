@@ -101,15 +101,15 @@ const PostFeedModal = ({ data: ApiFeed }: {
           <Carousel>
             <CarouselContent>
               {data?.fileUrl?.map((url, index) => (
-                <CarouselItem key={index}>
+                <CarouselItem key={index}  className='m-auto'>
                   <Image
                     src={url}
                     width={300}
                     height={300}
                     alt="Picture of the author"
                     quality={75}
-                  priority={true}
-                  fetchPriority="high"
+                    priority={true}
+                    fetchPriority="high"
                     sizes="(min-width: 808px) 50vw, 100vw"
                     //(min-width: 808px) 50vw, 100vw 
                     className='w-auto h-auto cursor-default border m-auto rounded-lg userNotSelectImg'

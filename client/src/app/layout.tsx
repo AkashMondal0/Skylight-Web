@@ -4,9 +4,6 @@ import { ThemeProvider } from "@/provider/ThemeProvider";
 import NextAuth_Provider from "@/provider/NextAuth_Provider";
 import { Toaster } from "@/components/ui/sonner"
 import Redux_Provider from "@/provider/Redux_Provider";
-import Sm_Header from "@/components/home/navigation/sm-header";
-import Lg_Navigation from "@/components/home/navigation/lg-navigation";
-import Sm_Navigation from "@/components/home/navigation/sm-navigation";
 
 
 export const metadata: Metadata = {
@@ -24,7 +21,7 @@ export default function RootLayout({ children,
     <>
       <html lang="en" suppressHydrationWarning={false}>
         <head />
-        <body className="ease-in-out duration-300">
+        <body className="ease-in-out duration-300 ">
           <Toaster />
           <Redux_Provider>
             <NextAuth_Provider>
@@ -32,18 +29,8 @@ export default function RootLayout({ children,
                 attribute="class"
                 defaultTheme="dark"
                 enableSystem>
-                {/* <AppStart_Provider> */}
-                <div className="flex flex-col h-full">
-                  {/* sm device header*/}
-                  <div className="flex h-full">
-                    {/* left side */}
-                    <Lg_Navigation />
-                    {children}
-                  </div>
-                  {/* sm device footer*/}
-                </div>
+                {children}
                 {modal}
-                {/* </AppStart_Provider> */}
               </ThemeProvider>
             </NextAuth_Provider>
           </Redux_Provider>

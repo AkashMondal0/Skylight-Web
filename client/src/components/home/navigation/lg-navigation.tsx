@@ -34,23 +34,15 @@ export default function Lg_Navigation({
   const pageChange = (path: string) => router.push(path)
   const session = useSession().data?.user
   const SideIconData = [
-    { icon: Home, label: "Home", onClick: () => pageChange('/') },
-    { icon: Search, label: "Search", onClick: () => { } },
-    { icon: Compass, label: "Explore", onClick: () => pageChange('/explore') },
-    { icon: Film, label: "Reels", onClick: () => pageChange('/reels/5') },
-    { icon: MessageCircleCode, label: "Messages", onClick: () => pageChange('/message') },
-    { icon: Heart, label: "Notifications", onClick: () => { } },
-    { icon: CopyPlus, label: "Create", onClick: () => { } },
-    { icon: CircleUserRound, label: "Profile", onClick: () => pageChange(`/${session?.username || ""}`) },
+    { icon: <Home size={28} />, label: "Home", onClick: () => pageChange('/') },
+    { icon: <Search size={28} />, label: "Search", onClick: () => { } },
+    { icon: <Compass size={28} />, label: "Explore", onClick: () => pageChange('/explore') },
+    { icon: <Film size={28} />, label: "Reels", onClick: () => pageChange('/reels/5') },
+    { icon: <MessageCircleCode size={28} />, label: "Messages", onClick: () => pageChange('/message') },
+    { icon: <Heart size={28} />, label: "Notifications", onClick: () => { } },
+    { icon: <CopyPlus size={28} />, label: "Create", onClick: () => { } },
+    { icon: <CircleUserRound size={28} />, label: "Profile", onClick: () => pageChange(`/${session?.username || ""}`) },
   ]
-
-  if (!session) return <div className={cn(`
- scroll-smooth hideScrollbar
-  h-[100dvh] overflow-y-auto md:flex
-  hidden ease-in-out sticky top-0
-  duration-300`,
-    hideLabel ? "w-20" : "w-72 2xl:w-96 max-w-[20rem] md:w-20 xl:w-72"
-  )}></div>
 
   return (
     <div className={cn(`
@@ -68,14 +60,14 @@ export default function Lg_Navigation({
               if (label === "Notifications") {
                 return <NotificationModel key={index}>
                   <NavigationItem label={label} onClick={onClick} hideLabel={hideLabel}>
-                    {React.createElement(icon, { size: 28 })}
+                    {icon}
                   </NavigationItem>
                 </NotificationModel>
               }
               if (label === "Search") {
                 return <SearchModel key={index}>
                   <NavigationItem label={label} onClick={onClick} hideLabel={hideLabel}>
-                    {React.createElement(icon, { size: 28 })}
+                    {icon}
                   </NavigationItem>
                 </SearchModel>
               }
@@ -83,19 +75,19 @@ export default function Lg_Navigation({
                 return <UploadPostDialog key={index}>
                   <NavigationItem key={index} label={label} hideLabel={hideLabel}
                     onClick={onClick}>
-                    {React.createElement(icon, { size: 28 })}
+                    {icon}
                   </NavigationItem>
                 </UploadPostDialog>
               }
               if (label === "Profile") {
                 return <NavigationItem key={index} label={label} hideLabel={hideLabel}
                   onClick={onClick}>
-                  <SkyAvatar url={session.image || null} className="h-full w-full max-h-8 max-w-8" />
+                  <SkyAvatar url={session?.image || null} className="h-full w-full max-h-8 max-w-8" />
                 </NavigationItem>
               }
               return <NavigationItem key={index} label={label} hideLabel={hideLabel}
                 onClick={onClick}>
-                {React.createElement(icon, { size: 28 })}
+                {icon}
               </NavigationItem>
             })}
           </div>

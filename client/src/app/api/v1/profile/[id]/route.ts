@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import jwt from "jsonwebtoken"
 import db from "@/lib/db/drizzle";
 import { comments, followers, likes, posts, users } from "@/lib/db/schema";
-import { count, eq, like, or, desc, not, is, sql, exists, and, asc } from "drizzle-orm";
+import { count, eq, like, or, desc, not, is, sql, exists, and, asc, countDistinct } from "drizzle-orm";
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
@@ -84,7 +84,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       id: posts.id,
       authorId: posts.authorId,
       fileUrl: posts.fileUrl,
-      likeCount: count(eq(likes.postId, posts.id)),
+      likeCount: countDistinct(eq(likes.postId, posts.id)),
       commentCount: count(eq(comments.postId, posts.id)),
       createdAt: posts.createdAt
     })

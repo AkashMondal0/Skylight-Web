@@ -10,6 +10,7 @@ import { loadMoreData, setFeedPosts } from '@/redux/slice/post-feed';
 import { Button } from '../ui/button';
 import Sm_Navigation from './navigation/sm-navigation';
 import Sm_Header from './navigation/sm-header';
+import ShowUpload from './alert/show-upload';
 
 const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
     const dispatch = useDispatch()
@@ -52,39 +53,29 @@ const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
     }, [dispatch, size])
 
     return (
-        <div className='w-full flex'>
-            <div style={{
-                height: "100%",
-                overflow: "hidden",
-            }}
-                className='w-dvw md:w-full'>
-                <Sm_Header />
-                <Virtuoso
-                    style={{
-                        height: '100%',
-                    }}
-                    data={posts.Posts}
-                    endReached={loadMore}
-                    increaseViewportBy={3000}
-                    itemContent={(index, post) => {
-                        if (post?.isDummy) {
-                            return <PostItemDummy feed={post} />
-                        } else {
-                            return <PostItem feed={post} />
-                        }
-                    }}
-                    components={{
-                        Header: () => <StoriesPage />,
-                        Footer: () => <div className='flex justify-center'>
-                            <Button onClick={loadMore}>Load Dummy Posts</Button>
-                        </div>
-                    }}
+        <>
+            <Virtuoso
+                className='h-full w-full'
+                data={posts.Posts}
+                endReached={loadMore}
+                increaseViewportBy={2000}
+                itemContent={(index, post) => {
+                    if (post?.isDummy) {
+                        return <PostItemDummy feed={post} />
+                    } else {
+                        return <PostItem feed={post} />
+                    }
+                }}
+                components={{
+                    Header: () => <><StoriesPage /><ShowUpload /></>,
+                    Footer: () => <div className='flex justify-center'>
+                        <Button onClick={loadMore}>Load Dummy Posts</Button>
+                    </div>
+                }}
+            />
+            <style>{`html, body, #root { height: 100% }`}</style>
+        </>
 
-                />
-                <Sm_Navigation />
-                <style>{`html, body, #root { height: 100% }`}</style>
-            </div>
-        </div>
     )
 }
 

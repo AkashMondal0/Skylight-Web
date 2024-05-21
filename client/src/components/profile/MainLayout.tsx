@@ -1,5 +1,5 @@
 "use client";
-import { setUsers } from "@/redux/slice/users";
+import { setLoadMoreProfilePosts, setUsers } from "@/redux/slice/users";
 import { RootState } from "@/redux/store";
 import { FeedPost, User } from "@/types";
 import { useSession } from "next-auth/react";
@@ -37,13 +37,9 @@ const MainLayout = ({ data }: {
 
     if (users?.profileData.user) {
         return <>
-            <div className='w-full flex h-full'>
-                <div className='mx-auto w-full overflow-x-hidden h-auto'>
-                    <Virtualized
-                        isProfile={isProfile}
-                        user={users.profileData.user} />
-                </div>
-            </div >
+            <Virtualized
+                isProfile={isProfile}
+                user={users.profileData.user} />
         </>
     }
 }
@@ -55,7 +51,7 @@ function Virtualized({
     user
 }: Props) {
     const [size, setSize] = useState(0)
-    const [userPosts, setUserPosts] = useState<FeedPost[]>(user.posts)
+    const dispatch = useDispatch()
     const loadMore = () => {
         const _posts: FeedPost[] = Array.from({ length: 10 }, (_, i) => ({
             id: `${i + size}`,
@@ -75,7 +71,7 @@ function Virtualized({
             likes: [],
             isDummy: true
         }))
-        setUserPosts([...userPosts, ..._posts])
+        dispatch(setLoadMoreProfilePosts(_posts))
         setSize(size + 10)
     }
     return (
@@ -86,7 +82,7 @@ function Virtualized({
                 }}
                 endReached={loadMore}
                 overscan={500}
-                totalCount={userPosts.length}
+                totalCount={user.posts.length}
                 components={{
                     Header: forwardRef(function HeaderComponent() {
                         return (
@@ -95,7 +91,11 @@ function Virtualized({
                     }),
                     Footer: forwardRef(function FooterComponent() {
                         return (
-                            <div className='flex justify-center'><Button onClick={loadMore}>Load Dummy Posts</Button></div>
+                            <div className='flex justify-center h-28'>
+                                <Button onClick={loadMore}>
+                                    Load Dummy Posts
+                                </Button>
+                            </div>
                         );
                     }),
                     List: forwardRef(function ListComponent({ style, children, ...props }, ref) {
@@ -115,24 +115,24 @@ function Virtualized({
                             </div>
                         );
                     }),
-                    Item: ({ children, ...props }) => (
-                        <div
-                            {...props}
-                            style={{
-                                padding: "0.1rem",
-                                width: "33.3%",
-                                display: "flex",
-                                flex: "none",
-                                alignContent: "stretch",
-                                boxSizing: "border-box",
-                            }}
-                        >
-                            {children}
-                        </div>
-                    )
+                    Item: forwardRef(function ItemComponent({ style, children, ...props }, ref) {
+                        return (
+                            <div
+                                {...props}
+                                style={{
+                                    padding: "0.1rem",
+                                    width: "33.3%",
+                                    display: "flex",
+                                    flex: "none",
+                                    alignContent: "stretch",
+                                    boxSizing: "border-box",
+                                }}>
+                                {children}
+                            </div>
+                        );
+                    }),
                 }}
-                itemContent={(index) => <ImageComponent data={userPosts[index]} />}
-            />
+                itemContent={(index) => <ImageComponent data={user.posts[index]} />} />
             <style>{`html, body, #root { height: 100% }`}</style>
         </>
 

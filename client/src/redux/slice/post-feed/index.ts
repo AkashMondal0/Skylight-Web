@@ -65,6 +65,7 @@ export const PostFeedSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            // fetch post likes
             .addCase(fetchPostLikesApi.pending, (state) => {
                 state.fetchLoading = true
                 state.fetchError = null
@@ -134,6 +135,7 @@ export const PostFeedSlice = createSlice({
                 state.likeLoading = false
                 state.likeError = action.error.message || 'Failed to unlike post'
             })
+             // create comment
             .addCase(createPostCommentApi.pending, (state) => {
                 state.commentLoading = true
             })
@@ -147,6 +149,7 @@ export const PostFeedSlice = createSlice({
             .addCase(createPostCommentApi.rejected, (state, action) => {
                 state.commentLoading = false
             })
+             // destroy comment
             .addCase(destroyPostCommentApi.pending, (state) => {
                 state.commentLoading = true
             })
@@ -159,7 +162,7 @@ export const PostFeedSlice = createSlice({
             .addCase(destroyPostCommentApi.rejected, (state, action) => {
                 state.commentLoading = false
             })
-
+            
     },
 })
 

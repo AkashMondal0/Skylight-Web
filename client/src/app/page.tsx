@@ -6,6 +6,9 @@ import VirtualizePost from '@/components/home/VirtualizePost';
 import { Suspense } from 'react';
 import SkeletonPostCard from '@/components/home/loading/PostCard';
 import LikeViewModal from '@/components/home/dialog/LikeViewModal';
+import Sm_Navigation from '@/components/home/navigation/sm-navigation';
+import Sm_Header from '@/components/home/navigation/sm-header';
+import Lg_Navigation from '@/components/home/navigation/lg-navigation';
 
 async function getFeeds() {
   try {
@@ -33,10 +36,20 @@ async function Render() {
 export default async function Page() {
   try {
     return (
-      <Suspense fallback={<SkeletonPostCard />}>
+      <>
         <LikeViewModal />
-        <Render />
-      </Suspense>)
+        <div className='w-full h-full flex'>
+          <Lg_Navigation />
+          <div className='w-full md:py-0 py-14'>
+            <Sm_Header />
+            <Suspense fallback={<SkeletonPostCard />}>
+              <Render />
+            </Suspense>
+            <Sm_Navigation />
+          </div>
+        </div>
+      </>
+    )
   } catch (error) {
     console.log(error)
     return notFound()

@@ -105,7 +105,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         ...userProfile[0],
         followersCount: FollowingCount[0].followingCount,
         followingCount: FollowersCount[0].followersCount,
-        posts: userPosts,
+        posts: userPosts ?? [],
       }
     }, { status: 200 })
 

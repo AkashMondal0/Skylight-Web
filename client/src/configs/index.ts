@@ -8,6 +8,14 @@ const _configs = {
         bucketUrl: process.env.SUPABASE_BUCKET_URL,
         clientKey: process.env.SUPABASE_CLIENT_KEY,
         clientUrl: process.env.SUPABASE_CLIENT
+    },
+    firebase: {
+        apiKey: process.env.API_KEY,
+        authDomain: process.env.AUTH_DOMAIN,
+        projectId: process.env.PROJECT_ID,
+        storageBucket: process.env.STORAGE_BUCKET,
+        messagingSenderId: process.env.MESSAGING_SENDER_ID,
+        appId: process.env.APP_ID
     }
 }
 

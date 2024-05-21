@@ -1,3 +1,5 @@
+import Lg_Navigation from "@/components/home/navigation/lg-navigation"
+
 export default async function RootLayout({ children, modal }: {
   children: React.ReactNode
   modal: React.ReactNode
@@ -5,8 +7,11 @@ export default async function RootLayout({ children, modal }: {
 
   return (
     <>
-      {children}
-      {modal}
+      <div className="flex h-full md:py-0 py-14">
+        <Lg_Navigation />
+        {children}
+        {modal}
+      </div>
     </>
   )
 }
