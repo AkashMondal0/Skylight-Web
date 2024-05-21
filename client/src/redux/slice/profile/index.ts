@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { fetchProfileDataApi, UploadImagesApi } from './api-functions'
+import { fetchProfileDataApi, UploadImagesFireBaseApi } from './api-functions'
 import { User } from '@/types'
 
 // Define a type for the slice state
@@ -58,17 +58,17 @@ export const profileSlice = createSlice({
                 state.AppStart = true
             })
             // upload image
-            .addCase(UploadImagesApi.pending, (state) => {
+            .addCase(UploadImagesFireBaseApi.pending, (state) => {
                 state.UploadFiles.loading = true
                 state.UploadFiles.error = null
                 state.UploadFiles.currentUploadImg = null
                 state.UploadFiles.uploadImages = []
             })
-            .addCase(UploadImagesApi.fulfilled, (state, action: PayloadAction<User>) => {
+            .addCase(UploadImagesFireBaseApi.fulfilled, (state, action: PayloadAction<User>) => {
                 state.UploadFiles.loading = false
                 state.UploadFiles.error = null
             })
-            .addCase(UploadImagesApi.rejected, (state, action) => {
+            .addCase(UploadImagesFireBaseApi.rejected, (state, action) => {
                 state.UploadFiles.loading = false
                 state.UploadFiles.currentUploadImg = null
                 state.UploadFiles.uploadImages = []

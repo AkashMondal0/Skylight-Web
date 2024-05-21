@@ -58,7 +58,7 @@ const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
                 className='h-full w-full'
                 data={posts.Posts}
                 endReached={loadMore}
-                increaseViewportBy={3000}
+                increaseViewportBy={2000}
                 itemContent={(index, post) => {
                     if (post?.isDummy) {
                         return <PostItemDummy feed={post} />
