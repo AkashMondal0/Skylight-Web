@@ -20,9 +20,9 @@ const HeroSection = ({
             <div className="hidden sm:block mx-auto max-w-[960px]">
                 {/* profile header */}
                 <div className='flex items-center my-8 m-5'>
-                    <SkyAvatar 
-                    sizeImage='20vw'
-                    url={userProfileData.profilePicture || "/user.jpg"}
+                    <SkyAvatar
+                        sizeImage='20vw'
+                        url={userProfileData.profilePicture || "/user.jpg"}
                         className={'sm:w-36 object-cover bg-slate-400 sm:h-36 w-28 h-28 rounded-full sm:mr-8'} />
                     <div className='flex flex-col justify-between gap-5'>
                         <ActionButtonsLg
@@ -35,13 +35,13 @@ const HeroSection = ({
                                     {userProfileData.postCount}
                                 </p> posts
                             </div>
-                            <Link href={`/${userProfileData.username}/followers`} className='sm:cursor-pointer flex gap-1'>
+                            <Link href={`/${userProfileData.username.toString() ??""}/followers`} className='sm:cursor-pointer flex gap-1'>
                                 <p className='text-base font-semibold'>
                                     {userProfileData.followersCount}
                                 </p>
                                 followers
                             </Link>
-                            <Link href={`/${userProfileData.username}/following`} className='sm:cursor-pointer flex gap-1'>
+                            <Link href={`/${userProfileData.username.toString() ?? ""}/following`} className='sm:cursor-pointer flex gap-1'>
                                 <p className='text-base font-semibold'>
                                     {userProfileData.followingCount}
                                 </p>
@@ -114,7 +114,7 @@ const HeroSection = ({
                             </div>
                         </div>
 
-                        <Link className='cursor-pointer text-center' href={`/${userProfileData.username}/followers`}>
+                        <Link className='cursor-pointer text-center' href={`/${userProfileData.username.toString() ??""}/followers`}>
                             <p className='text-base font-semibold'>
                                 {userProfileData.followersCount}
                             </p>
@@ -123,7 +123,7 @@ const HeroSection = ({
                             </div>
                         </Link>
 
-                        <Link className='cursor-pointer text-center' href={`/${userProfileData.username}/following`}>
+                        <Link className='cursor-pointer text-center' href={`/${userProfileData.username.toString() ??""}/following`}>
                             <p className='text-base font-semibold'>
                                 {userProfileData.followingCount}
                             </p>

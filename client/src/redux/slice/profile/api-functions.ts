@@ -101,19 +101,15 @@ export const UploadImagesApi = createAsyncThunk(
         try {
             var photoUrls: string[] = []
             for (let index = 0; index < isFile.length; index++) {
-                const makeApiCall = async () => {
-                    thunkApi.dispatch(setShowUploadImage(isFile[index]))
-                    const { data, error } = await supabaseClient.storage.from('skymedia').upload(`${profileId}/feedPosts/${isFile[index].name}`, isFile[index]);
-                    if (!error) {
-                        photoUrls.push(`${configs.supabase.bucketUrl}${data?.path}`)
-                    } else {
-                        photoUrls.push(`${configs.supabase.bucketUrl}${profileId}/feedPosts/${isFile[index].name}`)
-                    }
+                thunkApi.dispatch(setShowUploadImage(isFile[index]) as any)
+                const { data, error } = await supabaseClient.storage.from('skymedia').upload(`${profileId}/feedPosts/${isFile[index].name}`, isFile[index]);
+                await new Promise(resolve => setTimeout(resolve, 2500));
+
+                if (!error) {
+                    photoUrls.push(`${configs.supabase.bucketUrl}${data?.path}`)
+                } else {
+                    photoUrls.push(`${configs.supabase.bucketUrl}${profileId}/feedPosts/${isFile[index].name}`)
                 }
-
-                await new Promise(resolve => setTimeout(resolve, 1500));
-
-                makeApiCall();
             }
             const res = await axios.post(`/api/feeds/create`, {
                 caption: isCaption,
