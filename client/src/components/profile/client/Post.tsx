@@ -4,16 +4,16 @@ import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import { Copy, Heart, MessageCircle, RotateCcw } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { FeedPost } from '@/types'
+import { FeedPost, networkImage_status } from '@/types'
 import { PostError } from '@/components/error/image.error'
-type status = "error" | "loading" | "success"
+
 export const ImageComponent = ({
     data
 }: {
     data: FeedPost
 }) => {
     const router = useRouter()
-    const [status, setStatus] = React.useState<status>("loading")
+    const [status, setStatus] = React.useState<networkImage_status>("loading")
 
     return (
         <>

@@ -1,5 +1,5 @@
 "use client";
-import { setUsers } from "@/redux/slice/users";
+import { setLoadMoreProfilePosts, setUsers } from "@/redux/slice/users";
 import { RootState } from "@/redux/store";
 import { FeedPost, User } from "@/types";
 import { useSession } from "next-auth/react";
@@ -51,8 +51,7 @@ function Virtualized({
     user
 }: Props) {
     const [size, setSize] = useState(0)
-    const [userPosts, setUserPosts] = useState<FeedPost[]>(user.posts)
-
+    const dispatch = useDispatch()
     const loadMore = () => {
         const _posts: FeedPost[] = Array.from({ length: 10 }, (_, i) => ({
             id: `${i + size}`,
@@ -72,7 +71,7 @@ function Virtualized({
             likes: [],
             isDummy: true
         }))
-        setUserPosts([...userPosts, ..._posts])
+        dispatch(setLoadMoreProfilePosts(_posts))
         setSize(size + 10)
     }
     return (
@@ -83,7 +82,7 @@ function Virtualized({
                 }}
                 endReached={loadMore}
                 overscan={500}
-                totalCount={userPosts.length}
+                totalCount={user.posts.length}
                 components={{
                     Header: forwardRef(function HeaderComponent() {
                         return (
@@ -133,7 +132,7 @@ function Virtualized({
                         );
                     }),
                 }}
-                itemContent={(index) => <ImageComponent data={userPosts[index]} />} />
+                itemContent={(index) => <ImageComponent data={user.posts[index]} />} />
             <style>{`html, body, #root { height: 100% }`}</style>
         </>
 

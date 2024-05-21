@@ -179,7 +179,7 @@ interface PayloadData {
     }
 }
 
-
+type networkImage_status = "error" | "loading" | "success"
 export type {
     User,
     Message,
@@ -197,5 +197,6 @@ export type {
     SavedPost,
     PayloadData,
     FeedPost,
-    AuthorData
+    AuthorData,
+    networkImage_status
 }
