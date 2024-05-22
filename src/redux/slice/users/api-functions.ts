@@ -43,6 +43,7 @@ export const UserFollowingApi = createAsyncThunk(
         userId
     }: followAndunFollow, thunkApi) => {
         try {
+            // await new Promise(r => setTimeout(r, 5000))
             const res = await axios.post(`/api/v1/profile/follow/create`, {
                 followingUserId,
                 followerUserId,
@@ -68,6 +69,7 @@ export const UserUnFollowingApi = createAsyncThunk(
         userId
     }: followAndunFollow, thunkApi) => {
         try {
+            // await new Promise(r => setTimeout(r, 5000))
             const res = await axios.post(`/api/profile/following/destroy`, {
                 followingUserId,
                 followerUserId

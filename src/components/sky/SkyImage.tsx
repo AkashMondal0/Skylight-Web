@@ -14,7 +14,7 @@ interface OptimizedImageProps {
     onLoad?: (event: React.SyntheticEvent<HTMLImageElement, Event>) => void;
 }
 
-const OptimizedImage: React.FC<OptimizedImageProps> = ({ 
+const OptimizedImage: React.FC<OptimizedImageProps> = ({
     src, alt, width, height, className,
     fetchPriority = 'auto', sizes = '(min-width: 808px) 50vw, 100vw',
     onError, onLoad
@@ -73,6 +73,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
                         ${src} 1800w,
                         ${src} 2000w,
                     `}
+                    decoding="async"
                     fetchPriority={fetchPriority}
                     sizes={sizes}
                     className={cn('h-auto w-full', className)}

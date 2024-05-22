@@ -79,10 +79,10 @@ function Virtualized({
         }, 500)
     }, [dispatch, size])
 
-    useEffect(() => {
-        const timeout = loadMore()
-        return () => clearTimeout(timeout)
-    }, [])
+    // useEffect(() => {
+    //     const timeout = loadMore()
+    //     return () => clearTimeout(timeout)
+    // }, [])
 
     return (
         <>

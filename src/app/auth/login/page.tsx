@@ -9,7 +9,7 @@ import * as z from "zod";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation"
-import { Github } from "lucide-react"
+import { Github, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -20,6 +20,7 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { PayloadData } from "@/types";
+import { useState } from "react";
 
 const FormSchema = z.object({
     password: z.string().min(6, {
@@ -35,6 +36,7 @@ type FormData = z.infer<typeof FormSchema>;
 export default function LoginPage() {
     const dispatch = useDispatch();
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
 
     const { handleSubmit, register, reset, formState: { errors } } = useForm({
         resolver: zodResolver(FormSchema),
@@ -45,6 +47,7 @@ export default function LoginPage() {
     });
 
     const onSubmit = async (data: FormData) => {
+        setLoading(true);
         const { password, email } = data;
         const res = await dispatch(loginApi({ email, password }) as any) as PayloadData
 
@@ -54,15 +57,16 @@ export default function LoginPage() {
                 username: res.payload.data.username,
                 name: res.payload.data.name,
                 id: res.payload.data.id,
-                image: res.payload.data.profilePicture??"/user.jpg",
+                image: res.payload.data.profilePicture ?? "/user.jpg",
                 token: res.payload.data.token,
                 redirect: true,
             });
+            reset();
         }
         else {
             toast.error(`${res.payload.message}`)
         }
-        reset();
+        setLoading(false);
     };
 
     return (
@@ -129,10 +133,10 @@ export default function LoginPage() {
                 <CardFooter>
                     <Button
                         type="submit"
+                        disabled={loading}
                         onClick={handleSubmit(onSubmit)}
-                        // disabled={true}
                         className="w-full">
-                        Sign In
+                        {loading ? <Loader2 className="animate-spin" /> : "Sign In"}
                     </Button>
                 </CardFooter>
             </Card>

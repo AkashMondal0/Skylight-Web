@@ -3,7 +3,7 @@ import { Link2 } from 'lucide-react'
 import { User } from '@/types'
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import StoriesComponent from './Stories'
-import { ActionButtonsLg, ActionButtonsSM } from './button'
+import FollowAndUnFollowButton from './FollowButton'
 
 
 interface Props {
@@ -25,7 +25,7 @@ const HeroSection = ({
                         url={userProfileData.profilePicture || "/user.jpg"}
                         className={'sm:w-36 object-cover bg-slate-400 sm:h-36 w-28 h-28 rounded-full sm:mr-8'} />
                     <div className='flex flex-col justify-between gap-5'>
-                        <ActionButtonsLg
+                        <FollowAndUnFollowButton
                             isFollowing={userProfileData.isFollowing}
                             user={userProfileData}
                             isProfile={isProfile} />
@@ -35,7 +35,7 @@ const HeroSection = ({
                                     {userProfileData.postCount}
                                 </p> posts
                             </div>
-                            <Link href={`/${userProfileData.username.toString() ??""}/followers`} className='sm:cursor-pointer flex gap-1'>
+                            <Link href={`/${userProfileData.username.toString() ?? ""}/followers`} className='sm:cursor-pointer flex gap-1'>
                                 <p className='text-base font-semibold'>
                                     {userProfileData.followersCount}
                                 </p>
@@ -63,27 +63,17 @@ const HeroSection = ({
                 </div>
                 {/* story */}
                 <StoriesComponent user={userProfileData} />
-                {/* post */}
-                {/* <PostComponent posts={userProfileData.posts} />
-            <div className='h-10 w-full'></div> */}
             </div>
             {/* small device */}
             <div className='sm:hidden block'>
                 {/* profile header */}
                 <div className='flex gap-3 my-5 items-center px-2'>
-
                     <SkyAvatar url={userProfileData.profilePicture || "/user.jpg"}
                         className={'w-24 h-24 rounded-full object-cover bg-slate-400'} />
-
-                    <div className='flex flex-col gap-4'>
-                        <div className='flex gap-2'>
-                            <p className='text-xl px-3'>{userProfileData.username}</p>
-                        </div>
-                        <ActionButtonsSM
-                            isFollowing={userProfileData.isFollowing}
-                            user={userProfileData}
-                            isProfile={isProfile} />
-                    </div>
+                    <FollowAndUnFollowButton
+                        isFollowing={userProfileData.isFollowing}
+                        user={userProfileData}
+                        isProfile={isProfile} />
                 </div>
                 {/*  */}
                 <>
@@ -97,12 +87,7 @@ const HeroSection = ({
                             https://www.linkedin.com/in/akash-mondal-b5a712231/
                         </a>
                     </div>
-
-                    {/* stories */}
-                    {/* <Suspense fallback={<>Loading...</>}> */}
                     <StoriesComponent user={userProfileData} />
-                    {/* </Suspense> */}
-
                     {/* followers and following */}
                     <div className='flex justify-around p-2 border-y'>
                         <div className=' text-center'>
@@ -114,7 +99,7 @@ const HeroSection = ({
                             </div>
                         </div>
 
-                        <Link className='cursor-pointer text-center' href={`/${userProfileData.username.toString() ??""}/followers`}>
+                        <Link className='cursor-pointer text-center' href={`/${userProfileData.username.toString() ?? ""}/followers`}>
                             <p className='text-base font-semibold'>
                                 {userProfileData.followersCount}
                             </p>
@@ -123,7 +108,7 @@ const HeroSection = ({
                             </div>
                         </Link>
 
-                        <Link className='cursor-pointer text-center' href={`/${userProfileData.username.toString() ??""}/following`}>
+                        <Link className='cursor-pointer text-center' href={`/${userProfileData.username.toString() ?? ""}/following`}>
                             <p className='text-base font-semibold'>
                                 {userProfileData.followingCount}
                             </p>

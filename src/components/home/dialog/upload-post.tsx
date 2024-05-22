@@ -22,6 +22,7 @@ import { useSession } from "next-auth/react"
 import Image from "next/image"
 import { UploadImagesFireBaseApi } from "@/redux/slice/profile/api-functions"
 import { toast } from "sonner"
+import OptimizedImage from "@/components/sky/SkyImage"
 export default function UploadPostDialog({
     children
 }: {
@@ -117,7 +118,11 @@ export default function UploadPostDialog({
                                 </Button>
                             </div>
                         </div>}
-                    <input type="file" id="file" multiple onChange={onChangeFilePicker} className="hidden" />
+                    <input
+                        // video and photo upload
+                        type="file" accept="image/*"
+                        id="file" multiple onChange={onChangeFilePicker}
+                        className="hidden" />
                 </div>
             </DialogContent>
         </Dialog>
@@ -158,6 +163,7 @@ const ShowSelectedImages = ({
         })
     }, [api, images])
 
+    // scroll list of images
     if (step === 1) {
         return <>
             <div className="flex flex-col space-y-4">
@@ -165,15 +171,15 @@ const ShowSelectedImages = ({
                     {images.map((image: File, i) => (
                         <div key={i} className="flex my-2 justify-between items-center border p-2 rounded-xl">
                             <div className="flex items-center space-x-2">
-                                <Image
+                                <OptimizedImage
                                     width={320}
                                     height={320}
-                                    sizes="(min-width: 808px) 50vw, 100vw"
+                                    sizes="(min-width: 808px) 10vw, 15vw"
                                     src={URL.createObjectURL(image)}
                                     alt={image.name}
                                     className="w-16 h-16 object-cover rounded-xl"
                                 />
-                                <p>{image.name.slice(0, 11)}</p>
+                                <p>{image.name.slice(0, 11)}...</p>
                             </div>
                             <Button onClick={() => handleDeleteImage(i)} variant={"outline"} className="rounded-xl p-2">
                                 <Trash2 className="text-red-500" />
@@ -198,17 +204,17 @@ const ShowSelectedImages = ({
 
     return (
         <div className="mx-auto">
-            <Carousel setApi={setApi} className="w-full max-w-80 h-80">
+            <Carousel setApi={setApi} className="w-full max-w-80 max-h-80">
                 <CarouselContent>
                     {images.map((_, index) => (
-                        <CarouselItem key={index}>
-                            <Image
+                        <CarouselItem key={index} className=" m-auto">
+                            <OptimizedImage
                                 width={320}
                                 height={320}
-                                sizes="(min-width: 808px) 50vw, 100vw"
+                                sizes="(min-width: 808px) 30vw, 50vw"
                                 src={URL.createObjectURL(images[index])}
                                 alt={`Image ${index + 1}`}
-                                className="w-auto h-auto object-cover rounded-xl"
+                                className="w-auto h-auto max-h-80 object-cover rounded-xl"
                             />
                         </CarouselItem>
                     ))}

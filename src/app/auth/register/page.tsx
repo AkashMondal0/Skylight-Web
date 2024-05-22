@@ -9,7 +9,7 @@ import * as z from "zod";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation"
-import { Github } from "lucide-react"
+import { Github, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -20,6 +20,7 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { PayloadData } from "@/types";
+import { useState } from "react";
 
 const FormSchema = z.object({
     username: z.string().min(2, {
@@ -41,6 +42,7 @@ type FormData = z.infer<typeof FormSchema>;
 export default function LoginPage() {
     const dispatch = useDispatch();
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
 
     const { handleSubmit, register, reset, formState: { errors } } = useForm({
         resolver: zodResolver(FormSchema),
@@ -53,8 +55,9 @@ export default function LoginPage() {
     });
 
     const onSubmit = async (data: FormData) => {
+        setLoading(true);
         const { name, username, password, email } = data;
-        if (username.includes(" ") || username.includes("@")){
+        if (username.includes(" ") || username.includes("@")) {
             toast.error("Username must not contain spaces or @ symbol")
             return
         }
@@ -69,11 +72,12 @@ export default function LoginPage() {
                 token: res.payload.data.token,
                 redirect: true,
             });
+            reset();
         }
         else {
             toast.error(`${res.payload.message}`)
         }
-        reset();
+        setLoading(false);
     };
 
     return (
@@ -159,10 +163,10 @@ export default function LoginPage() {
                 <CardFooter>
                     <Button
                         type="submit"
+                        disabled={loading}
                         onClick={handleSubmit(onSubmit)}
-                        // disabled={true}
                         className="w-full">
-                        Sign Up
+                        {loading ? <Loader2 className="animate-spin" /> : "Sign Up"}
                     </Button>
                 </CardFooter>
             </Card>
