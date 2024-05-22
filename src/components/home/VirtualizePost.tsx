@@ -8,15 +8,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { loadMoreData, setFeedPosts } from '@/redux/slice/post-feed';
 import { Button } from '../ui/button';
-import Sm_Navigation from './navigation/sm-navigation';
-import Sm_Header from './navigation/sm-header';
 import ShowUpload from './alert/show-upload';
 
 const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
     const dispatch = useDispatch()
     const posts = useSelector((state: RootState) => state.postFeed.feed)
     const loadedRef = useRef(false)
-    const [size, setSize] = useState(0)
+    const [size, setSize] = useState(160)
 
     useEffect(() => {
         if (!loadedRef.current) {
@@ -26,31 +24,39 @@ const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
     }, [dispatch, data]);
 
     const loadMore = useCallback(() => {
-        const _posts: FeedPost[] = Array.from({ length: 10 }, (_, i) => {
-            const generate_img = `https://source.unsplash.com/random/600x900?sig=${i + size}`
-            return {
-                id: `${i + size}`,
-                caption: `Caption ${i + size}`,
-                fileUrl: [generate_img],
-                commentCount: 10,
-                likeCount: 10,
-                createdAt: new Date().toDateString(),
-                alreadyLiked: false,
-                authorData: {
-                    id: `user-${i + size}`,
-                    username: `user-${i + size}`,
-                    email: `user-${i} @gmail.com`,
-                    name: `User ${i + size}`,
-                    profilePicture: generate_img,
-                },
-                comments: [],
-                likes: [],
-                isDummy: true
-            }
-        })
-        setSize(size + 10)
-        dispatch(loadMoreData(_posts) as any)
+        return setTimeout(() => {
+            const _posts: FeedPost[] = Array.from({ length: 10 }, (_, i) => {
+                const generate_img = `https://source.unsplash.com/random/600x900?sig=${i + size}`
+                return {
+                    id: `${i + size}`,
+                    caption: `Caption ${i + size}`,
+                    fileUrl: [generate_img],
+                    commentCount: 10,
+                    likeCount: 10,
+                    createdAt: new Date().toDateString(),
+                    alreadyLiked: false,
+                    authorData: {
+                        id: `user-${i + size}`,
+                        username: `user-${i + size}`,
+                        email: `user-${i} @gmail.com`,
+                        name: `User ${i + size}`,
+                        profilePicture: generate_img,
+                    },
+                    comments: [],
+                    likes: [],
+                    isDummy: true
+                }
+            })
+            dispatch(loadMoreData(_posts) as any)
+            setSize(size + 10)
+        }, 500)
     }, [dispatch, size])
+
+    useEffect(() => {
+        const timeout = loadMore()
+        return () => clearTimeout(timeout)
+    }, [])
+
 
     return (
         <>
@@ -58,7 +64,7 @@ const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
                 className='h-full w-full'
                 data={posts.Posts}
                 endReached={loadMore}
-                increaseViewportBy={2000}
+                increaseViewportBy={3000}
                 itemContent={(index, post) => {
                     if (post?.isDummy) {
                         return <PostItemDummy feed={post} />

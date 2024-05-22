@@ -17,6 +17,7 @@ import { openModal } from '@/redux/slice/modal';
 import { FeedPost } from '@/types';
 import { createPostLikeApi, destroyPostLikeApi } from '@/redux/slice/post-feed/api-functions';
 import { useSession } from 'next-auth/react';
+import OptimizedImage from '@/components/sky/SkyImage';
 
 const PostItem = ({
   feed,
@@ -77,15 +78,13 @@ const PostItem = ({
           <CarouselContent>
             {feed.fileUrl.map((url, index) => (
               <CarouselItem key={index} className='flex flex-col m-auto'>
-                  <Image
+                <OptimizedImage
                   src={url}
                   width={500}
                   height={500}
                   alt="Picture of the author"
-                  quality={75}
-                  priority={true}
-                  fetchPriority="high"
-                  sizes="(min-width: 808px) 50vw, 100vw"
+                  fetchPriority={"high"}
+                  sizes={"(min-width: 808px) 50vw, 100vw"}
                   className={cn('h-auto w-full cursor-pointer userNotSelectImg bg-muted')}
                 />
               </CarouselItem>
@@ -146,7 +145,7 @@ const PostItem = ({
           }}>View all {feed.commentCount} comments</div>
       </div>
 
-    </div>
+    </div >
   )
 }
 
@@ -185,15 +184,13 @@ export const PostItemDummy = ({
           <CarouselContent>
             {feed.fileUrl.map((url, index) => (
               <CarouselItem key={index} className='flex flex-col m-auto'>
-                <Image
+                <OptimizedImage
                   src={url}
                   width={500}
                   height={500}
                   alt="Picture of the author"
-                  quality={75}
-                  priority={true}
-                  fetchPriority="high"
-                  sizes="(min-width: 808px) 50vw, 100vw"
+                  fetchPriority={"high"}
+                  sizes={"(min-width: 808px) 50vw, 100vw"}
                   className={cn('h-auto w-full cursor-pointer userNotSelectImg bg-muted')}
                 />
               </CarouselItem>

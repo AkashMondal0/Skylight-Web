@@ -6,6 +6,7 @@ import { Copy, Heart, MessageCircle, RotateCcw } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { FeedPost, networkImage_status } from '@/types'
 import { PostError } from '@/components/error/image.error'
+import OptimizedImage from '@/components/sky/SkyImage'
 
 export const ImageComponent = ({
     data
@@ -17,7 +18,7 @@ export const ImageComponent = ({
 
     return (
         <>
-            <figure className='relative transition-all duration-300 ease-in-out w-full h-full cursor-pointer' onClick={() => {
+            <div className='relative transition-all duration-300 ease-in-out w-full h-full cursor-pointer' onClick={() => {
                 if (!data?.isDummy) {
                     router.push(`/post/${data.id}`)
                 }
@@ -37,18 +38,13 @@ export const ImageComponent = ({
                         </div>}
                 </div>
                 {status === "error" ? <PostError /> :
-                    <Image
+                    <OptimizedImage
                         fetchPriority="high"
                         src={data.fileUrl[0]}
                         width={300}
                         height={300}
                         alt=""
-                        quality={75}
-                        priority={true}
                         sizes="(min-width: 808px) 20vw, 40vw"
-                        style={{
-                            objectFit: 'cover', // cover, contain, none
-                        }}
                         onError={(e) => {
                             setStatus("error")
                         }}
@@ -58,7 +54,7 @@ export const ImageComponent = ({
                         className={cn(`aspect-square hover:opacity-50 
                         w-full h-full object-cover userNotSelectImg 
                         bg-muted`, status === "loading" ? "animate-pulse" : "")} />}
-            </figure>
+            </div>
         </>
     )
 }

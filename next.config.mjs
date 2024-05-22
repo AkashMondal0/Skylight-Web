@@ -3,6 +3,7 @@ const nextConfig = {
     reactStrictMode: true,
     output: "standalone",
     images: {
+        unoptimized: true,
         formats: ["image/avif", "image/webp"],
         // domains: ["nngujjeumggzpchjxdpn.supabase.co"],
         remotePatterns: [

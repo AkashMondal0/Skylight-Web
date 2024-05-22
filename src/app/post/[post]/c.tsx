@@ -16,6 +16,7 @@ import { createPostCommentApi, createPostLikeApi, destroyPostLikeApi } from '@/r
 import { useSession } from 'next-auth/react'
 import { setSinglePost } from '@/redux/slice/post-feed'
 import { RootState } from '@/redux/store'
+import OptimizedImage from '@/components/sky/SkyImage'
 
 const PostPage = ({ data: ApiFeed }: {
     data: FeedPost
@@ -89,15 +90,13 @@ const PostPage = ({ data: ApiFeed }: {
                         <CarouselContent>
                             {data?.fileUrl?.map((url, index) => (
                                 <CarouselItem key={index}>
-                                    <Image
+                                    <OptimizedImage
                                         src={url}
                                         width={500}
                                         height={500}
                                         alt="Could't load image. Tap to retry"
-                                        quality={75}
                                         sizes="(min-width: 808px) 50vw, 100vw"
                                         fetchPriority="high"
-                                        priority={true}
                                         className='w-auto h-auto cursor-default border m-auto rounded-lg userNotSelectImg'
                                     />
                                 </CarouselItem>

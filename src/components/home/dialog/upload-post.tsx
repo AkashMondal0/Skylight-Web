@@ -198,7 +198,7 @@ const ShowSelectedImages = ({
 
     return (
         <div className="mx-auto">
-            <Carousel setApi={setApi} className="w-80 h-80">
+            <Carousel setApi={setApi} className="w-full max-w-80 h-80">
                 <CarouselContent>
                     {images.map((_, index) => (
                         <CarouselItem key={index}>
@@ -208,7 +208,7 @@ const ShowSelectedImages = ({
                                 sizes="(min-width: 808px) 50vw, 100vw"
                                 src={URL.createObjectURL(images[index])}
                                 alt={`Image ${index + 1}`}
-                                className="w-80 h-80 object-cover rounded-xl"
+                                className="w-auto h-auto object-cover rounded-xl"
                             />
                         </CarouselItem>
                     ))}
