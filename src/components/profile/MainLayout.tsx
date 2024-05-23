@@ -54,35 +54,28 @@ function Virtualized({
     const [size, setSize] = useState(250)
     const dispatch = useDispatch()
 
-    const loadMore = useCallback(() => {
-        return setTimeout(() => {
-            const _posts: FeedPost[] = Array.from({ length: 10 }, (_, i) => ({
-                id: `${i + size}`,
-                caption: `Caption ${i + size}`,
-                fileUrl: [`https://source.unsplash.com/random/300x300?sig=${i + size}`],
-                commentCount: 10,
-                likeCount: 10,
-                createdAt: new Date().toDateString(),
-                alreadyLiked: false,
-                authorData: {
-                    id: `user-${i + size}`,
-                    username: `user-${i + size}`,
-                    email: `user-${i} @gmail.com`,
-                    name: `User ${i + size}`,
-                },
-                comments: [],
-                likes: [],
-                isDummy: true
-            }))
-            dispatch(setLoadMoreProfilePosts(_posts))
-            setSize(size + 10)
-        }, 500)
-    }, [dispatch, size])
-
-    // useEffect(() => {
-    //     const timeout = loadMore()
-    //     return () => clearTimeout(timeout)
-    // }, [])
+    const loadMore = () => {
+        const _posts: FeedPost[] = Array.from({ length: 12 }, (_, i) => ({
+            id: `${i + size}`,
+            caption: `Caption ${i + size}`,
+            fileUrl: [`https://source.unsplash.com/random/300x300?sig=${i + size}`],
+            commentCount: 10,
+            likeCount: 10,
+            createdAt: new Date().toDateString(),
+            alreadyLiked: false,
+            authorData: {
+                id: `user-${i + size}`,
+                username: `user-${i + size}`,
+                email: `user-${i} @gmail.com`,
+                name: `User ${i + size}`,
+            },
+            comments: [],
+            likes: [],
+            isDummy: true
+        }))
+        dispatch(setLoadMoreProfilePosts(_posts))
+        setSize(size + 12)
+    }
 
     return (
         <>
@@ -90,7 +83,7 @@ function Virtualized({
                 style={{
                     height: '100%',
                 }}
-                // endReached={loadMore}
+                endReached={loadMore}
                 overscan={5000}
                 totalCount={user.posts.length}
                 components={{

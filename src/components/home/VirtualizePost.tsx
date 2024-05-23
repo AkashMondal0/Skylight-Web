@@ -1,6 +1,6 @@
 "use client";
 import { FeedPost } from '@/types';
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 import PostItem, { PostItemDummy } from './Card/PostCard';
 import StoriesPage from './StoriesPage';
@@ -23,40 +23,32 @@ const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
         }
     }, [dispatch, data]);
 
-    const loadMore = useCallback(() => {
-        return setTimeout(() => {
-            const _posts: FeedPost[] = Array.from({ length: 10 }, (_, i) => {
-                const generate_img = `https://source.unsplash.com/random/600x900?sig=${i + size}`
-                return {
-                    id: `${i + size}`,
-                    caption: `Caption ${i + size}`,
-                    fileUrl: [generate_img],
-                    commentCount: 10,
-                    likeCount: 10,
-                    createdAt: new Date().toDateString(),
-                    alreadyLiked: false,
-                    authorData: {
-                        id: `user-${i + size}`,
-                        username: `user-${i + size}`,
-                        email: `user-${i} @gmail.com`,
-                        name: `User ${i + size}`,
-                        profilePicture: generate_img,
-                    },
-                    comments: [],
-                    likes: [],
-                    isDummy: true
-                }
-            })
-            dispatch(loadMoreData(_posts) as any)
-            setSize(size + 10)
-        }, 500)
-    }, [dispatch, size])
-
-    // useEffect(() => {
-    //     const timeout = loadMore()
-    //     return () => clearTimeout(timeout)
-    // }, [])
-
+    const loadMore = () => {
+        const _posts: FeedPost[] = Array.from({ length: 10 }, (_, i) => {
+            const generate_img = `https://source.unsplash.com/random/600x900?sig=${i + size}`
+            return {
+                id: `${i + size}`,
+                caption: `Caption ${i + size}`,
+                fileUrl: [generate_img],
+                commentCount: 10,
+                likeCount: 10,
+                createdAt: new Date().toDateString(),
+                alreadyLiked: false,
+                authorData: {
+                    id: `user-${i + size}`,
+                    username: `user-${i + size}`,
+                    email: `user-${i} @gmail.com`,
+                    name: `User ${i + size}`,
+                    profilePicture: generate_img,
+                },
+                comments: [],
+                likes: [],
+                isDummy: true
+            }
+        })
+        dispatch(loadMoreData(_posts) as any)
+        setSize(size + 10)
+    }
 
     return (
         <>
