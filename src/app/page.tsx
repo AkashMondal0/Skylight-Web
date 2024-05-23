@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { configs } from '@/configs';;
-import { FeedPost } from '@/types';
+import { FeedPost, RestApiPayload } from '@/types';
 import VirtualizePost from '@/components/home/VirtualizePost';
 import { Suspense } from 'react';
 import SkeletonPostCard from '@/components/home/loading/PostCard';
@@ -10,7 +10,7 @@ import Sm_Navigation from '@/components/home/navigation/sm-navigation';
 import Sm_Header from '@/components/home/navigation/sm-header';
 import Lg_Navigation from '@/components/home/navigation/lg-navigation';
 
-async function getFeeds() {
+async function getUserFollowingPostsApi() {
   try {
     const response = await fetch(`${configs.appUrl}/api/v1/feed`, {
       headers: {
@@ -19,8 +19,12 @@ async function getFeeds() {
       },
       cache: "no-store"
     });
-    const data = await response.json();
-    return data.data;
+
+    const res = await response.json() as RestApiPayload<FeedPost[]>;
+    if (res.code === 0) {
+      throw new Error(res.message);
+    }
+    return res.data;
   } catch (error) {
     console.log(error)
     return notFound()
@@ -29,29 +33,24 @@ async function getFeeds() {
 
 
 async function Render() {
-  const data = await getFeeds() as FeedPost[];
+  const data = await getUserFollowingPostsApi()
   return <VirtualizePost data={data} />
 }
 
 export default async function Page() {
-  try {
-    return (
-      <>
-        <LikeViewModal />
-        <div className='w-full h-full flex'>
-          <Lg_Navigation />
-          <div className='w-full md:py-0 py-14'>
-            <Sm_Header />
-            <Suspense fallback={<SkeletonPostCard />}>
-              <Render />
-            </Suspense>
-            <Sm_Navigation />
-          </div>
+  return (
+    <>
+      <LikeViewModal />
+      <div className='w-full h-full flex'>
+        <Lg_Navigation />
+        <div className='w-full md:py-0 py-14'>
+          <Sm_Header />
+          <Suspense fallback={<SkeletonPostCard />}>
+            <Render />
+          </Suspense>
+          <Sm_Navigation />
         </div>
-      </>
-    )
-  } catch (error) {
-    console.log(error)
-    return notFound()
-  }
+      </div>
+    </>
+  )
 }

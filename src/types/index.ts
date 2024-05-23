@@ -121,7 +121,6 @@ interface Dm {
     createdAt: Date;
     updatedAt: Date;
 }
-
 interface Story {
     id: string;
     fileUrl: string[];
@@ -179,6 +178,13 @@ interface PayloadData {
     }
 }
 
+interface RestApiPayload<T> {
+    code: number,
+    message: string,
+    data: T,
+    status_code: number
+}
+
 type networkImage_status = "error" | "loading" | "success"
 export type {
     User,
@@ -198,5 +204,6 @@ export type {
     PayloadData,
     FeedPost,
     AuthorData,
-    networkImage_status
+    networkImage_status,
+    RestApiPayload
 }

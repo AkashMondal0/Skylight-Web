@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { configs } from '@/configs';
-import { User } from '@/types';
+import { RestApiPayload, User } from '@/types';
 import PageFollowing from "./c";
 import { SkeletonUserCardFollowPage } from "@/components/profile/loading/skeleton";
 import Sm_Navigation from "@/components/home/navigation/sm-navigation";
@@ -16,8 +16,11 @@ async function getProfileFollowing(id: string) {
             },
             cache: "no-store"
         });
-        const data = await response.json();
-        return data.data;
+        const res = await response.json() as RestApiPayload<User[]>;
+        if (res.code === 0) {
+            throw new Error(res.message);
+        }
+        return res.data;
     } catch (error) {
         console.log(error)
         return notFound()
