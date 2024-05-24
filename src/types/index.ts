@@ -186,6 +186,13 @@ interface RestApiPayload<T> {
 }
 
 type networkImage_status = "error" | "loading" | "success"
+
+type Assets = {
+    id?: string,
+    url?: string,
+    type?: 'image' | 'video' | 'audio' | "text"
+    caption?: string;
+}
 export type {
     User,
     Message,
@@ -205,5 +212,6 @@ export type {
     FeedPost,
     AuthorData,
     networkImage_status,
+    Assets,
     RestApiPayload
 }

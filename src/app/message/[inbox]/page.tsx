@@ -1,3 +1,6 @@
+import InBoxBody from '@/components/message/inbox/body';
+import InBoxFooter from '@/components/message/inbox/footer';
+import InBoxHeader from '@/components/message/inbox/header';
 import { configs } from '@/configs';
 import { RestApiPayload } from '@/types';
 import { cookies } from 'next/headers';
@@ -25,16 +28,12 @@ async function getProfileChatListApi(id: string) {
   }
 }
 
-
-
-const Page = () => {
-
+export default async function Page({ params }: { params: { inbox: string } }) {
   return (
-    <>
-      Your messages
-      <div>Send a message to start a chat.</div>
-    </>
+    <div>
+      <InBoxHeader/>
+      <InBoxBody/>
+      <InBoxFooter/>
+    </div>
   )
 }
-
-export default Page
