@@ -1,4 +1,5 @@
 import Lg_Navigation from '@/components/home/navigation/lg-navigation';
+import { UserCardListSkeleton } from '@/components/message/loading';
 import SidebarMessage from '@/components/message/Sidebar';
 import type { Metadata } from 'next'
 import { Suspense } from 'react';
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 }
 
 const RenderSidebar = async () => {
-  await new Promise((r) => setTimeout(r, 1000))
+  await new Promise((r) => setTimeout(r, 5000))
   // const data = await getProfileChatListApi('1')
 
   return <SidebarMessage />
@@ -24,7 +25,7 @@ export default function RootLayout({ children }: {
         <Lg_Navigation hideLabel />
         {/* md */}
         <div className='w-full min-h-full hidden md:flex'>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<UserCardListSkeleton/>}>
             <RenderSidebar />
           </Suspense>
           {children}

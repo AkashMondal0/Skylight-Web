@@ -18,7 +18,7 @@ const InBoxHeader: FC<HeaderProps> = ({
 
 
     return (
-        <div className={cn("w-full h-16 px-4 border-b")}>
+        <div className={cn("w-full h-[4.5rem] px-4 border-b")}>
             <div className="flex justify-between items-center h-full w-full">
                 {/* logo */}
                 <div className='flex items-center gap-2'>

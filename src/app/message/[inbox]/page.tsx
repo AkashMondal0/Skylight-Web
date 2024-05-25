@@ -1,11 +1,12 @@
 import InBoxBody from '@/components/message/inbox/body';
 import InBoxFooter from '@/components/message/inbox/footer';
 import InBoxHeader from '@/components/message/inbox/header';
+import { MessagePageSkeleton } from '@/components/message/loading';
 import { configs } from '@/configs';
 import { RestApiPayload } from '@/types';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
-import React from 'react'
+import React, { Suspense } from 'react'
 
 
 async function getProfileChatListApi(id: string) {
@@ -28,12 +29,24 @@ async function getProfileChatListApi(id: string) {
   }
 }
 
+const RenderComponent = async ({ params }: { params: { inbox: string } }) => {
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+
+  return (
+    <>
+      <InBoxHeader />
+      <InBoxBody />
+      <InBoxFooter />
+    </>
+  )
+}
+
 export default async function Page({ params }: { params: { inbox: string } }) {
   return (
     <div className='w-full flex flex-col'>
-      <InBoxHeader/>
-      <InBoxBody/>
-      <InBoxFooter/>
+      <Suspense fallback={<MessagePageSkeleton/>}>
+        <RenderComponent params={params} />
+      </Suspense>
     </div>
   )
 }

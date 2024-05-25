@@ -1,5 +1,4 @@
 "use client"
-import { AuthorData, Dm, Message } from '@/types';
 import { FC, useEffect, useRef, useState } from 'react';
 import MessagesCard from './message_card';
 import { Virtuoso } from 'react-virtuoso';
@@ -23,6 +22,7 @@ const InBoxBody: FC<InBoxBodyProps> = ({
             }
         }).reverse()
         setMessages([...message, ...messages])
+        //@ts-ignore
         prnt?.current?.scrollToIndex({ index: 20 })
     }
 
@@ -42,16 +42,16 @@ const InBoxBody: FC<InBoxBodyProps> = ({
                         // } else {
                         //     return <PostItem feed={post} />
                         // }
+                        // @ts-ignore
                         return <MessagesCard data={{
                             id: `${index}`,
                             content: `Hello ${index}`,
                         }} isProfile />
                     }}
                     components={{
-                        Header: () => <Button onClick={loadMore}>Load More</Button>,
-                        // Footer: () => <div className='flex justify-center'>
-                        //     <Button onClick={loadMore}>Load Dummy Posts</Button>
-                        // </div>
+                        Header: () => <div className='flex justify-center my-2'>
+                            <Button onClick={loadMore}>Load More</Button>
+                        </div>,
                     }} />
                 <style>{`html, body, #root { height: 100% }`}</style>
             </div >
