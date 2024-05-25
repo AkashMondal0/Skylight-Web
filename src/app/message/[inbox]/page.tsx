@@ -30,7 +30,7 @@ async function getProfileChatListApi(id: string) {
 
 export default async function Page({ params }: { params: { inbox: string } }) {
   return (
-    <div>
+    <div className='w-full flex flex-col'>
       <InBoxHeader/>
       <InBoxBody/>
       <InBoxFooter/>

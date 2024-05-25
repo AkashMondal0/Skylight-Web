@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client"
 import { FC, useCallback, useContext, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -26,8 +25,8 @@ const schema = z.object({
 })
 const InBoxFooter: FC<InBoxFooterProps> = ({
 }) => {
-    const dispatch = useDispatch()
-    const router = useRouter()
+    // const dispatch = useDispatch()
+    // const router = useRouter()
     const [stopTyping, setStopTyping] = useState(true)
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: zodResolver(schema),
@@ -128,14 +127,14 @@ const InBoxFooter: FC<InBoxFooterProps> = ({
 
     return (
         <>
-            <UploadFileComponent assets={assets} />
+            {/* <UploadFileComponent assets={assets} /> */}
             <div className={cn("w-full border-t items-center p-2 h-16 my-auto max-h-20 flex gap-2")}>
-                <DropDownMenu data={dropdownData}>
+                {/* <DropDownMenu data={dropdownData}>
                     <Button type="submit"
                         variant={"outline"} className='rounded-3xl'>
                         <Paperclip />
                     </Button>
-                </DropDownMenu>
+                </DropDownMenu> */}
                 <input
                     type="file"
                     accept="image/*, video/*, audio/*"
@@ -170,7 +169,7 @@ const InBoxFooter: FC<InBoxFooterProps> = ({
                         })}
                     />
                 </form>
-                <Button type="submit"
+                {/* <Button type="submit"
                     onClick={() => {
                         if (assets.length > 0) {
                             sendMessageHandle({ message: "" })
@@ -181,7 +180,7 @@ const InBoxFooter: FC<InBoxFooterProps> = ({
                     }}
                     variant={"outline"} className='rounded-3xl'>
                     <Send />
-                </Button>
+                </Button> */}
             </div>
         </>
     );

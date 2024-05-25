@@ -9,7 +9,7 @@ const ChatUserCard = ({
 }) => {
     return (
         <>
-            <div className='flex justify-between'>
+            <div className='flex justify-between my-4'>
                 <div className='flex space-x-2 items-center cursor-pointer' onClick={() => { }}>
                     <SkyAvatar url={user?.profilePicture || "/user.jpg"} className='h-[3.3rem] w-[3.3rem] mx-auto' />
                     <div>

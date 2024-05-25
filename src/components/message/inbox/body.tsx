@@ -1,8 +1,10 @@
-
 "use client"
-import { AuthorData, Dm } from '@/types';
-import { FC } from 'react';
+import { AuthorData, Dm, Message } from '@/types';
+import { FC, useEffect, useRef, useState } from 'react';
 import MessagesCard from './message_card';
+import { Virtuoso } from 'react-virtuoso';
+import { Button } from '@/components/ui/button';
+import React from 'react';
 
 
 interface InBoxBodyProps {
@@ -11,27 +13,48 @@ interface InBoxBodyProps {
 const InBoxBody: FC<InBoxBodyProps> = ({
 
 }) => {
+    const [messages, setMessages] = useState<any[]>([])
+    const prnt = useRef(null)
+    const loadMore = () => {
+        const message = Array.from({ length: 20 }, (_, i) => {
+            return {
+                id: `${i}`,
+                content: `Hello x${i}`,
+            }
+        }).reverse()
+        setMessages([...message, ...messages])
+        prnt?.current?.scrollToIndex({ index: 20 })
+    }
 
     return (
         <>
-            <div className='flex-1 overflow-y-auto px-2' id='style-1'>
-                {Array(10).fill(0).map((item, index) => {
-                    // const seen = item.seenBy.includes(profile._id) && item.seenBy.length >= 2
-                    // if (item.fileUrl) {
-                    //     return <FileComponent
-                    //         key={index}
-                    //         seen={seen}
-                    //         data={item}
-                    //         profile={profile} />
-                    // }
-                    return <MessagesCard
-                        key={index}
-                        data={item}
-                        seen={true}
-                        isProfile={true}
-                    />
-                })}
-            </div>
+            <div className='h-full w-full flex-1' id='style-1'>
+                <Virtuoso
+                    ref={prnt}
+                    className='h-full w-full'
+                    data={messages}
+                    // startReached={loadMore}
+                    initialTopMostItemIndex={messages.length - 1}
+                    increaseViewportBy={1000}
+                    itemContent={(index, post) => {
+                        // if (post?.isDummy) {
+                        //     return <PostItemDummy feed={post} />
+                        // } else {
+                        //     return <PostItem feed={post} />
+                        // }
+                        return <MessagesCard data={{
+                            id: `${index}`,
+                            content: `Hello ${index}`,
+                        }} isProfile />
+                    }}
+                    components={{
+                        Header: () => <Button onClick={loadMore}>Load More</Button>,
+                        // Footer: () => <div className='flex justify-center'>
+                        //     <Button onClick={loadMore}>Load Dummy Posts</Button>
+                        // </div>
+                    }} />
+                <style>{`html, body, #root { height: 100% }`}</style>
+            </div >
         </>
     );
 

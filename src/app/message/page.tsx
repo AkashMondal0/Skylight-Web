@@ -1,8 +1,9 @@
+import SidebarMessage from '@/components/message/Sidebar';
 import { configs } from '@/configs';
 import { RestApiPayload } from '@/types';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
-import React from 'react'
+import React, { Suspense } from 'react'
 
 
 async function getProfileChatListApi(id: string) {
@@ -25,14 +26,28 @@ async function getProfileChatListApi(id: string) {
   }
 }
 
+const RenderSidebar = async () => {
+  await new Promise((r) => setTimeout(r, 1000))
+  // const data = await getProfileChatListApi('1')
 
+  return <SidebarMessage />
+}
 
 const Page = () => {
 
   return (
     <>
-      Your messages
-      <div>Send a message to start a chat.</div>
+      {/* md */}
+      <div className='w-full h-full md:block hidden'>
+        Your messages
+        <div>Send a message to start a chat.</div>
+      </div>
+      {/* sm */}
+      <div className='w-full h-full flex md:hidden'>
+        <Suspense fallback={<div>Loading...</div>}>
+          <RenderSidebar />
+        </Suspense>
+      </div>
     </>
   )
 }

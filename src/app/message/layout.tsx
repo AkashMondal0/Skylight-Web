@@ -1,5 +1,4 @@
 import Lg_Navigation from '@/components/home/navigation/lg-navigation';
-import Sm_Navigation from '@/components/home/navigation/sm-navigation';
 import SidebarMessage from '@/components/message/Sidebar';
 import type { Metadata } from 'next'
 import { Suspense } from 'react';
@@ -23,16 +22,18 @@ export default function RootLayout({ children }: {
     <>
       <div className='flex'>
         <Lg_Navigation hideLabel />
-        <div className='w-full min-h-full flex'>
+        {/* md */}
+        <div className='w-full min-h-full hidden md:flex'>
           <Suspense fallback={<div>Loading...</div>}>
             <RenderSidebar />
           </Suspense>
-          <div className='w-full h-full md:block hidden'>
-            {children}
-          </div>
+          {children}
+        </div>
+        {/* sm */}
+        <div className='w-full min-h-dvh md:hidden flex'>
+          {children}
         </div>
       </div>
-      <Sm_Navigation />
     </>
   )
 }
