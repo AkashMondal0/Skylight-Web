@@ -6,6 +6,7 @@ import { Button } from '../ui/button';
 import ChatUserCard from './UserCard';
 import Link from 'next/link';
 import { Virtuoso } from 'react-virtuoso';
+import FindUserForChat from './modal/FindUserForChat';
 
 
 export default function SidebarMessage() {
@@ -25,10 +26,13 @@ export default function SidebarMessage() {
                         <div className="flex justify-between w-full items-center">
                             <CardTitle>Sky Chat</CardTitle>
                             <div>
-                                <Button variant={"ghost"} onClick={() => {
-                                }}>
-                                    <SquarePen className='w-6 h-6 cursor-pointer' />
-                                </Button>
+                                <FindUserForChat>
+                                    <Button variant={"ghost"} onClick={() => {
+                                    }}>
+                                        <SquarePen className='w-6 h-6 cursor-pointer' />
+                                    </Button>
+                                </FindUserForChat>
+
                             </div>
                         </div>
                         <div className="flex items-center justify-between py-3 w-full">

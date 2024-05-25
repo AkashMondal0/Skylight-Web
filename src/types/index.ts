@@ -46,7 +46,7 @@ interface User {
 interface Message {
     id: string;
     content: string;
-    fileUrl: string[];
+    fileUrl: Assets[];
     authorId: string;
     deleted: boolean;
     seenBy: string[];
@@ -57,7 +57,7 @@ interface Message {
 
 interface Conversation {
     id: string;
-    members: string[];
+    members: AuthorData[];
     isGroup: boolean;
     groupName: string | null;
     groupImage: string | null;
@@ -109,15 +109,6 @@ interface Notification {
     authorId: string;
     receiverId: string;
     postId: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-interface Dm {
-    id: string;
-    content: string;
-    authorId: string;
-    receiverId: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -202,7 +193,6 @@ export type {
     Like,
     Follower,
     Notification,
-    Dm,
     Story,
     StoryView,
     StoryReply,

@@ -1,7 +1,6 @@
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import { AuthorData, User } from "@/types"
 
-
 const ChatUserCard = ({
     user,
 }: {

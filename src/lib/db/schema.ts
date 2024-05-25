@@ -1,6 +1,6 @@
 import { relations, sql } from "drizzle-orm";
-import { pgTable, varchar, uuid, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
-
+import { pgTable, varchar, uuid, timestamp, boolean, jsonb, pgEnum } from "drizzle-orm/pg-core";
+export const roleEnum = pgEnum('Role', ['ADMIN', 'MEMBER']);
 export const users = pgTable('users', {
     id: uuid('id').primaryKey().defaultRandom(),
     username: varchar('username').notNull().unique(),
@@ -25,6 +25,14 @@ export const messages = pgTable('messages', {
     authorId: uuid('author_id').notNull().references(() => users.id),
     deleted: boolean('deleted').default(false),
     seenBy: varchar('seen_by').array(),
+    conversationId: uuid('conversation_id').notNull().references(() => conversations.id),
+    createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+});
+export const members = pgTable('messages', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id').notNull().references(() => users.id),
+    role: roleEnum('role').default('MEMBER').notNull(),
     conversationId: uuid('conversation_id').notNull().references(() => conversations.id),
     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
@@ -162,4 +170,10 @@ export const likesRelations = relations(likes, ({ one }) => ({
 export const followersRelations = relations(followers, ({ one }) => ({
     follower: one(users, { fields: [followers.followerUserId], references: [users.id] }),
     following: one(users, { fields: [followers.followingUserId], references: [users.id] }),
+}));
+
+export const conversationsRelations = relations(conversations, ({ one, many }) => ({
+    members: many(members),
+    messages: many(messages),
+    author: one(users, { fields: [conversations.authorId], references: [users.id] }),
 }));
