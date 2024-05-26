@@ -1,14 +1,19 @@
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import { AuthorData, User } from "@/types"
+import Link from "next/link"
 
 const ChatUserCard = ({
     user,
+    v
 }: {
     user: AuthorData | User | null
 }) => {
     return (
-        <>
-            <div className='flex justify-between my-4'>
+        <Link href={"/message/12345"}>
+            <div className='flex cursor-pointer
+            rounded-2xl justify-between p-3 
+            transition-colors duration-300 ease-in-out
+            hover:bg-accent hover:text-accent-foreground'>
                 <div className='flex space-x-2 items-center cursor-pointer' onClick={() => { }}>
                     <SkyAvatar url={user?.profilePicture || "/user.jpg"} className='h-[3.3rem] w-[3.3rem] mx-auto' />
                     <div>
@@ -22,9 +27,10 @@ const ChatUserCard = ({
                 </div>
                 <div className='flex items-center'>
                     {/* 09:00 AM */}
+                    {v}
                 </div>
             </div>
-        </>
+        </Link>
     )
 }
 

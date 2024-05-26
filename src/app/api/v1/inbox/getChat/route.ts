@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server"
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 import jwt from "jsonwebtoken"
 import { conversations, messages, users } from "@/lib/db/schema";
-import { arrayContains, desc, eq, exists, max, sql } from "drizzle-orm";
+import { arrayContains, desc, eq, exists, max, sql, inArray } from "drizzle-orm";
 export async function GET(request: NextRequest, response: NextResponse) {
   try {
 
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
 
     let verify_id = jwt.verify(token, secret) as { email: string, id: string } as any
 
-    verify_id = verify_id.id // logged user id
+    verify_id = "1a15377d-bee0-4f75-9cd1-5875df2b0ca4" || verify_id.id // logged user id
 
     if (!verify_id) {
       console.log("Invalid token")
@@ -32,10 +32,12 @@ export async function GET(request: NextRequest, response: NextResponse) {
     }
     // profile verification
 
+    // find all conversations and last messages
     const data = await db.select({
       id: conversations.id,
       authorId: conversations.authorId,
-      members: conversations.members,
+      members: sql`(array_remove(${conversations.members}, ${verify_id}))`,
+      // members: conversations.members,
       isGroup: conversations.isGroup,
       groupDescription: conversations.groupDescription,
       groupImage: conversations.groupImage,
@@ -46,19 +48,47 @@ export async function GET(request: NextRequest, response: NextResponse) {
       lastMessageContent: sql`(array_agg(${messages.content}))[array_length(array_agg(${messages.content}), 1)]`, // last message content
     })
       .from(conversations)
-      .where(arrayContains(conversations.members, ["1a15377d-bee0-4f75-9cd1-5875df2b0ca4"]))
+      .where(arrayContains(conversations.members, [verify_id]))
       .leftJoin(messages, eq(conversations.id, messages.conversationId))
-      .leftJoin(users, eq(conversations.authorId, users.id))
-      .groupBy(conversations.id, users.id)
+      .groupBy(conversations.id)
       .orderBy(desc(max(messages.createdAt)))
       .limit(10)
 
+    if (data.length <= 0) {
+      return NextResponse.json({
+        code: 1,
+        message: "Fetched Successfully No Item",
+        status_code: 200,
+        data: []
+      }, { status: 200 })
+    }
+
+    const findUserData = async (id: string[]) => {
+      return await db.select({
+        id: users.id,
+        email: users.email,
+        username: users.username,
+        profilePicture: users.profilePicture,
+      })
+        .from(users)
+        .where(inArray(users.id, id))
+    }
+
+    const finalData = await Promise.all(
+      data.map(async (item) => {
+        // console.log(item.members)
+        return {
+          ...item,
+          membersWithData: await findUserData(item.members as string[]),
+        }
+      })
+    )
 
     return NextResponse.json({
       code: 1,
       message: "Fetched Successfully",
       status_code: 200,
-      data: data
+      data: finalData
     }, { status: 200 })
 
   } catch (error) {
