@@ -51,7 +51,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
       content,
       authorId,
       conversationId,
-      createdAt: new Date(),
     }).returning()
 
     /// send notification to all members

@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server"
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 import jwt from "jsonwebtoken"
 import { conversations, messages, users } from "@/lib/db/schema";
-import { arrayContains, desc, eq } from "drizzle-orm";
+import { arrayContains, desc, eq, exists, max, sql } from "drizzle-orm";
 export async function GET(request: NextRequest, response: NextResponse) {
   try {
 
@@ -32,25 +32,31 @@ export async function GET(request: NextRequest, response: NextResponse) {
     }
     // profile verification
 
-    const data = await db.query.conversations.findMany({
-      where: arrayContains(conversations.members, ["1a15377d-bee0-4f75-9cd1-5875df2b0ca4"]),
-      orderBy: (conversations, { desc }) => desc(messages.createdAt),
-      limit: 10,
-      with: {
-        messages: {
-          limit: 1,
-          columns: {
-            content: true,
-            createdAt: true
-          },
-          orderBy: (messages, { desc }) => desc(messages.createdAt),
-        },
-      },
-    });
+    const data = await db.select({
+      id: conversations.id,
+      authorId: conversations.authorId,
+      members: conversations.members,
+      isGroup: conversations.isGroup,
+      groupDescription: conversations.groupDescription,
+      groupImage: conversations.groupImage,
+      groupName: conversations.groupName,
+      createdAt: conversations.createdAt,
+      updatedAt: conversations.updatedAt,
+      lastMessage: max(messages.createdAt),
+      lastMessageContent: sql`(array_agg(${messages.content}))[array_length(array_agg(${messages.content}), 1)]`, // last message content
+    })
+      .from(conversations)
+      .where(arrayContains(conversations.members, ["1a15377d-bee0-4f75-9cd1-5875df2b0ca4"]))
+      .leftJoin(messages, eq(conversations.id, messages.conversationId))
+      .leftJoin(users, eq(conversations.authorId, users.id))
+      .groupBy(conversations.id, users.id)
+      .orderBy(desc(max(messages.createdAt)))
+      .limit(10)
+
 
     return NextResponse.json({
       code: 1,
-      message: "post Fetched Successfully",
+      message: "Fetched Successfully",
       status_code: 200,
       data: data
     }, { status: 200 })

@@ -28,7 +28,7 @@ export const messages = pgTable('messages', {
     seenBy: varchar('seen_by').array(),
     conversationId: uuid('conversation_id').notNull().references(() => conversations.id),
     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
-    updatedAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp('updated_at').default(sql`CURRENT_TIMESTAMP`),
 });
 
 export const conversations = pgTable('conversations', {
@@ -85,15 +85,6 @@ export const followers = pgTable('followers', {
 //     authorId: uuid('author_id').notNull().references(() => users.id),
 //     receiverId: uuid('receiver_id').notNull().references(() => users.id),
 //     postId: uuid('post_id').notNull().references(() => posts.id),
-//     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
-//     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
-// })
-
-// export const dm = pgTable('dm', {
-//     id: uuid('id').primaryKey().defaultRandom(),
-//     content: varchar('content').notNull(),
-//     authorId: uuid('author_id').notNull().references(() => users.id),
-//     receiverId: uuid('receiver_id').notNull().references(() => users.id),
 //     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
 //     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
 // })
@@ -167,8 +158,10 @@ export const followersRelations = relations(followers, ({ one }) => ({
 
 export const conversationsRelations = relations(conversations, ({ many, one }) => ({
     messages: many(messages),
+    author: one(users, { fields: [conversations.authorId], references: [users.id] }),
 }));
 
 export const messagesRelations = relations(messages, ({ one }) => ({
     conversation: one(conversations, { fields: [messages.conversationId], references: [conversations.id] }),
+    author: one(users, { fields: [messages.authorId], references: [users.id] }),
 }));

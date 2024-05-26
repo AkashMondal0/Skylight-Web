@@ -65,6 +65,8 @@ interface Conversation {
     authorId: string;
     createdAt: Date;
     updatedAt: Date;
+    lastMessage: Date;
+    lastMessageContent: string
 }
 
 interface Post {
