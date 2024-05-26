@@ -1,14 +1,16 @@
 import db from "@/lib/db/drizzle"
+import {
+  conversations,
+  messages
+} from "@/lib/db/schema"
 import { NextRequest, NextResponse } from "next/server"
-import { count, eq, desc, exists, and, countDistinct } from "drizzle-orm";
-import { followers, posts, users, comments, likes } from '@/lib/db/schema';
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 import jwt from "jsonwebtoken"
 
-export async function GET(request: NextRequest, response: NextResponse) {
+export async function POST(request: NextRequest, response: NextResponse) {
   try {
 
-    const token = request.headers.get("authorization") ||  request.cookies.get("token-auth")?.value
+    const token = request.headers.get("authorization") || request.cookies.get("token-auth")?.value
     if (!token) {
       return Response.json({
         code: 0,
@@ -32,48 +34,31 @@ export async function GET(request: NextRequest, response: NextResponse) {
       }, { status: 404 })
     }
     // profile verification
-    const data = await db.select({
-      id: posts.id,
-      caption: posts.caption,
-      fileUrl: posts.fileUrl,
-      commentCount: count(eq(comments.postId, posts.id)),
-      likeCount: countDistinct(eq(likes.postId, posts.id)),
-      createdAt: posts.createdAt,
-      alreadyLiked: exists(db.select().from(likes).where(and(
-        eq(likes.authorId, verify_id),
-        eq(likes.postId, posts.id)
-      ))),
-      authorData: {
-        id: users.id,
-        username: users.username,
-        email: users.email,
-        profilePicture: users.profilePicture,
-      },
-    })
-      .from(followers)
-      .where(eq(followers.followerUserId, verify_id))
-      .limit(12)
-      .offset(0)
-      .orderBy(desc(posts.createdAt))
-      .leftJoin(posts, eq(followers.followingUserId, posts.authorId))
-      .leftJoin(comments, eq(posts.id, comments.postId))
-      .leftJoin(likes, eq(posts.id, likes.postId))
-      .leftJoin(users, eq(posts.authorId, users.id))
-      .groupBy(
-        posts.id,
-        users.id,
-        // posts.createdAt,
-        // followers.followingUserId,
-        // followers.createdAt,
-        // comments.postId,
-        // likes.postId,
-      )
 
-    // console.log(data,"data")
+    const {
+      authorId,
+      members,
+      content,
+      conversationId
+    } = await request.json() as {
+      authorId: string,
+      members: string[],
+      content: string,
+      conversationId: string
+    }
+
+    const data = await db.insert(messages).values({
+      content,
+      authorId,
+      conversationId,
+      createdAt: new Date(),
+    }).returning()
+
+    /// send notification to all members
 
     return NextResponse.json({
       code: 1,
-      message: "post Fetched Successfully",
+      message: "Create Successfully",
       status_code: 200,
       data: data
     }, { status: 200 })

@@ -2,7 +2,7 @@ import db from "@/lib/db/drizzle"
 import { NextRequest, NextResponse } from "next/server"
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 import jwt from "jsonwebtoken"
-import { conversations, members, messages } from "@/lib/db/schema";
+import { conversations, messages, users } from "@/lib/db/schema";
 import { arrayContains, desc, eq } from "drizzle-orm";
 export async function GET(request: NextRequest, response: NextResponse) {
   try {
@@ -32,26 +32,21 @@ export async function GET(request: NextRequest, response: NextResponse) {
     }
     // profile verification
 
-    // step 1
-    // const data = await db.select({
-
-    // }).from(conversations)
-    //   .where(arrayContains(conversations.members, verify_id))
-    //   .orderBy(desc(messages.createdAt))
-    //   .leftJoin(messages, eq(members.conversationId, messages.id))
-    //   .limit(12)
-
-    // step 
-    const data = await db.select({
-
-    }).from(members)
-      .where(eq(members.userId, verify_id))
-      .orderBy(desc(messages.createdAt))
-      .leftJoin(conversations, eq(members.conversationId, conversations.id))
-      .leftJoin(messages, eq(members.conversationId, messages.id))
-      .limit(12)
-
-
+    const data = await db.query.conversations.findMany({
+      where: arrayContains(conversations.members, ["1a15377d-bee0-4f75-9cd1-5875df2b0ca4"]),
+      orderBy: (conversations, { desc }) => desc(messages.createdAt),
+      limit: 10,
+      with: {
+        messages: {
+          limit: 1,
+          columns: {
+            content: true,
+            createdAt: true
+          },
+          orderBy: (messages, { desc }) => desc(messages.createdAt),
+        },
+      },
+    });
 
     return NextResponse.json({
       code: 1,

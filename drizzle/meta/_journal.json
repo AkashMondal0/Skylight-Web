@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1715373042482,
-      "tag": "0000_broken_midnight",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1715373570671,
-      "tag": "0001_acoustic_expediter",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1716671304255,
-      "tag": "0002_brainy_blazing_skull",
+      "when": 1716710840382,
+      "tag": "0000_tidy_red_wolf",
       "breakpoints": true
     }
   ]

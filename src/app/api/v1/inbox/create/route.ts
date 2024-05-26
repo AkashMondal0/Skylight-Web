@@ -37,14 +37,14 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
     const {
       authorId,
-      userIds,
+      members,
       isGroup
-    } = await request.json() as { authorId: string, userIds: string[], isGroup: boolean }
+    } = await request.json() as { authorId: string, members: string[], isGroup: boolean }
 
     const data = await db.insert(conversations).values({
-      authorId: authorId,
-      members: userIds,
-      isGroup: isGroup,
+      authorId,
+      members,
+      isGroup,
     }).returning()
 
     return NextResponse.json({
