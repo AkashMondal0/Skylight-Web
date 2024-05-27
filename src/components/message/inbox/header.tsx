@@ -1,21 +1,28 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 import { cn } from '@/lib/utils';
-import { FC, useMemo } from 'react';
-import { ChevronLeft, Gamepad2, Menu } from 'lucide-react';
+import { ChevronLeft, Gamepad2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import SkyAvatar from '@/components/sky/SkyAvatar';
+import { Conversation } from '@/types';
 
-interface HeaderProps {
-}
-
-const InBoxHeader: FC<HeaderProps> = ({
-  
-}) => {
+const InBoxHeader = ({ data }: { data: Conversation }) => {
     const router = useRouter()
-
-
+    const Conversation = data?.isGroup ? {
+        image: data?.groupImage,
+        name: data?.groupName,
+        message: data?.lastMessageContent,
+        time: data?.updatedAt,
+        id: data?.id
+    } : {
+        image: data?.membersData[0]?.profilePicture,
+        name: data?.membersData[0]?.username,
+        message: data?.lastMessageContent,
+        time: data?.updatedAt,
+        id: data?.membersData[0]?.id
+    }
+    if (!Conversation) return null
 
     return (
         <div className={cn("w-full h-[4.5rem] px-4 border-b")}>
@@ -31,11 +38,11 @@ const InBoxHeader: FC<HeaderProps> = ({
                     </div>
                     <>
                         <div className="flex items-center gap-2">
-                            <SkyAvatar className='h-12 w-12' url={'/user.jpg'} />
+                            <SkyAvatar className='h-12 w-12' url={Conversation.image || '/user.jpg'} />
                             <div className='w-40'>
                                 <div className="text-xl font-bold 
                                     text-gray-900 dark:text-gray-100 truncate">
-                                    User Name
+                                    {Conversation?.name || "group name"}
                                 </div>
                                 <div className="text-sm text-gray-500 dark:text-gray-400 ml-1">
                                     {/* {data?.typing ? "typing..." : userData?.status ? "online" : "offline"} */}

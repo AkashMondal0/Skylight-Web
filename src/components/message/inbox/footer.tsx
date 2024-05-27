@@ -17,14 +17,13 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Assets } from '@/types';
+import { Assets, Conversation } from '@/types';
 interface InBoxFooterProps {
 }
 const schema = z.object({
     message: z.string().min(1)
 })
-const InBoxFooter: FC<InBoxFooterProps> = ({
-}) => {
+const InBoxFooter =({ data }: { data: Conversation }) => {
     // const dispatch = useDispatch()
     // const router = useRouter()
     const [stopTyping, setStopTyping] = useState(true)

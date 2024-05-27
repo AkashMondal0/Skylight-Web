@@ -4,6 +4,7 @@ import authReducer from '@/redux/slice/auth'
 import usersReducer from '@/redux/slice/users'
 import postFeedReducer from '@/redux/slice/post-feed'
 import modalReducer from '@/redux/slice/modal'
+import conversationReducer from '@/redux/slice/conversation'
 
 export const store = configureStore({
   reducer: {
@@ -11,7 +12,8 @@ export const store = configureStore({
     auth: authReducer,
     users: usersReducer,
     postFeed: postFeedReducer,
-    modal: modalReducer
+    modal: modalReducer,
+    conversation: conversationReducer
   },
 })
 

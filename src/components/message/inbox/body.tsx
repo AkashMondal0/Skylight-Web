@@ -4,14 +4,12 @@ import MessagesCard from './message_card';
 import { Virtuoso } from 'react-virtuoso';
 import { Button } from '@/components/ui/button';
 import React from 'react';
+import { Conversation } from '@/types';
 
 
-interface InBoxBodyProps {
-}
 
-const InBoxBody: FC<InBoxBodyProps> = ({
+const InBoxBody =({ data }: { data: Conversation }) => {
 
-}) => {
     const [messages, setMessages] = useState<any[]>([])
     const prnt = useRef(null)
     const loadMore = () => {

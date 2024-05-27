@@ -5,6 +5,16 @@ import jwt from "jsonwebtoken"
 import { conversations, messages, users } from "@/lib/db/schema";
 import { arrayContains, eq, sql, inArray, and, or } from "drizzle-orm";
 
+const initialNull = {
+  id: null,
+  members: [],
+  isGroup: false,
+  groupDescription: null,
+  groupImage: null,
+  groupName: null,
+  messages: []
+}
+
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
 
@@ -18,11 +28,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       }, { status: 404 })
     }
 
-    // let verify_id = jwt.verify(token, secret) as { email: string, id: string } as any
+    let verify_id = jwt.verify(token, secret) as { email: string, id: string } as any
 
-    // verify_id = verify_id.id // logged user id
-
-    let verify_id = "3b904c98-6394-441c-bc46-d40217d436f8"
+    verify_id = verify_id.id // logged user id
 
     if (!verify_id) {
       console.log("Invalid token")
@@ -36,10 +44,13 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     // profile verification
 
     // find all conversations and last messages
-    const data = await db.select({
+    const ConversationData = await db.select({
       id: conversations.id,
       members: sql`(array_remove(${conversations.members}, ${verify_id}))`,
-      isGroup: conversations.isGroup
+      isGroup: conversations.isGroup,
+      groupDescription: conversations.groupDescription,
+      groupImage: conversations.groupImage,
+      groupName: conversations.groupName,
     })
       .from(conversations)
       .where(
@@ -56,52 +67,55 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
           and(
             eq(conversations.id, params.id),
             eq(conversations.isGroup, true),
-          )
+          ),
         )
       )
       .limit(1)
+
+    const findUserData = async () => {
+      try {
+        return await db.select({
+          id: users.id,
+          email: users.email,
+          username: users.username,
+          profilePicture: users.profilePicture,
+        })
+          .from(users)
+          .where(eq(users.id, params.id))
+      } catch (error) {
+        console.log(error)
+        return []
+      }
+    }
+
+    if (ConversationData.length <= 0) {
+      return NextResponse.json({
+        code: 1,
+        message: "Fetched Successfully No Item",
+        status_code: 200,
+        data: {
+          ...initialNull,
+          membersData: await findUserData()
+        }
+      }, { status: 200 })
+    }
 
     // const messagesData = await db.select().from(messages)
     // .where(eq(messages.conversationId, params.id))
     // .orderBy(desc(messages.createdAt))
     // .limit(15)
 
-
-    if (data.length <= 0) {
-      return NextResponse.json({
-        code: 1,
-        message: "Fetched Successfully No Item",
-        status_code: 200,
-        data: []
-      }, { status: 200 })
+    const data = {
+      ...ConversationData[0],
+      membersData: !ConversationData[0]?.isGroup ? await findUserData() : [],
+      messages: []
     }
-
-    const findUserData = async (id: string[]) => {
-      return await db.select({
-        id: users.id,
-        email: users.email,
-        username: users.username,
-        profilePicture: users.profilePicture,
-      })
-        .from(users)
-        .where(inArray(users.id, id))
-    }
-
-    const finalData = await Promise.all(
-      data.map(async (item) => {
-        // console.log(item.members)
-        return {
-          ...item,
-          membersWithData: await findUserData(item.members as string[]),
-        }
-      })
-    )
 
     return NextResponse.json({
       code: 1,
-      message: "Fetched Successfully x",
+      message: "Fetched Successfully",
       status_code: 200,
-      data: finalData
+      data: data
     }, { status: 200 })
 
   } catch (error) {

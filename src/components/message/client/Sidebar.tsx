@@ -1,18 +1,30 @@
 "use client";
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { CardTitle } from '../../ui/card';
 import { SquarePen } from 'lucide-react';
 import { Button } from '../../ui/button';
-import ChatUserCard from '../UserCard';
+import ConversationUserCard from '../UserCard';
 import { Virtuoso } from 'react-virtuoso';
 import FindUserForChat from '../modal/FindUserForChat';
 import { Conversation } from '@/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { setConversations } from '@/redux/slice/conversation';
 
 
 export default function SidebarMessageClient({ data }: { data: Conversation[] }) {
-    // console.log(data)
 
-    
+    const dispatch = useDispatch()
+    const _Conversation = useSelector((state: RootState) => state.conversation)
+    const loadedRef = useRef(false)
+
+    useEffect(() => {
+        if (!loadedRef.current) {
+            dispatch(setConversations(data) as any)
+            loadedRef.current = true;
+        }
+    }, [dispatch, data]);
+
     return (
         <div className={`
         flex flex-col md:border-r scroll-smooth duration-300 p-1 
@@ -20,10 +32,10 @@ export default function SidebarMessageClient({ data }: { data: Conversation[] })
             <Header />
             <Virtuoso
                 className='h-auto w-full hideScrollbar'
-                data={Array.from({ length: 12 })}
+                data={_Conversation.list}
                 increaseViewportBy={500}
-                itemContent={(i, post) => {
-                    return <ChatUserCard user={null} v={i} />
+                itemContent={(i, conversation) => {
+                    return <ConversationUserCard data={conversation}/>
                 }} />
         </div>
     )

@@ -3,13 +3,13 @@ import InBoxFooter from '@/components/message/inbox/footer';
 import InBoxHeader from '@/components/message/inbox/header';
 import { MessagePageSkeleton } from '@/components/message/loading';
 import { configs } from '@/configs';
-import { RestApiPayload } from '@/types';
+import { Conversation, RestApiPayload } from '@/types';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import React, { Suspense } from 'react'
 
 
-async function getProfileChatListApi(id: string) {
+async function getConversationMessageApi(id: string) {
   try {
     const response = await fetch(`${configs.appUrl}/api/v1/inbox/${id}`, {
       headers: {
@@ -18,7 +18,7 @@ async function getProfileChatListApi(id: string) {
       },
       cache: "no-store"
     });
-    const res = await response.json() as RestApiPayload<{}>;
+    const res = await response.json() as RestApiPayload<Conversation>;
     if (res.code === 0) {
       throw new Error(res.message);
     }
@@ -30,16 +30,12 @@ async function getProfileChatListApi(id: string) {
 }
 
 const RenderComponent = async ({ params }: { params: { inbox: string } }) => {
-  
-  // find user data
-  // find chat data
-  // const data = await getProfileChatListApi(params.inbox);
-
+  const data = await getConversationMessageApi(params.inbox);
   return (
     <>
-      <InBoxHeader />
-      <InBoxBody />
-      <InBoxFooter />
+      <InBoxHeader data={data}/>
+      <InBoxBody data={data}/>
+      <InBoxFooter data={data}/>
     </>
   )
 }
