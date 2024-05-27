@@ -1,19 +1,11 @@
 import Lg_Navigation from '@/components/home/navigation/lg-navigation';
-import { UserCardListSkeleton } from '@/components/message/loading';
-import SidebarMessage from '@/components/message/Sidebar';
+import ChatListSidebar from '@/components/message/chatList';
 import type { Metadata } from 'next'
-import { Suspense } from 'react';
+
 export const metadata: Metadata = {
   title: 'Message',
   description: `Sky Media is a social media platform that 
   allows users to share their thoughts and ideas with the world.`,
-}
-
-const RenderSidebar = async () => {
-  await new Promise((r) => setTimeout(r, 5000))
-  // const data = await getProfileChatListApi('1')
-
-  return <SidebarMessage />
 }
 
 export default function RootLayout({ children }: {
@@ -25,9 +17,7 @@ export default function RootLayout({ children }: {
         <Lg_Navigation hideLabel />
         {/* md */}
         <div className='w-full min-h-full hidden md:flex'>
-          <Suspense fallback={<UserCardListSkeleton/>}>
-            <RenderSidebar />
-          </Suspense>
+        <ChatListSidebar/>
           {children}
         </div>
         {/* sm */}

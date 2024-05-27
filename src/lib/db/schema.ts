@@ -39,6 +39,7 @@ export const conversations = pgTable('conversations', {
     groupImage: varchar('group_image'),
     groupDescription: varchar('group_description'),
     authorId: uuid('author_id').notNull(),
+    lastMessageContent: varchar('last_message_content'),
     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
 });

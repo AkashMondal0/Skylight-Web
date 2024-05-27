@@ -57,7 +57,7 @@ interface Message {
 
 interface Conversation {
     id: string;
-    members: AuthorData[];
+    members: string[];
     isGroup: boolean;
     groupName: string | null;
     groupImage: string | null;
@@ -65,7 +65,8 @@ interface Conversation {
     authorId: string;
     createdAt: Date;
     updatedAt: Date;
-    lastMessage: Date;
+    messages: Message[];
+    membersData: AuthorData[]
     lastMessageContent: string
 }
 

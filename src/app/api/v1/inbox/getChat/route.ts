@@ -2,8 +2,8 @@ import db from "@/lib/db/drizzle"
 import { NextRequest, NextResponse } from "next/server"
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 import jwt from "jsonwebtoken"
-import { conversations, messages, users } from "@/lib/db/schema";
-import { arrayContains, desc, eq, exists, max, sql, inArray } from "drizzle-orm";
+import { conversations, users } from "@/lib/db/schema";
+import { arrayContains, desc, sql, inArray } from "drizzle-orm";
 export async function GET(request: NextRequest, response: NextResponse) {
   try {
 
@@ -18,8 +18,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
     }
 
     let verify_id = jwt.verify(token, secret) as { email: string, id: string } as any
-
-    verify_id = "1a15377d-bee0-4f75-9cd1-5875df2b0ca4" || verify_id.id // logged user id
+    verify_id = verify_id.id
 
     if (!verify_id) {
       console.log("Invalid token")
@@ -44,8 +43,8 @@ export async function GET(request: NextRequest, response: NextResponse) {
     })
       .from(conversations)
       .where(arrayContains(conversations.members, [verify_id]))
-      .orderBy(desc(messages.updatedAt))
-      .limit(10)
+      .orderBy(desc(conversations.updatedAt))
+      .limit(15)
 
     if (data.length <= 0) {
       return NextResponse.json({
@@ -69,13 +68,17 @@ export async function GET(request: NextRequest, response: NextResponse) {
 
     const finalData = await Promise.all(
       data.map(async (item) => {
-        // console.log(item.members)
+
         return {
           ...item,
-          membersWithData: await findUserData(item.members as string[]),
+          membersData: !item.isGroup ? await findUserData(item.members as string[]) : [],
+          messages: []
         }
+
       })
     )
+
+    // console.log(finalData)
 
     return NextResponse.json({
       code: 1,
