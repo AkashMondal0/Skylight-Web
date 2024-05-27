@@ -5,15 +5,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { searchProfileApi } from '@/redux/slice/users/api-functions';
 import { RootState } from '@/redux/store';
 import { removeAllUserFormSearch } from '@/redux/slice/users';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { SkeletonUserCard } from '@/components/home/loading/UserCard';
-import { DrawerClose } from '@/components/ui/drawer';
 import SkyAvatar from '@/components/sky/SkyAvatar';
 import { User } from '@/types';
 import { useRouter } from 'next/navigation';
-import { MessagesSquare} from 'lucide-react';
+import { MessagesSquare } from 'lucide-react';
 
 
 
@@ -87,13 +86,13 @@ const UserCard = ({
         // dispatch(removeUserFormSearch(item.id) as any)
     }, []);
 
-    const navigateToProfile = useCallback(() => {
-    }, []);
+    const navigate = () => {
+        router.push(`/message/${item.id}`)
+    };
 
     return (
-        <div className='flex justify-between p-2 hover:bg-secondary hover:text-secondary-foreground rounded-2xl my-1 cursor-pointer'
-            onClick={navigateToProfile}>
-            <DrawerClose>
+        <DialogClose onClick={navigate} className='w-full h-full'>
+            <div className='flex justify-between p-2 hover:bg-secondary hover:text-secondary-foreground rounded-2xl my-1 cursor-pointer'>
                 <div className='flex space-x-2 items-center'>
                     <SkyAvatar className='h-12 w-12 mx-auto' url={item.profilePicture ? item.profilePicture : "/user.jpg"} />
                     <div className='ml-2 text-start'>
@@ -105,10 +104,10 @@ const UserCard = ({
                         </div>
                     </div>
                 </div>
-            </DrawerClose>
-            <div className='flex items-center cursor-pointer' onClick={removeUser}>
-                <MessagesSquare />
+                <div className='flex items-center cursor-pointer' onClick={removeUser}>
+                    <MessagesSquare />
+                </div>
             </div>
-        </div>
+        </DialogClose>
     )
 }

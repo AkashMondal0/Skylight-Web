@@ -35,6 +35,17 @@ export async function POST(request: NextRequest, response: NextResponse) {
     }
     // profile verification
 
+    // const newMessage = db.$with('new_message').as(
+    //   db.insert(messageTable)
+    //     .values({ content: "Hello!" })
+    //     .returning({ id: messageTable.id })
+    // );
+    
+    // const result = await db.with(newMessage)
+    //   .update(chatTable)
+    //   .set({ lastMessage: sql`(select id from ${newMessage})` })
+    //   .where(eq(chatTable.id, specificChatId)) // Replace specificChatId with the actual chat ID
+    //   .returning();
     const {
       authorId,
       members,

@@ -11,7 +11,7 @@ import React, { Suspense } from 'react'
 
 async function getProfileChatListApi(id: string) {
   try {
-    const response = await fetch(`${configs.appUrl}/api/v1/profile/${id}`, {
+    const response = await fetch(`${configs.appUrl}/api/v1/inbox/${id}`, {
       headers: {
         "Content-Type": "application/json",
         "authorization": `${cookies().get("token-auth")?.value}`
@@ -30,7 +30,10 @@ async function getProfileChatListApi(id: string) {
 }
 
 const RenderComponent = async ({ params }: { params: { inbox: string } }) => {
-  await new Promise((resolve) => setTimeout(resolve, 5000));
+  
+  // find user data
+  // find chat data
+  // const data = await getProfileChatListApi(params.inbox);
 
   return (
     <>
@@ -44,7 +47,7 @@ const RenderComponent = async ({ params }: { params: { inbox: string } }) => {
 export default async function Page({ params }: { params: { inbox: string } }) {
   return (
     <div className='w-full flex flex-col'>
-      <Suspense fallback={<MessagePageSkeleton/>}>
+      <Suspense fallback={<MessagePageSkeleton />}>
         <RenderComponent params={params} />
       </Suspense>
     </div>

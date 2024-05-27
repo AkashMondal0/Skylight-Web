@@ -1,14 +1,14 @@
 import db from "@/lib/db/drizzle"
 import { NextRequest, NextResponse } from "next/server"
-import { count, eq, desc, exists, and, countDistinct } from "drizzle-orm";
-import { followers, posts, users, comments, likes } from '@/lib/db/schema';
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 import jwt from "jsonwebtoken"
+import { conversations, messages, users } from "@/lib/db/schema";
+import { arrayContains, eq, sql, inArray, and, or } from "drizzle-orm";
 
-export async function GET(request: NextRequest, response: NextResponse) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
 
-    const token = request.headers.get("authorization") ||  request.cookies.get("token-auth")?.value
+    const token = request.headers.get("authorization") || request.cookies.get("token-auth")?.value
     if (!token) {
       return Response.json({
         code: 0,
@@ -18,9 +18,11 @@ export async function GET(request: NextRequest, response: NextResponse) {
       }, { status: 404 })
     }
 
-    let verify_id = jwt.verify(token, secret) as { email: string, id: string } as any
+    // let verify_id = jwt.verify(token, secret) as { email: string, id: string } as any
 
-    verify_id = verify_id.id // logged user id
+    // verify_id = verify_id.id // logged user id
+
+    let verify_id = "3b904c98-6394-441c-bc46-d40217d436f8"
 
     if (!verify_id) {
       console.log("Invalid token")
@@ -32,50 +34,74 @@ export async function GET(request: NextRequest, response: NextResponse) {
       }, { status: 404 })
     }
     // profile verification
-    const data = await db.select({
-      id: posts.id,
-      caption: posts.caption,
-      fileUrl: posts.fileUrl,
-      commentCount: count(eq(comments.postId, posts.id)),
-      likeCount: countDistinct(eq(likes.postId, posts.id)),
-      createdAt: posts.createdAt,
-      alreadyLiked: exists(db.select().from(likes).where(and(
-        eq(likes.authorId, verify_id),
-        eq(likes.postId, posts.id)
-      ))),
-      authorData: {
-        id: users.id,
-        username: users.username,
-        email: users.email,
-        profilePicture: users.profilePicture,
-      },
-    })
-      .from(followers)
-      .where(eq(followers.followerUserId, verify_id))
-      .limit(12)
-      .offset(0)
-      .orderBy(desc(posts.createdAt))
-      .leftJoin(posts, eq(followers.followingUserId, posts.authorId))
-      .leftJoin(comments, eq(posts.id, comments.postId))
-      .leftJoin(likes, eq(posts.id, likes.postId))
-      .leftJoin(users, eq(posts.authorId, users.id))
-      .groupBy(
-        posts.id,
-        users.id,
-        // posts.createdAt,
-        // followers.followingUserId,
-        // followers.createdAt,
-        // comments.postId,
-        // likes.postId,
-      )
 
-    // console.log(data,"data")
+    // find all conversations and last messages
+    const data = await db.select({
+      id: conversations.id,
+      members: sql`(array_remove(${conversations.members}, ${verify_id}))`,
+      isGroup: conversations.isGroup
+    })
+      .from(conversations)
+      .where(
+        or(
+          // if id is dm conversation
+          and(
+            arrayContains(conversations.members, [
+              verify_id,
+              params.id
+            ]),
+            eq(conversations.isGroup, false)
+          ),
+          // if id is group conversation
+          and(
+            eq(conversations.id, params.id),
+            eq(conversations.isGroup, true),
+          )
+        )
+      )
+      .limit(1)
+
+    // const messagesData = await db.select().from(messages)
+    // .where(eq(messages.conversationId, params.id))
+    // .orderBy(desc(messages.createdAt))
+    // .limit(15)
+
+
+    if (data.length <= 0) {
+      return NextResponse.json({
+        code: 1,
+        message: "Fetched Successfully No Item",
+        status_code: 200,
+        data: []
+      }, { status: 200 })
+    }
+
+    const findUserData = async (id: string[]) => {
+      return await db.select({
+        id: users.id,
+        email: users.email,
+        username: users.username,
+        profilePicture: users.profilePicture,
+      })
+        .from(users)
+        .where(inArray(users.id, id))
+    }
+
+    const finalData = await Promise.all(
+      data.map(async (item) => {
+        // console.log(item.members)
+        return {
+          ...item,
+          membersWithData: await findUserData(item.members as string[]),
+        }
+      })
+    )
 
     return NextResponse.json({
       code: 1,
-      message: "post Fetched Successfully",
+      message: "Fetched Successfully x",
       status_code: 200,
-      data: data
+      data: finalData
     }, { status: 200 })
 
   } catch (error) {

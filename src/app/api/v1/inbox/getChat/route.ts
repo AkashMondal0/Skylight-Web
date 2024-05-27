@@ -37,21 +37,14 @@ export async function GET(request: NextRequest, response: NextResponse) {
       id: conversations.id,
       authorId: conversations.authorId,
       members: sql`(array_remove(${conversations.members}, ${verify_id}))`,
-      // members: conversations.members,
       isGroup: conversations.isGroup,
       groupDescription: conversations.groupDescription,
       groupImage: conversations.groupImage,
       groupName: conversations.groupName,
-      createdAt: conversations.createdAt,
-      updatedAt: conversations.updatedAt,
-      lastMessage: max(messages.createdAt),
-      lastMessageContent: sql`(array_agg(${messages.content}))[array_length(array_agg(${messages.content}), 1)]`, // last message content
     })
       .from(conversations)
       .where(arrayContains(conversations.members, [verify_id]))
-      .leftJoin(messages, eq(conversations.id, messages.conversationId))
-      .groupBy(conversations.id)
-      .orderBy(desc(max(messages.createdAt)))
+      .orderBy(desc(messages.updatedAt))
       .limit(10)
 
     if (data.length <= 0) {
