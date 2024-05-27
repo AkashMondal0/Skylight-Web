@@ -6,6 +6,7 @@ import {
 import { NextRequest, NextResponse } from "next/server"
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 import jwt from "jsonwebtoken"
+import { and, arrayContains, eq } from "drizzle-orm";
 
 export async function POST(request: NextRequest, response: NextResponse) {
   try {
@@ -38,8 +39,66 @@ export async function POST(request: NextRequest, response: NextResponse) {
     const {
       authorId,
       members,
-      isGroup
-    } = await request.json() as { authorId: string, members: string[], isGroup: boolean }
+      isGroup,
+      groupDescription = "Group",
+      groupName = "Group",
+      groupImage = "/user.jpg"
+    } = await request.json() as { authorId: string, members: string[], isGroup: boolean, groupDescription: string, groupName: string, groupImage: string }
+
+    if (!authorId ?? !members ?? !isGroup) {
+      console.log(authorId, members, isGroup)
+      return NextResponse.json({
+        code: 0,
+        message: "Invalid request body",
+        status_code: 400,
+        data: {}
+      }, { status: 400 })
+    }
+
+    if (isGroup && members.length >= 2) {
+      const data = await db.insert(conversations).values({
+        authorId,
+        members,
+        isGroup,
+      }).returning()
+
+      return NextResponse.json({
+        code: 1,
+        message: "Create group Successfully",
+        status_code: 200,
+        data: data[0]
+      }, { status: 200 })
+    }
+
+    if (members.length !== 2) {
+      return NextResponse.json({
+        code: 0,
+        message: "Invalid members create dm with only 2 members",
+        status_code: 400,
+        data: {}
+      }, { status: 400 })
+    }
+
+    const findConversationData = await db.select({
+      id: conversations.id,
+    })
+      .from(conversations)
+      .where(
+        and(
+          arrayContains(conversations.members, members),
+          eq(conversations.isGroup, false)
+        )
+      )
+      .limit(1)
+
+    if (findConversationData.length > 0) {
+      return NextResponse.json({
+        code: 0,
+        message: "Conversation already exist",
+        status_code: 400,
+        data: {}
+      }, { status: 400 })
+    }
 
     const data = await db.insert(conversations).values({
       authorId,
@@ -49,9 +108,9 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
     return NextResponse.json({
       code: 1,
-      message: "Create Successfully",
+      message: "Create dm Successfully",
       status_code: 200,
-      data: data
+      data: data[0]
     }, { status: 200 })
 
   } catch (error) {

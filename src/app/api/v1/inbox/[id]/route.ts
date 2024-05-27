@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server"
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 import jwt from "jsonwebtoken"
 import { conversations, messages, users } from "@/lib/db/schema";
-import { arrayContains, eq, sql, inArray, and, or } from "drizzle-orm";
+import { arrayContains, eq, sql, desc, and, or } from "drizzle-orm";
 
 const initialNull = {
   id: null,
@@ -95,21 +95,24 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         status_code: 200,
         data: {
           ...initialNull,
+          members: [params.id],
           membersData: await findUserData()
         }
       }, { status: 200 })
     }
 
-    // const messagesData = await db.select().from(messages)
-    // .where(eq(messages.conversationId, params.id))
-    // .orderBy(desc(messages.createdAt))
-    // .limit(15)
+    const messagesData = await db.select().from(messages)
+      .where(eq(messages.conversationId, ConversationData[0].id))
+      .orderBy(desc(messages.createdAt))
+      .limit(15)
 
     const data = {
       ...ConversationData[0],
       membersData: !ConversationData[0]?.isGroup ? await findUserData() : [],
-      messages: []
+      messages: messagesData.reverse()
     }
+
+    // console.log(messagesData)
 
     return NextResponse.json({
       code: 1,

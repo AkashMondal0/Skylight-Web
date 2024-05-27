@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import { CheckCheck } from 'lucide-react';
-import { AuthorData, Dm } from '@/types';
+import { AuthorData, Message } from '@/types';
 interface MessagesCardProps {
-    data: Dm
+    data: Message
     profile?: AuthorData
     isReply?: boolean
-    seen: boolean
+    seen?: boolean
     isProfile?: boolean
 }
 const MessagesCard: FC<MessagesCardProps> = ({

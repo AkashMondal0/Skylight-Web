@@ -1,28 +1,29 @@
 "use client"
-import { FC, useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import MessagesCard from './message_card';
 import { Virtuoso } from 'react-virtuoso';
 import { Button } from '@/components/ui/button';
 import React from 'react';
 import { Conversation } from '@/types';
+import { useSession } from 'next-auth/react';
 
 
 
-const InBoxBody =({ data }: { data: Conversation }) => {
+const InBoxBody = ({ data }: { data: Conversation }) => {
 
-    const [messages, setMessages] = useState<any[]>([])
+    const session = useSession().data?.user
     const prnt = useRef(null)
-    const loadMore = () => {
-        const message = Array.from({ length: 20 }, (_, i) => {
-            return {
-                id: `${i}`,
-                content: `Hello x${i}`,
-            }
-        }).reverse()
-        setMessages([...message, ...messages])
-        //@ts-ignore
-        prnt?.current?.scrollToIndex({ index: 20 })
-    }
+    // const loadMore = () => {
+    //     const message = Array.from({ length: 20 }, (_, i) => {
+    //         return {
+    //             id: `${i}`,
+    //             content: `Hello x${i}`,
+    //         }
+    //     }).reverse()
+    //     setMessages([...message, ...messages])
+    //     //@ts-ignore
+    //     prnt?.current?.scrollToIndex({ index: 20 })
+    // }
 
     return (
         <>
@@ -30,25 +31,20 @@ const InBoxBody =({ data }: { data: Conversation }) => {
                 <Virtuoso
                     ref={prnt}
                     className='h-full w-full'
-                    data={messages}
+                    data={data.messages}
                     // startReached={loadMore}
-                    initialTopMostItemIndex={messages.length - 1}
+                    initialTopMostItemIndex={data.messages.length - 1}
                     increaseViewportBy={1000}
                     itemContent={(index, post) => {
-                        // if (post?.isDummy) {
-                        //     return <PostItemDummy feed={post} />
-                        // } else {
-                        //     return <PostItem feed={post} />
-                        // }
-                        // @ts-ignore
-                        return <MessagesCard data={{
-                            id: `${index}`,
-                            content: `Hello ${index}`,
-                        }} isProfile />
+                        return <MessagesCard
+                            data={data.messages[index]}
+                            seen={false}
+                            isProfile={session?.id === data.messages[index].authorId}
+                        />
                     }}
                     components={{
                         Header: () => <div className='flex justify-center my-2'>
-                            <Button onClick={loadMore}>Load More</Button>
+                            {/* <Button onClick={loadMore}>Load More</Button> */}
                         </div>,
                     }} />
                 <style>{`html, body, #root { height: 100% }`}</style>

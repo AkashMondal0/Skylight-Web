@@ -70,7 +70,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
       code: 1,
       message: "Create Successfully",
       status_code: 200,
-      data: data
+      data: data[0]
     }, { status: 200 })
 
   } catch (error) {

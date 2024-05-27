@@ -24,6 +24,7 @@ const InBoxHeader = ({ data }: { data: Conversation }) => {
     }
     if (!Conversation) return null
 
+
     return (
         <div className={cn("w-full h-[4.5rem] px-4 border-b")}>
             <div className="flex justify-between items-center h-full w-full">

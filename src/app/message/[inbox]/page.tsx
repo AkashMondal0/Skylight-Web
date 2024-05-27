@@ -1,6 +1,4 @@
-import InBoxBody from '@/components/message/inbox/body';
-import InBoxFooter from '@/components/message/inbox/footer';
-import InBoxHeader from '@/components/message/inbox/header';
+import MainClientPage from '@/components/message/inbox/main';
 import { MessagePageSkeleton } from '@/components/message/loading';
 import { configs } from '@/configs';
 import { Conversation, RestApiPayload } from '@/types';
@@ -31,13 +29,7 @@ async function getConversationMessageApi(id: string) {
 
 const RenderComponent = async ({ params }: { params: { inbox: string } }) => {
   const data = await getConversationMessageApi(params.inbox);
-  return (
-    <>
-      <InBoxHeader data={data}/>
-      <InBoxBody data={data}/>
-      <InBoxFooter data={data}/>
-    </>
-  )
+  return <MainClientPage data={data}/>
 }
 
 export default async function Page({ params }: { params: { inbox: string } }) {
