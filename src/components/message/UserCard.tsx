@@ -2,7 +2,10 @@
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import { Conversation } from "@/types"
 import { useRouter } from "next/navigation"
-
+const timeFormat = (time: string | Date | undefined) => {
+    if (!time) return ""
+    return new Date(time).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+}
 const ConversationUserCard = ({
     data
 }: {
@@ -23,7 +26,7 @@ const ConversationUserCard = ({
         id: data?.membersData[0]?.id
     }
     if (!Conversation) return null
-
+// console.log(Conversation)
     return (
         <>
             <div className='flex cursor-pointer
@@ -43,8 +46,7 @@ const ConversationUserCard = ({
                     </div>
                 </div>
                 <div className='flex items-center'>
-                    {/* 09:00 AM */}
-                    {/* {Conversation.time || "09:00 AM"} */}
+                    {timeFormat(Conversation.time || "")}
                 </div>
             </div>
         </>

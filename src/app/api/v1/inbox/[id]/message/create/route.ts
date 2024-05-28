@@ -6,6 +6,7 @@ import {
 import { NextRequest, NextResponse } from "next/server"
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 import jwt from "jsonwebtoken"
+import { eq, sql } from "drizzle-orm";
 
 export async function POST(request: NextRequest, response: NextResponse) {
   try {
@@ -35,17 +36,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
     }
     // profile verification
 
-    // const newMessage = db.$with('new_message').as(
-    //   db.insert(messageTable)
-    //     .values({ content: "Hello!" })
-    //     .returning({ id: messageTable.id })
-    // );
-    
-    // const result = await db.with(newMessage)
-    //   .update(chatTable)
-    //   .set({ lastMessage: sql`(select id from ${newMessage})` })
-    //   .where(eq(chatTable.id, specificChatId)) // Replace specificChatId with the actual chat ID
-    //   .returning();
     const {
       authorId,
       members,
@@ -63,6 +53,10 @@ export async function POST(request: NextRequest, response: NextResponse) {
       authorId,
       conversationId,
     }).returning()
+
+    await db.update(conversations)
+      .set({ lastMessageContent: content })
+      .where(eq(conversations.id, conversationId))
 
     /// send notification to all members
 

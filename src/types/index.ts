@@ -64,7 +64,7 @@ interface Conversation {
     groupDescription: string | null;
     authorId: string;
     createdAt: Date;
-    updatedAt: Date;
+    updatedAt: Date | string;
     messages: Message[];
     membersData: AuthorData[]
     lastMessageContent: string

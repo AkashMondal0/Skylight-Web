@@ -40,6 +40,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
       groupDescription: conversations.groupDescription,
       groupImage: conversations.groupImage,
       groupName: conversations.groupName,
+      updatedAt: conversations.updatedAt,
     })
       .from(conversations)
       .where(arrayContains(conversations.members, [verify_id]))

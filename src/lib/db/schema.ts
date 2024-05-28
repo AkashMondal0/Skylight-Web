@@ -41,7 +41,9 @@ export const conversations = pgTable('conversations', {
     authorId: uuid('author_id').notNull(),
     lastMessageContent: varchar('last_message_content'),
     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
-    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp('updated_at', { mode: 'date', precision: 3 })
+        .defaultNow()
+        .$onUpdate(() => new Date()),
 });
 
 export const posts = pgTable('posts', {

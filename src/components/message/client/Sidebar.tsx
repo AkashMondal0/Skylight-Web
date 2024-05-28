@@ -25,6 +25,8 @@ export default function SidebarMessageClient({ data }: { data: Conversation[] })
         }
     }, [dispatch, data]);
 
+    // console.log(_Conversation.list)
+
     return (
         <div className={`
         flex flex-col md:border-r scroll-smooth duration-300 p-1 

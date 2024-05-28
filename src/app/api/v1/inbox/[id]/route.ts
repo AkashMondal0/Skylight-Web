@@ -12,7 +12,8 @@ const initialNull = {
   groupDescription: null,
   groupImage: null,
   groupName: null,
-  messages: []
+  messages: [],
+  updatedAt: new Date()
 }
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
@@ -51,6 +52,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       groupDescription: conversations.groupDescription,
       groupImage: conversations.groupImage,
       groupName: conversations.groupName,
+      updatedAt: conversations.updatedAt,
     })
       .from(conversations)
       .where(

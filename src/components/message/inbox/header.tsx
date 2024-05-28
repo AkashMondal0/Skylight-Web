@@ -35,7 +35,7 @@ const InBoxHeader = ({ data }: { data: Conversation }) => {
                                 <Sidebar />
                             </SheetSide> */}
                         <ChevronLeft
-                            size={30} onClick={() => router.push('/')} />
+                            size={30} onClick={() => router.back()} />
                     </div>
                     <>
                         <div className="flex items-center gap-2">
