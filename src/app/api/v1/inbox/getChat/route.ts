@@ -41,6 +41,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
       groupImage: conversations.groupImage,
       groupName: conversations.groupName,
       updatedAt: conversations.updatedAt,
+      lastMessageContent: conversations.lastMessageContent,
     })
       .from(conversations)
       .where(arrayContains(conversations.members, [verify_id]))

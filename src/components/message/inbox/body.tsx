@@ -1,8 +1,7 @@
 "use client"
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import MessagesCard from './message_card';
 import { Virtuoso } from 'react-virtuoso';
-import { Button } from '@/components/ui/button';
 import React from 'react';
 import { Conversation } from '@/types';
 import { useSession } from 'next-auth/react';
@@ -12,29 +11,38 @@ import { useSession } from 'next-auth/react';
 const InBoxBody = ({ data }: { data: Conversation }) => {
 
     const session = useSession().data?.user
-    const prnt = useRef(null)
-    // const loadMore = () => {
-    //     const message = Array.from({ length: 20 }, (_, i) => {
-    //         return {
-    //             id: `${i}`,
-    //             content: `Hello x${i}`,
-    //         }
-    //     }).reverse()
-    //     setMessages([...message, ...messages])
-    //     //@ts-ignore
-    //     prnt?.current?.scrollToIndex({ index: 20 })
-    // }
+    const virtuosoMethods = useRef(null)
+
+    const loadMore = () => {
+        // @ts-ignore
+        virtuosoMethods.current?.scrollToIndex({ index: 15 })
+    }
+
+    useEffect(() => {
+        const timeOut = setTimeout(() => {
+            //@ts-ignore
+            virtuosoMethods?.current?.scrollToIndex({ index: data.messages.length - 1 })
+        }, 100)
+        return () => {
+            clearTimeout(timeOut)
+        }
+    }, [data.messages])
+
+    const onScroll = (e:any) => {
+        if (e.target.scrollTop < 100) {
+            loadMore()
+        }
+    }
 
     return (
         <>
             <div className='h-full w-full flex-1' id='style-1'>
                 <Virtuoso
-                    ref={prnt}
                     className='h-full w-full'
                     data={data.messages}
-                    // startReached={loadMore}
-                    initialTopMostItemIndex={data.messages.length - 1}
+                    ref={virtuosoMethods}
                     increaseViewportBy={1000}
+                    onScroll={onScroll}
                     itemContent={(index, post) => {
                         return <MessagesCard
                             data={data.messages[index]}
@@ -44,7 +52,7 @@ const InBoxBody = ({ data }: { data: Conversation }) => {
                     }}
                     components={{
                         Header: () => <div className='flex justify-center my-2'>
-                            {/* <Button onClick={loadMore}>Load More</Button> */}
+
                         </div>,
                     }} />
                 <style>{`html, body, #root { height: 100% }`}</style>
