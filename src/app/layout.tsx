@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/provider/ThemeProvider";
 import NextAuth_Provider from "@/provider/NextAuth_Provider";
 import { Toaster } from "@/components/ui/sonner"
 import Redux_Provider from "@/provider/Redux_Provider";
+import AppStart_Provider from "@/provider/AppStart_Provider";
 
 
 export const metadata: Metadata = {
@@ -29,8 +30,10 @@ export default function RootLayout({ children,
                 attribute="class"
                 defaultTheme="dark"
                 enableSystem>
-                {children}
-                {modal}
+                <AppStart_Provider>
+                  {children}
+                  {modal}
+                </AppStart_Provider>
               </ThemeProvider>
             </NextAuth_Provider>
           </Redux_Provider>

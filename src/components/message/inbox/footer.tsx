@@ -60,6 +60,8 @@ const InBoxFooter = ({ data }: { data: Conversation }) => {
                 conversationId: data.id,
                 authorId: session?.id,
                 content: _data.message,
+                isGroup: data.isGroup,
+                members: data.members.filter((member) => member !== session?.id),
                 // assets: assets
             }) as any)
         }

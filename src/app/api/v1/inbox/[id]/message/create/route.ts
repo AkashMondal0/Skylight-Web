@@ -7,6 +7,9 @@ import { NextRequest, NextResponse } from "next/server"
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 import jwt from "jsonwebtoken"
 import { eq, sql } from "drizzle-orm";
+import socket from "@/lib/socket-io";
+import redis from "@/lib/db/redis";
+import { json } from "stream/consumers";
 
 export async function POST(request: NextRequest, response: NextResponse) {
   try {
@@ -40,12 +43,14 @@ export async function POST(request: NextRequest, response: NextResponse) {
       authorId,
       members,
       content,
-      conversationId
+      conversationId,
+      isGroup
     } = await request.json() as {
       authorId: string,
       members: string[],
       content: string,
       conversationId: string
+      isGroup: boolean
     }
 
     const data = await db.insert(messages).values({
@@ -58,6 +63,20 @@ export async function POST(request: NextRequest, response: NextResponse) {
       .set({ lastMessageContent: content })
       .where(eq(conversations.id, conversationId))
 
+    if (isGroup) {
+      return NextResponse.json({
+        code: 1,
+        message: "Create Successfully",
+        status_code: 200,
+        data: data[0]
+      }, { status: 200 })
+    }
+
+    const receiverId = await redis.hget(`session:${members[0]}`, "socketId")
+
+    if (receiverId) {
+      redis.publish("message", JSON.stringify({ ...data[0], receiverId }));
+    }
     /// send notification to all members
 
     return NextResponse.json({

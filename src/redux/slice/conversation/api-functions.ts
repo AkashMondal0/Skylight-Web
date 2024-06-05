@@ -82,17 +82,23 @@ export const CreateMessageApi = createAsyncThunk(
     async ({
         conversationId,
         content,
-        authorId
+        authorId,
+        isGroup,
+        members
     }: {
         conversationId: string,
         content: string,
-        authorId: string
+        authorId: string,
+        isGroup: boolean,
+        members: string[]
     }) => {
         try {
             const res = await axios.post(`/api/v1/inbox/${conversationId}/message/create`, {
                 content,
                 authorId,
-                conversationId
+                conversationId,
+                isGroup,
+                members
             })
             return res.data?.data
         } catch (error: any) {
