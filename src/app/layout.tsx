@@ -30,10 +30,9 @@ export default function RootLayout({ children,
                 attribute="class"
                 defaultTheme="dark"
                 enableSystem>
-                <AppStart_Provider>
-                  {children}
-                  {modal}
-                </AppStart_Provider>
+                <AppStart_Provider />
+                {children}
+                {modal}
               </ThemeProvider>
             </NextAuth_Provider>
           </Redux_Provider>

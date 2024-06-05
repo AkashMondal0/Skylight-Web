@@ -4,7 +4,19 @@ import Redis from 'ioredis';
 
 const redisConnection = new Redis('rediss://default:AVNS_m2w_dcCClYxLc-zo9wR@redis-30cb8bb2-skysolo007.a.aivencloud.com:28574')
 
-const httpServer = createServer();
+const httpServer = createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('socket io and redis\n');
+});
+
+setInterval(() => {
+  fetch('https://socket-backend-latest-ju6v.onrender.com').then(() => {
+    console.log('Alive ⚓');
+  })
+    .catch((error) => {
+      console.log(error);
+    });
+}, 1000 * 60 * 5); // millisecond * second * minute //
 
 const socketIO = new Server(httpServer, {
   cors: {
@@ -14,6 +26,8 @@ const socketIO = new Server(httpServer, {
 
 // socket io
 socketIO.on('connection', (socket) => {
+
+  socket.emit('connection', socket.id)
 
   socket.on('user-connect', async (data: string) => {
     try {
@@ -41,6 +55,7 @@ sub.subscribe("message")
 sub.subscribe("message_seen")
 sub.subscribe("message_typing")
 sub.subscribe("update_Chat_List")
+sub.subscribe("test")
 
 // redis pub/sub
 sub.on("message", async (channel, message) => {
@@ -60,6 +75,9 @@ sub.on("message", async (channel, message) => {
     const data = JSON.parse(message)
     socketIO.to(data.receiverId).emit('connectionEventHandle', data);
     socketIO.to(data.senderId).emit('connectionEventHandle', data);
+  }
+  else if (channel === "test") {
+    socketIO.to(message).emit('test', message);
   }
 })
 

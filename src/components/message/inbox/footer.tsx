@@ -3,7 +3,7 @@
 import { useCallback, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Paperclip, Send } from 'lucide-react'
+import { Loader2Icon, Paperclip, Send } from 'lucide-react'
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form'
@@ -24,6 +24,7 @@ const InBoxFooter = ({ data }: { data: Conversation }) => {
     const router = useRouter()
     const [stopTyping, setStopTyping] = useState(true)
     const [assets, setAssets] = useState<Assets[]>([])
+    const [loading, setLoading] = useState(false)
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: zodResolver(schema),
@@ -44,6 +45,7 @@ const InBoxFooter = ({ data }: { data: Conversation }) => {
 
 
     const sendMessageHandle = async (_data: { message: string }) => {
+        setLoading(true)
         // create message with new conversation
         if (!session?.id) return
 
@@ -66,6 +68,8 @@ const InBoxFooter = ({ data }: { data: Conversation }) => {
             }) as any)
         }
         reset()
+        setAssets([])
+        setLoading(false)
     }
 
 
@@ -128,9 +132,10 @@ const InBoxFooter = ({ data }: { data: Conversation }) => {
                     />
                 </form>
                 <Button type="submit"
+                    disabled={loading}
                     onClick={handleSubmit(sendMessageHandle)}
                     variant={"outline"} className='rounded-3xl'>
-                    <Send />
+                    {loading ? <Loader2Icon className='animate-spin' /> : <Send />}
                 </Button>
             </div>
         </>

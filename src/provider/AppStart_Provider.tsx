@@ -5,11 +5,7 @@ import React, { useEffect } from 'react'
 
 
 
-const AppStart_Provider = ({
-    children
-}: {
-    children: React.ReactNode
-}) => {
+const AppStart_Provider = () => {
     const session = useSession().data?.user
     const loadedRef = React.useRef(false)
     // const [isClient, setIsClient] = React.useState(false)
@@ -41,10 +37,7 @@ const AppStart_Provider = ({
     // if (!isClient) return null
 
     return (
-        <>
-            {/* <>{socket.connected ? "true" : "false"}</> */}
-            {children}
-        </>
+        <></>
     )
 }
 
