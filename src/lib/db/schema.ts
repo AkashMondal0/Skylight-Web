@@ -1,5 +1,6 @@
 import { relations, sql } from "drizzle-orm";
-import { pgTable, varchar, uuid, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, varchar, uuid, timestamp, boolean, jsonb, pgEnum } from "drizzle-orm/pg-core";
+export const roleEnum = pgEnum('Role', ['ADMIN', 'MEMBER']);
 
 export const users = pgTable('users', {
     id: uuid('id').primaryKey().defaultRandom(),
@@ -27,7 +28,7 @@ export const messages = pgTable('messages', {
     seenBy: varchar('seen_by').array(),
     conversationId: uuid('conversation_id').notNull().references(() => conversations.id),
     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
-    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp('updated_at').default(sql`CURRENT_TIMESTAMP`),
 });
 
 export const conversations = pgTable('conversations', {
@@ -37,9 +38,12 @@ export const conversations = pgTable('conversations', {
     groupName: varchar('group_name'),
     groupImage: varchar('group_image'),
     groupDescription: varchar('group_description'),
-    authorId: uuid('author_id').notNull().references(() => users.id),
+    authorId: uuid('author_id').notNull(),
+    lastMessageContent: varchar('last_message_content'),
     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
-    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp('updated_at', { mode: 'date', precision: 3 })
+        .defaultNow()
+        .$onUpdate(() => new Date()),
 });
 
 export const posts = pgTable('posts', {
@@ -54,7 +58,7 @@ export const posts = pgTable('posts', {
 export const comments = pgTable('comments', {
     id: uuid('id').primaryKey().defaultRandom(),
     comment: varchar('comment').notNull(),
-    authorId: uuid('author_id').notNull().references(() => users.id),
+    authorId: uuid('author_id').notNull().references(() => users.id, { onDelete: 'no action', onUpdate: "no action" }),
     postId: uuid('post_id').notNull().references(() => posts.id),
     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
@@ -62,7 +66,7 @@ export const comments = pgTable('comments', {
 
 export const likes = pgTable('likes', {
     id: uuid('id').primaryKey().defaultRandom(),
-    authorId: uuid('author_id').notNull().references(() => users.id),
+    authorId: uuid('author_id').notNull().references(() => users.id, { onDelete: 'no action', onUpdate: "no action" }),
     postId: uuid('post_id').notNull().references(() => posts.id),
     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
@@ -70,74 +74,65 @@ export const likes = pgTable('likes', {
 
 export const followers = pgTable('followers', {
     id: uuid('id').primaryKey().defaultRandom(),
-    followerUserId: uuid('follower_id').notNull().references(() => users.id),
-    followingUserId: uuid('following_id').notNull().references(() => users.id),
-    followerUsername: varchar('follower_username').notNull().references(() => users.username),
-    followingUsername: varchar('following_username').notNull().references(() => users.username),
+    followerUserId: uuid('follower_id').notNull().references(() => users.id, { onDelete: 'no action', onUpdate: "no action" }),
+    followingUserId: uuid('following_id').notNull().references(() => users.id, { onDelete: 'no action', onUpdate: 'no action' }),
+    followerUsername: varchar('follower_username').notNull().references(() => users.username, { onDelete: 'no action', onUpdate: 'no action' }),
+    followingUsername: varchar('following_username').notNull().references(() => users.username, { onDelete: 'no action', onUpdate: 'no action' }),
     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
 })
 
-export const notifications = pgTable('notifications', {
-    id: uuid('id').primaryKey().defaultRandom(),
-    content: varchar('content').notNull(),
-    authorId: uuid('author_id').notNull().references(() => users.id),
-    receiverId: uuid('receiver_id').notNull().references(() => users.id),
-    postId: uuid('post_id').notNull().references(() => posts.id),
-    createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
-    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
-})
+// export const notifications = pgTable('notifications', {
+//     id: uuid('id').primaryKey().defaultRandom(),
+//     content: varchar('content').notNull(),
+//     authorId: uuid('author_id').notNull().references(() => users.id),
+//     receiverId: uuid('receiver_id').notNull().references(() => users.id),
+//     postId: uuid('post_id').notNull().references(() => posts.id),
+//     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
+//     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+// })
 
-export const dm = pgTable('dm', {
-    id: uuid('id').primaryKey().defaultRandom(),
-    content: varchar('content').notNull(),
-    authorId: uuid('author_id').notNull().references(() => users.id),
-    receiverId: uuid('receiver_id').notNull().references(() => users.id),
-    createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
-    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
-})
+// export const stories = pgTable('stories', {
+//     id: uuid('id').primaryKey().defaultRandom(),
+//     fileUrl: varchar('file_url').array(),
+//     caption: varchar('caption').notNull(),
+//     authorId: uuid('author_id').notNull().references(() => users.id),
+//     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
+//     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+// })
 
-export const stories = pgTable('stories', {
-    id: uuid('id').primaryKey().defaultRandom(),
-    fileUrl: varchar('file_url').array(),
-    caption: varchar('caption').notNull(),
-    authorId: uuid('author_id').notNull().references(() => users.id),
-    createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
-    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
-})
+// export const storyViews = pgTable('story_views', {
+//     id: uuid('id').primaryKey().defaultRandom(),
+//     viewerId: uuid('viewer_id').notNull().references(() => users.id),
+//     storyId: uuid('story_id').notNull().references(() => stories.id),
+//     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
+//     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+// })
 
-export const storyViews = pgTable('story_views', {
-    id: uuid('id').primaryKey().defaultRandom(),
-    viewerId: uuid('viewer_id').notNull().references(() => users.id),
-    storyId: uuid('story_id').notNull().references(() => stories.id),
-    createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
-    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
-})
+// export const storyReplies = pgTable('story_replies', {
+//     id: uuid('id').primaryKey().defaultRandom(),
+//     content: varchar('content').notNull(),
+//     authorId: uuid('author_id').notNull().references(() => users.id),
+//     storyId: uuid('story_id').notNull().references(() => stories.id),
+//     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
+//     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+// })
 
-export const storyReplies = pgTable('story_replies', {
-    id: uuid('id').primaryKey().defaultRandom(),
-    content: varchar('content').notNull(),
-    authorId: uuid('author_id').notNull().references(() => users.id),
-    storyId: uuid('story_id').notNull().references(() => stories.id),
-    createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
-    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
-})
+// export const storyLikes = pgTable('story_likes', {
+//     id: uuid('id').primaryKey().defaultRandom(),
+//     authorId: uuid('author_id').notNull().references(() => users.id),
+//     storyId: uuid('story_id').notNull().references(() => stories.id),
+//     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
+//     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+// })
 
-export const storyLikes = pgTable('story_likes', {
-    id: uuid('id').primaryKey().defaultRandom(),
-    authorId: uuid('author_id').notNull().references(() => users.id),
-    storyId: uuid('story_id').notNull().references(() => stories.id),
-    createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
-    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
-})
-
-export const savedPosts = pgTable('saved_posts', {
-    id: uuid('id').primaryKey().defaultRandom(),
-    postId: uuid('post_id').notNull().references(() => posts.id),
-    userId: uuid('user_id').notNull().references(() => users.id),
-    createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
-    updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
-})
+// export const savedPosts = pgTable('saved_posts', {
+//     id: uuid('id').primaryKey().defaultRandom(),
+//     postId: uuid('post_id').notNull().references(() => posts.id),
+//     userId: uuid('user_id').notNull().references(() => users.id),
+//     createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`),
+//     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
+// })
 
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -162,4 +157,14 @@ export const likesRelations = relations(likes, ({ one }) => ({
 export const followersRelations = relations(followers, ({ one }) => ({
     follower: one(users, { fields: [followers.followerUserId], references: [users.id] }),
     following: one(users, { fields: [followers.followingUserId], references: [users.id] }),
+}));
+
+export const conversationsRelations = relations(conversations, ({ many, one }) => ({
+    messages: many(messages),
+    author: one(users, { fields: [conversations.authorId], references: [users.id] }),
+}));
+
+export const messagesRelations = relations(messages, ({ one }) => ({
+    conversation: one(conversations, { fields: [messages.conversationId], references: [conversations.id] }),
+    author: one(users, { fields: [messages.authorId], references: [users.id] }),
 }));

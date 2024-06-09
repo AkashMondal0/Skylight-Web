@@ -46,7 +46,7 @@ interface User {
 interface Message {
     id: string;
     content: string;
-    fileUrl: string[];
+    fileUrl: Assets[];
     authorId: string;
     deleted: boolean;
     seenBy: string[];
@@ -64,7 +64,10 @@ interface Conversation {
     groupDescription: string | null;
     authorId: string;
     createdAt: Date;
-    updatedAt: Date;
+    updatedAt: Date | string;
+    messages: Message[];
+    membersData: AuthorData[]
+    lastMessageContent: string
 }
 
 interface Post {
@@ -112,16 +115,6 @@ interface Notification {
     createdAt: Date;
     updatedAt: Date;
 }
-
-interface Dm {
-    id: string;
-    content: string;
-    authorId: string;
-    receiverId: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
 interface Story {
     id: string;
     fileUrl: string[];
@@ -179,7 +172,21 @@ interface PayloadData {
     }
 }
 
+interface RestApiPayload<T> {
+    code: number,
+    message: string,
+    data: T,
+    status_code: number
+}
+
 type networkImage_status = "error" | "loading" | "success"
+
+type Assets = {
+    id?: string,
+    url?: string,
+    type?: 'image' | 'video' | 'audio' | "text"
+    caption?: string;
+}
 export type {
     User,
     Message,
@@ -189,7 +196,6 @@ export type {
     Like,
     Follower,
     Notification,
-    Dm,
     Story,
     StoryView,
     StoryReply,
@@ -198,5 +204,7 @@ export type {
     PayloadData,
     FeedPost,
     AuthorData,
-    networkImage_status
+    networkImage_status,
+    Assets,
+    RestApiPayload
 }

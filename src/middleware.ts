@@ -10,8 +10,5 @@ export default withAuth({
 export const config = {
   matcher: [
     "/",
-    '/api/profile/:path*',
-    '/api/account/data/:path*',
-    '/api/post/:path*',
   ]
 }

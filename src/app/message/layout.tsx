@@ -1,19 +1,30 @@
 import Lg_Navigation from '@/components/home/navigation/lg-navigation';
-import Sm_Navigation from '@/components/home/navigation/sm-navigation';
+import ChatListSidebar from '@/components/message/chatList';
 import type { Metadata } from 'next'
+
 export const metadata: Metadata = {
   title: 'Message',
   description: `Sky Media is a social media platform that 
   allows users to share their thoughts and ideas with the world.`,
 }
+
 export default function RootLayout({ children }: {
   children: React.ReactNode;
 }) {
   return (
     <>
-      <Lg_Navigation hideLabel/>
-      {children}
-      <Sm_Navigation/>
+      <div className='flex'>
+        <Lg_Navigation hideLabel />
+        {/* md */}
+        <div className='w-full min-h-full hidden md:flex'>
+        <ChatListSidebar/>
+          {children}
+        </div>
+        {/* sm */}
+        <div className='w-full min-h-dvh md:hidden flex'>
+          {children}
+        </div>
+      </div>
     </>
   )
 }

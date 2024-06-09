@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { configs } from '@/configs';
-import { User } from '@/types';
+import { RestApiPayload, User } from '@/types';
 import PageFollower from "./c";
 import { SkeletonUserCardFollowPage } from "@/components/profile/loading/skeleton";
 import Sm_Navigation from "@/components/home/navigation/sm-navigation";
@@ -16,8 +16,11 @@ async function getProfileFollower(id: string) {
             },
             cache: "no-store"
         });
-        const data = await response.json();
-        return data.data;
+        const res = await response.json() as RestApiPayload<User[]>;
+        if (res.code === 0) {
+            throw new Error(res.message);
+        }
+        return res.data;
     } catch (error) {
         console.log(error)
         return notFound()
@@ -26,7 +29,7 @@ async function getProfileFollower(id: string) {
 async function PageComponent({ params }: { params: { profile: string } }) {
     try {
         const data = await getProfileFollower(params.profile) as User[]
-        return <PageFollower data={data} profileId={params.profile}/>
+        return <PageFollower data={data} profileId={params.profile} />
     } catch (error) {
         console.log(error)
         return notFound()
@@ -35,9 +38,9 @@ async function PageComponent({ params }: { params: { profile: string } }) {
 
 export default async function Page({ params }: { params: { profile: string } }) {
     return <>
-        <Suspense fallback={<SkeletonUserCardFollowPage title="Followers"/>}>
+        <Suspense fallback={<SkeletonUserCardFollowPage title="Followers" />}>
             <PageComponent params={params} />
         </Suspense>
-        <Sm_Navigation/>
+        <Sm_Navigation />
     </>
 }

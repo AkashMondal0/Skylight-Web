@@ -1,3 +1,4 @@
+import redis from "@/lib/db/redis";
 import NextAuth from "next-auth"
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from "next-auth/providers/credentials"
@@ -33,7 +34,15 @@ const authOptions: NextAuthOptions = {
             secure: true,
             sameSite: "lax"
           })
-          return {...credentials, profilePicture:credentials.image} as any
+          const user = {
+            username: credentials.username,
+            name: credentials.name,
+            email: credentials.email,
+            profilePicture: credentials.image,
+            id: credentials.id
+          }
+          await redis.hset(`session:${credentials?.id}`, user);
+          return { ...credentials, profilePicture: credentials.image } as any
         } catch (error) {
           console.log("Error", error)
           return null
