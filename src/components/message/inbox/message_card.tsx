@@ -16,7 +16,7 @@ const MessagesCard: FC<MessagesCardProps> = ({
 }) => {
 
     return (
-        <div className={`my-3 flex items-center ${isProfile ? "justify-end" : " justify-start"}`}>
+        <div className={`my-3 flex items-center mx-2 ${isProfile ? "justify-end" : " justify-start"}`}>
             <div className={`px-4 py-1 rounded-2xl border 
              ${isProfile ? "bg-primary/90 text-primary-foreground ml-8" : "bg-accent mr-8"}`}>
                 <div className=''>

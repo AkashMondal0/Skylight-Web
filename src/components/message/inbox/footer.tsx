@@ -91,12 +91,12 @@ const InBoxFooter = ({ data }: { data: Conversation }) => {
         <>
             {/* <UploadFileComponent assets={assets} /> */}
             <div className={cn("w-full border-t items-center p-2 h-16 my-auto max-h-20 flex gap-2")}>
-                {/* <DropDownMenu data={dropdownData}>
+                {/* <DropDownMenu data={dropdownData}> */}
                     <Button type="submit"
                         variant={"outline"} className='rounded-3xl'>
                         <Paperclip />
                     </Button>
-                </DropDownMenu> */}
+                {/* </DropDownMenu> */}
                 <input
                     type="file"
                     accept="image/*, video/*, audio/*"

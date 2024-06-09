@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 import { cn } from '@/lib/utils';
-import { ChevronLeft, Gamepad2, PhoneCall } from 'lucide-react';
+import { ChevronLeft,Info } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import SkyAvatar from '@/components/sky/SkyAvatar';
@@ -47,7 +47,7 @@ const InBoxHeader = ({ data }: { data: Conversation }) => {
                                 </div>
                                 <div className="text-sm text-gray-500 dark:text-gray-400 ml-1">
                                     {/* {data?.typing ? "typing..." : userData?.status ? "online" : "offline"} */}
-                                    typing...
+                                    
                                 </div>
                             </div>
                         </div>
@@ -58,16 +58,16 @@ const InBoxHeader = ({ data }: { data: Conversation }) => {
                     {/*  */}
                     {/* mode toggle */}
                     <div className='md:hidden flex gap-2'>
-                        <Button variant="outline" size="icon">
-                            <PhoneCall size={30} />
+                        <Button variant="outline" size="icon" className='rounded-full'>
+                            <Info size={30} />
                         </Button>
                     </div>
                 </div>
                 {/*  */}
                 <div className='hidden md:flex gap-2'>
 
-                    <Button variant="outline" size="icon">
-                        <PhoneCall size={30} />
+                    <Button variant="outline" size="icon" className='rounded-full'>
+                        <Info size={30} />
                     </Button>
                 </div>
             </div>

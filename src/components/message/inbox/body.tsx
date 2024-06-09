@@ -51,9 +51,8 @@ const InBoxBody = ({ data }: { data: Conversation }) => {
                         />
                     }}
                     components={{
-                        Header: () => <div className='flex justify-center my-2'>
-
-                        </div>,
+                        Header: () => <div className='flex justify-center h-2'></div>,
+                        Footer: () => <div className='flex justify-center h-2'></div>
                     }} />
                 <style>{`html, body, #root { height: 100% }`}</style>
             </div >

@@ -7,7 +7,7 @@ export const searchProfileApi = createAsyncThunk(
     'searchProfileApi/get',
     async ({ keywords }: { keywords: string }, thunkApi) => {
         try {
-            const res = await axios.get(`/api/profile/search?keywords=${keywords}`)
+            const res = await axios.get(`/api/v1/explore/search?keywords=${keywords}`)
             return res.data.data
         } catch (error: any) {
             return thunkApi.rejectWithValue({

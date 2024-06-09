@@ -59,7 +59,6 @@ export const registerApi = createAsyncThunk(
     }
 );
 
-
 export const fetchProfileDataApi = createAsyncThunk(
     'fetchProfileDataApi/get',
     async (_, thunkApi) => {
@@ -141,7 +140,7 @@ export const UploadImagesFireBaseApi = createAsyncThunk(
             var photoUrls: string[] = []
             for (let index = 0; index < isFile.length; index++) {
                 thunkApi.dispatch(setShowUploadImage(isFile[index]) as any)
-                await new Promise(resolve => setTimeout(resolve, 2500));
+                await new Promise(resolve => setTimeout(resolve, 500));
                 const url = await uploadFirebaseFile(isFile[index],profileId)
                 if (url) {
                     photoUrls.push(url)
@@ -152,7 +151,7 @@ export const UploadImagesFireBaseApi = createAsyncThunk(
                     message: 'Upload file failed'
                 })
             }
-            const res = await axios.post(`/api/feeds/create`, {
+            const res = await axios.post(`/api/v1/feed/create`, {
                 caption: isCaption,
                 fileUrl: photoUrls,
                 authorId: profileId

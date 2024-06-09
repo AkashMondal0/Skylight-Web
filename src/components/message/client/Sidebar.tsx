@@ -49,8 +49,7 @@ const Header = () => {
             <CardTitle>Sky Chat</CardTitle>
             <div>
                 <FindUserForChat>
-                    <Button variant={"ghost"} onClick={() => {
-                    }}>
+                    <Button variant={"ghost"} className='rounded-2xl'>
                         <SquarePen className='w-6 h-6 cursor-pointer' />
                     </Button>
                 </FindUserForChat>
