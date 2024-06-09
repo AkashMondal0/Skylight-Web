@@ -1,6 +1,6 @@
-import { createServer } from 'http';
-import { Server } from 'socket.io';
-import Redis from 'ioredis';
+const { createServer } = require('http');
+const { Server } = require('socket.io');
+const Redis = require('ioredis');
 
 const redisConnection = new Redis('rediss://default:AVNS_m2w_dcCClYxLc-zo9wR@redis-30cb8bb2-skysolo007.a.aivencloud.com:28574')
 
@@ -9,14 +9,14 @@ const httpServer = createServer((req, res) => {
   res.end('socket io and redis\n');
 });
 
-setInterval(() => {
-  fetch('https://socket-backend-latest-ju6v.onrender.com').then(() => {
-    console.log('Alive ⚓');
-  })
-    .catch((error) => {
-      console.log(error);
-    });
-}, 1000 * 60 * 5); // millisecond * second * minute //
+// setInterval(() => {
+//   fetch('https://socket-backend-latest-ju6v.onrender.com').then(() => {
+//     console.log('Alive ⚓');
+//   })
+//     .catch((error) => {
+//       console.log(error);
+//     });
+// }, 1000 * 60 * 5); // millisecond * second * minute //
 
 const socketIO = new Server(httpServer, {
   cors: {
@@ -29,7 +29,7 @@ socketIO.on('connection', (socket) => {
 
   socket.emit('connection', socket.id)
 
-  socket.on('user-connect', async (data: string) => {
+  socket.on('user-connect', async (data) => {
     try {
       await redisConnection.set(`sockets:${socket.id}`, data.toString(), "EX", 60 * 60)
       await redisConnection.hmset(`session:${data}`, { socketId: socket.id, last_activity: true })
@@ -77,7 +77,9 @@ sub.on("message", async (channel, message) => {
     socketIO.to(data.senderId).emit('connectionEventHandle', data);
   }
   else if (channel === "test") {
-    socketIO.to(message).emit('test', message);
+    console.log("test function called🤞")
+    socketIO.to(message).emit('test-single', message);
+    socketIO.emit('test-all', message);
   }
 })
 

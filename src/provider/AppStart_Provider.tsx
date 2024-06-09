@@ -1,13 +1,17 @@
 'use client'
 import socket from '@/lib/socket-io'
+import { setMessage } from '@/redux/slice/conversation'
 import { useSession } from 'next-auth/react'
 import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { toast } from 'sonner'
 
 
 
 const AppStart_Provider = () => {
     const session = useSession().data?.user
     const loadedRef = React.useRef(false)
+    const dispatch = useDispatch()
     // const [isClient, setIsClient] = React.useState(false)
 
     useEffect(() => {
@@ -16,7 +20,7 @@ const AppStart_Provider = () => {
             loadedRef.current = true;
         }
         socket.on('messageEventHandle', (data) => {
-            console.log(data)
+            dispatch(setMessage(data))
         })
         socket.on('messageSeenEventHandle', () => { })
         socket.on('messageTypingEventHandle', () => { })

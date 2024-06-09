@@ -57,6 +57,20 @@ export const ConversationSlice = createSlice({
         setSelectConversation: (state, action: PayloadAction<Conversation>) => {
             state.selectedConversation.Conversation = action.payload
         },
+        // messages
+        setMessage: (state, action: PayloadAction<Message>) => {
+            const findConversationIndex = state.list.findIndex((conversation) => conversation.id === action.payload.conversationId)
+            if (findConversationIndex !== -1) {
+                state.list[findConversationIndex].messages.unshift(action.payload)
+                state.list[findConversationIndex].lastMessageContent = action.payload.content
+                state.list[findConversationIndex].updatedAt = action.payload.createdAt
+            }
+            if (state.selectedConversation.Conversation?.id === action.payload.conversationId) {
+                state.selectedConversation.Conversation.messages.push(action.payload)
+                state.selectedConversation.Conversation.lastMessageContent = action.payload.content
+                state.selectedConversation.Conversation.updatedAt = action.payload.createdAt
+            }
+        },
         loadMessages: (state, action: PayloadAction<Conversation>) => { },
         // fetch members data
         setMembersData: (state, action: PayloadAction<Conversation>) => { },
@@ -119,7 +133,8 @@ export const {
     setSelectConversation,
     loadMessages,
     setMembersData,
-    loadMoreMembersData
+    loadMoreMembersData,
+    setMessage
 } = ConversationSlice.actions
 
 export default ConversationSlice.reducer
