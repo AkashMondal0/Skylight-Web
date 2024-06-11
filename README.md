@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+![Logo](/public/next.svg)
 
-First, run the development server:
+
+# Sky Media
+
+This is a Social Media application Similar to Instagram, this social media app was made with Nextjs. It has features like status uploading, and share photo with your friends, and real-time conversation.
+
+## Tech Stack
+
+Nextjs, Redux toolkit, TailwindCSS, shadcn ui, react-hook-form, socket io, zod
+
+**Database:** Redis (pub/sub), Postgresql 
+
+
+## Features
+
+- User authentication with JWT and NextAuth.js
+- Real time chat using Socket io
+- Image uploading feature
+- Share Photo with your friends
+- Light/dark mode toggle
+- Application is fully responsive
+- Group real chat feature
+### Screenshot Home page
+
+![App Screenshot](/public/Screenshot3.png)
+<!-- ![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here) -->
+### Screenshot Profile Page
+
+![App Screenshot](/public/Screenshot1.png)
+<!-- ![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here) -->
+
+### Screenshot Chat Page
+
+![App Screenshot](/public/Screenshot2.png)
+<!-- ![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here) -->
+    
+## Run Locally
+
+Clone the project
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+  git clone https://github.com/AkashMondal0/sky-media.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Go to the project directory
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+  cd sky-media
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Install dependencies
 
-## Learn More
+```bash
+  npm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Environment Variables
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To run this project, you will need to add the following environment variables to your .env file
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+`NEXTAUTH_URL`
 
-## Deploy on Vercel
+`DATABASE_URL`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`REDIS_URL`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+`NEXTAUTH_SECRET`
+
+## Feedback
+
+If you have any feedback, please reach out to us at akash2003mondal@gmail.com

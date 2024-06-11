@@ -2,7 +2,7 @@ const { createServer } = require('http');
 const { Server } = require('socket.io');
 const Redis = require('ioredis');
 
-const redisConnection = new Redis('rediss://default:AVNS_m2w_dcCClYxLc-zo9wR@redis-30cb8bb2-skysolo007.a.aivencloud.com:28574')
+const redisConnection = new Redis(process.env.REDIS_URL)
 
 const httpServer = createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
