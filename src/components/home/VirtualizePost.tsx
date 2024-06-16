@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import { FeedPost } from '@/types';
+import { ApiPayloadData, FeedPost } from '@/types';
 import React, { useEffect, useRef, useState } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 import PostItem, { PostItemDummy } from './Card/PostCard';
@@ -9,19 +10,31 @@ import { RootState } from '@/redux/store';
 import { loadMoreData, setFeedPosts } from '@/redux/slice/post-feed';
 import { Button } from '../ui/button';
 import ShowUpload from './alert/show-upload';
+import SkeletonPostCard from './loading/PostCard';
+import { fetchProfileFeedApi } from '@/redux/slice/profile/api-functions';
+import { useRouter } from 'next/navigation';
 
-const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
+const VirtualizePost = () => {
     const dispatch = useDispatch()
     const posts = useSelector((state: RootState) => state.postFeed.feed)
     const loadedRef = useRef(false)
     const [size, setSize] = useState(160)
+    const router = useRouter()
 
     useEffect(() => {
-        if (!loadedRef.current) {
-            dispatch(setFeedPosts(data) as any)
-            loadedRef.current = true;
+        const fetchPosts = async () => {
+            if (!loadedRef.current) {
+                const res = await dispatch(fetchProfileFeedApi() as any) as { payload: ApiPayloadData<FeedPost[]> }
+                if (res.payload?.code === 0) {
+                    router.push('/not-found')
+                    return
+                }
+                loadedRef.current = true;
+            }
         }
-    }, [dispatch, data]);
+
+        fetchPosts()
+    }, [dispatch]);
 
     const loadMore = () => {
         const _posts: FeedPost[] = Array.from({ length: 10 }, (_, i) => {
@@ -48,6 +61,18 @@ const VirtualizePost = ({ data }: { data: FeedPost[] }) => {
         })
         dispatch(loadMoreData(_posts) as any)
         setSize(size + 10)
+    }
+
+    if (posts.loading) {
+        return <SkeletonPostCard />
+    }
+
+    if (posts.error) {
+        return <div>Error</div>
+    }
+
+    if(posts.Posts.length === 0) {
+        return <div>No Posts</div>
     }
 
     return (

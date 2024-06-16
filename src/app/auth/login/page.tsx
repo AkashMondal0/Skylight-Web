@@ -19,8 +19,8 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { PayloadData } from "@/types";
 import { useState } from "react";
+import { ApiPayloadData, User } from "@/types";
 
 const FormSchema = z.object({
     password: z.string().min(6, {
@@ -49,7 +49,7 @@ export default function LoginPage() {
     const onSubmit = async (data: FormData) => {
         setLoading(true);
         const { password, email } = data;
-        const res = await dispatch(loginApi({ email, password }) as any) as PayloadData
+        const res = await dispatch(loginApi({ email, password }) as any) as { payload: ApiPayloadData<User> } // <ApiPayloadData<User>
 
         if (res.payload?.code === 1) {
             signIn("credentials", {
@@ -58,7 +58,7 @@ export default function LoginPage() {
                 name: res.payload.data.name,
                 id: res.payload.data.id,
                 image: res.payload.data.profilePicture ?? "/user.jpg",
-                token: res.payload.data.token,
+                token: res.payload.data.accessToken,
                 redirect: true,
             });
             reset();

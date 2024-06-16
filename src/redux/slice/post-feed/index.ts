@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createPostCommentApi, createPostLikeApi, destroyPostCommentApi, destroyPostLikeApi, fetchPostLikesApi } from './api-functions'
 import { AuthorData, FeedPost, Comment } from '@/types'
+import { fetchProfileFeedApi } from '../profile/api-functions'
 
 export type TypeActionLike = 'feeds' | 'singleFeed'
 // Define a type for the slice state
@@ -65,6 +66,18 @@ export const PostFeedSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(fetchProfileFeedApi.pending, (state) => {
+                state.fetchLoading = true
+                state.fetchError = null
+            })
+            .addCase(fetchProfileFeedApi.fulfilled, (state, action:  PayloadAction<FeedPost[]>) => {
+                state.feed.Posts = action.payload
+                state.fetchLoading = false
+            })
+            .addCase(fetchProfileFeedApi.rejected, (state, action) => {
+                state.fetchLoading = false
+                state.fetchError = action.error.message || 'Failed to fetch likes'
+            })
             // fetch post likes
             .addCase(fetchPostLikesApi.pending, (state) => {
                 state.fetchLoading = true
@@ -135,7 +148,7 @@ export const PostFeedSlice = createSlice({
                 state.likeLoading = false
                 state.likeError = action.error.message || 'Failed to unlike post'
             })
-             // create comment
+            // create comment
             .addCase(createPostCommentApi.pending, (state) => {
                 state.commentLoading = true
             })
@@ -149,7 +162,7 @@ export const PostFeedSlice = createSlice({
             .addCase(createPostCommentApi.rejected, (state, action) => {
                 state.commentLoading = false
             })
-             // destroy comment
+            // destroy comment
             .addCase(destroyPostCommentApi.pending, (state) => {
                 state.commentLoading = true
             })
@@ -162,7 +175,7 @@ export const PostFeedSlice = createSlice({
             .addCase(destroyPostCommentApi.rejected, (state, action) => {
                 state.commentLoading = false
             })
-            
+
     },
 })
 

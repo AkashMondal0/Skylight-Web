@@ -20,27 +20,26 @@ interface AuthorData {
     profilePicture?: string
     isFollowing?: boolean,
 }
-
+enum Role {
+    User = 'user',
+    Admin = 'admin',
+}
 interface User {
     id: string;
     username: string;
+    name: string;
     email: string;
-    password: string;
+    password?: string; // Password might not be returned
     profilePicture: string | null;
     bio: string | null;
-    createdAt: Date;
-    updatedAt: Date;
-    followers: User[]
-    following: User[]
-    isVerified: false,
-    isPrivate: false,
-    postCount: number,
-    followersCount: number,
-    followingCount: number,
-    posts: FeedPost[]
-    isFollowing: boolean,
-    removeFollower: boolean,
-    name: string
+    createdAt?: Date | string | null | unknown;
+    updatedAt?: Date | string | null | unknown;
+    isVerified?: boolean | false | null;
+    isPrivate?: boolean | false | null;
+    accessToken?: string | null | unknown;
+    refreshToken?: string | null | unknown;
+    loggedDevice?: any[] | unknown;
+    roles?: Role[] | string[];
 }
 
 interface Message {
@@ -157,19 +156,11 @@ interface SavedPost {
     updatedAt: Date;
 }
 
-interface PayloadData {
-    payload: {
-        code: number,
-        message: string,
-        data: {
-            email: string,
-            username: string,
-            id: string,
-            profilePicture: string,
-            token: string,
-            name: string
-        }
-    }
+type code = 0 | 1
+interface ApiPayloadData<T> {
+    code: code,
+    message: string,
+    data: T,
 }
 
 interface RestApiPayload<T> {
@@ -201,7 +192,7 @@ export type {
     StoryReply,
     StoryLike,
     SavedPost,
-    PayloadData,
+    ApiPayloadData,
     FeedPost,
     AuthorData,
     networkImage_status,

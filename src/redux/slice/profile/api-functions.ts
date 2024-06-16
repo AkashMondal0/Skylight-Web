@@ -1,129 +1,8 @@
 import { configs } from "@/configs";
-import { supabaseClient } from "@/lib/supa-base";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { setShowUploadImage } from ".";
 import { uploadFirebaseFile } from "@/lib/firebase/upload-file";
-
-export const loginApi = createAsyncThunk(
-    'login/post',
-    async ({
-        email,
-        password,
-    }: {
-        email: string,
-        password: string,
-    }, thunkApi) => {
-        try {
-            const res = await axios.get(`/api/account/login`, {
-                headers: {
-                    email,
-                    password
-                }
-            })
-            return res.data
-        } catch (error: any) {
-            return thunkApi.rejectWithValue({
-                ...error?.response?.data,
-            })
-        }
-    }
-);
-
-export const registerApi = createAsyncThunk(
-    'register/post',
-    async ({
-        email,
-        password,
-        name,
-        username
-    }: {
-        email: string,
-        password: string,
-        name: string,
-        username: string
-    }, thunkApi) => {
-        try {
-            const res = await axios.post(`/api/account/register`, {
-                email: email,
-                password: password,
-                name: name,
-                username: username
-            })
-            return res.data
-        } catch (error: any) {
-            return thunkApi.rejectWithValue({
-                ...error?.response?.data,
-            })
-        }
-    }
-);
-
-export const fetchProfileDataApi = createAsyncThunk(
-    'fetchProfileDataApi/get',
-    async (_, thunkApi) => {
-        try {
-            const res = await axios.get(`/api/account/data`)
-            return res.data
-        } catch (error: any) {
-            return thunkApi.rejectWithValue({
-                ...error?.response?.data,
-            })
-        }
-    }
-);
-
-export const logoutApi = createAsyncThunk(
-    'logoutApi/post',
-    async (_, thunkApi) => {
-        try {
-            const res = await axios.get(`/api/account/logout`)
-            return res.data
-        } catch (error: any) {
-            return thunkApi.rejectWithValue({
-                ...error?.response?.data,
-            })
-        }
-    }
-);
-
-export const UploadImagesApi = createAsyncThunk(
-    'UploadImagesApi/post',
-    async ({
-        isFile,
-        isCaption,
-        profileId,
-    }: {
-        isFile: File[],
-        isCaption: string,
-        profileId: string
-    }, thunkApi) => {
-        try {
-            var photoUrls: string[] = []
-            for (let index = 0; index < isFile.length; index++) {
-                thunkApi.dispatch(setShowUploadImage(isFile[index]) as any)
-                const { data, error } = await supabaseClient.storage.from('skymedia').upload(`${profileId}/feedPosts/${isFile[index].name}`, isFile[index]);
-                await new Promise(resolve => setTimeout(resolve, 2500));
-
-                if (!error) {
-                    photoUrls.push(`${configs.supabase.bucketUrl}${data?.path}`)
-                } else {
-                    photoUrls.push(`${configs.supabase.bucketUrl}${profileId}/feedPosts/${isFile[index].name}`)
-                }
-            }
-            const res = await axios.post(`/api/feeds/create`, {
-                caption: isCaption,
-                fileUrl: photoUrls,
-                authorId: profileId
-            })
-            return res.data
-        } catch (error: any) {
-            return thunkApi.rejectWithValue({
-                ...error?.response?.data,
-            })
-        }
-    }
-);
 
 export const UploadImagesFireBaseApi = createAsyncThunk(
     'UploadImagesFireBaseApi/post',
@@ -141,7 +20,7 @@ export const UploadImagesFireBaseApi = createAsyncThunk(
             for (let index = 0; index < isFile.length; index++) {
                 thunkApi.dispatch(setShowUploadImage(isFile[index]) as any)
                 await new Promise(resolve => setTimeout(resolve, 500));
-                const url = await uploadFirebaseFile(isFile[index],profileId)
+                const url = await uploadFirebaseFile(isFile[index], profileId)
                 if (url) {
                     photoUrls.push(url)
                 }
@@ -161,6 +40,122 @@ export const UploadImagesFireBaseApi = createAsyncThunk(
             return thunkApi.rejectWithValue({
                 ...error?.response?.data,
             })
+        }
+    }
+);
+
+const ErrorFunction = (error: any) => {
+    if (axios.isAxiosError(error)) {
+        return {
+            data: null,
+            message: error.response?.data.message,
+            code: 0
+        }
+    } else {
+        return {
+            data: null,
+            message: "An error occurred. Please try again later.",
+            code: 0
+        }
+    }
+}
+
+export const loginApi = createAsyncThunk(
+    'login/post',
+    async ({
+        email,
+        password,
+    }: {
+        email: string,
+        password: string,
+    }, thunkApi) => {
+        try {
+            const res = await axios.post(`${configs.serverApi.baseUrl}/v1/auth/login`, {
+                email,
+                password
+            })
+            return {
+                data: res.data,
+                message: "Login successful",
+                code: 1
+            }
+        } catch (error: any) {
+            return ErrorFunction(error)
+        }
+    }
+);
+
+export const registerApi = createAsyncThunk(
+    'register/post',
+    async ({
+        email,
+        password,
+        name,
+        username
+    }: {
+        email: string,
+        password: string,
+        name: string,
+        username: string
+    }, thunkApi) => {
+        try {
+            const res = await axios.post(`${configs.serverApi.baseUrl}/v1/auth/register`, {
+                email: email,
+                password: password,
+                name: name,
+                username: username
+            })
+            return {
+                data: res.data,
+                message: "Register successful",
+                code: 1
+            }
+        } catch (error: any) {
+            return ErrorFunction(error)
+        }
+    }
+);
+
+export const fetchProfileDataApi = createAsyncThunk(
+    'fetchProfileDataApi/get',
+    async (_, thunkApi) => {
+        try {
+            const res = await axios.get(`${configs.serverApi.baseUrl}/v1/auth/session`)
+            return {
+                data: res.data,
+                message: "Fetch profile successful",
+                code: 1
+            }
+        } catch (error: any) {
+            return ErrorFunction(error)
+        }
+    }
+);
+
+export const logoutApi = createAsyncThunk(
+    'logoutApi/post',
+    async (_, thunkApi) => {
+        try {
+            const res = await axios.get(`/api/account/logout`)
+            return res.data
+        } catch (error: any) {
+            return ErrorFunction(error)
+        }
+    }
+);
+
+export const fetchProfileFeedApi = createAsyncThunk(
+    'fetchProfileFeedApi/get',
+    async (_, thunkApi) => {
+        try {
+            const res = await axios.get(`${configs.serverApi.baseUrl}/v1/post/feed`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+            return  res.data
+        } catch (error: any) {
+            return ErrorFunction(error)
         }
     }
 );
