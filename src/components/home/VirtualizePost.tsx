@@ -25,11 +25,13 @@ const VirtualizePost = () => {
         const fetchPosts = async () => {
             if (!loadedRef.current) {
                 const res = await dispatch(fetchProfileFeedApi() as any) as { payload: ApiPayloadData<FeedPost[]> }
-                if (res.payload?.code === 0) {
-                    router.push('/not-found')
-                    return
-                }
-                loadedRef.current = true;
+                
+                console.log(res.payload)
+                // if (res.payload?.code === 0) {
+                //     router.push('/not-found')
+                //     return
+                // }
+                // loadedRef.current = true;
             }
         }
 

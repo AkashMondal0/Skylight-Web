@@ -1,6 +1,6 @@
-import Redis from 'ioredis';
-import { redisUrl } from '../../../keys';
+// import Redis from 'ioredis';
+// import { redisUrl } from '../../../keys';
 
-const redis = new Redis(redisUrl);
+// const redis = null || new Redis(redisUrl);
 
-export default redis;
+// export default redis;

@@ -3,6 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import { setShowUploadImage } from ".";
 import { uploadFirebaseFile } from "@/lib/firebase/upload-file";
+import { graphqlQuery } from "../lib/graphqlQuery";
 
 export const UploadImagesFireBaseApi = createAsyncThunk(
     'UploadImagesFireBaseApi/post',
@@ -148,12 +149,42 @@ export const fetchProfileFeedApi = createAsyncThunk(
     'fetchProfileFeedApi/get',
     async (_, thunkApi) => {
         try {
-            const res = await axios.get(`${configs.serverApi.baseUrl}/v1/post/feed`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
+            let query = `query ProfileView($username: String!) {
+                profileView(username: $username) {
+                  id
+                  username
+                  email
+                  name
+                  profilePicture
+                  postCount
+                  followerCount
+                  followingCount
+                  friendship {
+                    followed_by
+                    following
+                  }
+                  top_followers {
+                    id
+                    email
+                    username
+                    profilePicture
+                  }
                 }
+              }`
+
+            const res = await graphqlQuery({
+                url: `localhost:5000/graphql`,
+                query: query,
+                withCredentials: true,
+                variables: { username: "olivia" },
+                BearerToken: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFrYXNoIiwiaWQiOiIyNTlmOTgzNy0xNTE0LTQxODMtOTE1Ny1iYzFmMWY1MDRmMGUiLCJlbWFpbCI6ImFrYXNoQGdtYWlsLmNvbSIsIm5hbWUiOiJha2FzaCIsInByb2ZpbGVQaWN0dXJlIjpudWxsLCJjcmVhdGVkQXQiOiIyMDI0LTA2LTE5VDIwOjU1OjM2LjM2MFoiLCJyb2xlcyI6WyJ1c2VyIl0sImlhdCI6MTcxODgzNzE2NiwiZXhwIjoxNzIxNDI5MTY2fQ.GqcG7DWkrnvGhl_3NnotrjaONE8jHAoetJVSkHsBOnc`
             })
-            return  res.data
+
+            return {
+                data: res.data.data,
+                message: "Fetch profile feed successful",
+                code: 1
+            }
         } catch (error: any) {
             return ErrorFunction(error)
         }
