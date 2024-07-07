@@ -18,7 +18,7 @@ const FollowAndUnFollowButton = ({
     user: User
     isFollowing?: boolean
 }) => {
-    const loading = useSelector((state: RootState) => state.users.profileData.handleFollow.loading)
+    const loading = false
     const router = useRouter()
     const dispatch = useDispatch()
     const session = useSession().data?.user

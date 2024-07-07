@@ -26,7 +26,7 @@ const authOptions: NextAuthOptions = {
         try {
           if (!credentials?.token) return null
           cookies().set({
-            name: 'token-auth',
+            name: 'auth-session-token',
             value: credentials?.token,
             httpOnly: true,
             path: '/',

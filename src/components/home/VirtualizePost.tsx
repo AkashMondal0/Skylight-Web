@@ -1,42 +1,34 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import { ApiPayloadData, FeedPost } from '@/types';
+import { FeedPost } from '@/types';
 import React, { useEffect, useRef, useState } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 import PostItem, { PostItemDummy } from './Card/PostCard';
 import StoriesPage from './StoriesPage';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { loadMoreData, setFeedPosts } from '@/redux/slice/post-feed';
 import { Button } from '../ui/button';
 import ShowUpload from './alert/show-upload';
 import SkeletonPostCard from './loading/PostCard';
 import { fetchProfileFeedApi } from '@/redux/slice/profile/api-functions';
-import { useRouter } from 'next/navigation';
+import _ from 'lodash';
+import debounce from '@/lib/debounc';
 
 const VirtualizePost = () => {
     const dispatch = useDispatch()
-    const posts = useSelector((state: RootState) => state.postFeed.feed)
+    const posts = useSelector((Root: RootState) => Root.postFeed)
     const loadedRef = useRef(false)
     const [size, setSize] = useState(160)
-    const router = useRouter()
 
     useEffect(() => {
         const fetchPosts = async () => {
             if (!loadedRef.current) {
-                const res = await dispatch(fetchProfileFeedApi() as any) as { payload: ApiPayloadData<FeedPost[]> }
-                
-                console.log(res.payload)
-                // if (res.payload?.code === 0) {
-                //     router.push('/not-found')
-                //     return
-                // }
-                // loadedRef.current = true;
+                dispatch(fetchProfileFeedApi() as any)
+                loadedRef.current = true
             }
         }
-
         fetchPosts()
-    }, [dispatch]);
+    }, []);
 
     const loadMore = () => {
         const _posts: FeedPost[] = Array.from({ length: 10 }, (_, i) => {
@@ -61,7 +53,7 @@ const VirtualizePost = () => {
                 isDummy: true
             }
         })
-        dispatch(loadMoreData(_posts) as any)
+        // dispatch(loadMoreData(_posts) as any)
         setSize(size + 10)
     }
 
@@ -73,16 +65,18 @@ const VirtualizePost = () => {
         return <div>Error</div>
     }
 
-    if(posts.Posts.length === 0) {
-        return <div>No Posts</div>
+    if (posts.state.length <= 0) {
+        return <div className='flex justify-center items-center h-full w-full'>
+            <h1 className='text-2xl'>No Posts</h1>
+        </div>
     }
 
     return (
         <>
             <Virtuoso
                 className='h-full w-full'
-                data={posts.Posts}
-                endReached={loadMore}
+                data={posts.state}
+                // endReached={loadMore}
                 increaseViewportBy={3000}
                 itemContent={(index, post) => {
                     if (post?.isDummy) {
@@ -92,10 +86,10 @@ const VirtualizePost = () => {
                     }
                 }}
                 components={{
-                    Header: () => <><StoriesPage /><ShowUpload /></>,
-                    Footer: () => <div className='flex justify-center'>
-                        <Button onClick={loadMore}>Load Dummy Posts</Button>
-                    </div>
+                    // Header: () => <><StoriesPage /><ShowUpload /></>,
+                    // Footer: () => <div className='flex justify-center'>
+                    //     <Button onClick={loadMore}>Load Dummy Posts</Button>
+                    // </div>
                 }}
             />
             <style>{`html, body, #root { height: 100% }`}</style>

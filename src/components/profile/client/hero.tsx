@@ -26,7 +26,7 @@ const HeroSection = ({
                         className={'sm:w-36 object-cover bg-slate-400 sm:h-36 w-28 h-28 rounded-full sm:mr-8'} />
                     <div className='flex flex-col justify-between gap-5'>
                         <FollowAndUnFollowButton
-                            isFollowing={userProfileData.isFollowing}
+                            isFollowing={userProfileData.friendship.following}
                             user={userProfileData}
                             isProfile={isProfile} />
                         <div className='flex justify-between px-3'>
@@ -37,7 +37,7 @@ const HeroSection = ({
                             </div>
                             <Link href={`/${userProfileData.username.toString() ?? ""}/followers`} className='sm:cursor-pointer flex gap-1'>
                                 <p className='text-base font-semibold'>
-                                    {userProfileData.followersCount}
+                                    {userProfileData.followerCount}
                                 </p>
                                 followers
                             </Link>
@@ -71,7 +71,7 @@ const HeroSection = ({
                     <SkyAvatar url={userProfileData.profilePicture || "/user.jpg"}
                         className={'w-24 h-24 rounded-full object-cover bg-slate-400'} />
                     <FollowAndUnFollowButton
-                        isFollowing={userProfileData.isFollowing}
+                        isFollowing={userProfileData.friendship.following}
                         user={userProfileData}
                         isProfile={isProfile} />
                 </div>
@@ -101,7 +101,7 @@ const HeroSection = ({
 
                         <Link className='cursor-pointer text-center' href={`/${userProfileData.username.toString() ?? ""}/followers`}>
                             <p className='text-base font-semibold'>
-                                {userProfileData.followersCount}
+                                {userProfileData.followerCount}
                             </p>
                             <div>
                                 followers

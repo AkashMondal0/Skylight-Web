@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { searchProfileApi } from '@/redux/slice/users/api-functions';
 import { RootState } from '@/redux/store';
 import { User } from '@/types';
-import { removeAllUserFormSearch, removeUserFormSearch } from '@/redux/slice/users';
+// import { removeAllUserFormSearch, removeUserFormSearch } from '@/redux/slice/users';
 import { SkeletonUserCard } from '@/components/home/loading/UserCard';
 import { useRouter } from 'next/navigation';
 import SkyAvatar from '@/components/sky/SkyAvatar';
@@ -34,7 +34,7 @@ const SearchModel = ({ children }: { children: React.ReactNode }) => {
     const debouncedHandleSearch = useCallback(debounce(handleSearch, 1000), []);
 
     const clearAll = useCallback(() => {
-        dispatch(removeAllUserFormSearch() as any)
+        // dispatch(removeAllUserFormSearch() as any)
     }, []);
 
     return (
@@ -57,9 +57,9 @@ const SearchModel = ({ children }: { children: React.ReactNode }) => {
                     <div className='font-semibold'>Recent</div>
                     <div className='text-primary text-blue-00 cursor-pointer' onClick={clearAll}>Clear All</div>
                 </div>
-                {searchResultUser.loading ?
+                {/* {searchResultUser.loading ?
                     <div className='space-y-4'>{Array(10).fill(0).map((_, i) => <SkeletonUserCard key={i} />)}</div> :
-                    searchResultUser.search_users.map((item, i) => <UserCard key={i} item={item} />)}
+                    searchResultUser.search_users.map((item, i) => <UserCard key={i} item={item} />)} */}
             </DrawerContent>
         </Drawer>
     )
@@ -78,7 +78,7 @@ const UserCard = ({
     const router = useRouter()
 
     const removeUser = useCallback(() => {
-        dispatch(removeUserFormSearch(item.id) as any)
+        // dispatch(removeUserFormSearch(item.id) as any)
     }, []);
 
     const navigateToProfile = useCallback(() => {

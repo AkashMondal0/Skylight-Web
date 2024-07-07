@@ -1,5 +1,4 @@
 "use client";
-import { setLoadMoreProfilePosts, setUsers } from "@/redux/slice/users";
 import { RootState } from "@/redux/store";
 import { FeedPost, User } from "@/types";
 import { useSession } from "next-auth/react";
@@ -16,31 +15,37 @@ import React, { forwardRef } from 'react'
 import { ImageComponent } from './client/Post'
 import HeroSection from './client/hero'
 import { Button } from "../ui/button";
+import { fetchUserProfileData } from "@/redux/services/users";
+import SkeletonProfile from "./loading/skeleton";
 interface Props {
     isProfile: boolean
-    user: User
+    user: User | null
 }
-const MainLayout = ({ data }: {
-    data: User
+const MainLayout = ({ username }: {
+    username: User["username"]
 }) => {
     const dispatch = useDispatch()
     const session = useSession().data?.user
     const users = useSelector((state: RootState) => state.users)
     const loadedRef = useRef(false)
-    const isProfile = useMemo(() => session?.username === data.username, [session?.username, data.username])
+    const isProfile = useMemo(() => session?.username === username, [session?.username, username])
 
     useEffect(() => {
         if (!loadedRef.current) {
-            dispatch(setUsers(data) as any)
+            dispatch(fetchUserProfileData(username) as any)
             loadedRef.current = true;
         }
-    }, [dispatch, data]);
+    }, []);
 
-    if (users?.profileData.user) {
+    if (users?.loading) {
+        return <SkeletonProfile />
+    }
+
+    if (users?.state) {
         return <>
             <Virtualized
                 isProfile={isProfile}
-                user={users.profileData.user} />
+                user={users.state} />
         </>
     }
 }
@@ -73,9 +78,11 @@ function Virtualized({
             likes: [],
             isDummy: true
         }))
-        dispatch(setLoadMoreProfilePosts(_posts))
+        // dispatch(setLoadMoreProfilePosts(_posts))
         setSize(size + 12)
     }
+
+    if (!user) return null
 
     return (
         <>
@@ -83,9 +90,9 @@ function Virtualized({
                 style={{
                     height: '100%',
                 }}
-                endReached={loadMore}
+                // endReached={loadMore}
                 overscan={5000}
-                totalCount={user.posts.length}
+                // totalCount={user.posts.length}
                 components={{
                     Header: forwardRef(function HeaderComponent() {
                         return (
@@ -140,7 +147,8 @@ function Virtualized({
                         );
                     }),
                 }}
-                itemContent={(index) => <ImageComponent data={user.posts[index]} />} />
+            // itemContent={(index) => <ImageComponent data={user.posts[index]} />} 
+            />
             <style>{`html, body, #root { height: 100% }`}</style>
         </>
 

@@ -149,44 +149,30 @@ export const fetchProfileFeedApi = createAsyncThunk(
     'fetchProfileFeedApi/get',
     async (_, thunkApi) => {
         try {
-            let query = `query ProfileView($username: String!) {
-                profileView(username: $username) {
+            let query = `query FeedTimelineConnection {
+                feedTimelineConnection {
                   id
-                  username
-                  email
-                  name
-                  profilePicture
-                  postCount
-                  followerCount
-                  followingCount
-                  friendship {
-                    followed_by
-                    following
-                  }
-                  top_followers {
-                    id
-                    email
-                    username
-                    profilePicture
-                  }
+                  content
+                  title
+                  fileUrl
+                  createdAt
+                  updatedAt
+                  authorId
+                  commentCount
+                  likeCount
+                  is_Liked
                 }
-              }`
-
+              }
+              `
             const res = await graphqlQuery({
-                url: `localhost:5000/graphql`,
                 query: query,
-                withCredentials: true,
-                variables: { username: "olivia" },
-                BearerToken: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFrYXNoIiwiaWQiOiIyNTlmOTgzNy0xNTE0LTQxODMtOTE1Ny1iYzFmMWY1MDRmMGUiLCJlbWFpbCI6ImFrYXNoQGdtYWlsLmNvbSIsIm5hbWUiOiJha2FzaCIsInByb2ZpbGVQaWN0dXJlIjpudWxsLCJjcmVhdGVkQXQiOiIyMDI0LTA2LTE5VDIwOjU1OjM2LjM2MFoiLCJyb2xlcyI6WyJ1c2VyIl0sImlhdCI6MTcxODgzNzE2NiwiZXhwIjoxNzIxNDI5MTY2fQ.GqcG7DWkrnvGhl_3NnotrjaONE8jHAoetJVSkHsBOnc`
             })
 
-            return {
-                data: res.data.data,
-                message: "Fetch profile feed successful",
-                code: 1
-            }
+            return res.feedTimelineConnection
         } catch (error: any) {
-            return ErrorFunction(error)
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })  
         }
     }
 );

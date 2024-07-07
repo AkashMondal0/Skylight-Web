@@ -24,7 +24,7 @@ enum Role {
     User = 'user',
     Admin = 'admin',
 }
-interface User {
+type User = {
     id: string;
     username: string;
     name: string;
@@ -40,6 +40,33 @@ interface User {
     refreshToken?: string | null | unknown;
     loggedDevice?: any[] | unknown;
     roles?: Role[] | string[];
+    salt?: string;
+    friendship: {
+        followed_by: boolean; // if the user is followed by the following
+        following: boolean; // if the user is following the following
+    }
+    postCount: number;
+    followerCount: number;
+    followingCount: number;
+}
+
+enum FriendshipStatus {
+    // 'pending', 'accepted', 'rejected', 'blocked', 'deleted'
+    Pending = 'pending',
+    Accepted = 'accepted',
+    Rejected = 'rejected',
+    Blocked = 'blocked',
+    Deleted = 'deleted',
+}
+type Friendship = {
+    id?: string;
+    followingUsername?: string;
+    authorUsername?: string;
+    followingUserId?: string;
+    authorUserId?: string;
+    createdAt?: Date | string | unknown;
+    updatedAt?: Date | string | unknown;
+    status?: FriendshipStatus | string;
 }
 
 interface Message {
@@ -197,5 +224,9 @@ export type {
     AuthorData,
     networkImage_status,
     Assets,
-    RestApiPayload
+    RestApiPayload,
+    Friendship,
+    Role,
+    FriendshipStatus
+
 }
