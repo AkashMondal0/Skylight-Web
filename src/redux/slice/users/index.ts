@@ -1,7 +1,6 @@
 import { User } from '@/types'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { fetchUserProfileData } from '@/redux/services/users'
 
 // Define a type for the slice state
 export interface UsersState {
@@ -71,21 +70,21 @@ export const UsersSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchUserProfileData.pending, (state) => {
-                state.loading = true
-                state.error = null
-                state.state = null
-            })
-            .addCase(fetchUserProfileData.fulfilled, (state, action: PayloadAction<User>) => {
-                state.state = action.payload
-                state.loading = false
-                state.error = null
-            })
-            .addCase(fetchUserProfileData.rejected, (state, action) => {
-                state.loading = false
-                state.error = null
-                state.state = null
-            })
+            // .addCase(fetchUserProfileData.pending, (state) => {
+            //     state.loading = true
+            //     state.error = null
+            //     state.state = null
+            // })
+            // .addCase(fetchUserProfileData.fulfilled, (state, action: PayloadAction<User>) => {
+            //     state.state = action.payload
+            //     state.loading = false
+            //     state.error = null
+            // })
+            // .addCase(fetchUserProfileData.rejected, (state, action) => {
+            //     state.loading = false
+            //     state.error = null
+            //     state.state = null
+            // })
         // // FetchUserProfileDataApi
         // .addCase(FetchUserProfileDataApi.pending, (state) => {
         //     state.profileData.loading = true

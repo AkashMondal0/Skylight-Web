@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createPostCommentApi, createPostLikeApi, destroyPostCommentApi, destroyPostLikeApi, fetchPostLikesApi } from './api-functions'
 import { AuthorData, FeedPost, Comment } from '@/types'
-import { fetchProfileFeedApi } from '../profile/api-functions'
+import { fetchAccountFeedApi } from '@/redux/services/account'
 
 export type TypeActionLike = 'feeds' | 'singleFeed'
 // Define a type for the slice state
@@ -47,17 +47,17 @@ export const PostFeedSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchProfileFeedApi.pending, (state) => {
+            .addCase(fetchAccountFeedApi.pending, (state) => {
                 state.loading = true
                 state.error = null
             })
-            .addCase(fetchProfileFeedApi.fulfilled, (state, action: PayloadAction<FeedPost[]>) => {
+            .addCase(fetchAccountFeedApi.fulfilled, (state, action: PayloadAction<FeedPost[]>) => {
                 if (action.payload?.length > 0) {
                     state.state.push(...action.payload)
                 }
                 state.loading = false
             })
-            .addCase(fetchProfileFeedApi.rejected, (state, action) => {
+            .addCase(fetchAccountFeedApi.rejected, (state, action) => {
                 state.loading = false
                 state.error = action.error.message || 'Failed to fetch profile feed'
             })

@@ -1,7 +1,6 @@
 'use client'
 import { signIn } from "next-auth/react"
 import { useDispatch } from "react-redux";
-import { loginApi } from "@/redux/slice/profile/api-functions";
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -21,6 +20,7 @@ import {
 } from "@/components/ui/card"
 import { useState } from "react";
 import { ApiPayloadData, User } from "@/types";
+import { loginApi } from "@/redux/services/account";
 
 const FormSchema = z.object({
     password: z.string().min(6, {

@@ -10,9 +10,7 @@ import { RootState } from '@/redux/store';
 import { Button } from '../ui/button';
 import ShowUpload from './alert/show-upload';
 import SkeletonPostCard from './loading/PostCard';
-import { fetchProfileFeedApi } from '@/redux/slice/profile/api-functions';
-import _ from 'lodash';
-import debounce from '@/lib/debounc';
+import { fetchAccountFeedApi } from '@/redux/services/account';
 
 const VirtualizePost = () => {
     const dispatch = useDispatch()
@@ -23,7 +21,7 @@ const VirtualizePost = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             if (!loadedRef.current) {
-                dispatch(fetchProfileFeedApi() as any)
+                dispatch(fetchAccountFeedApi() as any)
                 loadedRef.current = true
             }
         }

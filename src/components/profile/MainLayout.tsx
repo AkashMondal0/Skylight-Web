@@ -15,8 +15,8 @@ import React, { forwardRef } from 'react'
 import { ImageComponent } from './client/Post'
 import HeroSection from './client/hero'
 import { Button } from "../ui/button";
-import { fetchUserProfileData } from "@/redux/services/users";
 import SkeletonProfile from "./loading/skeleton";
+import { fetchUserProfileDetailApi } from "@/redux/services/profile";
 interface Props {
     isProfile: boolean
     user: User | null
@@ -26,13 +26,13 @@ const MainLayout = ({ username }: {
 }) => {
     const dispatch = useDispatch()
     const session = useSession().data?.user
-    const users = useSelector((state: RootState) => state.users)
+    const users = useSelector((state: RootState) => state.profile)
     const loadedRef = useRef(false)
     const isProfile = useMemo(() => session?.username === username, [session?.username, username])
 
     useEffect(() => {
         if (!loadedRef.current) {
-            dispatch(fetchUserProfileData(username) as any)
+            dispatch(fetchUserProfileDetailApi(username) as any)
             loadedRef.current = true;
         }
     }, []);
@@ -152,7 +152,7 @@ function Virtualized({
                 }}
             // itemContent={(index) => <ImageComponent data={user.posts[index]} />} 
             />
-            {/* <style>{`html, body, #root { height: 100% }`}</style> */}
+            <style>{`html, body, #root { height: 100% }`}</style>
         </>
 
     );
