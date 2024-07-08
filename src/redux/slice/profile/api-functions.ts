@@ -3,7 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import { setShowUploadImage } from ".";
 import { uploadFirebaseFile } from "@/lib/firebase/upload-file";
-import { graphqlQuery } from "../lib/graphqlQuery";
+import { graphqlQuery } from "../../../lib/graphqlQuery";
 
 export const UploadImagesFireBaseApi = createAsyncThunk(
     'UploadImagesFireBaseApi/post',

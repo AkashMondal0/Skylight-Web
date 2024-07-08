@@ -1,7 +1,6 @@
-import { FeedPost, Post, User } from '@/types'
+import { User } from '@/types'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { FetchFollowersUserDataApi, FetchFollowingsUserDataApi, FetchUserProfileDataApi, searchProfileApi, UserFollowingApi, UserUnFollowingApi } from './api-functions'
 import { fetchUserProfileData } from '@/redux/services/users'
 
 // Define a type for the slice state
@@ -75,6 +74,7 @@ export const UsersSlice = createSlice({
             .addCase(fetchUserProfileData.pending, (state) => {
                 state.loading = true
                 state.error = null
+                state.state = null
             })
             .addCase(fetchUserProfileData.fulfilled, (state, action: PayloadAction<User>) => {
                 state.state = action.payload
@@ -84,6 +84,7 @@ export const UsersSlice = createSlice({
             .addCase(fetchUserProfileData.rejected, (state, action) => {
                 state.loading = false
                 state.error = null
+                state.state = null
             })
         // // FetchUserProfileDataApi
         // .addCase(FetchUserProfileDataApi.pending, (state) => {

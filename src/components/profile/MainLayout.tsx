@@ -37,14 +37,17 @@ const MainLayout = ({ username }: {
         }
     }, []);
 
-    if (users?.loading) {
+    if (users.loading) {
         return <SkeletonProfile />
     }
 
-    if (users?.state) {
+    if (users.error) {
+        return <div>error</div>
+    }
+
+    if (users.state?.id) {
         return <>
-            <Virtualized
-                isProfile={isProfile}
+            <Virtualized isProfile={isProfile}
                 user={users.state} />
         </>
     }
@@ -149,7 +152,7 @@ function Virtualized({
                 }}
             // itemContent={(index) => <ImageComponent data={user.posts[index]} />} 
             />
-            <style>{`html, body, #root { height: 100% }`}</style>
+            {/* <style>{`html, body, #root { height: 100% }`}</style> */}
         </>
 
     );

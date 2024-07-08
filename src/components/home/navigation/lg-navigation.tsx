@@ -52,7 +52,7 @@ export default function Lg_Navigation({
         duration-300`,
       hideLabel ? "w-20" : "w-72 2xl:w-96 max-w-[20rem] md:w-20 xl:w-72"
     )}>
-      <div className="p-2 w-full flex flex-col justify-between">
+      <div className="p-1 w-full flex flex-col justify-between">
         <div>
           <Banner hideLabel={hideLabel} />
           <div className="space-y-3">

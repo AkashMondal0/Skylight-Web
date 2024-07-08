@@ -68,10 +68,6 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
                         ${src} 800w,
                         ${src} 1080w,
                         ${src} 1200w,
-                        ${src} 1400w,
-                        ${src} 1600w,
-                        ${src} 1800w,
-                        ${src} 2000w,
                     `}
                     decoding="async"
                     fetchPriority={fetchPriority}

@@ -1,4 +1,4 @@
-import { graphqlQuery } from "@/redux/slice/lib/graphqlQuery";
+import { graphqlQuery } from "@/lib/graphqlQuery";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchUserProfileData = createAsyncThunk(
