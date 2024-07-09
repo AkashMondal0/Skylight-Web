@@ -39,7 +39,7 @@ import {
 import { useTheme } from "next-themes"
 import { signOut } from "next-auth/react"
 import { useDispatch } from "react-redux"
-import { logoutApi } from "@/redux/slice/profile/api-functions"
+import { logoutApi } from "@/redux/services/account"
 
 export default function MoreDropdownMenu({ children }: {
   children: React.ReactNode

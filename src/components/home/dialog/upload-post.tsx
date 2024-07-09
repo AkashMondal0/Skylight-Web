@@ -20,7 +20,6 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { useDispatch } from "react-redux"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
-import { UploadImagesFireBaseApi } from "@/redux/slice/profile/api-functions"
 import { toast } from "sonner"
 import OptimizedImage from "@/components/sky/SkyImage"
 export default function UploadPostDialog({
@@ -69,11 +68,11 @@ export default function UploadPostDialog({
         if (isFile.length > 5) {
             return ToastAlert("You can't upload more than 5 images")
         }
-        dispatch(UploadImagesFireBaseApi({
-            isFile,
-            isCaption: isCaption?.current?.value ? isCaption?.current?.value : "",
-            profileId: session?.id
-        }) as any)
+        // dispatch(UploadImagesFireBaseApi({
+        //     isFile,
+        //     isCaption: isCaption?.current?.value ? isCaption?.current?.value : "",
+        //     profileId: session?.id
+        // }) as any)
         setIsFile([])
         document.getElementById('closeDialog')?.click()
     }

@@ -120,7 +120,8 @@ export const logoutApi = createAsyncThunk(
     'logoutApi/post',
     async (_, thunkApi) => {
         try {
-            const res = await axios.get(`/api/account/logout`)
+            await axios.delete(`/api/v1/auth/logout`)
+            const res = await axios.post(`${configs.serverApi.baseUrl}/v1/auth/logout`)
             return res.data
         } catch (error: any) {
             return ErrorFunction(error)

@@ -16,7 +16,7 @@ import {
 import { useDispatch } from 'react-redux'
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import { signOut, useSession } from 'next-auth/react'
-import { logoutApi } from '@/redux/slice/profile/api-functions'
+import { logoutApi } from '@/redux/services/account'
 
 const Page = () => {
     const profile = useSession().data
