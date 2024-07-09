@@ -144,9 +144,15 @@ export const fetchAccountFeedApi = createAsyncThunk(
                   commentCount
                   likeCount
                   is_Liked
+                  user {
+                    id
+                    username
+                    email
+                    name
+                    profilePicture
+                  }
                 }
-              }
-              `
+              }`
             const res = await graphqlQuery({
                 query: query,
             })
@@ -155,7 +161,7 @@ export const fetchAccountFeedApi = createAsyncThunk(
         } catch (error: any) {
             return thunkApi.rejectWithValue({
                 ...error?.response?.data,
-            })  
+            })
         }
     }
 );

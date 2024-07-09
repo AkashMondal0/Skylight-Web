@@ -1,15 +1,17 @@
 interface FeedPost {
     id: string
-    caption: string
     fileUrl: string[]
     commentCount: number
     likeCount: number
     createdAt: Date | string
-    alreadyLiked: boolean | null
-    authorData: AuthorData
     comments: Comment[]
     likes: AuthorData[]
     isDummy?: boolean
+    content: string;
+    title: string;
+    updatedAt: Date;
+    is_Liked: boolean;
+    user: AuthorData;
 }
 
 interface AuthorData {

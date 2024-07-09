@@ -28,32 +28,32 @@ const VirtualizePost = () => {
         fetchPosts()
     }, []);
 
-    const loadMore = () => {
-        const _posts: FeedPost[] = Array.from({ length: 10 }, (_, i) => {
-            const generate_img = `https://source.unsplash.com/random/600x900?sig=${i + size}`
-            return {
-                id: `${i + size}`,
-                caption: `Caption ${i + size}`,
-                fileUrl: [generate_img],
-                commentCount: 10,
-                likeCount: 10,
-                createdAt: new Date().toDateString(),
-                alreadyLiked: false,
-                authorData: {
-                    id: `user-${i + size}`,
-                    username: `user-${i + size}`,
-                    email: `user-${i} @gmail.com`,
-                    name: `User ${i + size}`,
-                    profilePicture: generate_img,
-                },
-                comments: [],
-                likes: [],
-                isDummy: true
-            }
-        })
-        // dispatch(loadMoreData(_posts) as any)
-        setSize(size + 10)
-    }
+    // const loadMore = () => {
+    //     const _posts: FeedPost[] = Array.from({ length: 10 }, (_, i) => {
+    //         const generate_img = `https://source.unsplash.com/random/600x900?sig=${i + size}`
+    //         return {
+    //             id: `${i + size}`,
+    //             caption: `Caption ${i + size}`,
+    //             fileUrl: [generate_img],
+    //             commentCount: 10,
+    //             likeCount: 10,
+    //             createdAt: new Date().toDateString(),
+    //             alreadyLiked: false,
+    //             authorData: {
+    //                 id: `user-${i + size}`,
+    //                 username: `user-${i + size}`,
+    //                 email: `user-${i} @gmail.com`,
+    //                 name: `User ${i + size}`,
+    //                 profilePicture: generate_img,
+    //             },
+    //             comments: [],
+    //             likes: [],
+    //             isDummy: true
+    //         }
+    //     })
+    //     // dispatch(loadMoreData(_posts) as any)
+    //     setSize(size + 10)
+    // }
 
     if (posts.loading) {
         return <SkeletonPostCard />

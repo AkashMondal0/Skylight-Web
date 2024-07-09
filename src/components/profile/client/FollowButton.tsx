@@ -62,7 +62,7 @@ const FollowAndUnFollowButton = ({
 
 
     if (isProfile) {
-        return <div className='sm:flex space-x-2 space-y-2'>
+        return <div className='sm:flex space-x-2 space-y-2 items-center'>
             <div className="flex items-center">
                 <p className='text-xl px-3 truncate w-32'>{user.username}</p>
                 <Settings className='w-6 h-6 cursor-pointer sm:hidden block' />
