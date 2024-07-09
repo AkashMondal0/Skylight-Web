@@ -50,17 +50,20 @@ export const profileSlice = createSlice({
                 state.friendShipLoading = true
                 state.friendShipError = null
             })
-            .addCase(createFriendshipApi.fulfilled, (state) => {
+            .addCase(createFriendshipApi.fulfilled, (state, action: PayloadAction<{ userId: string }>) => {
                 if (state.state) {
                     state.state.friendship = {
                         ...state.state.friendship,
                         following: true,
                     }
+                    if (state.state.id !== action.payload.userId) {
+                        state.state.followerCount += 1
+                    }
                 }
                 state.friendShipLoading = false
             })
             .addCase(createFriendshipApi.rejected, (state, action) => {
-               state.friendShipLoading = false
+                state.friendShipLoading = false
                 state.friendShipError = action.error.message || null
             })
             // destroyFriendshipApi
@@ -68,11 +71,14 @@ export const profileSlice = createSlice({
                 state.friendShipLoading = true
                 state.friendShipError = null
             })
-            .addCase(destroyFriendshipApi.fulfilled, (state) => {
+            .addCase(destroyFriendshipApi.fulfilled, (state, action: PayloadAction<{ userId: string }>) => {
                 if (state.state) {
                     state.state.friendship = {
                         ...state.state.friendship,
                         following: false,
+                    }
+                    if (state.state.id !== action.payload.userId) {
+                        state.state.followerCount -= 1
                     }
                 }
                 state.friendShipLoading = false

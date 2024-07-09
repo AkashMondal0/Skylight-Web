@@ -49,14 +49,14 @@ export const createFriendshipApi = createAsyncThunk(
                   friendShip
                 }
               }`
-            const res = await graphqlQuery({
+            await graphqlQuery({
                 query: query,
                 variables: {
                     createFriendshipInput
                 }
             })
 
-            return res.createFriendship.friendShip
+            return { userId: createFriendshipInput.authorUserId }
         } catch (error: any) {
             return thunkApi.rejectWithValue({
                 ...error?.response?.data,
@@ -68,9 +68,9 @@ export const createFriendshipApi = createAsyncThunk(
 export const destroyFriendshipApi = createAsyncThunk(
     'destroyFriendshipApi/post',
     async (destroyFriendship: {
-        // authorUserId?: string,
+        authorUserId: string,
         authorUsername: string,
-        // followingUserId?: string,
+        followingUserId: string,
         followingUsername: string
     }, thunkApi) => {
         try {
@@ -79,14 +79,14 @@ export const destroyFriendshipApi = createAsyncThunk(
                   friendShip
                 }
               }`
-            const res = await graphqlQuery({
+             await graphqlQuery({
                 query: query,
-                variables: { 
+                variables: {
                     destroyFriendship
-                 }
+                }
             })
 
-            return res.destroyFriendship.friendShip
+            return { userId: destroyFriendship.authorUserId }
         } catch (error: any) {
             return thunkApi.rejectWithValue({
                 ...error?.response?.data,

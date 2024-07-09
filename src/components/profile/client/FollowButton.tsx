@@ -38,9 +38,9 @@ const FollowAndUnFollowButton = ({
         if (!session?.id) return alert('no user id from unfollow button')
         if (!user?.id) return alert('no user id from unfollow button')
         await dispatch(destroyFriendshipApi({
-            // authorUserId: session?.id,
+            authorUserId: session?.id,
             authorUsername: session?.username,
-            // followingUserId: user?.id,
+            followingUserId: user?.id,
             followingUsername: user?.username
         }) as any)
     }
