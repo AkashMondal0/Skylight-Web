@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { FeedPost } from '@/types'
 import { fetchAccountFeedApi } from '@/redux/services/account'
-import { fetchOnePostApi } from '@/redux/services/post'
+import { createPostLikeApi, destroyPostLikeApi, fetchOnePostApi } from '@/redux/services/post'
 
 export type TypeActionLike = 'feeds' | 'singleFeed'
 // Define a type for the slice state
@@ -14,6 +14,8 @@ export interface PostFeedState {
     viewPost?: FeedPost | null
     viewPostLoading?: boolean
     viewPostError?: string | null
+    // like
+    likeLoading?: boolean
 }
 
 // Define the initial state using that type
@@ -24,7 +26,9 @@ const PostFeedState: PostFeedState = {
 
     viewPost: null,
     viewPostLoading: false,
-    viewPostError: null
+    viewPostError: null,
+
+    likeLoading: false,
 }
 
 export const PostFeedSlice = createSlice({
@@ -67,6 +71,44 @@ export const PostFeedSlice = createSlice({
                 state.viewPostLoading = false
                 state.viewPost = null
                 state.viewPostError = action.error.message || 'Failed to fetch post'
+            })
+            // post like
+            .addCase(createPostLikeApi.pending, (state) => {
+                state.likeLoading = true
+            })
+            .addCase(createPostLikeApi.fulfilled, (state, action: PayloadAction<{postId:string}>) => {
+                const postIndex = state.state.findIndex((post) => post.id === action.payload.postId)
+                if(postIndex !== -1){
+                    state.state[postIndex].likeCount += 1
+                    state.state[postIndex].is_Liked = true
+                }
+                if(state.viewPost?.id === action.payload.postId){
+                    state.viewPost.likeCount += 1
+                    state.viewPost.is_Liked = true
+                }
+                state.likeLoading = false
+            })
+            .addCase(createPostLikeApi.rejected, (state, action) => {
+                state.likeLoading = false
+            })
+            // post like undo
+            .addCase(destroyPostLikeApi.pending, (state) => {
+                state.likeLoading = true
+            })
+            .addCase(destroyPostLikeApi.fulfilled, (state, action: PayloadAction<{postId:string}>) => {
+                const postIndex = state.state.findIndex((post) => post.id === action.payload.postId)
+                if(postIndex !== -1){
+                    state.state[postIndex].likeCount -= 1
+                    state.state[postIndex].is_Liked = false
+                }
+                if(state.viewPost?.id === action.payload.postId){
+                    state.viewPost.likeCount -= 1
+                    state.viewPost.is_Liked = false
+                }
+                state.likeLoading = false
+            })
+            .addCase(destroyPostLikeApi.rejected, (state, action) => {
+                state.likeLoading = false
             })
     },
 })

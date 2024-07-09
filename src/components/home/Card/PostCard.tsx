@@ -9,15 +9,14 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import SkyAvatar from '@/components/sky/SkyAvatar';
 import { useDispatch } from 'react-redux';
 import { openModal } from '@/redux/slice/modal';
 import { FeedPost } from '@/types';
-import { createPostLikeApi, destroyPostLikeApi } from '@/redux/slice/post-feed/api-functions';
 import { useSession } from 'next-auth/react';
 import OptimizedImage from '@/components/sky/SkyImage';
+import { createPostLikeApi, destroyPostLikeApi } from '@/redux/services/post';
 
 const PostItem = ({
   feed,
@@ -29,23 +28,13 @@ const PostItem = ({
   const session = useSession().data?.user
 
   const handleLikeAndUndoLike = () => {
-    if (session && feed) {
-
-      const data = {
-        postId: feed.id,
-        user: {
-          ...session,
-          profilePicture: session?.image ?? "/user.jpg",
-          isFollowing: false,
-        }
-      }
-
+    if (feed) {
       if (feed.is_Liked) {
         // unlike
-        dispatch(destroyPostLikeApi({ ...data, type: "feeds" }) as any)
+        dispatch(destroyPostLikeApi(feed.id) as any)
       } else {
         // like
-        dispatch(createPostLikeApi({ ...data, type: "feeds" }) as any)
+        dispatch(createPostLikeApi(feed.id) as any)
       }
     }
   }

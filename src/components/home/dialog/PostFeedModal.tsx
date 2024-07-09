@@ -13,10 +13,9 @@ import {
 } from 'lucide-react'
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import { useDispatch, useSelector } from 'react-redux'
-import { createPostCommentApi, createPostLikeApi, destroyPostLikeApi } from '@/redux/slice/post-feed/api-functions'
 import { useSession } from 'next-auth/react'
 import { RootState } from '@/redux/store'
-import { fetchOnePostApi } from '@/redux/services/post'
+import { createPostLikeApi, destroyPostLikeApi, fetchOnePostApi } from '@/redux/services/post'
 
 
 const PostFeedModal = ({ id }: {
@@ -25,6 +24,7 @@ const PostFeedModal = ({ id }: {
   const router = useRouter()
   const dispatch = useDispatch()
   const data = useSelector((root: RootState) => root.postFeed.viewPost)
+  const likeLoading = useSelector((root: RootState) => root.postFeed.likeLoading)
   const status = useSelector((root: RootState) => root.postFeed)
   const inputRef = useRef<HTMLInputElement>(null)
   const session = useSession().data?.user
@@ -39,43 +39,26 @@ const PostFeedModal = ({ id }: {
   }, []);
 
   const handleComment = async () => {
-    if (session && data) {
-      await dispatch(createPostCommentApi({
-        postId: data.id,
-        user: session,
-        comment: inputRef.current?.value ?? "",
-        type: 'singleFeed'
-      }) as any)
-      if (inputRef.current) {
-        inputRef.current.value = ""
-      }
-    }
+    // if (session && data) {
+    //   await dispatch(createPostCommentApi({
+    //     postId: data.id,
+    //     user: session,
+    //     comment: inputRef.current?.value ?? "",
+    //     type: 'singleFeed'
+    //   }) as any)
+    //   if (inputRef.current) {
+    //     inputRef.current.value = ""
+    //   }
+    // }
   }
   const handleLikeAndUndoLike = () => {
-    if (session && data) {
-
-      const _data = {
-        postId: data.id,
-        user: {
-          ...session,
-          profilePicture: session?.image ?? "/user.jpg",
-          isFollowing: false,
-        }
-      }
-
-      if (data.is_Liked) {
-        // unlike
-        dispatch(destroyPostLikeApi({
-          ..._data,
-          type: "singleFeed"
-        }) as any)
-      } else {
-        // like
-        dispatch(createPostLikeApi({
-          ..._data,
-          type: "singleFeed"
-        }) as any)
-      }
+    if (!data) return alert('No data')
+    if (data.is_Liked && !likeLoading) {
+      // unlike
+      dispatch(destroyPostLikeApi(data.id) as any)
+    } else {
+      // like
+      dispatch(createPostLikeApi(data?.id) as any)
     }
   }
   const onOpenChange = (isOpen: boolean) => {

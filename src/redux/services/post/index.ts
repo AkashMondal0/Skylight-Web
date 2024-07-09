@@ -37,3 +37,53 @@ export const fetchOnePostApi = createAsyncThunk(
         }
     }
 );
+
+export const createPostLikeApi = createAsyncThunk(
+    'createPostLikeApi/post',
+    async (createLikeId: string, thunkApi) => {
+        try {
+            let query = `mutation CreateLike($createLikeId: String!) {
+                createLike(id: $createLikeId) {
+                  like
+                }
+              }`
+            const res = await graphqlQuery({
+                query: query,
+                variables: { createLikeId }
+            })
+
+            return {
+                postId: createLikeId
+            }
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
+        }
+    }
+);
+
+export const destroyPostLikeApi = createAsyncThunk(
+    'destroyPostLikeApi/post',
+    async (destroyLikeId: string, thunkApi) => {
+        try {
+            let query = `mutation DestroyLike($destroyLikeId: String!) {
+                destroyLike(id: $destroyLikeId) {
+                  like
+                }
+              }`
+            const res = await graphqlQuery({
+                query: query,
+                variables: { destroyLikeId }
+            })
+
+            return {
+                postId: destroyLikeId
+            }
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
+        }
+    }
+);
