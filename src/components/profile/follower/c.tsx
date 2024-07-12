@@ -11,14 +11,16 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { RootState } from '@/redux/store'
 import { UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions'
-import { followersDataClear, setFollowersUsers } from '@/redux/slice/users'
+// import { followersDataClear, setFollowersUsers } from '@/redux/slice/users'
 import { SkeletonFollowUserCard } from '@/components/profile/loading/skeleton'
 import { useSession } from 'next-auth/react'
 import UserCard from './UserCard'
 
 
 
-const ModalFollower = ({ data,profileId }: { data: User[],profileId:string }) => {
+const ModalFollower = ({
+    profileId
+}: { profileId: string }) => {
     const dispatch = useDispatch()
     const router = useRouter()
     const users = useSelector((state: RootState) => state.users)
@@ -32,14 +34,14 @@ const ModalFollower = ({ data,profileId }: { data: User[],profileId:string }) =>
 
     useEffect(() => {
         if (!loadedRef.current) {
-            dispatch(setFollowersUsers({
-                Users: data,
-                skip: 0,
-                size: 12
-            }) as any)
+            // dispatch(setFollowersUsers({
+            //     Users: data,
+            //     skip: 0,
+            //     size: 12
+            // }) as any)
             loadedRef.current = true;
         }
-    }, [data, dispatch]);
+    }, [dispatch]);
 
 
     const handleActionUnFollow = async (user: User) => {
@@ -72,7 +74,7 @@ const ModalFollower = ({ data,profileId }: { data: User[],profileId:string }) =>
 
     const onOpenChange = (isOpen: boolean) => {
         if (!isOpen) {
-            dispatch(followersDataClear())
+            // dispatch(followersDataClear())
             router.back()
         }
     }
@@ -82,7 +84,7 @@ const ModalFollower = ({ data,profileId }: { data: User[],profileId:string }) =>
                 <h1 className="text-center font-semibold text-lg">Followers</h1>
                 <Separator />
                 <ScrollArea className="h-72 w-full rounded-md">
-                    {users.profileData.fetchFollow.followers.map((user, i) => <UserCard
+                    {/* {users.profileData.fetchFollow.followers.map((user, i) => <UserCard
                         pageRedirect={pageRedirect}
                         key={i} user={user}
                         isProfile={isProfile}
@@ -91,7 +93,7 @@ const ModalFollower = ({ data,profileId }: { data: User[],profileId:string }) =>
                         handleActionUnFollow={handleActionUnFollow} />)}
                     {users.profileData.fetchFollow.loading ? <div className='space-y-2'>
                         {Array(10).fill(0).map((_, i) => <SkeletonFollowUserCard key={i} />)}
-                    </div> : <></>}
+                    </div> : <></>} */}
                 </ScrollArea>
             </DialogContent>
         </Dialog>

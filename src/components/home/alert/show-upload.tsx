@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { HardDriveUpload, Loader2 } from 'lucide-react'
 import Image from 'next/image'
 const ShowUpload = () => {
-    const profile = useSelector((state: RootState) => state.profile)
+    const profile = useSelector((state: RootState) => state.account)
     if (!profile.UploadFiles.loading) return null
     return (
         <div className='w-full max-w-[480px] h-16 mx-auto flex items-center border-y space-x-4 px-4'>
@@ -21,7 +21,7 @@ const ShowUpload = () => {
                         height={20}
                         sizes="10vw"
                         loading='lazy'
-                        src={URL.createObjectURL(profile.UploadFiles.currentUploadImg) ?? "/user.jpg"}
+                        src={profile.UploadFiles.currentUploadImg ?? "/user.jpg"}
                         alt='User profile picture'
                         className="w-10 h-10 object-cover rounded-xl"
                     /> : <>

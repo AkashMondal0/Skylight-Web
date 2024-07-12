@@ -1,7 +1,6 @@
 "use client";
 import UserCardFollower from '@/components/profile/follower/UserCard';
 import { Separator } from '@/components/ui/separator'
-import { setFollowersUsers } from '@/redux/slice/users';
 import { UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions';
 import { RootState } from '@/redux/store';
 import { User } from '@/types';
@@ -24,11 +23,11 @@ const PageFollower = ({ data,profileId }: { data: User[],profileId:string }) => 
 
   useEffect(() => {
     if (!loadedRef.current) {
-        dispatch(setFollowersUsers({
-            Users: data,
-            skip: 0,
-            size: 12
-        }) as any)
+        // dispatch(setFollowersUsers({
+        //     Users: data,
+        //     skip: 0,
+        //     size: 12
+        // }) as any)
         loadedRef.current = true;
     }
 }, [data, dispatch]);
@@ -67,68 +66,16 @@ const PageFollower = ({ data,profileId }: { data: User[],profileId:string }) => 
         <h1 className="font-semibold text-lg text-center mb-4">Followers</h1>
         <Separator />
         <div className='h-5' />
-        {users.profileData.fetchFollow.followers.map((user, i) => <UserCardFollower
+        {/* {users.profileData.fetchFollow.followers.map((user, i) => <UserCardFollower
           pageRedirect={pageRedirect}
           key={i} user={user}
           isProfile={isProfile}
           handleActionFollow={handleActionFollow}
           itself={profile?.id === user.id}
-          handleActionUnFollow={handleActionUnFollow} />)}
+          handleActionUnFollow={handleActionUnFollow} />)} */}
       </div>
     </div>
   )
 }
 
 export default PageFollower
-
-
-// const UserCard = ({
-//   user,
-//   pageRedirect,
-//   handleActionUnFollow,
-//   isProfile,
-//   itself,
-//   handleActionFollow
-// }: {
-//   user: User
-//   pageRedirect: (user: User) => void
-//   handleActionUnFollow: (user: User) => void
-//   isProfile?: boolean
-//   itself?: boolean
-//   handleActionFollow: (user: User) => void
-// }) => {
-//   if (!user) return null
-
-//   return (
-//     <>
-//       <div className='flex justify-between px-2 my-4'>
-//         <div className='flex space-x-2 items-center cursor-pointer' onClick={() => pageRedirect(user)}>
-         
-//           <SkyAvatar url={user.profilePicture || "/user.jpg"} className='h-10 w-10 mx-auto' />
-//           <div>
-//             <div className='font-semibold text-base'>
-//               {user.username}
-//             </div>
-//             <div className='text-sm'>
-//               {user.email}
-//             </div>
-//           </div>
-//         </div>
-//         <div className='flex items-center space-x-2'>
-//           {!itself && <>
-//             {!user.isFollowing &&
-//               <Button variant={"default"}
-//                 className="rounded-xl" onClick={() => handleActionFollow(user)}>
-//                 Follow
-//               </Button>}
-//           </>}
-//           {isProfile && <Button variant={"secondary"}
-//             disabled={user.removeFollower}
-//             className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
-//             Remove
-//           </Button>}
-//         </div>
-//       </div>
-//     </>
-//   )
-// }

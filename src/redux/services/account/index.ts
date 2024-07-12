@@ -3,46 +3,68 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import { uploadFirebaseFile } from "@/lib/firebase/upload-file";
 import { graphqlQuery } from "../../../lib/graphqlQuery";
+import { ShowUploadImage } from "@/redux/slice/account";
 
-// export const UploadImagesFireBaseApi = createAsyncThunk(
-//     'UploadImagesFireBaseApi/post',
-//     async ({
-//         isFile,
-//         isCaption,
-//         profileId,
-//     }: {
-//         isFile: File[],
-//         isCaption: string,
-//         profileId: string
-//     }, thunkApi) => {
-//         try {
-//             var photoUrls: string[] = []
-//             for (let index = 0; index < isFile.length; index++) {
-//                 thunkApi.dispatch(setShowUploadImage(isFile[index]) as any)
-//                 await new Promise(resolve => setTimeout(resolve, 500));
-//                 const url = await uploadFirebaseFile(isFile[index], profileId)
-//                 if (url) {
-//                     photoUrls.push(url)
-//                 }
-//             }
-//             if (photoUrls.length === 0) {
-//                 return thunkApi.rejectWithValue({
-//                     message: 'Upload file failed'
-//                 })
-//             }
-//             const res = await axios.post(`/api/v1/feed/create`, {
-//                 caption: isCaption,
-//                 fileUrl: photoUrls,
-//                 authorId: profileId
-//             })
-//             return res.data
-//         } catch (error: any) {
-//             return thunkApi.rejectWithValue({
-//                 ...error?.response?.data,
-//             })
-//         }
-//     }
-// );
+export const UploadImagesFireBaseApi = createAsyncThunk(
+    'UploadImagesFireBaseApi/post',
+    async ({
+        isFile,
+        isCaption,
+        profileId,
+    }: {
+        isFile: File[],
+        isCaption: string,
+        profileId: string
+    }, thunkApi) => {
+        try {
+            var photoUrls: string[] = []
+            for (let index = 0; index < isFile.length; index++) {
+                thunkApi.dispatch(ShowUploadImage(URL.createObjectURL(isFile[index])) as any)
+                await new Promise(resolve => setTimeout(resolve, 500));
+                const url = await uploadFirebaseFile(isFile[index], profileId)
+                if (url) {
+                    photoUrls.push(url)
+                }
+            }
+            if (photoUrls.length === 0) {
+                return thunkApi.rejectWithValue({
+                    message: 'Upload file failed'
+                })
+            }
+
+            let query = `mutation CreatePost($createPostInput: CreatePostInput!) {
+                createPost(createPostInput: $createPostInput) {
+                  updatedAt
+                  title
+                  id
+                  fileUrl
+                  createdAt
+                  content
+                  username
+                  authorId
+                }
+              }
+              `
+            const res = await graphqlQuery({
+                query: query,
+                variables: {
+                    createPostInput: {
+                        status: "published",
+                        fileUrl: photoUrls,
+                        content: isCaption,
+                        authorId: profileId
+                    }
+                }
+            })
+
+            return res.feedTimelineConnection
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
+        }
+    }
+);
 
 const ErrorFunction = (error: any) => {
     if (axios.isAxiosError(error)) {

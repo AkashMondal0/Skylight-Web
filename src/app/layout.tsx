@@ -8,7 +8,7 @@ import AppStart_Provider from "@/provider/AppStart_Provider";
 
 
 export const metadata: Metadata = {
-  title: 'Sky Media',
+  title: 'SkyLight',
   description: `Sky Media is a social media platform that 
   allows users to share their thoughts and ideas with the world.`,
 }

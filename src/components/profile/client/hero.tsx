@@ -35,7 +35,7 @@ const HeroSection = ({
                                     {userProfileData.postCount}
                                 </p> posts
                             </div>
-                            <Link href={`/${userProfileData.username.toString() ?? ""}/followers`} className='sm:cursor-pointer flex gap-1'>
+                            <Link href={`/${userProfileData.username.toString() ?? ""}/follower`} className='sm:cursor-pointer flex gap-1'>
                                 <p className='text-base font-semibold'>
                                     {userProfileData.followerCount}
                                 </p>
@@ -99,7 +99,7 @@ const HeroSection = ({
                             </div>
                         </div>
 
-                        <Link className='cursor-pointer text-center' href={`/${userProfileData.username.toString() ?? ""}/followers`}>
+                        <Link className='cursor-pointer text-center' href={`/${userProfileData.username.toString() ?? ""}/follower`}>
                             <p className='text-base font-semibold'>
                                 {userProfileData.followerCount}
                             </p>

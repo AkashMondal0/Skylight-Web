@@ -16,7 +16,6 @@ const VirtualizePost = () => {
     const dispatch = useDispatch()
     const posts = useSelector((Root: RootState) => Root.postFeed)
     const loadedRef = useRef(false)
-    const [size, setSize] = useState(160)
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -55,18 +54,13 @@ const VirtualizePost = () => {
     //     setSize(size + 10)
     // }
 
+
     if (posts.loading) {
         return <SkeletonPostCard />
     }
 
     if (posts.error) {
         return <div>Error</div>
-    }
-
-    if (posts.state.length <= 0) {
-        return <div className='flex justify-center items-center h-full w-full'>
-            <h1 className='text-2xl'>No Posts</h1>
-        </div>
     }
 
     return (
@@ -84,7 +78,7 @@ const VirtualizePost = () => {
                     }
                 }}
                 components={{
-                    // Header: () => <><StoriesPage /><ShowUpload /></>,
+                    Header: () => <><StoriesPage /><ShowUpload /></>,
                     // Footer: () => <div className='flex justify-center'>
                     //     <Button onClick={loadMore}>Load Dummy Posts</Button>
                     // </div>

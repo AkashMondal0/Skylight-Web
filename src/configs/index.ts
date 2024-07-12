@@ -16,6 +16,12 @@ const _configs = {
         storageBucket: process.env.STORAGE_BUCKET,
         messagingSenderId: process.env.MESSAGING_SENDER_ID,
         appId: process.env.APP_ID
+    },
+    AppDetails:{
+        name: process.env.APP_NAME|| "Skylight",
+        description: process.env.APP_DESCRIPTION|| "Sky Media is a social media platform that allows users to share their thoughts and ideas with the world.",
+        version: process.env.APP_VERSION|| "1.0.0",
+        logoUrl: process.env.APP_LOGO_URL||"/skylight_logo.png",
     }
 }
 
