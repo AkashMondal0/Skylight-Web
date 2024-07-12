@@ -1,11 +1,12 @@
 "use client"
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import { Copy, Heart, MessageCircle, RotateCcw } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { FeedPost, networkImage_status } from '@/types'
 import OptimizedImage from '@/components/sky/SkyImage'
+import { ImageError } from '@/components/sky/image.error'
 
 export const ImageComponent = ({
     data
@@ -13,6 +14,11 @@ export const ImageComponent = ({
     data: FeedPost
 }) => {
     const router = useRouter()
+    const [error, setError] = useState(false)
+
+    if (error) {
+        return <ImageError />
+    }
 
     return (
         <>
@@ -34,16 +40,13 @@ export const ImageComponent = ({
                     </div>
                 </div>
                 <OptimizedImage
-                    showErrorIcon
                     fetchPriority="high"
                     src={data.fileUrl[0]}
                     width={300}
                     height={300}
-                    alt=""
+                    onError={() => {if (!error) setError(true)}}
                     sizes="(min-width: 808px) 20vw, 40vw"
-                    className={cn(`aspect-square hover:opacity-50 
-                        w-full h-full object-cover userNotSelectImg 
-                        bg-muted`, status === "loading" ? "animate-pulse" : "")} />
+                    className={cn(`aspect-square hover:opacity-50 w-full h-full object-cover userNotSelectImg bg-muted`)} />
             </div>
         </>
     )

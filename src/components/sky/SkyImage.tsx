@@ -5,20 +5,25 @@ import { ImageError } from './image.error';
 
 interface OptimizedImageProps {
     src: string;
-    alt: string;
+    alt?: string;
     width: number;
     height: number;
     className?: string;
     fetchPriority?: 'auto' | 'high' | 'low';
     sizes?: string;
     showErrorIcon?: boolean;
-    onError?: (event: React.SyntheticEvent<HTMLImageElement, Event>) => void;
-    onLoad?: (event: React.SyntheticEvent<HTMLImageElement, Event>) => void;
+    onError?: () => void;
+    onLoad?: () => void;
 }
 
 const OptimizedImage: React.FC<OptimizedImageProps> = ({
-    src, alt, width, height, className,
-    fetchPriority = 'auto', sizes = '(min-width: 808px) 50vw, 100vw',
+    src,
+    alt = "image not found",
+    width,
+    height,
+    className,
+    fetchPriority = 'auto',
+    sizes = '(min-width: 808px) 50vw, 100vw',
     onError,
     onLoad,
     showErrorIcon = false
@@ -52,7 +57,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
         };
     }, []);
 
-    if (error.current&&showErrorIcon) {
+    if (error.current && showErrorIcon) {
         return <ImageError />
     }
 
@@ -76,8 +81,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
                         ${src} 500w,
                         ${src} 800w,
                         ${src} 1080w,
-                        ${src} 1200w,
-                    `}
+                        ${src} 1200w,`}
                     decoding="async"
                     fetchPriority={fetchPriority}
                     sizes={sizes}
@@ -85,7 +89,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
                     onError={() => {
                         if (error.current) return;
                         error.current = true
-                        onError && onError
+                        onError && onError()
                     }}
                     onLoad={onLoad}
                 />
