@@ -1,6 +1,8 @@
 "use client";
-import UserCardFollower from '@/components/profile/follower/UserCard';
+import { SkeletonUserCard } from '@/components/home/loading/UserCard';
+import UserCardFollower from '@/components/profile/client/UserCardFollower';
 import { Separator } from '@/components/ui/separator'
+import { fetchUserProfileFollowerUserApi } from '@/redux/services/profile';
 import { UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions';
 import { RootState } from '@/redux/store';
 import { User } from '@/types';
@@ -9,55 +11,59 @@ import {useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
-const PageFollower = ({ data,profileId }: { data: User[],profileId:string }) => {
-    const dispatch = useDispatch()
-    const router = useRouter()
-    const users = useSelector((state: RootState) => state.users)
-    const profile = useSession().data?.user
-    const isProfile = useMemo(() => profile?.username === profileId, [profile?.username, profileId])
-    const loadedRef = useRef(false)
+const Page = ({
+  params
+}: {
+  params: { profile: string }
+}) => {
+  const dispatch = useDispatch()
+  const router = useRouter()
+  const profile = useSelector((state: RootState) => state.profile)
+  const session = useSession().data?.user
+  const isProfile = useMemo(() => profile?.state?.username === params.profile, [profile, params.profile])
+  const loadedRef = useRef(false)
+
+
+  useEffect(() => {
+    if (!loadedRef.current) {
+      dispatch(fetchUserProfileFollowerUserApi({
+        username: params.profile,
+        offset: 0,
+        limit: 10
+      }) as any)
+      loadedRef.current = true;
+    }
+  }, []);
 
   const pageRedirect = (user: User) => {
     router.push(`/${user?.username}`)
   }
 
-  useEffect(() => {
-    if (!loadedRef.current) {
-        // dispatch(setFollowersUsers({
-        //     Users: data,
-        //     skip: 0,
-        //     size: 12
-        // }) as any)
-        loadedRef.current = true;
-    }
-}, [data, dispatch]);
-
-
   const handleActionUnFollow = async (user: User) => {
-    if (profile?.id) {
-      await dispatch(UserUnFollowingApi({
-        followingUserId: profile.id,
-        followerUserId: user.id,
-        isProfile: isProfile as boolean,
-        type: "followers",
-        userId: user.id
-      }) as any)
-      /// remove from list
-    }
+    // if (profile?.id) {
+    //   await dispatch(UserUnFollowingApi({
+    //     followingUserId: profile.id,
+    //     followerUserId: user.id,
+    //     isProfile: isProfile as boolean,
+    //     type: "followers",
+    //     userId: user.id
+    //   }) as any)
+    //   /// remove from list
+    // }
   }
 
   const handleActionFollow = (user: User) => {
-    if (profile?.id) {
-      dispatch(UserFollowingApi({
-        followingUserId: user.id,
-        followingUsername:user.username,
-        followerUserId: profile.id,
-        followerUsername: profile.username,
-        isProfile: isProfile as boolean,
-        type: "followers",
-        userId: user.id
-    }) as any)
-    }
+    // if (profile?.id) {
+    //   dispatch(UserFollowingApi({
+    //     followingUserId: user.id,
+    //     followingUsername:user.username,
+    //     followerUserId: profile.id,
+    //     followerUsername: profile.username,
+    //     isProfile: isProfile as boolean,
+    //     type: "followers",
+    //     userId: user.id
+    // }) as any)
+    // }
   }
 
   return (
@@ -66,16 +72,17 @@ const PageFollower = ({ data,profileId }: { data: User[],profileId:string }) => 
         <h1 className="font-semibold text-lg text-center mb-4">Followers</h1>
         <Separator />
         <div className='h-5' />
-        {/* {users.profileData.fetchFollow.followers.map((user, i) => <UserCardFollower
-          pageRedirect={pageRedirect}
+        {profile.followerList?.map((user, i) => <UserCardFollower
           key={i} user={user}
           isProfile={isProfile}
+          itself={session?.id === user.id}
+          pageRedirect={pageRedirect}
           handleActionFollow={handleActionFollow}
-          itself={profile?.id === user.id}
-          handleActionUnFollow={handleActionUnFollow} />)} */}
+          handleActionUnFollow={handleActionUnFollow} />)}
+        {profile.followerListLoading ? <>{Array(10).fill(0).map((_, i) => <SkeletonUserCard key={i} />)}</> : <></>}
       </div>
     </div>
   )
 }
 
-export default PageFollower
+export default Page

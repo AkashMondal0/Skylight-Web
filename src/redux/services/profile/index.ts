@@ -130,3 +130,62 @@ export const destroyFriendshipApi = createAsyncThunk(
         }
     }
 );
+
+// fetchUserProfileFollowingUserApi
+export const fetchUserProfileFollowingUserApi = createAsyncThunk(
+    'fetchUserProfileFollowingUserApi/get',
+    async (viewFollowingInput: findDataInput, thunkApi) => {
+        try {
+            let query = `query FindAllFollowing($viewFollowingInput: SearchByUsernameInput!) {
+                findAllFollowing(viewFollowingInput: $viewFollowingInput) {
+                  username
+                  profilePicture
+                  name
+                  id
+                  email
+                  following
+                  followed_by
+                }
+              }`
+            const res = await graphqlQuery({
+                query: query,
+                variables: { viewFollowingInput }
+            })
+
+            return res.findAllFollowing
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
+        }
+    }
+);
+// fetchUserProfileFollowerUserApi
+export const fetchUserProfileFollowerUserApi = createAsyncThunk(
+    'fetchUserProfileFollowerUserApi/get',
+    async (viewFollowerInput: findDataInput, thunkApi) => {
+        try {
+            let query = `query FindAllFollower($viewFollowerInput: SearchByUsernameInput!) {
+                findAllFollower(viewFollowerInput: $viewFollowerInput) {
+                  id
+                  username
+                  email
+                  name
+                  profilePicture
+                  followed_by
+                  following
+                }
+              }`
+            const res = await graphqlQuery({
+                query: query,
+                variables: { viewFollowerInput }
+            })
+
+            return res.findAllFollower
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
+        }
+    }
+);

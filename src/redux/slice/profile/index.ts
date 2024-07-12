@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { FeedPost, User } from '@/types'
-import { createFriendshipApi, destroyFriendshipApi, fetchUserProfileDetailApi, fetchUserProfilePostsApi } from '@/redux/services/profile'
+import { createFriendshipApi, destroyFriendshipApi, fetchUserProfileDetailApi, fetchUserProfileFollowerUserApi, fetchUserProfileFollowingUserApi, fetchUserProfilePostsApi } from '@/redux/services/profile'
 
 // Define a type for the slice state
 interface ProfileState {
@@ -15,6 +15,14 @@ interface ProfileState {
 
     friendShipLoading: boolean
     friendShipError: string | null
+
+    followerList: User[]
+    followerListLoading: boolean
+    followerListError: string | null
+
+    followingList: User[]
+    followingListLoading: boolean
+    followingListError: string | null
 }
 
 // Define the initial state using that type
@@ -29,12 +37,21 @@ const profileState: ProfileState = {
 
     friendShipLoading: false,
     friendShipError: null,
+
+    followerList: [],
+    followerListLoading: false,
+    followerListError: null,
+
+    followingList: [],
+    followingListLoading: false,
+    followingListError: null,
 }
 
 export const profileSlice = createSlice({
     name: 'Profile',
     initialState: profileState,
     reducers: {
+
     },
     extraReducers: (builder) => {
         builder
@@ -66,6 +83,32 @@ export const profileSlice = createSlice({
             .addCase(fetchUserProfilePostsApi.rejected, (state, action) => {
                 state.postLoading = false
                 state.postError = action.error.message || null
+            })
+            // find user profile following list
+            .addCase(fetchUserProfileFollowingUserApi.pending, (state) => {
+                state.followingListLoading = true
+                state.followingListError = null
+            })
+            .addCase(fetchUserProfileFollowingUserApi.fulfilled, (state, action: PayloadAction<User[]>) => {
+                state.followingList = action.payload
+                state.followingListLoading = false
+            })
+            .addCase(fetchUserProfileFollowingUserApi.rejected, (state, action) => {
+                state.followingListLoading = false
+                state.followingListError = action.error.message || null
+            })
+            // find user profile follower list
+            .addCase(fetchUserProfileFollowerUserApi.pending, (state) => {
+                state.followerListLoading = true
+                state.followerListError = null
+            })
+            .addCase(fetchUserProfileFollowerUserApi.fulfilled, (state, action: PayloadAction<User[]>) => {
+                state.followerList = action.payload
+                state.followerListLoading = false
+            })
+            .addCase(fetchUserProfileFollowerUserApi.rejected, (state, action) => {
+                state.followerListLoading = false
+                state.followerListError = action.error.message || null
             })
             //  createFriendshipApi
             .addCase(createFriendshipApi.pending, (state) => {
