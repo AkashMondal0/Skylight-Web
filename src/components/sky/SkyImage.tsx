@@ -1,6 +1,7 @@
 "use client";
 import { cn } from '@/lib/utils';
 import React, { useEffect, useRef } from 'react';
+import { ImageError } from './image.error';
 
 interface OptimizedImageProps {
     src: string;
@@ -10,6 +11,7 @@ interface OptimizedImageProps {
     className?: string;
     fetchPriority?: 'auto' | 'high' | 'low';
     sizes?: string;
+    showErrorIcon?: boolean;
     onError?: (event: React.SyntheticEvent<HTMLImageElement, Event>) => void;
     onLoad?: (event: React.SyntheticEvent<HTMLImageElement, Event>) => void;
 }
@@ -17,9 +19,12 @@ interface OptimizedImageProps {
 const OptimizedImage: React.FC<OptimizedImageProps> = ({
     src, alt, width, height, className,
     fetchPriority = 'auto', sizes = '(min-width: 808px) 50vw, 100vw',
-    onError, onLoad
+    onError,
+    onLoad,
+    showErrorIcon = false
 }) => {
     const imgRef = useRef<HTMLImageElement>(null);
+    const error = useRef(false)
 
     useEffect(() => {
         const img = imgRef.current;
@@ -47,6 +52,10 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
         };
     }, []);
 
+    if (error.current&&showErrorIcon) {
+        return <ImageError />
+    }
+
     return (
         <>
             <picture className='h-auto w-full cursor-pointer'>
@@ -73,7 +82,11 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
                     fetchPriority={fetchPriority}
                     sizes={sizes}
                     className={cn('h-auto w-full', className)}
-                    onError={onError}
+                    onError={() => {
+                        if (error.current) return;
+                        error.current = true
+                        onError && onError
+                    }}
                     onLoad={onLoad}
                 />
             </picture>

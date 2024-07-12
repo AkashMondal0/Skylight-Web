@@ -207,6 +207,13 @@ type Assets = {
     type?: 'image' | 'video' | 'audio' | "text"
     caption?: string;
 }
+
+type findDataInput = {
+    username?: string
+    id?: string
+    offset: number
+    limit: number
+}
 export type {
     User,
     Message,
@@ -229,6 +236,6 @@ export type {
     RestApiPayload,
     Friendship,
     Role,
-    FriendshipStatus
-
+    FriendshipStatus,
+    findDataInput
 }

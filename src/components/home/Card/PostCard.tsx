@@ -68,6 +68,7 @@ const PostItem = ({
             {feed.fileUrl.map((url, index) => (
               <CarouselItem key={index} className='flex flex-col m-auto'>
                 <OptimizedImage
+                  showErrorIcon
                   src={url}
                   width={500}
                   height={500}
@@ -174,6 +175,7 @@ export const PostItemDummy = ({
             {feed.fileUrl.map((url, index) => (
               <CarouselItem key={index} className='flex flex-col m-auto'>
                 <OptimizedImage
+                  showErrorIcon
                   src={url}
                   width={500}
                   height={500}

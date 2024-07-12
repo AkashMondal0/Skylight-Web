@@ -1,4 +1,5 @@
 import { graphqlQuery } from "@/lib/graphqlQuery";
+import { findDataInput } from "@/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchUserProfileDetailApi = createAsyncThunk(
@@ -27,6 +28,41 @@ export const fetchUserProfileDetailApi = createAsyncThunk(
             })
 
             return res.profileView
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
+        }
+    }
+);
+
+export const fetchUserProfilePostsApi = createAsyncThunk(
+    'fetchUserProfilePostApi/get',
+    async (findPosts: findDataInput, thunkApi) => {
+        try {
+            let query = `query FindProfilePosts($findPosts: SearchByUsernameInput!) {
+                findProfilePosts(findPosts: $findPosts) {
+                  user {
+                    username
+                    profilePicture
+                    name
+                    email
+                  }
+                  commentCount
+                  content
+                  createdAt
+                  fileUrl
+                  id
+                  is_Liked
+                  likeCount
+                }
+              }`
+            const res = await graphqlQuery({
+                query: query,
+                variables: { findPosts }
+            })
+
+            return res.findProfilePosts
         } catch (error: any) {
             return thunkApi.rejectWithValue({
                 ...error?.response?.data,
@@ -79,7 +115,7 @@ export const destroyFriendshipApi = createAsyncThunk(
                   friendShip
                 }
               }`
-             await graphqlQuery({
+            await graphqlQuery({
                 query: query,
                 variables: {
                     destroyFriendship

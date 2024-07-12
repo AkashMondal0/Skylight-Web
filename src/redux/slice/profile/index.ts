@@ -1,13 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { User } from '@/types'
-import { createFriendshipApi, destroyFriendshipApi, fetchUserProfileDetailApi } from '@/redux/services/profile'
+import { FeedPost, User } from '@/types'
+import { createFriendshipApi, destroyFriendshipApi, fetchUserProfileDetailApi, fetchUserProfilePostsApi } from '@/redux/services/profile'
 
 // Define a type for the slice state
 interface ProfileState {
     state: User | null
     loading: boolean
     error: string | null
+
+    posts: FeedPost[]
+    postLoading: boolean
+    postError: string | null
 
     friendShipLoading: boolean
     friendShipError: string | null
@@ -18,6 +22,10 @@ const profileState: ProfileState = {
     state: null,
     loading: false,
     error: null,
+
+    posts: [],
+    postLoading: false,
+    postError: null,
 
     friendShipLoading: false,
     friendShipError: null,
@@ -30,6 +38,7 @@ export const profileSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            // find user profile
             .addCase(fetchUserProfileDetailApi.pending, (state) => {
                 state.loading = true
                 state.error = null
@@ -44,6 +53,19 @@ export const profileSlice = createSlice({
                 state.loading = false
                 state.error = action.error.message || null
                 state.state = null
+            })
+            // find user profile posts
+            .addCase(fetchUserProfilePostsApi.pending, (state) => {
+                state.postLoading = true
+                state.postError = null
+            })
+            .addCase(fetchUserProfilePostsApi.fulfilled, (state, action: PayloadAction<FeedPost[]>) => {
+                state.posts = action.payload
+                state.postLoading = false
+            })
+            .addCase(fetchUserProfilePostsApi.rejected, (state, action) => {
+                state.postLoading = false
+                state.postError = action.error.message || null
             })
             //  createFriendshipApi
             .addCase(createFriendshipApi.pending, (state) => {

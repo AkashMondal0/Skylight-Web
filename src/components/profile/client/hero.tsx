@@ -8,12 +8,15 @@ import FollowAndUnFollowButton from './FollowButton'
 
 interface Props {
     isProfile: boolean
-    user: User
+    user: User | null
 }
 const HeroSection = ({
     isProfile,
     user: userProfileData,
 }: Props) => {
+
+    if (!userProfileData) return null
+
     return (
         <>
             {/* large device */}
