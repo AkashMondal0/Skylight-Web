@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server"
 const secret = process.env.NEXTAUTH_SECRET || "secret";
 import jwt from "jsonwebtoken"
 import { eq, sql } from "drizzle-orm";
-import redis from "@/lib/db/redis";
+// import redis from "@/lib/db/redis";
 
 export async function POST(request: NextRequest, response: NextResponse) {
   try {
@@ -71,11 +71,11 @@ export async function POST(request: NextRequest, response: NextResponse) {
     }
 
     try {
-      const receiverId = await redis.hget(`session:${members[0]}`, "socketId")
+      // const receiverId = await redis.hget(`session:${members[0]}`, "socketId")
 
-      if (receiverId) {
-        redis.publish("message", JSON.stringify({ ...data[0], receiverId }));
-      }
+      // if (receiverId) {
+      //   redis.publish("message", JSON.stringify({ ...data[0], receiverId }));
+      // }
     } catch (error) {
     }
     /// send notification to all members

@@ -2,7 +2,8 @@ import SkyAvatar from "@/components/sky/SkyAvatar"
 import { Button } from "@/components/ui/button"
 import { User } from "@/types"
 
-const UserCardFollower = ({
+
+const UserCardFollowing = ({
     user,
     pageRedirect,
     handleActionUnFollow,
@@ -18,7 +19,6 @@ const UserCardFollower = ({
     handleActionFollow: (user: User) => void
 }) => {
     if (!user) return null
-
     return (
         <>
             <div className='flex justify-between px-2 my-4'>
@@ -29,27 +29,25 @@ const UserCardFollower = ({
                             {user.username}
                         </div>
                         <div className='text-sm'>
-                            {user.name}
+                            {user.email}
                         </div>
                     </div>
                 </div>
-                <div className='flex items-center space-x-2'>
+                <div className='flex items-center'>
                     {!itself && <>
-                        {!user.isFollowing &&
+                        {/* {user.isFollowing ?
+                            <Button variant={"secondary"} className=" rounded-xl" onClick={() => handleActionUnFollow(user)}>
+                                Unfollow
+                            </Button> :
                             <Button variant={"default"}
                                 className="rounded-xl" onClick={() => handleActionFollow(user)}>
                                 Follow
-                            </Button>}
+                            </Button>} */}
                     </>}
-                    {isProfile && <Button variant={"secondary"}
-                        disabled={user.removeFollower}
-                        className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
-                        Remove
-                    </Button>}
                 </div>
             </div>
         </>
     )
 }
 
-export default UserCardFollower
+export default UserCardFollowing

@@ -1,7 +1,7 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
-import { UserFollowingApi, UserUnFollowingApi } from "@/redux/slice/users/api-functions"
+import { createFriendshipApi, destroyFriendshipApi } from "@/redux/services/profile"
 import { RootState } from "@/redux/store"
 import { User } from "@/types"
 import { Loader2, Settings } from "lucide-react"
@@ -18,7 +18,7 @@ const FollowAndUnFollowButton = ({
     user: User
     isFollowing?: boolean
 }) => {
-    const loading = useSelector((state: RootState) => state.users.profileData.handleFollow.loading)
+    const loading = useSelector((root: RootState) => root.profile.friendShipLoading)
     const router = useRouter()
     const dispatch = useDispatch()
     const session = useSession().data?.user
@@ -26,24 +26,22 @@ const FollowAndUnFollowButton = ({
     const handleFollow = async () => {
         if (!session?.id) return alert('no user id from follow button')
         if (!user?.id) return alert('no user id from follow button')
-        await dispatch(UserFollowingApi({
+        await dispatch(createFriendshipApi({
+            authorUserId: session?.id,
+            authorUsername: session?.username,
             followingUserId: user?.id,
-            followerUserId: session?.id,
-            followingUsername: user.username,
-            followerUsername: session.username,
-            isProfile: isProfile as boolean,
-            type: null
+            followingUsername: user?.username
         }) as any)
     }
 
     const handleUnfollow = async () => {
         if (!session?.id) return alert('no user id from unfollow button')
         if (!user?.id) return alert('no user id from unfollow button')
-        await dispatch(UserUnFollowingApi({
+        await dispatch(destroyFriendshipApi({
+            authorUserId: session?.id,
+            authorUsername: session?.username,
             followingUserId: user?.id,
-            followerUserId: session?.id,
-            isProfile: isProfile as boolean,
-            type: null
+            followingUsername: user?.username
         }) as any)
     }
 
@@ -64,9 +62,9 @@ const FollowAndUnFollowButton = ({
 
 
     if (isProfile) {
-        return <div className='justify-between gap-2 items-center sm:flex block space-x-2 space-y-2'>
+        return <div className='sm:flex space-x-2 space-y-2 items-center'>
             <div className="flex items-center">
-                <p className='text-xl px-3'>{user.username}</p>
+                <p className='text-xl px-3 truncate w-32'>{user.username}</p>
                 <Settings className='w-6 h-6 cursor-pointer sm:hidden block' />
             </div>
 
@@ -80,15 +78,16 @@ const FollowAndUnFollowButton = ({
             }}>
                 View Archive
             </Button>
-            <Settings className='w-8 h-8 cursor-pointer hidden sm:block' />
+            {EllipsisVertical('w-6 h-6 cursor-pointer hidden sm:block')}
         </div>
     }
 
-    return <div className='justify-between gap-2 items-center sm:flex block space-x-2 space-y-2'>
-        <p className='text-xl px-3'>{user.username}</p>
+    return <div className='items-center sm:flex space-x-2 space-y-2'>
+        <p className='text-xl px-3 truncate w-32'>{user.username}</p>
 
-        <Button className='rounded-xl w-24' disabled={loading} onClick={handleFollowAndUnfollow}>
-            {isFollowing ? 'Unfollow' : 'Follow'}{loading ? "ing..." : ""}
+        <Button className='rounded-xl px-6' disabled={loading} onClick={handleFollowAndUnfollow}>
+            {isFollowing ? 'Unfollow' : 'Follow'}
+            {/* {loading ? "ing..." : ""} */}
         </Button>
 
         <Button variant={"secondary"} className='rounded-xl' disabled={loading} onClick={() => {
@@ -96,7 +95,9 @@ const FollowAndUnFollowButton = ({
         }}>
             Message
         </Button>
-        <Settings className='w-8 h-8 cursor-pointer hidden sm:block' />
+        {EllipsisVertical('w-6 h-6 cursor-pointer hidden sm:block')}
     </div>
 }
 export default FollowAndUnFollowButton
+
+const EllipsisVertical = (className?: string) => <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={`lucide lucide-ellipsis-vertical ${className}`}><circle cx={12} cy={12} r={1} /><circle cx={12} cy={5} r={1} /><circle cx={12} cy={19} r={1} /></svg>

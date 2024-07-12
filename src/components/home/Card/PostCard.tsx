@@ -9,15 +9,14 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import SkyAvatar from '@/components/sky/SkyAvatar';
 import { useDispatch } from 'react-redux';
 import { openModal } from '@/redux/slice/modal';
 import { FeedPost } from '@/types';
-import { createPostLikeApi, destroyPostLikeApi } from '@/redux/slice/post-feed/api-functions';
 import { useSession } from 'next-auth/react';
 import OptimizedImage from '@/components/sky/SkyImage';
+import { createPostLikeApi, destroyPostLikeApi } from '@/redux/services/post';
 
 const PostItem = ({
   feed,
@@ -29,23 +28,13 @@ const PostItem = ({
   const session = useSession().data?.user
 
   const handleLikeAndUndoLike = () => {
-    if (session && feed) {
-
-      const data = {
-        postId: feed.id,
-        user: {
-          ...session,
-          profilePicture: session?.image ?? "/user.jpg",
-          isFollowing: false,
-        }
-      }
-
-      if (feed.alreadyLiked) {
+    if (feed) {
+      if (feed.is_Liked) {
         // unlike
-        dispatch(destroyPostLikeApi({ ...data, type: "feeds" }) as any)
+        dispatch(destroyPostLikeApi(feed.id) as any)
       } else {
         // like
-        dispatch(createPostLikeApi({ ...data, type: "feeds" }) as any)
+        dispatch(createPostLikeApi(feed.id) as any)
       }
     }
   }
@@ -54,11 +43,11 @@ const PostItem = ({
     <div className='max-w-[480px] w-full mx-auto py-4 border-b'>
       <div className='flex justify-between px-2'>
         <div className='flex space-x-2 items-center cursor-pointer' onClick={() => {
-          router.push(`/${feed.authorData.username}`)
+          router.push(`/${feed.user.username}`)
         }}>
-          <SkyAvatar url={feed.authorData.profilePicture || "/user.jpg"} className='h-12 w-12 mx-auto border-fuchsia-500 border-[3px] p-[2px]' />
+          <SkyAvatar url={feed.user.profilePicture || "/user.jpg"} className='h-12 w-12 mx-auto border-fuchsia-500 border-[3px] p-[2px]' />
           <div>
-            <div className='font-semibold text-base'>{feed.authorData.username} .
+            <div className='font-semibold text-base'>{feed.user.username} .
               <span className='font-light text-base'>1d</span>
             </div>
             <div className='text-sm'>Los Angeles, California</div>
@@ -79,6 +68,7 @@ const PostItem = ({
             {feed.fileUrl.map((url, index) => (
               <CarouselItem key={index} className='flex flex-col m-auto'>
                 <OptimizedImage
+                  showErrorIcon
                   src={url}
                   width={500}
                   height={500}
@@ -99,7 +89,7 @@ const PostItem = ({
 
       <div className=' mt-5 mb-1 mx-3 flex justify-between'>
         <div className='flex space-x-3'>
-          <Heart className={`w-7 h-7 cursor-pointer  ${feed.alreadyLiked ? "text-red-500 fill-red-500" : ""}`} onClick={handleLikeAndUndoLike} />
+          <Heart className={`w-7 h-7 cursor-pointer  ${feed.is_Liked ? "text-red-500 fill-red-500" : ""}`} onClick={handleLikeAndUndoLike} />
           <MessageCircle className='w-7 h-7 cursor-pointer hidden sm:block' onClick={() => router.push(`/post/${feed.id}`)} />
           {/* sm */}
           <MessageCircle className='w-7 h-7 cursor-pointer sm:hidden block' onClick={() => router.push(`/post/${feed.id}`)} />
@@ -127,9 +117,9 @@ const PostItem = ({
         {/* close friend comments */}
         <div className='flex space-x-2'>
           <div className='font-semibold cursor-pointer ' onClick={() => {
-            router.push(`/${feed.authorData.email}`)
-          }}>{feed.authorData.username}</div>
-          <div>{feed.caption}</div>
+            router.push(`/${feed.user.email}`)
+          }}>{feed.user.username}</div>
+          <div>{feed.content}</div>
         </div>
         {/* load more */}
 
@@ -162,9 +152,9 @@ export const PostItemDummy = ({
     <div className='max-w-[480px] w-full mx-auto py-4 border-b'>
       <div className='flex justify-between px-2'>
         <div className='flex space-x-2 items-center cursor-pointer'>
-          <SkyAvatar url={feed.authorData.profilePicture || "/user.jpg"} className='h-12 w-12 mx-auto border-fuchsia-500 border-[3px] p-[2px]' />
+          <SkyAvatar url={feed.user.profilePicture || "/user.jpg"} className='h-12 w-12 mx-auto border-fuchsia-500 border-[3px] p-[2px]' />
           <div>
-            <div className='font-semibold text-base'>{feed.authorData.username} .
+            <div className='font-semibold text-base'>{feed.user.username} .
               <span className='font-light text-base'>1d</span>
             </div>
             <div className='text-sm'>Los Angeles, California</div>
@@ -185,6 +175,7 @@ export const PostItemDummy = ({
             {feed.fileUrl.map((url, index) => (
               <CarouselItem key={index} className='flex flex-col m-auto'>
                 <OptimizedImage
+                  showErrorIcon
                   src={url}
                   width={500}
                   height={500}
@@ -205,7 +196,7 @@ export const PostItemDummy = ({
 
       <div className=' mt-5 mb-1 mx-3 flex justify-between'>
         <div className='flex space-x-3'>
-          <Heart className={`w-7 h-7 cursor-pointer  ${feed.alreadyLiked ? "text-red-500 fill-red-500" : ""}`} />
+          <Heart className={`w-7 h-7 cursor-pointer  ${feed.is_Liked ? "text-red-500 fill-red-500" : ""}`} />
           <MessageCircle className='w-7 h-7 cursor-pointer hidden sm:block' />
           {/* sm */}
           <MessageCircle className='w-7 h-7 cursor-pointer sm:hidden block' />
@@ -223,8 +214,8 @@ export const PostItemDummy = ({
 
         {/* close friend comments */}
         <div className='flex space-x-2'>
-          <div className='font-semibold cursor-pointer'>{feed.authorData.username}</div>
-          <div>{feed.caption}</div>
+          <div className='font-semibold cursor-pointer'>{feed.user.username}</div>
+          <div>{feed.content}</div>
         </div>
         {/* load more */}
 

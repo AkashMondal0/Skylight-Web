@@ -1,5 +1,4 @@
 "use client";
-import { setLoadMoreProfilePosts, setUsers } from "@/redux/slice/users";
 import { RootState } from "@/redux/store";
 import { FeedPost, User } from "@/types";
 import { useSession } from "next-auth/react";
@@ -16,80 +15,54 @@ import React, { forwardRef } from 'react'
 import { ImageComponent } from './client/Post'
 import HeroSection from './client/hero'
 import { Button } from "../ui/button";
+import SkeletonProfile from "./loading/skeleton";
+import { fetchUserProfileDetailApi, fetchUserProfilePostsApi } from "@/redux/services/profile";
 interface Props {
     isProfile: boolean
-    user: User
+    user: User | null
 }
-const MainLayout = ({ data }: {
-    data: User
+const MainLayout = ({ username }: {
+    username: User["username"]
 }) => {
     const dispatch = useDispatch()
     const session = useSession().data?.user
-    const users = useSelector((state: RootState) => state.users)
+    const profile = useSelector((state: RootState) => state.profile)
     const loadedRef = useRef(false)
-    const isProfile = useMemo(() => session?.username === data.username, [session?.username, data.username])
+    const isProfile = useMemo(() => session?.username === username, [session?.username, username])
 
     useEffect(() => {
         if (!loadedRef.current) {
-            dispatch(setUsers(data) as any)
+            dispatch(fetchUserProfileDetailApi(username) as any)
+            dispatch(fetchUserProfilePostsApi({
+                username,
+                limit: 12,
+                offset: 0
+            }) as any)
             loadedRef.current = true;
         }
-    }, [dispatch, data]);
+    }, []);
 
-    if (users?.profileData.user) {
+    if (profile.loading) {
+        return <SkeletonProfile />
+    }
+
+    if (profile.error) {
+        return <div>error</div>
+    }
+
+    if (profile.state?.id) {
         return <>
-            <Virtualized
-                isProfile={isProfile}
-                user={users.profileData.user} />
-        </>
-    }
-}
-
-export default MainLayout
-
-function Virtualized({
-    isProfile,
-    user
-}: Props) {
-    const [size, setSize] = useState(250)
-    const dispatch = useDispatch()
-
-    const loadMore = () => {
-        const _posts: FeedPost[] = Array.from({ length: 12 }, (_, i) => ({
-            id: `${i + size}`,
-            caption: `Caption ${i + size}`,
-            fileUrl: [`https://source.unsplash.com/random/300x300?sig=${i + size}`],
-            commentCount: 10,
-            likeCount: 10,
-            createdAt: new Date().toDateString(),
-            alreadyLiked: false,
-            authorData: {
-                id: `user-${i + size}`,
-                username: `user-${i + size}`,
-                email: `user-${i} @gmail.com`,
-                name: `User ${i + size}`,
-            },
-            comments: [],
-            likes: [],
-            isDummy: true
-        }))
-        dispatch(setLoadMoreProfilePosts(_posts))
-        setSize(size + 12)
-    }
-
-    return (
-        <>
             <VirtuosoGrid
                 style={{
                     height: '100%',
                 }}
-                endReached={loadMore}
+                // endReached={loadMore}
                 overscan={5000}
-                totalCount={user.posts.length}
+                totalCount={profile.posts.length}
                 components={{
                     Header: forwardRef(function HeaderComponent() {
                         return (
-                            <HeroSection isProfile={isProfile} user={user} />
+                            <HeroSection isProfile={isProfile} user={profile.state} />
                         );
                     }),
                     Footer: forwardRef(function FooterComponent() {
@@ -100,7 +73,7 @@ function Virtualized({
                                     display: 'flex',
                                     justifyContent: 'center',
                                 }}>
-                                <Button onClick={loadMore}>
+                                <Button>
                                     Load Dummy Posts
                                 </Button>
                             </div>
@@ -140,9 +113,41 @@ function Virtualized({
                         );
                     }),
                 }}
-                itemContent={(index) => <ImageComponent data={user.posts[index]} />} />
+                itemContent={(index) => <ImageComponent data={profile.posts[index]} />}
+            />
             <style>{`html, body, #root { height: 100% }`}</style>
         </>
-
-    );
+    }
 }
+
+export default MainLayout
+
+// function Virtualized({
+//     isProfile,
+//     user
+// }: Props) {
+//     const [size, setSize] = useState(250)
+//     const dispatch = useDispatch()
+
+//     const loadMore = () => {
+//         // const _posts: FeedPost[] = Array.from({ length: 12 }, (_, i) => ({
+//         //     id: `${i + size}`,
+//         //     caption: `Caption ${i + size}`,
+//         //     fileUrl: [`https://source.unsplash.com/random/300x300?sig=${i + size}`],
+//         //     commentCount: 10,
+//         //     likeCount: 10,
+//         //     createdAt: new Date().toDateString(),
+//         //     alreadyLiked: false,
+//         //     authorData: {
+//         //         id: `user-${i + size}`,
+//         //         username: `user-${i + size}`,
+//         //         email: `user-${i} @gmail.com`,
+//         //         name: `User ${i + size}`,
+//         //     },
+//         //     comments: [],
+//         //     likes: [],
+//         //     isDummy: true
+//         // }))
+//         // // dispatch(setLoadMoreProfilePosts(_posts))
+//         // setSize(size + 12)
+// }

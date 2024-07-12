@@ -20,9 +20,9 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { useDispatch } from "react-redux"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
-import { UploadImagesFireBaseApi } from "@/redux/slice/profile/api-functions"
 import { toast } from "sonner"
 import OptimizedImage from "@/components/sky/SkyImage"
+import { UploadImagesFireBaseApi } from "@/redux/services/account"
 export default function UploadPostDialog({
     children
 }: {

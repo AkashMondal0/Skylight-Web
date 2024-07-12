@@ -10,24 +10,24 @@ import {
 import { X } from 'lucide-react'
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { searchProfileApi } from '@/redux/slice/users/api-functions';
 import { RootState } from '@/redux/store';
 import { User } from '@/types';
-import { removeAllUserFormSearch, removeUserFormSearch } from '@/redux/slice/users';
 import { SkeletonUserCard } from '@/components/home/loading/UserCard';
 import { useRouter } from 'next/navigation';
 import SkyAvatar from '@/components/sky/SkyAvatar';
+import { searchUsersProfileApi } from '@/redux/services/users';
+import { removeAllUserFormSearch, removeUserByIdFormSearch } from '@/redux/slice/users';
 
 
 
 const SearchModel = ({ children }: { children: React.ReactNode }) => {
     const dispatch = useDispatch();
-    const inputRef = React.useRef<any>();
-    const searchResultUser = useSelector((state: RootState) => state.users);
+    const inputRef = React.useRef<any>("");
+    const Users = useSelector((state: RootState) => state.users);
 
     const handleSearch = useCallback(() => {
         if (inputRef?.current?.value) {
-            dispatch(searchProfileApi({ keywords: inputRef?.current?.value }) as any)
+            dispatch(searchUsersProfileApi(inputRef?.current?.value) as any)
         }
     }, []);
 
@@ -57,9 +57,9 @@ const SearchModel = ({ children }: { children: React.ReactNode }) => {
                     <div className='font-semibold'>Recent</div>
                     <div className='text-primary text-blue-00 cursor-pointer' onClick={clearAll}>Clear All</div>
                 </div>
-                {searchResultUser.loading ?
+                {Users.searchUsersLoading ?
                     <div className='space-y-4'>{Array(10).fill(0).map((_, i) => <SkeletonUserCard key={i} />)}</div> :
-                    searchResultUser.search_users.map((item, i) => <UserCard key={i} item={item} />)}
+                    Users.searchUsers?.map((item, i) => <UserCard key={i} item={item} />)}
             </DrawerContent>
         </Drawer>
     )
@@ -78,7 +78,7 @@ const UserCard = ({
     const router = useRouter()
 
     const removeUser = useCallback(() => {
-        dispatch(removeUserFormSearch(item.id) as any)
+        dispatch(removeUserByIdFormSearch(item.id) as any)
     }, []);
 
     const navigateToProfile = useCallback(() => {
@@ -90,10 +90,6 @@ const UserCard = ({
             onClick={navigateToProfile}>
             <DrawerClose>
                 <div className='flex space-x-2 items-center'>
-                    {/* <Avatar className='h-12 w-12 mx-auto'>
-                        <AvatarImage src={item.profilePicture ? item.profilePicture : "/user.jpg"}
-                            alt="@shadcn" className='rounded-full' />
-                    </Avatar> */}
                     <SkyAvatar className='h-12 w-12 mx-auto' url={item.profilePicture ? item.profilePicture : "/user.jpg"} />
                     <div className='ml-2 text-start'>
                         <div className='font-semibold text-base'>

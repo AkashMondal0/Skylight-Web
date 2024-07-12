@@ -1,7 +1,6 @@
 'use client'
 import { signIn } from "next-auth/react"
 import { useDispatch } from "react-redux";
-import { registerApi } from "@/redux/slice/profile/api-functions";
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,8 +18,9 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { PayloadData } from "@/types";
 import { useState } from "react";
+import { ApiPayloadData, User } from "@/types";
+import { registerApi } from "@/redux/services/account";
 
 const FormSchema = z.object({
     username: z.string().min(2, {
@@ -61,7 +61,7 @@ export default function LoginPage() {
             toast.error("Username must not contain spaces or @ symbol")
             return
         }
-        const res = await dispatch(registerApi({ email, password, name, username }) as any) as PayloadData
+        const res = await dispatch(registerApi({ email, password, name, username }) as any) as { payload: ApiPayloadData<User> }
         if (res.payload?.code === 1) {
             signIn("credentials", {
                 email: res.payload.data.email,
@@ -69,7 +69,7 @@ export default function LoginPage() {
                 name: res.payload.data.name,
                 id: res.payload.data.id,
                 image: res.payload.data.profilePicture ?? "/user.jpg",
-                token: res.payload.data.token,
+                token: res.payload.data.accessToken,
                 redirect: true,
             });
             reset();
@@ -121,7 +121,7 @@ export default function LoginPage() {
                         <Label htmlFor="name">Name</Label>
                         <Input id="name" type="name" placeholder="example name" {...register("name", { required: true })} />
                         <div className="h-4 w-full text-center mb-2">
-                            {errors.username ? <span className="text-red-500">{errors.username?.message}</span> : <></>}
+                            {errors.name ? <span className="text-red-500">{errors.name?.message}</span> : <></>}
                         </div>
                     </div>
                     <div className="grid gap-2">

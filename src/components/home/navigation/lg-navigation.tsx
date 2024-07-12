@@ -20,6 +20,7 @@ import MoreDropdownMenu from "../model/More_DropDown"
 import UploadPostDialog from "@/components/home/dialog/upload-post"
 import { useSession } from "next-auth/react"
 import SkyAvatar from "@/components/sky/SkyAvatar"
+import { configs } from "@/configs"
 
 
 
@@ -52,7 +53,7 @@ export default function Lg_Navigation({
         duration-300`,
       hideLabel ? "w-20" : "w-72 2xl:w-96 max-w-[20rem] md:w-20 xl:w-72"
     )}>
-      <div className="p-2 w-full flex flex-col justify-between">
+      <div className="p-1 w-full flex flex-col justify-between">
         <div>
           <Banner hideLabel={hideLabel} />
           <div className="space-y-3">
@@ -160,7 +161,7 @@ const Banner = ({ hideLabel }: {
         <Button
           variant="ghost"
           className={`w-full justify-start gap-3 h-full rounded-xl my-8`}>
-          <AtSign size={28} />
+           <img src={configs.AppDetails.logoUrl} alt="logo" className="w-6 h-6" />
         </Button>
       </div>
     )
@@ -170,12 +171,15 @@ const Banner = ({ hideLabel }: {
       <Button
         variant="ghost"
         className={`w-full justify-start gap-3 xl:hidden h-full rounded-xl my-8`}>
-        <AtSign size={28} />
+        <img src={configs.AppDetails.logoUrl} alt="logo" className="w-6 h-6" />
       </Button>
       <div className={`hidden xl:block my-8
       text-primary-500 text-xl px-5
       font-semibold`}>
-        Skymedia
+        <div className="flex items-center">
+          <img src={configs.AppDetails.logoUrl} alt="upload" className="w-6 h-6" />
+          {configs.AppDetails.name}
+        </div>
       </div>
     </div>
   )

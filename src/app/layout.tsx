@@ -8,7 +8,7 @@ import AppStart_Provider from "@/provider/AppStart_Provider";
 
 
 export const metadata: Metadata = {
-  title: 'Sky Media',
+  title: 'SkyLight',
   description: `Sky Media is a social media platform that 
   allows users to share their thoughts and ideas with the world.`,
 }
@@ -30,7 +30,7 @@ export default function RootLayout({ children,
                 attribute="class"
                 defaultTheme="dark"
                 enableSystem>
-                <AppStart_Provider />
+                {/* <AppStart_Provider /> */}
                 {children}
                 {modal}
               </ThemeProvider>

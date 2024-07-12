@@ -1,25 +1,35 @@
 "use client";
 import { cn } from '@/lib/utils';
 import React, { useEffect, useRef } from 'react';
+import { ImageError } from './image.error';
 
 interface OptimizedImageProps {
     src: string;
-    alt: string;
+    alt?: string;
     width: number;
     height: number;
     className?: string;
     fetchPriority?: 'auto' | 'high' | 'low';
     sizes?: string;
-    onError?: (event: React.SyntheticEvent<HTMLImageElement, Event>) => void;
-    onLoad?: (event: React.SyntheticEvent<HTMLImageElement, Event>) => void;
+    showErrorIcon?: boolean;
+    onError?: () => void;
+    onLoad?: () => void;
 }
 
 const OptimizedImage: React.FC<OptimizedImageProps> = ({
-    src, alt, width, height, className,
-    fetchPriority = 'auto', sizes = '(min-width: 808px) 50vw, 100vw',
-    onError, onLoad
+    src,
+    alt = "image not found",
+    width,
+    height,
+    className,
+    fetchPriority = 'auto',
+    sizes = '(min-width: 808px) 50vw, 100vw',
+    onError,
+    onLoad,
+    showErrorIcon = false
 }) => {
     const imgRef = useRef<HTMLImageElement>(null);
+    const error = useRef(false)
 
     useEffect(() => {
         const img = imgRef.current;
@@ -47,6 +57,10 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
         };
     }, []);
 
+    if (error.current && showErrorIcon) {
+        return <ImageError />
+    }
+
     return (
         <>
             <picture className='h-auto w-full cursor-pointer'>
@@ -67,17 +81,16 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
                         ${src} 500w,
                         ${src} 800w,
                         ${src} 1080w,
-                        ${src} 1200w,
-                        ${src} 1400w,
-                        ${src} 1600w,
-                        ${src} 1800w,
-                        ${src} 2000w,
-                    `}
+                        ${src} 1200w,`}
                     decoding="async"
                     fetchPriority={fetchPriority}
                     sizes={sizes}
                     className={cn('h-auto w-full', className)}
-                    onError={onError}
+                    onError={() => {
+                        if (error.current) return;
+                        error.current = true
+                        onError && onError()
+                    }}
                     onLoad={onLoad}
                 />
             </picture>

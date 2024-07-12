@@ -23,7 +23,7 @@ const Sm_Navigation = () => {
 
     return (
         <div className={`md:hidden w-full fixed flex bottom-0 z-10 border-t py-2 bg-background text-foreground h-14 items-center`}>
-            <div className="p-2 w-full flex justify-around">
+            <div className="p-1 w-full flex justify-around">
                 {SideIconData.map(({ icon, label, onClick }, index) => {
                     if (label === "Profile") {
                         return <NavigationItem key={index} label={label}

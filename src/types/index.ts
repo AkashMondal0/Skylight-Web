@@ -1,15 +1,17 @@
 interface FeedPost {
     id: string
-    caption: string
     fileUrl: string[]
     commentCount: number
     likeCount: number
     createdAt: Date | string
-    alreadyLiked: boolean | null
-    authorData: AuthorData
     comments: Comment[]
     likes: AuthorData[]
     isDummy?: boolean
+    content: string;
+    title: string;
+    updatedAt: Date;
+    is_Liked: boolean;
+    user: AuthorData;
 }
 
 interface AuthorData {
@@ -20,27 +22,53 @@ interface AuthorData {
     profilePicture?: string
     isFollowing?: boolean,
 }
-
-interface User {
+enum Role {
+    User = 'user',
+    Admin = 'admin',
+}
+type User = {
     id: string;
     username: string;
+    name: string;
     email: string;
-    password: string;
+    password?: string; // Password might not be returned
     profilePicture: string | null;
     bio: string | null;
-    createdAt: Date;
-    updatedAt: Date;
-    followers: User[]
-    following: User[]
-    isVerified: false,
-    isPrivate: false,
-    postCount: number,
-    followersCount: number,
-    followingCount: number,
-    posts: FeedPost[]
-    isFollowing: boolean,
-    removeFollower: boolean,
-    name: string
+    createdAt?: Date | string | null | unknown;
+    updatedAt?: Date | string | null | unknown;
+    isVerified?: boolean | false | null;
+    isPrivate?: boolean | false | null;
+    accessToken?: string | null | unknown;
+    refreshToken?: string | null | unknown;
+    loggedDevice?: any[] | unknown;
+    roles?: Role[] | string[];
+    salt?: string;
+    friendship: {
+        followed_by: boolean; // if the user is followed by the following
+        following: boolean; // if the user is following the following
+    }
+    postCount: number;
+    followerCount: number;
+    followingCount: number;
+}
+
+enum FriendshipStatus {
+    // 'pending', 'accepted', 'rejected', 'blocked', 'deleted'
+    Pending = 'pending',
+    Accepted = 'accepted',
+    Rejected = 'rejected',
+    Blocked = 'blocked',
+    Deleted = 'deleted',
+}
+type Friendship = {
+    id?: string;
+    followingUsername?: string;
+    authorUsername?: string;
+    followingUserId?: string;
+    authorUserId?: string;
+    createdAt?: Date | string | unknown;
+    updatedAt?: Date | string | unknown;
+    status?: FriendshipStatus | string;
 }
 
 interface Message {
@@ -157,19 +185,11 @@ interface SavedPost {
     updatedAt: Date;
 }
 
-interface PayloadData {
-    payload: {
-        code: number,
-        message: string,
-        data: {
-            email: string,
-            username: string,
-            id: string,
-            profilePicture: string,
-            token: string,
-            name: string
-        }
-    }
+type code = 0 | 1
+interface ApiPayloadData<T> {
+    code: code,
+    message: string,
+    data: T,
 }
 
 interface RestApiPayload<T> {
@@ -187,6 +207,13 @@ type Assets = {
     type?: 'image' | 'video' | 'audio' | "text"
     caption?: string;
 }
+
+type findDataInput = {
+    username?: string
+    id?: string
+    offset: number
+    limit: number
+}
 export type {
     User,
     Message,
@@ -201,10 +228,14 @@ export type {
     StoryReply,
     StoryLike,
     SavedPost,
-    PayloadData,
+    ApiPayloadData,
     FeedPost,
     AuthorData,
     networkImage_status,
     Assets,
-    RestApiPayload
+    RestApiPayload,
+    Friendship,
+    Role,
+    FriendshipStatus,
+    findDataInput
 }

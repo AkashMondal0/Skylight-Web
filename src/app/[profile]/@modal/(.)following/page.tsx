@@ -1,43 +1,80 @@
-import { Suspense } from "react";
-import { cookies } from 'next/headers';
-import { notFound } from 'next/navigation';
-import { configs } from '@/configs';
-import { RestApiPayload, User } from '@/types';
-import ModalFollowing from "@/components/profile/following/c";
+'use client'
+import {
+  Dialog,
+  DialogContent,
+} from "@/components/ui/dialog"
+import { Separator } from '@/components/ui/separator'
+import { UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions'
+import { RootState } from '@/redux/store'
+import { User } from '@/types'
+import { useRouter } from 'next/navigation'
+import React, { useEffect, useMemo, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { ScrollArea } from "@/components/ui/scroll-area"
+// import { followingsDataClear, setFollowingsUsers } from "@/redux/slice/users"
+import { useSession } from "next-auth/react"
+import { fetchUserProfileFollowingUserApi } from "@/redux/services/profile"
+import UserCardFollowing from "@/components/profile/client/UserCardFollowing"
 
-async function getProfileFollowing(id: string) {
-    try {
-        const response = await fetch(`${configs.appUrl}/api/v1/profile/${id}/following`, {
-            headers: {
-                "Content-Type": "application/json",
-                "authorization": `${cookies().get("token-auth")?.value}`
-            },
-            cache: "no-store"
-        });
-        const res = await response.json() as RestApiPayload<User[]>;
-        if (res.code === 0) {
-            throw new Error(res.message);
-        }
-        return res.data;
-    } catch (error) {
-        console.log(error)
-        return notFound()
+const Page = ({
+  params
+}: {
+  params: { profile: string }
+}) => {
+  const dispatch = useDispatch()
+  const router = useRouter()
+  const profile = useSelector((state: RootState) => state.profile)
+  const session = useSession().data?.user
+  const isProfile = useMemo(() => profile?.state?.username === params.profile, [profile, params.profile])
+  const loadedRef = useRef(false)
+
+  const pageRedirect = (user: User) => {
+    router.push(`/${user?.username}`)
+  }
+
+  useEffect(() => {
+    if (!loadedRef.current) {
+      dispatch(fetchUserProfileFollowingUserApi({
+        username: params.profile,
+        offset: 0,
+        limit: 10
+      }) as any)
+      loadedRef.current = true;
     }
-}
-async function PageComponent({ params }: { params: { profile: string } }) {
-    try {
-        const data = await getProfileFollowing(params.profile) as User[]
-        return <ModalFollowing data={data} profileId={params.profile} />
-    } catch (error) {
-        console.log(error)
-        return notFound()
+  }, []);
+
+
+  const handleActionUnFollow = async (user: User) => {
+   
+  }
+  const handleActionFollow = async (user: User) => {
+    
+  }
+
+  const onOpenChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      router.back()
     }
+  }
+  return (
+    <Dialog open onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-[425px] pb-0">
+        <h1 className="text-center font-semibold text-lg">Following</h1>
+        <Separator />
+        <ScrollArea className="h-72 w-full rounded-md">
+          {profile.followingList?.map((user, i) => <UserCardFollowing
+              key={i} user={user}
+              isProfile={isProfile}
+              itself={session?.id === user.id}
+              pageRedirect={pageRedirect}
+              handleActionFollow={handleActionFollow}
+              handleActionUnFollow={handleActionUnFollow} />)}
+        </ScrollArea>
+      </DialogContent>
+    </Dialog>
+  )
 }
 
-export default async function Page({ params }: { params: { profile: string } }) {
-    return <>
-        <Suspense fallback={<></>}>
-            <PageComponent params={params} />
-        </Suspense>
-    </>
-}
+export default Page
+
+
