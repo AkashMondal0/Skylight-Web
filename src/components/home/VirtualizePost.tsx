@@ -11,6 +11,7 @@ import { Button } from '../ui/button';
 import ShowUpload from './alert/show-upload';
 import SkeletonPostCard from './loading/PostCard';
 import { fetchAccountFeedApi } from '@/redux/services/account';
+import NotFound from "@/components/home/NotFound"
 
 const VirtualizePost = () => {
     const dispatch = useDispatch()
@@ -60,7 +61,7 @@ const VirtualizePost = () => {
     }
 
     if (posts.error) {
-        return <div>Error</div>
+        return <NotFound message={posts.error?.message}/>
     }
 
     return (
