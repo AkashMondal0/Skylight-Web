@@ -214,6 +214,24 @@ type findDataInput = {
     offset: number
     limit: number
 }
+
+type GraphqlError = {
+    message: string
+    locations: {
+        line: number
+        column: number
+    }[]
+    path: string[]
+    extensions: {
+        code: string
+        originalError: {
+            message: string
+            statusCode: number
+        }
+        stacktrace: string[]
+    }
+}
+
 export type {
     User,
     Message,
@@ -237,5 +255,6 @@ export type {
     Friendship,
     Role,
     FriendshipStatus,
-    findDataInput
+    findDataInput,
+    GraphqlError
 }

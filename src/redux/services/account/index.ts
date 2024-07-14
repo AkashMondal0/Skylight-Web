@@ -4,6 +4,11 @@ import axios, { AxiosError } from "axios";
 import { uploadFirebaseFile } from "@/lib/firebase/upload-file";
 import { graphqlQuery } from "../../../lib/graphqlQuery";
 import { ShowUploadImage } from "@/redux/slice/account";
+import { GraphqlError } from "@/types";
+
+export const DeleteAllCookie = async () => {
+    await axios.delete(`/api/v1/auth/logout`)
+}
 
 export const UploadImagesFireBaseApi = createAsyncThunk(
     'UploadImagesFireBaseApi/post',
@@ -142,7 +147,7 @@ export const logoutApi = createAsyncThunk(
     'logoutApi/post',
     async (_, thunkApi) => {
         try {
-            await axios.delete(`/api/v1/auth/logout`)
+            await DeleteAllCookie()
             const res = await axios.post(`${configs.serverApi.baseUrl}/v1/auth/logout`)
             return res.data
         } catch (error: any) {
@@ -153,9 +158,8 @@ export const logoutApi = createAsyncThunk(
 
 export const fetchAccountFeedApi = createAsyncThunk(
     'fetchProfileFeedApi/get',
-    async (_, thunkApi) => {
-        try {
-            let query = `query FeedTimelineConnection {
+    async (_, thunkAPI) => {
+        let query = `query FeedTimelineConnection {
                 feedTimelineConnection {
                   id
                   content
@@ -176,15 +180,10 @@ export const fetchAccountFeedApi = createAsyncThunk(
                   }
                 }
               }`
-            const res = await graphqlQuery({
-                query: query,
-            })
+        const res = await graphqlQuery({
+            query: query,
+        })
 
-            return res.feedTimelineConnection
-        } catch (error: any) {
-            return thunkApi.rejectWithValue({
-                ...error?.response?.data,
-            })
-        }
+        return res.feedTimelineConnection
     }
 );

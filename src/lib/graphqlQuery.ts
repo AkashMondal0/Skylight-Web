@@ -1,4 +1,6 @@
 import { configs } from "@/configs"
+import { DeleteAllCookie } from "@/redux/services/account"
+import { GraphqlError } from "@/types"
 import axios from "axios"
 
 export const graphqlQuery = async ({
@@ -6,13 +8,15 @@ export const graphqlQuery = async ({
     variables,
     url = `${configs.serverApi.baseUrl}/graphql`,
     BearerToken,
-    withCredentials = false
+    withCredentials = false,
+    errorCallBack
 }: {
     query: string
     variables?: any
     url?: string
     BearerToken?: string
     withCredentials?: boolean
+    errorCallBack?: (error: GraphqlError[]) => void
 }) => {
     const response = await fetch(url, {
         method: 'POST',
@@ -27,10 +31,16 @@ export const graphqlQuery = async ({
         }),
     });
 
-    const responseBody = await response.json();
+    const responseBody = await response.json() as {
+        data: any,
+        errors: GraphqlError[]
+    }
 
     if (responseBody.errors) {
-        throw new Error('Error fetching data: ' + responseBody.errors.map((e: any) => e.message).join(', '));
+        if (responseBody.errors[0].extensions.code === 'UNAUTHENTICATED') {
+            await DeleteAllCookie()
+        }
+        throw new Error(responseBody.errors[0].message)
     }
     return responseBody.data;
 }
