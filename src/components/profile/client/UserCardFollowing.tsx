@@ -1,23 +1,27 @@
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import { Button } from "@/components/ui/button"
 import { AuthorData } from "@/types"
+import { UnFollowDialog } from "../dialog/unfollow"
+import { useRouter } from "next/navigation"
 
 
 const UserCardFollowing = ({
     user,
-    pageRedirect,
-    handleActionUnFollow = () => { },
     isProfile,
-    itself,
-    handleActionFollow = () => { }
+    itself
 }: {
     user: AuthorData
-    pageRedirect: (user: AuthorData) => void
-    handleActionUnFollow?: (user: AuthorData) => void
     isProfile?: boolean
     itself?: boolean
-    handleActionFollow?: (user: AuthorData) => void
 }) => {
+    const router = useRouter()
+    const pageRedirect = (user: AuthorData) => {
+        router.push(`/${user?.username}`)
+    }
+
+    const HandleRejected = () => { }
+    const HandleConfirm = () => { }
+
     if (!user) return null
     return (
         <>
@@ -38,10 +42,15 @@ const UserCardFollowing = ({
                         {/* if profile */}
                         {itself ? <p className="text-sm">You</p> : <>
                             {user.following ?
-                                <Button variant={"secondary"}
-                                    className="rounded-xl">
-                                    Following  {/* UnFollow */}
-                                </Button>
+                                <UnFollowDialog
+                                    user={user}
+                                    HandleRejected={HandleRejected}
+                                    HandleConfirm={HandleConfirm}>
+                                    <Button variant={"secondary"}
+                                        className="rounded-xl">
+                                        Following  {/* UnFollow */}
+                                    </Button>
+                                </UnFollowDialog>
                                 :
                                 <Button variant={"secondary"} className="rounded-xl">
                                     Follow
@@ -51,13 +60,19 @@ const UserCardFollowing = ({
                         {
                             itself ? <p className="text-sm">You</p> : <>
                                 {user.following ?
-                                    <Button variant={"secondary"} className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
-                                        Following {/* Unfollow function*/}
-                                    </Button> :
-                                    <Button variant={"default"} className="rounded-xl" onClick={() => handleActionFollow(user)}>
+                                    <UnFollowDialog
+                                        user={user}
+                                        HandleRejected={HandleConfirm}
+                                        HandleConfirm={HandleConfirm}>
+                                        <Button variant={"secondary"}
+                                            className="rounded-xl">
+                                            Following  {/* UnFollow */}
+                                        </Button>
+                                    </UnFollowDialog> :
+                                    <Button variant={"default"}
+                                        className="rounded-xl">
                                         Follow
                                     </Button>}
-
                             </>
                         }
                     </>}

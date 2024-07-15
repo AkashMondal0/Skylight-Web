@@ -4,7 +4,6 @@ import {
     Dialog,
     DialogContent,
 } from "@/components/ui/dialog"
-import { AuthorData, User } from '@/types'
 import { useRouter } from "next/navigation"
 import { useDispatch, useSelector } from "react-redux"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -37,41 +36,6 @@ const Page = ({ params }: { params: { profile: string } }) => {
     }, []);
 
 
-    const pageRedirect = (user: AuthorData) => {
-        router.push(`/${user?.username}`)
-    }
-
-
-
-
-    const handleActionUnFollow = async (user: AuthorData) => {
-        // if (profile?.id) {
-        //     await dispatch(UserUnFollowingApi({
-        //         followingUserId: profile.id,
-        //         followerUserId: user.id,
-        //         isProfile: isProfile as boolean,
-        //         type: "followers",
-        //         userId: user.id
-        //     }) as any)
-        //     /// remove from list
-        // }
-    }
-
-    const handleActionFollow = (user: AuthorData) => {
-        // if (profile?.id) {
-        //     dispatch(UserFollowingApi({
-        //         followingUserId: user.id,
-        //         followingUsername: user.username,
-        //         followerUserId: profile.id,
-        //         followerUsername: profile.username,
-        //         isProfile: isProfile as boolean,
-        //         type: "followers",
-        //         userId: user.id
-        //     }) as any)
-        // }
-    }
-
-
     const onOpenChange = (isOpen: boolean) => {
         if (!isOpen) {
             router.back()
@@ -86,10 +50,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
                     {profile.followerList.map((user, i) => <UserCardFollower
                        key={i} user={user}
                        isProfile={isProfile}
-                       itself={session?.id === user.id}
-                       pageRedirect={pageRedirect}
-                       handleActionFollow={handleActionFollow}
-                       handleActionUnFollow={handleActionUnFollow} />)}
+                       itself={session?.id === user.id} />)}
                     {profile.followerListLoading ?
                        <FollowPageLoading/>: <></>}
                 </ScrollArea>

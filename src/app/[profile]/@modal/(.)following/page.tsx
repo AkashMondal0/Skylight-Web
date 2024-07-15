@@ -5,7 +5,6 @@ import {
 } from "@/components/ui/dialog"
 import { Separator } from '@/components/ui/separator'
 import { RootState } from '@/redux/store'
-import { AuthorData, User } from '@/types'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -27,10 +26,6 @@ const Page = ({
   const isProfile = useMemo(() => session?.username === params.profile, [profile, params.profile])
   const loadedRef = useRef(false)
 
-  const pageRedirect = (user: AuthorData) => {
-    router.push(`/${user?.username}`)
-  }
-
   useEffect(() => {
     if (!loadedRef.current) {
       dispatch(fetchUserProfileFollowingUserApi({
@@ -41,14 +36,6 @@ const Page = ({
       loadedRef.current = true;
     }
   }, []);
-
-
-  const handleActionUnFollow = async (user: AuthorData) => {
-
-  }
-  const handleActionFollow = async (user: AuthorData) => {
-
-  }
 
   const onOpenChange = (isOpen: boolean) => {
     if (!isOpen) {
@@ -64,10 +51,7 @@ const Page = ({
           {profile.followingList?.map((user, i) => <UserCardFollowing
             key={i} user={user}
             isProfile={isProfile}
-            itself={session?.id === user.id}
-            pageRedirect={pageRedirect}
-            handleActionFollow={handleActionFollow}
-            handleActionUnFollow={handleActionUnFollow} />)}
+            itself={session?.id === user.id}/>)}
           {profile.followingListLoading ? <FollowPageLoading /> : <></>}
         </ScrollArea>
       </DialogContent>

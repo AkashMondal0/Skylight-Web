@@ -1,22 +1,64 @@
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import { Button } from "@/components/ui/button"
 import { AuthorData, User } from "@/types"
+import { FollowerRemoveDialog } from "../dialog/remove.follower"
+import { useRouter } from "next/navigation"
 
 const UserCardFollower = ({
     user,
-    pageRedirect,
-    handleActionUnFollow,
     isProfile,
-    itself,
-    handleActionFollow
+    itself
 }: {
     user: AuthorData
-    pageRedirect: (user: AuthorData) => void
-    handleActionUnFollow: (user: AuthorData) => void
     isProfile?: boolean
     itself?: boolean
-    handleActionFollow: (user: AuthorData) => void
 }) => {
+    const router = useRouter()
+    const pageRedirect = (user: AuthorData) => {
+        router.push(`/${user?.username}`)
+    }
+    const handleUnFollow = async (user: AuthorData) => {
+        // if (profile?.id) {
+        //   await dispatch(UserUnFollowingApi({
+        //     followingUserId: profile.id,
+        //     followerUserId: user.id,
+        //     isProfile: isProfile as boolean,
+        //     type: "followers",
+        //     userId: user.id
+        //   }) as any)
+        //   /// remove from list
+        // }
+    }
+
+    const handleFollow = (user: AuthorData) => {
+        // if (profile?.id) {
+        //   dispatch(UserFollowingApi({
+        //     followingUserId: user.id,
+        //     followingUsername:user.username,
+        //     followerUserId: profile.id,
+        //     followerUsername: profile.username,
+        //     isProfile: isProfile as boolean,
+        //     type: "followers",
+        //     userId: user.id
+        // }) as any)
+        // }
+    }
+    const handleRemoveFollow = (user: AuthorData) => {
+        // if (profile?.id) {
+        //   dispatch(UserFollowingApi({
+        //     followingUserId: user.id,
+        //     followingUsername:user.username,
+        //     followerUserId: profile.id,
+        //     followerUsername: profile.username,
+        //     isProfile: isProfile as boolean,
+        //     type: "followers",
+        //     userId: user.id
+        // }) as any)
+        // }
+    }
+    const HandleRejected = () => { }
+    const HandleConfirm = () => { }
+
     if (!user) return null
 
     return (
@@ -47,19 +89,31 @@ const UserCardFollower = ({
                                 </Button>}
                             {/* if user following you */}
                             {user.followed_by &&
-                                <Button variant={"secondary"} className="rounded-xl">
-                                    Remove
-                                </Button>}
+                                <FollowerRemoveDialog
+                                    user={user}
+                                    HandleRejected={HandleRejected}
+                                    HandleConfirm={HandleConfirm}>
+                                    <Button variant={"secondary"} className="rounded-xl">
+                                        Remove
+                                    </Button>
+                                </FollowerRemoveDialog>}
                         </>}
                     </> : <>
                         {
                             itself ? <p className="text-sm">You</p> : <>
                                 {user.following ?
-                                    <Button variant={"secondary"} className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
-                                        Following
-                                        {/* this is unfollow func */}
-                                    </Button> :
-                                    <Button variant={"default"} className="rounded-xl" onClick={() => handleActionFollow(user)}>
+                                    <FollowerRemoveDialog
+                                        user={user}
+                                        HandleRejected={HandleRejected}
+                                        HandleConfirm={HandleConfirm}>
+                                        <Button variant={"secondary"} className="rounded-xl">
+                                            Following
+                                            {/* this is unfollow func */}
+                                        </Button>
+                                    </FollowerRemoveDialog>
+                                    :
+                                    <Button variant={"default"}
+                                        className="rounded-xl">
                                         Follow
                                     </Button>}
                             </>
