@@ -20,7 +20,8 @@ interface AuthorData {
     email: string
     name: string
     profilePicture?: string
-    isFollowing?: boolean,
+    followed_by?: boolean
+    following?: boolean
 }
 enum Role {
     User = 'user',

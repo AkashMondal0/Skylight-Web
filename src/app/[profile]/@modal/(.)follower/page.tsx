@@ -4,7 +4,7 @@ import {
     Dialog,
     DialogContent,
 } from "@/components/ui/dialog"
-import { User } from '@/types'
+import { AuthorData, User } from '@/types'
 import { useRouter } from "next/navigation"
 import { useDispatch, useSelector } from "react-redux"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -21,7 +21,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
     const router = useRouter()
     const profile = useSelector((state: RootState) => state.profile)
     const session = useSession().data?.user
-    const isProfile = useMemo(() => profile?.state?.username === params.profile, [profile, params.profile])
+    const isProfile = useMemo(() => session?.username === params.profile, [profile, params.profile])
     const loadedRef = useRef(false)
 
 
@@ -37,14 +37,14 @@ const Page = ({ params }: { params: { profile: string } }) => {
     }, []);
 
 
-    const pageRedirect = (user: User) => {
+    const pageRedirect = (user: AuthorData) => {
         router.push(`/${user?.username}`)
     }
 
 
 
 
-    const handleActionUnFollow = async (user: User) => {
+    const handleActionUnFollow = async (user: AuthorData) => {
         // if (profile?.id) {
         //     await dispatch(UserUnFollowingApi({
         //         followingUserId: profile.id,
@@ -57,7 +57,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
         // }
     }
 
-    const handleActionFollow = (user: User) => {
+    const handleActionFollow = (user: AuthorData) => {
         // if (profile?.id) {
         //     dispatch(UserFollowingApi({
         //         followingUserId: user.id,

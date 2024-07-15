@@ -1,22 +1,22 @@
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import { Button } from "@/components/ui/button"
-import { User } from "@/types"
+import { AuthorData } from "@/types"
 
 
 const UserCardFollowing = ({
     user,
     pageRedirect,
-    handleActionUnFollow,
+    handleActionUnFollow = () => { },
     isProfile,
     itself,
-    handleActionFollow
+    handleActionFollow = () => { }
 }: {
-    user: User
-    pageRedirect: (user: User) => void
-    handleActionUnFollow: (user: User) => void
+    user: AuthorData
+    pageRedirect: (user: AuthorData) => void
+    handleActionUnFollow?: (user: AuthorData) => void
     isProfile?: boolean
     itself?: boolean
-    handleActionFollow: (user: User) => void
+    handleActionFollow?: (user: AuthorData) => void
 }) => {
     if (!user) return null
     return (
@@ -34,15 +34,32 @@ const UserCardFollowing = ({
                     </div>
                 </div>
                 <div className='flex items-center'>
-                    {!itself && <>
-                        {/* {user.isFollowing ?
-                            <Button variant={"secondary"} className=" rounded-xl" onClick={() => handleActionUnFollow(user)}>
-                                Unfollow
-                            </Button> :
-                            <Button variant={"default"}
-                                className="rounded-xl" onClick={() => handleActionFollow(user)}>
-                                Follow
-                            </Button>} */}
+                    {isProfile ? <>
+                        {/* if profile */}
+                        {itself ? <p className="text-sm">You</p> : <>
+                            {user.following ?
+                                <Button variant={"secondary"}
+                                    className="rounded-xl">
+                                    Following  {/* UnFollow */}
+                                </Button>
+                                :
+                                <Button variant={"secondary"} className="rounded-xl">
+                                    Follow
+                                </Button>}
+                        </>}
+                    </> : <>
+                        {
+                            itself ? <p className="text-sm">You</p> : <>
+                                {user.following ?
+                                    <Button variant={"secondary"} className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
+                                        Following {/* Unfollow function*/}
+                                    </Button> :
+                                    <Button variant={"default"} className="rounded-xl" onClick={() => handleActionFollow(user)}>
+                                        Follow
+                                    </Button>}
+
+                            </>
+                        }
                     </>}
                 </div>
             </div>

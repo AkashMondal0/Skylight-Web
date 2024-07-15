@@ -1,11 +1,10 @@
 "use client";
 import FollowPageLoading from '@/components/home/loading/FollowerLoading';
-import { SkeletonUserCard } from '@/components/home/loading/UserCard';
 import UserCardFollower from '@/components/profile/client/UserCardFollower';
 import { Separator } from '@/components/ui/separator';
 import { fetchUserProfileFollowerUserApi } from '@/redux/services/profile';
 import { RootState } from '@/redux/store';
-import { User } from '@/types';
+import { AuthorData } from '@/types';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';;
 import React, { useEffect, useMemo, useRef } from 'react';
@@ -20,7 +19,7 @@ const Page = ({
   const router = useRouter()
   const profile = useSelector((state: RootState) => state.profile)
   const session = useSession().data?.user
-  const isProfile = useMemo(() => profile?.state?.username === params.profile, [profile, params.profile])
+  const isProfile = useMemo(() => session?.username === params.profile, [profile, params.profile])
   const loadedRef = useRef(false)
 
 
@@ -35,11 +34,11 @@ const Page = ({
     }
   }, []);
 
-  const pageRedirect = (user: User) => {
+  const pageRedirect = (user: AuthorData) => {
     router.push(`/${user?.username}`)
   }
 
-  const handleActionUnFollow = async (user: User) => {
+  const handleActionUnFollow = async (user: AuthorData) => {
     // if (profile?.id) {
     //   await dispatch(UserUnFollowingApi({
     //     followingUserId: profile.id,
@@ -52,7 +51,7 @@ const Page = ({
     // }
   }
 
-  const handleActionFollow = (user: User) => {
+  const handleActionFollow = (user: AuthorData) => {
     // if (profile?.id) {
     //   dispatch(UserFollowingApi({
     //     followingUserId: user.id,
@@ -79,7 +78,7 @@ const Page = ({
           pageRedirect={pageRedirect}
           handleActionFollow={handleActionFollow}
           handleActionUnFollow={handleActionUnFollow} />)}
-        {!profile.followerListLoading ? <FollowPageLoading/> : <></>}
+        {profile.followerListLoading ? <FollowPageLoading /> : <></>}
       </div>
     </div>
   )

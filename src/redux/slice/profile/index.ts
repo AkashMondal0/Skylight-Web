@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { FeedPost, User } from '@/types'
+import { AuthorData, FeedPost, User } from '@/types'
 import { createFriendshipApi, destroyFriendshipApi, fetchUserProfileDetailApi, fetchUserProfileFollowerUserApi, fetchUserProfileFollowingUserApi, fetchUserProfilePostsApi } from '@/redux/services/profile'
 
 // Define a type for the slice state
@@ -16,11 +16,11 @@ interface ProfileState {
     friendShipLoading: boolean
     friendShipError: string | null
 
-    followerList: User[]
+    followerList: AuthorData[]
     followerListLoading: boolean
     followerListError: string | null
 
-    followingList: User[]
+    followingList: AuthorData[]
     followingListLoading: boolean
     followingListError: string | null
 }
@@ -89,7 +89,7 @@ export const profileSlice = createSlice({
                 state.followingListLoading = true
                 state.followingListError = null
             })
-            .addCase(fetchUserProfileFollowingUserApi.fulfilled, (state, action: PayloadAction<User[]>) => {
+            .addCase(fetchUserProfileFollowingUserApi.fulfilled, (state, action: PayloadAction<AuthorData[]>) => {
                 state.followingList = action.payload
                 state.followingListLoading = false
             })
@@ -102,7 +102,7 @@ export const profileSlice = createSlice({
                 state.followerListLoading = true
                 state.followerListError = null
             })
-            .addCase(fetchUserProfileFollowerUserApi.fulfilled, (state, action: PayloadAction<User[]>) => {
+            .addCase(fetchUserProfileFollowerUserApi.fulfilled, (state, action: PayloadAction<AuthorData[]>) => {
                 state.followerList = action.payload
                 state.followerListLoading = false
             })

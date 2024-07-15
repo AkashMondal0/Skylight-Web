@@ -6,7 +6,7 @@ import { SkeletonUserCardFollowPage } from '@/components/profile/loading/skeleto
 import { Separator } from '@/components/ui/separator'
 import { fetchUserProfileFollowingUserApi } from '@/redux/services/profile'
 import { RootState } from '@/redux/store'
-import { User } from '@/types'
+import { AuthorData, User } from '@/types'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useRef } from 'react'
@@ -21,10 +21,10 @@ const Page = ({
   const router = useRouter()
   const profile = useSelector((state: RootState) => state.profile)
   const session = useSession().data?.user
-  const isProfile = useMemo(() => profile?.state?.username === params.profile, [profile, params.profile])
+  const isProfile = useMemo(() => session?.username === params.profile, [profile, params.profile])
   const loadedRef = useRef(false)
 
-  const pageRedirect = (user: User) => {
+  const pageRedirect = (user: AuthorData) => {
     router.push(`/${user?.username}`)
   }
 
@@ -41,7 +41,7 @@ const Page = ({
 
 
 
-  const handleActionUnFollow = async (user: User) => {
+  const handleActionUnFollow = async (user: AuthorData) => {
     // if (profile?.id) {
     //   await dispatch(UserUnFollowingApi({
     //     followingUserId: user.id,
@@ -53,7 +53,7 @@ const Page = ({
 
     // }
   }
-  const handleActionFollow = async (user: User) => {
+  const handleActionFollow = async (user: AuthorData) => {
     // if (profile?.id) {
     //   await dispatch(UserFollowingApi({
     //     followingUserId: user.id,
@@ -84,12 +84,14 @@ const Page = ({
         <Separator />
         <div className='h-5' />
         {profile.followingList?.map((user, i) => <UserCardFollowing
-          key={i} user={user}
+          key={i} 
+          user={user}
           isProfile={isProfile}
           itself={session?.id === user.id}
           pageRedirect={pageRedirect}
           handleActionFollow={handleActionFollow}
-          handleActionUnFollow={handleActionUnFollow} />)}
+          handleActionUnFollow={handleActionUnFollow} 
+          />)}
         {profile.followingListLoading ? <FollowPageLoading/> : <></>}
       </div>
     </div>

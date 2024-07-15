@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/dialog"
 import { Separator } from '@/components/ui/separator'
 import { RootState } from '@/redux/store'
-import { User } from '@/types'
+import { AuthorData, User } from '@/types'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -24,10 +24,10 @@ const Page = ({
   const router = useRouter()
   const profile = useSelector((state: RootState) => state.profile)
   const session = useSession().data?.user
-  const isProfile = useMemo(() => profile?.state?.username === params.profile, [profile, params.profile])
+  const isProfile = useMemo(() => session?.username === params.profile, [profile, params.profile])
   const loadedRef = useRef(false)
 
-  const pageRedirect = (user: User) => {
+  const pageRedirect = (user: AuthorData) => {
     router.push(`/${user?.username}`)
   }
 
@@ -43,10 +43,10 @@ const Page = ({
   }, []);
 
 
-  const handleActionUnFollow = async (user: User) => {
+  const handleActionUnFollow = async (user: AuthorData) => {
 
   }
-  const handleActionFollow = async (user: User) => {
+  const handleActionFollow = async (user: AuthorData) => {
 
   }
 

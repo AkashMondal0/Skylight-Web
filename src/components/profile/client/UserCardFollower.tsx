@@ -1,6 +1,6 @@
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import { Button } from "@/components/ui/button"
-import { User } from "@/types"
+import { AuthorData, User } from "@/types"
 
 const UserCardFollower = ({
     user,
@@ -10,12 +10,12 @@ const UserCardFollower = ({
     itself,
     handleActionFollow
 }: {
-    user: User
-    pageRedirect: (user: User) => void
-    handleActionUnFollow: (user: User) => void
+    user: AuthorData
+    pageRedirect: (user: AuthorData) => void
+    handleActionUnFollow: (user: AuthorData) => void
     isProfile?: boolean
     itself?: boolean
-    handleActionFollow: (user: User) => void
+    handleActionFollow: (user: AuthorData) => void
 }) => {
     if (!user) return null
 
@@ -34,18 +34,37 @@ const UserCardFollower = ({
                     </div>
                 </div>
                 <div className='flex items-center space-x-2'>
-                    {/* {!itself && <>
-                        {!user.isFollowing &&
-                            <Button variant={"default"}
-                                className="rounded-xl" onClick={() => handleActionFollow(user)}>
-                                Follow
-                            </Button>}
+                    {isProfile ? <>
+                        {itself ? <p className="text-sm">You</p> : <>
+                            {/* if your not following this user */}
+                            {!user.following &&
+                                <Button variant={"link"}
+                                    className="rounded-xl
+                                    hover:text-white
+                                    hover:no-underline
+                                    text-blue-500">
+                                    Follow
+                                </Button>}
+                            {/* if user following you */}
+                            {user.followed_by &&
+                                <Button variant={"secondary"} className="rounded-xl">
+                                    Remove
+                                </Button>}
+                        </>}
+                    </> : <>
+                        {
+                            itself ? <p className="text-sm">You</p> : <>
+                                {user.following ?
+                                    <Button variant={"secondary"} className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
+                                        Following
+                                        {/* this is unfollow func */}
+                                    </Button> :
+                                    <Button variant={"default"} className="rounded-xl" onClick={() => handleActionFollow(user)}>
+                                        Follow
+                                    </Button>}
+                            </>
+                        }
                     </>}
-                    {isProfile && <Button variant={"secondary"}
-                        disabled={user.removeFollower}
-                        className="rounded-xl" onClick={() => handleActionUnFollow(user)}>
-                        Remove
-                    </Button>} */}
                 </div>
             </div>
         </>
