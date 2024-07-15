@@ -1,7 +1,6 @@
 import { configs } from "@/configs"
 import { DeleteAllCookie } from "@/redux/services/account"
 import { GraphqlError } from "@/types"
-import axios from "axios"
 
 export const graphqlQuery = async ({
     query,
@@ -37,10 +36,19 @@ export const graphqlQuery = async ({
     }
 
     if (responseBody.errors) {
-        if (responseBody.errors[0].extensions.code === 'UNAUTHENTICATED') {
-            await DeleteAllCookie()
-        }
-        throw new Error(responseBody.errors[0].message)
+        await graphqlErrorTypes(responseBody.errors[0])
     }
     return responseBody.data;
+}
+
+const graphqlErrorTypes = async (e: GraphqlError) => {
+    switch (e.extensions.code) {
+        case 'UNAUTHENTICATED':
+            await DeleteAllCookie()
+            throw new Error(e.message)
+        case 'INTERNAL_SERVER_ERROR':
+            throw new Error("Something went wrong!")
+        default:
+            throw new Error("Something went wrong!")
+    }
 }

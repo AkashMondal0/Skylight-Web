@@ -1,14 +1,14 @@
 "use client";
+import FollowPageLoading from '@/components/home/loading/FollowerLoading';
 import { SkeletonUserCard } from '@/components/home/loading/UserCard';
 import UserCardFollower from '@/components/profile/client/UserCardFollower';
-import { Separator } from '@/components/ui/separator'
+import { Separator } from '@/components/ui/separator';
 import { fetchUserProfileFollowerUserApi } from '@/redux/services/profile';
-import { UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions';
 import { RootState } from '@/redux/store';
 import { User } from '@/types';
 import { useSession } from 'next-auth/react';
-import {useRouter } from 'next/navigation'
-import React, { useEffect, useMemo, useRef } from 'react'
+import { useRouter } from 'next/navigation';;
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Page = ({
@@ -79,7 +79,7 @@ const Page = ({
           pageRedirect={pageRedirect}
           handleActionFollow={handleActionFollow}
           handleActionUnFollow={handleActionUnFollow} />)}
-        {profile.followerListLoading ? <>{Array(10).fill(0).map((_, i) => <SkeletonUserCard key={i} />)}</> : <></>}
+        {!profile.followerListLoading ? <FollowPageLoading/> : <></>}
       </div>
     </div>
   )

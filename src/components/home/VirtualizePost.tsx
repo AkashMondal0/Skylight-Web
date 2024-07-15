@@ -55,11 +55,6 @@ const VirtualizePost = () => {
     //     setSize(size + 10)
     // }
 
-
-    if (posts.loading) {
-        return <SkeletonPostCard />
-    }
-
     if (posts.error) {
         return <NotFound message={posts.error?.message}/>
     }

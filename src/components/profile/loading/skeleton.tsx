@@ -69,9 +69,9 @@ const SkeletonProfile = () => {
                     <Skeleton className='w-20 h-20 rounded-full' />
                 </div>
                 {/* post */}
-                <div className="grid grid-cols-3 gap-2 p-1">
+                <div className="grid grid-cols-3 gap-1 p-1">
                     {Array(9).fill(0).map((post, index) => (
-                        <Skeleton key={index} className='aspect-square w-full h-full object-cover' />
+                        <Skeleton key={index} className='aspect-square rounded-none w-full h-full object-cover' />
                     ))}
                 </div>
                 <div className='h-10 w-full'></div>

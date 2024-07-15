@@ -10,12 +10,10 @@ import { useDispatch, useSelector } from "react-redux"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { RootState } from '@/redux/store'
-import { UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions'
-// import { followersDataClear, setFollowersUsers } from '@/redux/slice/users'
-import { SkeletonFollowUserCard } from '@/components/profile/loading/skeleton'
 import { useSession } from 'next-auth/react'
 import { fetchUserProfileFollowerUserApi } from '@/redux/services/profile'
 import UserCardFollower from '@/components/profile/client/UserCardFollower'
+import FollowPageLoading from '@/components/home/loading/FollowerLoading'
 
 
 const Page = ({ params }: { params: { profile: string } }) => {
@@ -93,9 +91,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
                        handleActionFollow={handleActionFollow}
                        handleActionUnFollow={handleActionUnFollow} />)}
                     {profile.followerListLoading ?
-                        <div className='space-y-2'>
-                            {Array(10).fill(0).map((_, i) => <SkeletonFollowUserCard key={i} />)}
-                        </div> : <></>}
+                       <FollowPageLoading/>: <></>}
                 </ScrollArea>
             </DialogContent>
         </Dialog>

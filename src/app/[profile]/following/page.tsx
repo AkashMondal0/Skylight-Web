@@ -1,4 +1,5 @@
 'use client'
+import FollowPageLoading from '@/components/home/loading/FollowerLoading'
 import { SkeletonUserCard } from '@/components/home/loading/UserCard'
 import UserCardFollowing from '@/components/profile/client/UserCardFollowing'
 import { SkeletonUserCardFollowPage } from '@/components/profile/loading/skeleton'
@@ -89,7 +90,7 @@ const Page = ({
           pageRedirect={pageRedirect}
           handleActionFollow={handleActionFollow}
           handleActionUnFollow={handleActionUnFollow} />)}
-        {profile.followingListLoading ? <>{Array(10).fill(0).map((_, i) => <SkeletonUserCard key={i} />)}</> : <></>}
+        {profile.followingListLoading ? <FollowPageLoading/> : <></>}
       </div>
     </div>
   )

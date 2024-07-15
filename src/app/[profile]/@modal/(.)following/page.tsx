@@ -4,17 +4,16 @@ import {
   DialogContent,
 } from "@/components/ui/dialog"
 import { Separator } from '@/components/ui/separator'
-import { UserFollowingApi, UserUnFollowingApi } from '@/redux/slice/users/api-functions'
 import { RootState } from '@/redux/store'
 import { User } from '@/types'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollArea } from "@/components/ui/scroll-area"
-// import { followingsDataClear, setFollowingsUsers } from "@/redux/slice/users"
 import { useSession } from "next-auth/react"
 import { fetchUserProfileFollowingUserApi } from "@/redux/services/profile"
 import UserCardFollowing from "@/components/profile/client/UserCardFollowing"
+import FollowPageLoading from "@/components/home/loading/FollowerLoading"
 
 const Page = ({
   params
@@ -45,10 +44,10 @@ const Page = ({
 
 
   const handleActionUnFollow = async (user: User) => {
-   
+
   }
   const handleActionFollow = async (user: User) => {
-    
+
   }
 
   const onOpenChange = (isOpen: boolean) => {
@@ -63,12 +62,13 @@ const Page = ({
         <Separator />
         <ScrollArea className="h-72 w-full rounded-md">
           {profile.followingList?.map((user, i) => <UserCardFollowing
-              key={i} user={user}
-              isProfile={isProfile}
-              itself={session?.id === user.id}
-              pageRedirect={pageRedirect}
-              handleActionFollow={handleActionFollow}
-              handleActionUnFollow={handleActionUnFollow} />)}
+            key={i} user={user}
+            isProfile={isProfile}
+            itself={session?.id === user.id}
+            pageRedirect={pageRedirect}
+            handleActionFollow={handleActionFollow}
+            handleActionUnFollow={handleActionUnFollow} />)}
+          {profile.followingListLoading ? <FollowPageLoading /> : <></>}
         </ScrollArea>
       </DialogContent>
     </Dialog>
