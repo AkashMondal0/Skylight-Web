@@ -79,9 +79,9 @@ export const createFriendshipApi = createAsyncThunk(
         authorUsername: string,
         followingUserId: string,
         followingUsername: string,
-        updateCount:boolean
+        updateCount: boolean
     }, thunkApi) => {
-        const { sessionId,updateCount, ...createFriendshipInput } = data
+        const { sessionId, updateCount, ...createFriendshipInput } = data
 
         try {
             let query = `mutation CreateFriendship($createFriendshipInput: CreateFriendshipInput!) {
@@ -117,9 +117,9 @@ export const destroyFriendshipApi = createAsyncThunk(
         authorUsername: string,
         followingUserId: string,
         followingUsername: string,
-        updateCount:boolean
+        updateCount: boolean
     }, thunkApi) => {
-        const { sessionId,updateCount, ...destroyFriendship } = data
+        const { sessionId, updateCount, ...destroyFriendship } = data
 
         try {
             let query = `mutation DestroyFriendship($destroyFriendship: DestroyFriendship!) {
@@ -151,6 +151,7 @@ export const fetchUserProfileFollowingUserApi = createAsyncThunk(
     'fetchUserProfileFollowingUserApi/get',
     async (viewFollowingInput: findDataInput, thunkApi) => {
         try {
+            await new Promise(resolve => setTimeout(resolve, 1000))
             let query = `query FindAllFollowing($viewFollowingInput: SearchByUsernameInput!) {
                 findAllFollowing(viewFollowingInput: $viewFollowingInput) {
                   username
@@ -180,6 +181,7 @@ export const fetchUserProfileFollowerUserApi = createAsyncThunk(
     'fetchUserProfileFollowerUserApi/get',
     async (viewFollowerInput: findDataInput, thunkApi) => {
         try {
+            await new Promise(resolve => setTimeout(resolve, 1000))
             let query = `query FindAllFollower($viewFollowerInput: SearchByUsernameInput!) {
                 findAllFollower(viewFollowerInput: $viewFollowerInput) {
                   id

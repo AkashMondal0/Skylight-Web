@@ -1,6 +1,7 @@
 "use client";
 import FollowPageLoading from '@/components/home/loading/FollowerLoading';
 import UserCardFollower from '@/components/profile/client/UserCardFollower';
+import { SkeletonUserCardFollowPage } from '@/components/profile/loading/skeleton';
 import { Separator } from '@/components/ui/separator';
 import { fetchUserProfileFollowerUserApi } from '@/redux/services/profile';
 import { RootState } from '@/redux/store';
@@ -30,6 +31,14 @@ const Page = ({
     }
   }, []);
 
+  if (profile.followerListError) {
+    return <>error followerList</>
+  }
+
+  if (profile.followerListLoading) {
+    return <SkeletonUserCardFollowPage title="Follower"/>
+  }
+  
 
   return (
     <div className='w-full flex justify-center min-h-[100dvh] h-full'>
