@@ -1,6 +1,5 @@
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton"
-import { DialogClose } from "../ui/dialog";
 
 export const CommentViewLoading = () => {
     return (<>
@@ -15,19 +14,19 @@ export const CommentViewLoading = () => {
                     </div>
                 </div>
                 <div className="flex items-center">
-                    <DialogClose className='w-8 h-8 cursor-pointer' >
+                    <div className='w-8 h-8 cursor-pointer' >
                         <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24}
                             viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}
                             strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x">
                             <line x1={18} y1={6} x2={6} y2={18} />
                             <line x1={6} y1={6} x2={18} y2={18} />
                         </svg>
-                    </DialogClose>
+                    </div>
                 </div>
             </div>
             {/* body comments list  */}
             <div className='h-auto flex-1'>
-               
+
             </div>
             {/* footer comment input  */}
             <div className='w-full bg-background p-2 border-t sticky bottom-0'>
@@ -43,6 +42,7 @@ export const CommentViewLoading = () => {
         </div>
     </>)
 }
+
 export const ImageViewLoading = () => {
     return (<>
         <div className='flex-1 h-auto m-auto'>
@@ -57,17 +57,17 @@ export const CommentViewError = () => {
             {/* header comment input  */}
             <div className="flex justify-between bg-background items-center p-4 border-b h-20 z-10 sticky top-0 rounded-lg">
                 <div className="flex gap-2 items-center">
-                   
+
                 </div>
                 <div className="flex items-center">
-                    <DialogClose className='w-8 h-8 cursor-pointer' >
+                    <div className='w-8 h-8 cursor-pointer' >
                         <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24}
                             viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}
                             strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x">
                             <line x1={18} y1={6} x2={6} y2={18} />
                             <line x1={6} y1={6} x2={18} y2={18} />
                         </svg>
-                    </DialogClose>
+                    </div>
                 </div>
             </div>
             {/* body comments list  */}
@@ -81,8 +81,28 @@ export const CommentViewError = () => {
             </div>
             {/* footer comment input  */}
             <div className='w-full bg-background p-2 border-t sticky bottom-0 h-24'>
-                
+
             </div>
         </div>
     </>)
+}
+
+export const PageLoading = ()=>{
+    return (
+        <div className='w-full h-full p-5'>
+        <div className="hidden md:flex max-h-[690px] mx-auto my-5 flex-wrap md:border max-w-[860px] min-h-min">
+          {/* left side */}
+          <div className='flex-1 h-auto m-auto'>
+            <ImageViewLoading />
+          </div>
+          {/* right side */}
+          <div className="flex max-h-[688px] flex-col justify-between w-80 flex-1 border-l">
+            <CommentViewLoading />
+          </div>
+        </div>
+        <div className='w-full h-full flex md:hidden'>
+          {/* <PostItem feed={data} /> */}
+        </div>
+      </div>
+    )
 }

@@ -48,6 +48,8 @@ const graphqlErrorTypes = async (e: GraphqlError) => {
             throw new Error(e.message)
         case 'INTERNAL_SERVER_ERROR':
             throw new Error("Something went wrong!")
+        case 'BAD_USER_INPUT':
+            throw new Error('Something went wrong!')
         default:
             throw new Error("Something went wrong!")
     }

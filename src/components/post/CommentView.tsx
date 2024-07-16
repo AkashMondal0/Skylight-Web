@@ -7,7 +7,6 @@ import { FeedPost } from "@/types"
 import { useRouter } from "next/navigation"
 import { Button } from "../ui/button"
 import { CommentViewError, CommentViewLoading } from "./loading.components"
-import { ImageError } from "../sky/image.error"
 
 const CommentView = ({
     data,
@@ -82,10 +81,10 @@ const CommentView = ({
                         <>
                             {data?.comments?.map((comment, index) => (
                                 <div key={index} className="flex p-4 my-auto">
-                                    <SkyAvatar url={comment?.authorData?.profilePicture || "/user.jpg"} className='h-12 w-12 border-fuchsia-500 border-[3px] p-[2px]' />
+                                    <SkyAvatar url={comment?.user?.profilePicture || "/user.jpg"} className='h-12 w-12 border-fuchsia-500 border-[3px] p-[2px]' />
                                     <div className="flex flex-col ml-4">
                                         <p className="break-all"><span className='font-semibold text-lg'>
-                                            {comment?.authorData?.username}</span> {comment?.comment}
+                                            {comment?.user?.username}</span> {comment?.content}
                                         </p>
                                         <div className="text-sm text-gray-500">2 hours ago</div>
                                     </div>

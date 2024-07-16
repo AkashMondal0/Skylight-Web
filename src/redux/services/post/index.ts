@@ -4,11 +4,11 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchOnePostApi = createAsyncThunk(
     'fetchOnePostApi/get',
-    async (postViewId: string, thunkApi) => {
+    async (findOnePostWithCommentId: string, thunkApi) => {
         try {
             await new Promise(resolve => setTimeout(resolve, 1000))
-            let query = `query PostView($postViewId: String!) {
-                postView(id: $postViewId) {
+            let query = `query findOnePostWithComment($findOnePostWithCommentId: String!) {
+                findOnePostWithComment(id: $findOnePostWithCommentId) {
                   id
                   content
                   fileUrl
@@ -17,6 +17,18 @@ export const fetchOnePostApi = createAsyncThunk(
                   commentCount
                   likeCount
                   is_Liked
+                  comments {
+                    content
+                    createdAt
+                    id
+                    user {
+                      id
+                      email
+                      username
+                      name
+                      profilePicture
+                    }
+                  }
                   user {
                     id
                     username
@@ -24,13 +36,14 @@ export const fetchOnePostApi = createAsyncThunk(
                     profilePicture
                   }
                 }
-              }`
+              }
+              `
             const res = await graphqlQuery({
                 query: query,
-                variables: { postViewId }
+                variables: { findOnePostWithCommentId }
             })
 
-            return res.postView
+            return res.findOnePostWithComment
         } catch (error: any) {
             return thunkApi.rejectWithValue({
                 ...error?.response?.data,
