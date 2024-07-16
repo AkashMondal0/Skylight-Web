@@ -119,7 +119,11 @@ const CommentView = ({
                         ref={inputRef}
                         className='w-full h-12 p-4 outline-none rounded-2xl border' />
                     <Button variant={"default"} onClick={() => {
-                        handleComment("")
+                        if (inputRef.current?.value) {
+                            handleComment(inputRef.current?.value)
+                            // @ts-ignore
+                            inputRef.current.value = "";
+                        }
                     }} className='w-full h-12 flex-1 rounded-2xl'>Post</Button>
                 </div>
             </div>

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSession } from 'next-auth/react'
 import { RootState } from '@/redux/store'
-import { createPostLikeApi, destroyPostLikeApi, fetchOnePostApi } from '@/redux/services/post'
+import { createPostCommentApi, createPostLikeApi, destroyPostLikeApi, fetchOnePostApi } from '@/redux/services/post'
 import ImageView from '@/components/post/ImageView'
 import CommentView from '@/components/post/CommentView'
 
@@ -27,17 +27,20 @@ export default function Page({ params }: { params: { id: string } }) {
   }, []);
 
   const handleComment = async (inputValue: string) => {
-    // if (session && data) {
-    //   await dispatch(createPostCommentApi({
-    //     postId: data.id,
-    //     user: session,
-    //     comment: inputRef.current?.value ?? "",
-    //     type: 'singleFeed'
-    //   }) as any)
-    //   if (inputRef.current) {
-    //     inputRef.current.value = ""
-    //   }
-    // }
+    if (!session) return alert("session undefine")
+    if (!Post.viewPost?.id) return alert("Post.viewPost.id undefine")
+    await dispatch(createPostCommentApi({
+      postId: Post.viewPost.id,
+      user: {
+        username: session.username,
+        name: session.name,
+        profilePicture: session.image as string,
+        id: session.id,
+        email: session.email
+      },
+      content: inputValue,
+      authorId: session.id
+    }) as any)
   }
   const handleLikeAndUndoLike = () => {
     if (!Post.viewPost) return alert('No data')

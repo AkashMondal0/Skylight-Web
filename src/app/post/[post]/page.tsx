@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useSession } from 'next-auth/react'
 import { RootState } from '@/redux/store'
 import OptimizedImage from '@/components/sky/SkyImage'
-import { createPostLikeApi, destroyPostLikeApi, fetchOnePostApi } from '@/redux/services/post'
+import { createPostCommentApi, createPostLikeApi, destroyPostLikeApi, fetchOnePostApi } from '@/redux/services/post'
 import { PageLoading } from '@/components/post/loading.components'
 import NotFound from '@/components/home/NotFound'
 
@@ -35,18 +35,24 @@ const PostPage = ({ params }: { params: { post: string } }) => {
     }
   }, []);
 
-  const handleComment = async (inputValue: string) => {
-    // if (session && data) {
-    //   await dispatch(createPostCommentApi({
-    //     postId: data.id,
-    //     user: session,
-    //     comment: inputRef.current?.value ?? "",
-    //     type: 'singleFeed'
-    //   }) as any)
-    //   if (inputRef.current) {
-    //     inputRef.current.value = ""
-    //   }
-    // }
+  const handleComment = async () => {
+    if (!session) return alert("session undefine")
+    if (!Post.viewPost?.id) return alert("Post.viewPost.id undefine")
+    if (inputRef.current && inputRef.current.value.length > 0)
+      await dispatch(createPostCommentApi({
+        postId: Post.viewPost.id,
+        user: {
+          username: session.username,
+          name: session.name,
+          profilePicture: session.image as string,
+          id: session.id,
+          email: session.email
+        },
+        content: inputRef.current?.value,
+        authorId: session.id
+      }) as any)
+    // @ts-ignore
+    inputRef.current.value = "";
   }
   const handleLikeAndUndoLike = () => {
     if (!Post.viewPost) return alert('No data')
@@ -170,7 +176,7 @@ const PostPage = ({ params }: { params: { post: string } }) => {
                   ref={inputRef}
                   className='w-full h-12 p-4 outline-none rounded-2xl border' />
                 <Button variant={"default"}
-                  // onClick={handleComment} 
+                  onClick={handleComment}
                   className='w-full h-12 flex-1 rounded-2xl'>Post</Button>
               </div>
             </div>

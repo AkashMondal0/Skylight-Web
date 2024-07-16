@@ -1,4 +1,5 @@
 import { graphqlQuery } from "@/lib/graphqlQuery";
+import { AuthorData } from "@/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 
@@ -94,6 +95,41 @@ export const destroyPostLikeApi = createAsyncThunk(
             return {
                 postId: destroyLikeId
             }
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
+        }
+    }
+);
+
+
+export const createPostCommentApi = createAsyncThunk(
+    'createPostCommentApi/post',
+    async (data: {
+        postId: string,
+        user: AuthorData,
+        content: string,
+        authorId: string
+    }, thunkApi) => {
+        const { user, ...createCommentInput } = data
+        try {
+            let query = `mutation CreateComment($createCommentInput: CreateCommentInput!) {
+                createComment(createCommentInput: $createCommentInput) {
+                  updatedAt
+                  postId
+                  id
+                  createdAt
+                  content
+                  authorId
+                }
+              }`
+            const res = await graphqlQuery({
+                query: query,
+                variables: { createCommentInput }
+            })
+
+            return { ...res.createComment, user }
         } catch (error: any) {
             return thunkApi.rejectWithValue({
                 ...error?.response?.data,

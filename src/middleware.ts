@@ -12,6 +12,7 @@ export const config = {
     "/",
     "/profile/:path*",
     "/posts/:path*",
+    "/post/:path*",
     "/explore/:path*",
     "/message/:path*",
     "/reels/:path*",
