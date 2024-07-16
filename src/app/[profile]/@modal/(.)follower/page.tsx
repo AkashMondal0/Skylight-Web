@@ -21,7 +21,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
     const profile = useSelector((state: RootState) => state.profile)
     const session = useSession().data?.user
     const isProfile = useMemo(() => session?.username === params.profile, [profile, params.profile])
-    const loadedRef = useRef(false)
+    const loadedRef = useRef(false)  
 
 
     useEffect(() => {

@@ -32,7 +32,7 @@ export function UnFollowDialog({
             <DialogContent className="sm:max-w-[425px]">
                 <SkyAvatar
                     sizeImage='10vw'
-                    url={user.profilePicture??"/user.jpg"}
+                    url={user.profilePicture ?? "/user.jpg"}
                     className={'object-cover bg-slate-400 w-28 h-28 rounded-full userNotSelectImg mx-auto my-4'} />
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-bold text-center my-2">Unfollow @{user.username}</DialogTitle>
@@ -41,11 +41,13 @@ export function UnFollowDialog({
                     </DialogDescription>
                 </DialogHeader>
                 <div className="justify-center flex-col flex gap-3">
-                    <Button variant={"destructive"}>
-                        Unfollow
-                    </Button>
                     <DialogClose asChild>
-                        <Button variant={"secondary"}>
+                        <Button variant={"destructive"} onClick={HandleConfirm}>
+                            Unfollow
+                        </Button>
+                    </DialogClose>
+                    <DialogClose asChild>
+                        <Button variant={"secondary"} onClick={HandleRejected}>
                             Cancel
                         </Button>
                     </DialogClose>

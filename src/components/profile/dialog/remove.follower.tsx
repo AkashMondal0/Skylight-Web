@@ -41,11 +41,13 @@ export function FollowerRemoveDialog({
                     </DialogDescription>
                 </DialogHeader>
                 <div className="justify-center flex-col flex gap-3">
-                    <Button variant={"destructive"}>
-                        Remove
-                    </Button>
                     <DialogClose asChild>
-                        <Button variant={"secondary"}>
+                        <Button variant={"destructive"} onClick={HandleConfirm}>
+                            Remove
+                        </Button>
+                    </DialogClose>
+                    <DialogClose asChild>
+                        <Button variant={"secondary"} onClick={HandleRejected}>
                             Cancel
                         </Button>
                     </DialogClose>

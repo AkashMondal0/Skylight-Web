@@ -73,12 +73,16 @@ export const fetchUserProfilePostsApi = createAsyncThunk(
 
 export const createFriendshipApi = createAsyncThunk(
     'createFriendshipApi/post',
-    async (createFriendshipInput: {
+    async (data: {
+        sessionId: string
         authorUserId: string,
         authorUsername: string,
         followingUserId: string,
-        followingUsername: string
+        followingUsername: string,
+        updateCount:boolean
     }, thunkApi) => {
+        const { sessionId,updateCount, ...createFriendshipInput } = data
+
         try {
             let query = `mutation CreateFriendship($createFriendshipInput: CreateFriendshipInput!) {
                 createFriendship(createFriendshipInput: $createFriendshipInput) {
@@ -92,7 +96,11 @@ export const createFriendshipApi = createAsyncThunk(
                 }
             })
 
-            return { userId: createFriendshipInput.authorUserId }
+            return {
+                userId: createFriendshipInput.authorUserId,
+                sessionId,
+                updateCount
+            }
         } catch (error: any) {
             return thunkApi.rejectWithValue({
                 ...error?.response?.data,
@@ -103,12 +111,16 @@ export const createFriendshipApi = createAsyncThunk(
 
 export const destroyFriendshipApi = createAsyncThunk(
     'destroyFriendshipApi/post',
-    async (destroyFriendship: {
+    async (data: {
+        sessionId: string
         authorUserId: string,
         authorUsername: string,
         followingUserId: string,
-        followingUsername: string
+        followingUsername: string,
+        updateCount:boolean
     }, thunkApi) => {
+        const { sessionId,updateCount, ...destroyFriendship } = data
+
         try {
             let query = `mutation DestroyFriendship($destroyFriendship: DestroyFriendship!) {
                 destroyFriendship(destroyFriendship: $destroyFriendship) {
@@ -122,37 +134,11 @@ export const destroyFriendshipApi = createAsyncThunk(
                 }
             })
 
-            return { userId: destroyFriendship.authorUserId }
-        } catch (error: any) {
-            return thunkApi.rejectWithValue({
-                ...error?.response?.data,
-            })
-        }
-    }
-);
-
-export const removeFriendshipApi = createAsyncThunk(
-    'removeFriendshipApi/post',
-    async (destroyFriendship: {
-        authorUserId: string,
-        authorUsername: string,
-        followingUserId: string,
-        followingUsername: string
-    }, thunkApi) => {
-        try {
-            let query = `mutation DestroyFriendship($destroyFriendship: DestroyFriendship!) {
-                destroyFriendship(destroyFriendship: $destroyFriendship) {
-                  friendShip
-                }
-              }`
-            await graphqlQuery({
-                query: query,
-                variables: {
-                    destroyFriendship
-                }
-            })
-
-            return { userId: destroyFriendship.authorUserId }
+            return {
+                userId: destroyFriendship.authorUserId,
+                sessionId,
+                updateCount
+            }
         } catch (error: any) {
             return thunkApi.rejectWithValue({
                 ...error?.response?.data,
