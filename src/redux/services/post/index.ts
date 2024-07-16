@@ -103,7 +103,6 @@ export const destroyPostLikeApi = createAsyncThunk(
     }
 );
 
-
 export const createPostCommentApi = createAsyncThunk(
     'createPostCommentApi/post',
     async (data: {
@@ -130,6 +129,40 @@ export const createPostCommentApi = createAsyncThunk(
             })
 
             return { ...res.createComment, user }
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
+        }
+    }
+);
+
+export const fetchPostLikesApi = createAsyncThunk(
+    'fetchPostLikesApi/get',
+    async (findAllLikesInput: {
+        offset: number,
+        limit: number,
+        id: string
+    }, thunkApi) => {
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1000))
+            let query = `query FindAllLikes($findAllLikesInput: SearchById!) {
+                findAllLikes(findAllLikesInput: $findAllLikesInput) {
+                  username
+                  profilePicture
+                  name
+                  id
+                  following
+                  followed_by
+                  email
+                }
+              }`
+            const res = await graphqlQuery({
+                query: query,
+                variables: { findAllLikesInput }
+            })
+
+            return res.findAllLikes
         } catch (error: any) {
             return thunkApi.rejectWithValue({
                 ...error?.response?.data,
