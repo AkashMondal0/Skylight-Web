@@ -15,9 +15,9 @@ export interface PostFeedState {
         stack?: string
     } | null
     // 
-    viewPost?: FeedPost | null
-    viewPostLoading?: boolean
-    viewPostError?: string | null
+    viewPost: FeedPost | null
+    viewPostLoading: boolean
+    viewPostError: string | null
     // like
     likeLoading?: boolean
 }

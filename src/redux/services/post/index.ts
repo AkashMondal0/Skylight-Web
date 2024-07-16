@@ -6,6 +6,7 @@ export const fetchOnePostApi = createAsyncThunk(
     'fetchOnePostApi/get',
     async (postViewId: string, thunkApi) => {
         try {
+            await new Promise(resolve => setTimeout(resolve, 1000))
             let query = `query PostView($postViewId: String!) {
                 postView(id: $postViewId) {
                   id
