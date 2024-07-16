@@ -17,7 +17,7 @@ export const SkeletonUserCardWithButton = () => {
 
   return (
     <>
-      <div className='flex justify-between px-2 my-4'>
+      <div className='flex justify-between px-2 my-2'>
         <div className='flex space-x-2 items-center'>
           <Skeleton className='h-12 w-12 mx-auto rounded-full' />
           <div className='space-y-1'>

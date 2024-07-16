@@ -30,7 +30,7 @@ const SkeletonProfile = () => {
             <div className="hidden sm:block">
                 {/* profile header */}
                 <div className='flex items-center my-8 m-5'>
-                    <Skeleton className='sm:w-28 w-36 sm:h-28 h-36 rounded-full sm:mr-8' />
+                    <Skeleton className='sm:w-36 object-cover sm:h-36 w-28 h-28 rounded-full sm:mr-8' />
                     <div className='flex flex-col justify-between gap-5'>
                         <div className='flex justify-between gap-2 items-center'>
                             <Skeleton className='w-32 h-6 rounded-xl' />

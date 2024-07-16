@@ -12,11 +12,10 @@ import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import SkyAvatar from '@/components/sky/SkyAvatar';
 import { useDispatch } from 'react-redux';
-import { openModal } from '@/redux/slice/modal';
 import { FeedPost } from '@/types';
-import { useSession } from 'next-auth/react';
 import OptimizedImage from '@/components/sky/SkyImage';
-import { createPostLikeApi, destroyPostLikeApi } from '@/redux/services/post';
+import { createPostLikeApi, destroyPostLikeApi, fetchPostLikesApi } from '@/redux/services/post';
+import LikeViewModal from '../dialog/LikeViewModal';
 
 const PostItem = ({
   feed,
@@ -25,7 +24,6 @@ const PostItem = ({
 }) => {
   const router = useRouter()
   const dispatch = useDispatch()
-  const session = useSession().data?.user
 
   const handleLikeAndUndoLike = () => {
     if (feed) {
@@ -37,6 +35,14 @@ const PostItem = ({
         dispatch(createPostLikeApi(feed.id) as any)
       }
     }
+  }
+
+  const fetchLikes = async () => {
+    dispatch(fetchPostLikesApi({
+      offset: 0,
+      limit: 16,
+      id: feed.id
+    }) as any)
   }
 
   return (
@@ -105,14 +111,12 @@ const PostItem = ({
           router.push(`/post/${feed.id}/liked_by`)
         }}>{feed.likeCount} likes</div>
         {/* sm */}
-        <div className='font-semibold cursor-pointer hidden sm:block' onClick={() => {
-          dispatch(openModal({
-            modalName: "Liked",
-            modalData: {
-              postId: feed.id
-            }
-          }))
-        }}>{feed.likeCount} likes</div>
+        <LikeViewModal>
+          <div className='font-semibold cursor-pointer hidden sm:block'
+            onClick={fetchLikes}>
+            {feed.likeCount} likes
+          </div>
+        </LikeViewModal>
 
         {/* close friend comments */}
         <div className='flex space-x-2'>

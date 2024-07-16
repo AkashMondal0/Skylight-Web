@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { FeedPost } from '@/types';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 import PostItem, { PostItemDummy } from './Card/PostCard';
 import StoriesPage from './StoriesPage';
@@ -56,7 +56,7 @@ const VirtualizePost = () => {
     // }
 
     if (posts.error) {
-        return <NotFound message={posts.error?.message}/>
+        return <NotFound message={posts.error?.message} />
     }
 
     return (
@@ -67,17 +67,17 @@ const VirtualizePost = () => {
                 // endReached={loadMore}
                 increaseViewportBy={3000}
                 itemContent={(index, post) => {
-                    if (post?.isDummy) {
-                        return <PostItemDummy feed={post} />
-                    } else {
-                        return <PostItem feed={post} />
-                    }
+                    return <PostItem feed={post} />
                 }}
                 components={{
-                    Header: () => <><StoriesPage /><ShowUpload /></>,
-                    // Footer: () => <div className='flex justify-center'>
-                    //     <Button onClick={loadMore}>Load Dummy Posts</Button>
-                    // </div>
+                     Header: forwardRef(function HeaderComponent() {
+                        return (
+                            <>
+                            <ShowUpload />
+                            <StoriesPage />
+                          </>
+                        );
+                    }),
                 }}
             />
             <style>{`html, body, #root { height: 100% }`}</style>

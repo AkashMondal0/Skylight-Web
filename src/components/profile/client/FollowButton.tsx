@@ -30,27 +30,23 @@ const FollowAndUnFollowButton = ({
             authorUserId: session?.id,
             authorUsername: session?.username,
             followingUserId: user?.id,
-            followingUsername: user?.username
+            followingUsername: user?.username,
+            sessionId:session?.id,
+            updateCount:true
         }) as any)
     }
 
-    const handleUnfollow = async () => {
+    const handleUnFollow = async () => {
         if (!session?.id) return alert('no user id from unfollow button')
         if (!user?.id) return alert('no user id from unfollow button')
         await dispatch(destroyFriendshipApi({
             authorUserId: session?.id,
             authorUsername: session?.username,
             followingUserId: user?.id,
-            followingUsername: user?.username
+            followingUsername: user?.username,
+            sessionId:session?.id,
+            updateCount:true
         }) as any)
-    }
-
-    const handleFollowAndUnfollow = async () => {
-        if (isFollowing) {
-            await handleUnfollow()
-        } else {
-            await handleFollow()
-        }
     }
 
     if (!user) return <div className='flex justify-between gap-2 items-center'>
@@ -84,12 +80,14 @@ const FollowAndUnFollowButton = ({
 
     return <div className='items-center sm:flex space-x-2 space-y-2'>
         <p className='text-xl px-3 truncate w-32'>{user.username}</p>
-
-        <Button className='rounded-xl px-6' disabled={loading} onClick={handleFollowAndUnfollow}>
-            {isFollowing ? 'Unfollow' : 'Follow'}
-            {/* {loading ? "ing..." : ""} */}
-        </Button>
-
+        {isFollowing ?
+            <Button className='rounded-xl px-6 w-24' variant={"secondary"} disabled={loading} onClick={handleUnFollow}>
+                Following
+            </Button> :
+            <Button className='rounded-xl px-6 w-24' disabled={loading} onClick={handleFollow}>
+                Follow
+            </Button>
+        }
         <Button variant={"secondary"} className='rounded-xl' disabled={loading} onClick={() => {
             router.push('/account/archive')
         }}>

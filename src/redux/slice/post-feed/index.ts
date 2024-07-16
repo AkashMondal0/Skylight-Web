@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { FeedPost } from '@/types'
+import { AuthorData, Comment, FeedPost } from '@/types'
 import { fetchAccountFeedApi } from '@/redux/services/account'
-import { createPostLikeApi, destroyPostLikeApi, fetchOnePostApi } from '@/redux/services/post'
+import { createPostCommentApi, createPostLikeApi, destroyPostLikeApi, fetchOnePostApi, fetchPostLikesApi } from '@/redux/services/post'
 
 export type TypeActionLike = 'feeds' | 'singleFeed'
 // Define a type for the slice state
@@ -15,11 +15,14 @@ export interface PostFeedState {
         stack?: string
     } | null
     // 
-    viewPost?: FeedPost | null
-    viewPostLoading?: boolean
-    viewPostError?: string | null
+    viewPost: FeedPost | null
+    viewPostLoading: boolean
+    viewPostError: string | null
     // like
     likeLoading?: boolean
+    likesUserList: AuthorData[]
+    // comment
+    commentLoading: boolean
 }
 
 // Define the initial state using that type
@@ -33,6 +36,9 @@ const PostFeedState: PostFeedState = {
     viewPostError: null,
 
     likeLoading: false,
+    likesUserList: [],
+
+    commentLoading: false
 }
 
 export const PostFeedSlice = createSlice({
@@ -64,7 +70,6 @@ export const PostFeedSlice = createSlice({
                     stack: action.error.stack
                 }
             })
-            
             // view post
             .addCase(fetchOnePostApi.pending, (state) => {
                 state.viewPostLoading = true
@@ -85,13 +90,13 @@ export const PostFeedSlice = createSlice({
             .addCase(createPostLikeApi.pending, (state) => {
                 state.likeLoading = true
             })
-            .addCase(createPostLikeApi.fulfilled, (state, action: PayloadAction<{postId:string}>) => {
+            .addCase(createPostLikeApi.fulfilled, (state, action: PayloadAction<{ postId: string }>) => {
                 const postIndex = state.state.findIndex((post) => post.id === action.payload.postId)
-                if(postIndex !== -1){
+                if (postIndex !== -1) {
                     state.state[postIndex].likeCount += 1
                     state.state[postIndex].is_Liked = true
                 }
-                if(state.viewPost?.id === action.payload.postId){
+                if (state.viewPost?.id === action.payload.postId) {
                     state.viewPost.likeCount += 1
                     state.viewPost.is_Liked = true
                 }
@@ -104,13 +109,13 @@ export const PostFeedSlice = createSlice({
             .addCase(destroyPostLikeApi.pending, (state) => {
                 state.likeLoading = true
             })
-            .addCase(destroyPostLikeApi.fulfilled, (state, action: PayloadAction<{postId:string}>) => {
+            .addCase(destroyPostLikeApi.fulfilled, (state, action: PayloadAction<{ postId: string }>) => {
                 const postIndex = state.state.findIndex((post) => post.id === action.payload.postId)
-                if(postIndex !== -1){
+                if (postIndex !== -1) {
                     state.state[postIndex].likeCount -= 1
                     state.state[postIndex].is_Liked = false
                 }
-                if(state.viewPost?.id === action.payload.postId){
+                if (state.viewPost?.id === action.payload.postId) {
                     state.viewPost.likeCount -= 1
                     state.viewPost.is_Liked = false
                 }
@@ -118,6 +123,36 @@ export const PostFeedSlice = createSlice({
             })
             .addCase(destroyPostLikeApi.rejected, (state, action) => {
                 state.likeLoading = false
+            })
+            // post comment create
+            .addCase(createPostCommentApi.pending, (state) => {
+                state.commentLoading = true
+            })
+            .addCase(createPostCommentApi.fulfilled, (state, action: PayloadAction<Comment>) => {
+                if (state.viewPost?.id === action.payload.postId) {
+                    state.viewPost?.comments.unshift(action.payload)
+                    const index = state.state.findIndex((post) => post.id === action.payload.postId)
+                    if (index !== -1) {
+                        state.state[index].commentCount += 1
+                    }
+                }
+                state.commentLoading = false
+            })
+            .addCase(createPostCommentApi.rejected, (state, action) => {
+                state.commentLoading = false
+            })
+            // fetchPostLikesApi
+            .addCase(fetchPostLikesApi.pending, (state) => {
+                state.likeLoading = true
+                state.likesUserList = []
+            })
+            .addCase(fetchPostLikesApi.fulfilled, (state, action: PayloadAction<AuthorData[]>) => {
+                state.likesUserList = [...action.payload]
+                state.likeLoading = false
+            })
+            .addCase(fetchPostLikesApi.rejected, (state, action) => {
+                state.likeLoading = false
+                state.likesUserList = []
             })
     },
 })

@@ -5,7 +5,6 @@ import {
 } from "@/components/ui/dialog"
 import { Separator } from '@/components/ui/separator'
 import { RootState } from '@/redux/store'
-import { AuthorData, User } from '@/types'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -13,7 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { useSession } from "next-auth/react"
 import { fetchUserProfileFollowingUserApi } from "@/redux/services/profile"
 import UserCardFollowing from "@/components/profile/client/UserCardFollowing"
-import FollowPageLoading from "@/components/home/loading/FollowerLoading"
+import { SkeletonUserCardWithButton } from "@/components/home/loading/UserCard"
 
 const Page = ({
   params
@@ -27,10 +26,6 @@ const Page = ({
   const isProfile = useMemo(() => session?.username === params.profile, [profile, params.profile])
   const loadedRef = useRef(false)
 
-  const pageRedirect = (user: AuthorData) => {
-    router.push(`/${user?.username}`)
-  }
-
   useEffect(() => {
     if (!loadedRef.current) {
       dispatch(fetchUserProfileFollowingUserApi({
@@ -42,14 +37,6 @@ const Page = ({
     }
   }, []);
 
-
-  const handleActionUnFollow = async (user: AuthorData) => {
-
-  }
-  const handleActionFollow = async (user: AuthorData) => {
-
-  }
-
   const onOpenChange = (isOpen: boolean) => {
     if (!isOpen) {
       router.back()
@@ -57,19 +44,22 @@ const Page = ({
   }
   return (
     <Dialog open onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[425px] pb-0">
-        <h1 className="text-center font-semibold text-lg">Following</h1>
-        <Separator />
-        <ScrollArea className="h-72 w-full rounded-md">
-          {profile.followingList?.map((user, i) => <UserCardFollowing
-            key={i} user={user}
-            isProfile={isProfile}
-            itself={session?.id === user.id}
-            pageRedirect={pageRedirect}
-            handleActionFollow={handleActionFollow}
-            handleActionUnFollow={handleActionUnFollow} />)}
-          {profile.followingListLoading ? <FollowPageLoading /> : <></>}
-        </ScrollArea>
+      <DialogContent className="p-0 h-[500px]">
+        <div className='w-full flex justify-center min-h-[100dvh] h-full'>
+          <div className='max-w-[600px] w-full p-4'>
+            <h1 className="font-semibold text-lg text-center mb-4">Following</h1>
+            <Separator />
+            <div className='h-5' />
+            <ScrollArea className='h-[400px]' >
+              {profile.followingListLoading ? <>{Array(10).fill(0).map((_,i)=><SkeletonUserCardWithButton key={i}/> )}</>: <>
+                {profile.followingList?.map((user, i) => <UserCardFollowing
+                  key={i} user={user}
+                  isProfile={isProfile}
+                  itself={session?.id === user.id} />)}
+              </>}
+            </ScrollArea>
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   )

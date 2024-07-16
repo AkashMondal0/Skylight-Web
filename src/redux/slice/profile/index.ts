@@ -51,7 +51,43 @@ export const profileSlice = createSlice({
     name: 'Profile',
     initialState: profileState,
     reducers: {
-
+        followUser: (state, action: PayloadAction<{ userId: string, side: "following" | "follower" }>) => {
+            if (action.payload.side === "following") {
+                const index = state.followingList.findIndex((user) => user.id === action.payload.userId)
+                if (index !== -1) {
+                    state.followingList[index].following = true
+                }
+            }
+            else if (action.payload.side === "follower") {
+                const index = state.followerList.findIndex((user) => user.id === action.payload.userId)
+                if (index !== -1) {
+                    state.followerList[index].following = true
+                }
+            }
+            else state
+        },
+        unFollowUser: (state, action: PayloadAction<{ userId: string, side: "following" | "follower" }>) => {
+            if (action.payload.side === "following") {
+                const index = state.followingList.findIndex((user) => user.id === action.payload.userId)
+                if (index !== -1) {
+                    state.followingList[index].following = false
+                }
+            }
+            else if (action.payload.side === "follower") {
+                const index = state.followerList.findIndex((user) => user.id === action.payload.userId)
+                if (index !== -1) {
+                    state.followerList[index].following = false
+                }
+            }
+            else state
+        },
+        removeFollower: (state, action: PayloadAction<{ userId: string }>) => {
+            const index = state.followerList.findIndex((user) => user.id === action.payload.userId)
+            if (index !== -1 && state?.state) {
+                state.followerList[index].followed_by = false
+                state.state.followerCount -= 1
+            }
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -115,15 +151,17 @@ export const profileSlice = createSlice({
                 state.friendShipLoading = true
                 state.friendShipError = null
             })
-            .addCase(createFriendshipApi.fulfilled, (state, action: PayloadAction<{ userId: string }>) => {
-                if (state.state) {
+            .addCase(createFriendshipApi.fulfilled, (state, action: PayloadAction<{ userId: string, sessionId: string, updateCount: boolean }>) => {
+                if (state.state && action.payload.updateCount && state.state.id !== action.payload.sessionId) {
                     state.state.friendship = {
                         ...state.state.friendship,
                         following: true,
                     }
-                    if (state.state.id !== action.payload.userId) {
-                        state.state.followerCount += 1
-                    }
+                    state.state.followerCount += 1
+                }
+                // if is profile update user follower
+                if (state.state && state.state.id === action.payload.sessionId) {
+                    state.state.followingCount += 1
                 }
                 state.friendShipLoading = false
             })
@@ -136,15 +174,17 @@ export const profileSlice = createSlice({
                 state.friendShipLoading = true
                 state.friendShipError = null
             })
-            .addCase(destroyFriendshipApi.fulfilled, (state, action: PayloadAction<{ userId: string }>) => {
-                if (state.state) {
+            .addCase(destroyFriendshipApi.fulfilled, (state, action: PayloadAction<{ userId: string, sessionId: string, updateCount: boolean }>) => {
+                if (state.state && action.payload.updateCount && state.state.id !== action.payload.sessionId) {
+                    state.state.followerCount -= 1
                     state.state.friendship = {
                         ...state.state.friendship,
                         following: false,
                     }
-                    if (state.state.id !== action.payload.userId) {
-                        state.state.followerCount -= 1
-                    }
+                }
+                // if is profile update user following
+                if (state.state && state.state.id === action.payload.sessionId) {
+                    state.state.followingCount -= 1
                 }
                 state.friendShipLoading = false
             })
@@ -156,9 +196,9 @@ export const profileSlice = createSlice({
 })
 
 export const {
-    // increment,
-    // decrement,
-    // incrementByAmount,
+    followUser,
+    unFollowUser,
+    removeFollower
 } = profileSlice.actions
 
 export default profileSlice.reducer

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 export default function NotFound({
-  message
+  message = "Sorry, this page isn't available."
 }: {
   message?: string,
 }) {

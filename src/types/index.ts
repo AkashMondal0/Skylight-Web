@@ -110,12 +110,12 @@ interface Post {
 
 interface Comment {
     id: string;
-    comment: string;
+    content: string;
     authorId: string;
     postId: string;
     createdAt: Date;
     updatedAt: Date;
-    authorData: AuthorData
+    user: AuthorData
 }
 
 interface Like {
