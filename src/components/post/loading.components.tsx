@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export const CommentViewLoading = () => {
     return (<>
-        <div className="flex h-full flex-col justify-between w-80 flex-1 w-full border-l">
+        <div className="flex h-full flex-col justify-between overflow-hidden flex-1 w-full border-l">
             {/* header comment input  */}
             <div className="flex justify-between bg-background items-center p-4 border-b h-20 z-10 sticky top-0 rounded-lg">
                 <div className="flex gap-2 items-center">
@@ -45,7 +45,7 @@ export const CommentViewLoading = () => {
 
 export const ImageViewLoading = () => {
     return (<>
-        <div className='flex-1 h-auto m-auto'>
+        <div className='sm:flex-1 flex-initial h-auto m-auto overflow-hidden'>
             <Skeleton className="w-[500px] h-[500px]" />
         </div>
     </>)
@@ -53,7 +53,7 @@ export const ImageViewLoading = () => {
 
 export const CommentViewError = () => {
     return (<>
-        <div className="flex h-full flex-col justify-between w-80 flex-1 w-full border-l">
+        <div className="flex h-full flex-col justify-between w-80 flex-1 border-l overflow-hidden">
             {/* header comment input  */}
             <div className="flex justify-between bg-background items-center p-4 border-b h-20 z-10 sticky top-0 rounded-lg">
                 <div className="flex gap-2 items-center">
@@ -89,7 +89,7 @@ export const CommentViewError = () => {
 
 export const PageLoading = ()=>{
     return (
-        <div className='w-full h-full p-5'>
+        <div className='w-full h-full p-5 overflow-hidden'>
         <div className="hidden md:flex max-h-[690px] mx-auto my-5 flex-wrap md:border max-w-[860px] min-h-min">
           {/* left side */}
           <div className='flex-1 h-auto m-auto'>

@@ -76,6 +76,7 @@ const PostPage = ({ params }: { params: { post: string } }) => {
   if (Post.viewPost) {
     return (
       <div className='w-full h-full p-5'>
+        {/* lg */}
         <div className="hidden md:flex max-h-[690px] mx-auto my-5 flex-wrap md:border max-w-[860px] min-h-min">
           {/* left side */}
           <div className='w-96 h-auto m-auto'>
@@ -183,8 +184,9 @@ const PostPage = ({ params }: { params: { post: string } }) => {
           </div>
         </div>
 
+        {/* sm  */}
         <div className='w-full h-full flex md:hidden'>
-          {/* <PostItem feed={data} /> */}
+          coming soon
         </div>
       </div>
     )
