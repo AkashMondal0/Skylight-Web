@@ -4,8 +4,19 @@ import { ThemeProvider } from "@/provider/ThemeProvider";
 import NextAuth_Provider from "@/provider/NextAuth_Provider";
 import { Toaster } from "@/components/ui/sonner"
 import Redux_Provider from "@/provider/Redux_Provider";
+import type { Viewport } from 'next'
 import AppStart_Provider from "@/provider/AppStart_Provider";
-
+ 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: 'light' },
+    { media: '(prefers-color-scheme: dark)', color: 'black' },
+  ],
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+}
 
 export const metadata: Metadata = {
   title: 'SkyLight',
@@ -21,7 +32,6 @@ export default function RootLayout({ children,
   return (
     <>
       <html lang="en" suppressHydrationWarning={false}>
-        <head />
         <body className="ease-in-out duration-300 ">
           <Toaster />
           <Redux_Provider>
@@ -30,7 +40,7 @@ export default function RootLayout({ children,
                 attribute="class"
                 defaultTheme="dark"
                 enableSystem>
-                {/* <AppStart_Provider /> */}
+                <AppStart_Provider />
                 {children}
                 {modal}
               </ThemeProvider>
