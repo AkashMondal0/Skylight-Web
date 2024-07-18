@@ -11,7 +11,7 @@ const StoryAvatar = ({
 }) => {
   return <div className="w-16">
     <SkyAvatar url={url} className={'rounded-full object-cover h-16 w-16 border-fuchsia-500 border-[3px] p-[2px]'} />
-    <p className="text-xs font-normal text-center">{label}</p>
+    <p className="text-xs font-normal text-center w-16 truncate">{label}</p>
   </div>
 }
 

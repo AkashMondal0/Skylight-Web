@@ -88,6 +88,10 @@ export const profileSlice = createSlice({
                 state.state.followerCount -= 1
             }
         },
+        setLoadMoreProfilePosts:(state, action: PayloadAction<FeedPost[]>) => {
+            if (!state.posts) return
+            state.posts.push(...action.payload)
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -221,7 +225,8 @@ export const profileSlice = createSlice({
 export const {
     followUser,
     unFollowUser,
-    removeFollower
+    removeFollower,
+    setLoadMoreProfilePosts
 } = profileSlice.actions
 
 export default profileSlice.reducer

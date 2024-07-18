@@ -17,6 +17,8 @@ import HeroSection from './client/hero'
 import { Button } from "../ui/button";
 import { fetchUserProfileDetailApi, fetchUserProfilePostsApi } from "@/redux/services/profile";
 import { SkeletonProfilePage } from "./loading.page";
+import { setLoadMoreProfilePosts } from "@/redux/slice/profile";
+import { getRandomProfilePost } from "../sky/random";
 
 interface Props {
     isProfile: boolean
@@ -27,10 +29,18 @@ const MainLayout = ({ username }: {
 }) => {
     const dispatch = useDispatch()
     const session = useSession().data?.user
-    const profile = useSelector((Root: RootState)=> Root.profile)
+    const profile = useSelector((Root: RootState) => Root.profile)
     const loadedRef = useRef(false)
     const isProfile = useMemo(() => session?.username === username, [session?.username, username])
+    const [size, setSize] = useState(250)
 
+
+
+    const loadMore = () => {
+      const _posts = getRandomProfilePost(size)
+        dispatch(setLoadMoreProfilePosts(_posts))
+        setSize(size + 12)
+    }
     useEffect(() => {
         if (!loadedRef.current) {
             dispatch(fetchUserProfileDetailApi(username) as any)
@@ -42,6 +52,7 @@ const MainLayout = ({ username }: {
             loadedRef.current = true;
         }
     }, []);
+
 
     if (profile.loading) {
         return <SkeletonProfilePage />
@@ -57,7 +68,7 @@ const MainLayout = ({ username }: {
                 style={{
                     height: '100%',
                 }}
-                // endReached={loadMore}
+                endReached={loadMore}
                 overscan={5000}
                 totalCount={profile.posts.length}
                 components={{
@@ -74,7 +85,7 @@ const MainLayout = ({ username }: {
                                     display: 'flex',
                                     justifyContent: 'center',
                                 }}>
-                                <Button>
+                                <Button onClick={loadMore}>
                                     Load Dummy Posts
                                 </Button>
                             </div>

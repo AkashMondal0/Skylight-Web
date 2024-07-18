@@ -2,10 +2,10 @@
 // import socket from '@/lib/socket-io'
 // import { setMessage } from '@/redux/slice/conversation'
 // import { useSession } from 'next-auth/react'
-import React, { useEffect } from 'react'
+// import React, { useEffect } from 'react'
 // import { useDispatch } from 'react-redux'
 // import { toast } from 'sonner'
-import { useTheme } from "next-themes"
+// import { useTheme } from "next-themes"
 
 
 const AppStart_Provider = () => {
@@ -39,15 +39,6 @@ const AppStart_Provider = () => {
     //         socket.off('connectionEventHandle')
     //     }
     // }, [session?.id])
-    const { theme } = useTheme()
-    useEffect(() => {
-        const metaThemeColor = document.querySelector('meta[name=theme-color]');
-        if (theme && theme !== "system") {
-            metaThemeColor?.setAttribute(
-                'content', theme === "dark" ? "black" : "light"
-            );
-        }
-    }, [])
 
     // if (!isClient) return null
 

@@ -1,5 +1,6 @@
+"use client"
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 import {
   Carousel,
   CarouselContent,
@@ -8,10 +9,23 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import StoryAvatar, { YourStory } from './Card/StoriesCard'
+import { generateRandomUsername } from '../sky/random';
 
 function StoriesPage() {
-  // await new Promise((resolve) => setTimeout(resolve, 5000));
+  const [isReady, setIsReady] = useState(true)
+  const data = Array.from({ length: 20 }, (_, i) => {
+    return {
+      url: `https://picsum.photos/id/${100 + i}/${50}/${50}`,
+      label: `${generateRandomUsername()}`
+    }
+  })
 
+  useEffect(() => {
+    setIsReady(false)
+  }, [])
+
+  if (isReady) return <></>
+  
   return (
     <>
       <Carousel
@@ -20,9 +34,9 @@ function StoriesPage() {
           <CarouselItem className="basis-1/7">
             <YourStory />
           </CarouselItem>
-          {Array(100).fill(0).map((_, index) => (
+          {data.map((item, index) => (
             <CarouselItem key={index} className="basis-1/7">
-              <StoryAvatar />
+              <StoryAvatar url={item.url} label={item.label} />
             </CarouselItem>
           ))}
         </CarouselContent>

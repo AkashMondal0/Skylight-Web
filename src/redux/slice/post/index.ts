@@ -45,7 +45,11 @@ export const PostFeedSlice = createSlice({
     name: 'PostFeed',
     initialState: PostState,
     reducers: {
-
+        setMoreData:(state, action: PayloadAction<FeedPost[]>)=>{
+            if (action.payload?.length > 0) {
+                state.state.push(...action.payload)
+            }
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -158,7 +162,7 @@ export const PostFeedSlice = createSlice({
 })
 
 export const {
-
+    setMoreData
 } = PostFeedSlice.actions
 
 export default PostFeedSlice.reducer

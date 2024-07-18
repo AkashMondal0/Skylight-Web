@@ -161,7 +161,7 @@ export const PostItemDummy = ({
             <div className='font-semibold text-base'>{feed.user.username} .
               <span className='font-light text-base'>1d</span>
             </div>
-            <div className='text-sm'>Los Angeles, California</div>
+            <div className='text-sm'>{feed.title}</div>
           </div>
         </div>
         <div className='flex items-center'>

@@ -9,7 +9,7 @@ interface FeedPost {
     isDummy?: boolean
     content: string;
     title: string;
-    updatedAt: Date;
+    updatedAt?: Date;
     is_Liked: boolean;
     user: AuthorData;
 }

@@ -1,9 +1,10 @@
-import React, { forwardRef} from 'react'
+import React, { forwardRef } from 'react'
 import { Virtuoso } from 'react-virtuoso'
-import PostItem from './Card/PostCard';
+import PostItem, { PostItemDummy } from './Card/PostCard';
 import StoriesPage from './StoriesPage';
 import ShowUpload from './alert/show-upload';
 import { PostState } from '@/redux/slice/post';
+import { Button } from '../ui/button';
 
 const VirtualizePostList = ({
     posts,
@@ -21,7 +22,11 @@ const VirtualizePostList = ({
                 endReached={loadMore}
                 increaseViewportBy={3000}
                 itemContent={(index, post) => {
-                    return <PostItem feed={post} />
+                    if (post?.isDummy) {
+                        return <PostItemDummy feed={post} />
+                    } else {
+                        return <PostItem feed={post} />
+                    }
                 }}
                 components={{
                     Header: forwardRef(function HeaderComponent() {
@@ -32,6 +37,20 @@ const VirtualizePostList = ({
                             </>
                         );
                     }),
+                    Footer: forwardRef(function () {
+                        return (
+                            <div
+                                style={{
+                                    padding: '2rem',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                }}>
+                                <Button onClick={loadMore}>
+                                    Load Dummy Posts
+                                </Button>
+                            </div>
+                        )
+                    })
                 }}
             />
             <style>{`html, body, #root { height: 100% }`}</style>
