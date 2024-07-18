@@ -37,7 +37,7 @@ const VirtualizePostList = ({
                             </>
                         );
                     }),
-                    Footer: forwardRef(function () {
+                    Footer: forwardRef(function FooterComponent() {
                         return (
                             <div
                                 style={{

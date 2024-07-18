@@ -1,5 +1,5 @@
 
-![Logo](/public/next.svg)
+![Logo](/public/skylight-github-banner.png)
 
 
 # Sky Media
@@ -22,20 +22,7 @@ Nextjs, Redux toolkit, TailwindCSS, shadcn ui, react-hook-form, socket io, zod
 - Light/dark mode toggle
 - Application is fully responsive
 - Group real chat feature
-### Screenshot Home page
 
-![App Screenshot](/public/Screenshot3.png)
-<!-- ![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here) -->
-### Screenshot Profile Page
-
-![App Screenshot](/public/Screenshot1.png)
-<!-- ![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here) -->
-
-### Screenshot Chat Page
-
-![App Screenshot](/public/Screenshot2.png)
-<!-- ![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here) -->
-    
 ## Run Locally
 
 Clone the project
@@ -67,6 +54,36 @@ To run this project, you will need to add the following environment variables to
 `REDIS_URL`
 
 `NEXTAUTH_SECRET`
+
+## Screenshots
+
+### Tab Screenshot
+
+![App Screenshot](/public/screen-shots/tab.jpg)
+
+### Tab Screenshot
+
+![App Screenshot](/public/screen-shots/tab2.jpg)
+
+### Tab Screenshot
+
+![App Screenshot](/public/screen-shots/tab3.jpg)
+
+### Desktop Screenshot
+
+![App Screenshot](/public/screen-shots/pc2.png)
+
+### Desktop Screenshot
+
+![App Screenshot](/public/screen-shots/pc.png)
+
+### Mobile Screenshot
+
+![App Screenshot](/public/screen-shots/mobile.png)
+
+### Chat Page
+
+![App Screenshot](/public/screen-shots/Screenshot2.png)
 
 ## Feedback
 

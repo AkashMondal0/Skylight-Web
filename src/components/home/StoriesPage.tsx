@@ -46,7 +46,9 @@ function StoriesPage() {
       <ScrollArea className='max-w-[630px] w-full mb-5 mt-3 mx-auto md:hidden'>
         <div className='flex space-x-2 px-2'>
           <YourStory />
-          {Array(10).fill(0).map((_, i) => <StoryAvatar key={i} />)}
+          {data.map((item, index) => (
+            <StoryAvatar url={item.url} label={item.label} key={index}/>
+          ))}
         </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
