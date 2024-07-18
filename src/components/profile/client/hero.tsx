@@ -78,17 +78,19 @@ const HeroSection = ({
                         user={userProfileData}
                         isProfile={isProfile} />
                 </div>
-                {/*  */}
+                {/* name or links and users count */}
                 <>
                     <div className='flex justify-between flex-col px-3'>
-                        <p>{userProfileData.username}</p>
+                        <p className='font-semibold'>{userProfileData.username}</p>
                         <p>!null</p>
-                        <a className='flex items-center gap-2 hover:underline font-semibold text-sm'
-                            target='_blank'
-                            href='https://www.linkedin.com/in/akash-mondal-b5a712231/'>
-                            <Link2 className='rotate-45' />
-                            https://www.linkedin.com/in/akash-mondal-b5a712231/
-                        </a>
+                        <div className='flex'>
+                            <a className='flex items-center gap-2 hover:underline font-semibold text-sm'
+                                target='_blank'
+                                href='https://www.linkedin.com/in/akash-mondal-b5a712231/'>
+                                <Link2 className='rotate-45' />
+                                <p className='truncate w-60'>{`https://www.linkedin.com/in/akash-mondal-b5a712231/`}</p>
+                            </a>
+                        </div>
                     </div>
                     <StoriesComponent user={userProfileData} />
                     {/* followers and following */}

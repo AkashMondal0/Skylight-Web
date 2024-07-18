@@ -7,7 +7,6 @@ import { removeAllUserFormSearch } from '@/redux/slice/users';
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { SkeletonUserCard } from '@/components/home/loading/UserCard';
 import SkyAvatar from '@/components/sky/SkyAvatar';
 import { User } from '@/types';
 import { useRouter } from 'next/navigation';
@@ -18,7 +17,7 @@ import { MessagesSquare } from 'lucide-react';
 const FindUserForChat = ({ children }: { children: React.ReactNode }) => {
     const dispatch = useDispatch();
     const inputRef = React.useRef<any>();
-    const searchResultUser = useSelector((state: RootState) => state.users);
+    const searchResultUser = useSelector((Root: RootState)=> Root.users);
 
 
     const handleSearch = useCallback(() => {

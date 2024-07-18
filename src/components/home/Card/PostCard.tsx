@@ -87,8 +87,8 @@ const PostItem = ({
             ))}
           </CarouselContent>
           <div className='flex'>
-            <CarouselPrevious variant={"default"} className='md:flex hidden left-2' />
-            <CarouselNext variant={"default"} className='md:flex hidden right-2' />
+            <CarouselPrevious variant={"outline"} className='md:flex hidden left-2' />
+            <CarouselNext variant={"outline"} className='md:flex hidden right-2' />
           </div>
         </Carousel>
       </div>

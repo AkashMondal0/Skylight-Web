@@ -4,7 +4,6 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { createFriendshipApi, destroyFriendshipApi } from "@/redux/services/profile"
 import { RootState } from "@/redux/store"
 import { User } from "@/types"
-import { Loader2, Settings } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useDispatch, useSelector } from "react-redux"
@@ -18,7 +17,7 @@ const FollowAndUnFollowButton = ({
     user: User
     isFollowing?: boolean
 }) => {
-    const loading = useSelector((root: RootState) => root.profile.friendShipLoading)
+    const loading = useSelector((Root: RootState) => Root.profile.friendShipLoading)
     const router = useRouter()
     const dispatch = useDispatch()
     const session = useSession().data?.user
@@ -61,7 +60,6 @@ const FollowAndUnFollowButton = ({
         return <div className='sm:flex space-x-2 space-y-2 items-center'>
             <div className="flex items-center">
                 <p className='text-xl px-3 truncate w-32'>{user.username}</p>
-                <Settings className='w-6 h-6 cursor-pointer sm:hidden block' />
             </div>
 
             <Button variant={"secondary"} disabled={loading} className='rounded-xl' onClick={() => {

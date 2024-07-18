@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { HardDriveUpload, Loader2 } from 'lucide-react'
 import Image from 'next/image'
 const ShowUpload = () => {
-    const profile = useSelector((state: RootState) => state.account)
+    const profile = useSelector((Root: RootState)=> Root.account)
     if (!profile.UploadFiles.loading) return null
     return (
         <div className='w-full max-w-[480px] h-16 mx-auto flex items-center border-y space-x-4 px-4'>

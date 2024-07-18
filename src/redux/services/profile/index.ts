@@ -147,6 +147,44 @@ export const destroyFriendshipApi = createAsyncThunk(
     }
 );
 
+export const RemoveFriendshipApi = createAsyncThunk(
+    'RemoveFriendshipApi/post',
+    async (data: {
+        sessionId: string
+        authorUserId: string,
+        authorUsername: string,
+        followingUserId: string,
+        followingUsername: string,
+        updateCount: boolean
+    }, thunkApi) => {
+        const { sessionId, updateCount, ...destroyFriendship } = data
+
+        try {
+            let query = `mutation DestroyFriendship($destroyFriendship: DestroyFriendship!) {
+                destroyFriendship(destroyFriendship: $destroyFriendship) {
+                  friendShip
+                }
+              }`
+            await graphqlQuery({
+                query: query,
+                variables: {
+                    destroyFriendship
+                }
+            })
+
+            return {
+                userId: destroyFriendship.authorUserId,
+                sessionId,
+                updateCount
+            }
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
+        }
+    }
+);
+
 export const fetchUserProfileFollowingUserApi = createAsyncThunk(
     'fetchUserProfileFollowingUserApi/get',
     async (viewFollowingInput: findDataInput, thunkApi) => {

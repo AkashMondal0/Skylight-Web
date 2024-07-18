@@ -10,7 +10,7 @@ import { fetchPostLikesApi } from '@/redux/services/post'
 export default function Page({ params }: { params: { post: string } }) {
   const dispatch = useDispatch()
   const session = useSession().data?.user
-  const likes = useSelector((state: RootState) => state.postFeed)
+  const likes = useSelector((Root: RootState)=> Root.post)
   const loadedRef = useRef(false)
 
   useEffect(() => {

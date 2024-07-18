@@ -21,8 +21,8 @@ import NotFound from '@/components/home/NotFound'
 const PostPage = ({ params }: { params: { post: string } }) => {
   const router = useRouter()
   const dispatch = useDispatch()
-  const Post = useSelector((root: RootState) => root.postFeed)
-  const likeLoading = useSelector((root: RootState) => root.postFeed.likeLoading)
+  const Post = useSelector((Root: RootState) => Root.post)
+  const likeLoading = useSelector((Root: RootState) => Root.post.likeLoading)
   const session = useSession().data?.user
   const inputRef = useRef<HTMLInputElement>(null)
   const loadedRef = useRef(false)

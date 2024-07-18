@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { AuthorData, FeedPost, User } from '@/types'
-import { createFriendshipApi, destroyFriendshipApi, fetchUserProfileDetailApi, fetchUserProfileFollowerUserApi, fetchUserProfileFollowingUserApi, fetchUserProfilePostsApi } from '@/redux/services/profile'
+import { RemoveFriendshipApi, createFriendshipApi, destroyFriendshipApi, fetchUserProfileDetailApi, fetchUserProfileFollowerUserApi, fetchUserProfileFollowingUserApi, fetchUserProfilePostsApi } from '@/redux/services/profile'
 
 // Define a type for the slice state
 interface ProfileState {
@@ -189,6 +189,29 @@ export const profileSlice = createSlice({
                 state.friendShipLoading = false
             })
             .addCase(destroyFriendshipApi.rejected, (state, action) => {
+                state.friendShipLoading = false
+                state.friendShipError = action.error.message || null
+            })
+            // RemoveFriendshipApi
+            .addCase(RemoveFriendshipApi.pending, (state) => {
+                state.friendShipLoading = true
+                state.friendShipError = null
+            })
+            .addCase(RemoveFriendshipApi.fulfilled, (state, action: PayloadAction<{ userId: string, sessionId: string, updateCount: boolean }>) => {
+                if (state.state && action.payload.updateCount && state.state.id !== action.payload.sessionId) {
+                    state.state.followerCount -= 1
+                    state.state.friendship = {
+                        ...state.state.friendship,
+                        following: false,
+                    }
+                }
+                // if is profile update user following
+                if (state.state && action.payload.updateCount && state.state.id === action.payload.sessionId) {
+                    state.state.followingCount -= 1
+                }
+                state.friendShipLoading = false
+            })
+            .addCase(RemoveFriendshipApi.rejected, (state, action) => {
                 state.friendShipLoading = false
                 state.friendShipError = action.error.message || null
             })
