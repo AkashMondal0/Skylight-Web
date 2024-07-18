@@ -85,20 +85,14 @@ Create a `.env.local` file in the `client` directory and configure the necessary
 
 ### Next auth 
 
-`NEXTAUTH_URL`
 ```env
 NEXTAUTH_URL=http://localhost:3000
-```
-`NEXTAUTH_SECRET`
-```env
 NEXTAUTH_SECRET=your-secret-value
 ```
 
 ### Nestjs Backend
 
 In this case, the SERVER_API_URL is set to http://localhost:5000, which means the backend server is running on the same machine (localhost) on port 5000.
-
-`SERVER_API_URL`
 
 ```env
 SERVER_API_URL=http://localhost:5000
@@ -176,13 +170,10 @@ The backend of this project is built using [NestJS](https://nestjs.com/), a prog
 Create a `.env` file in the `backend` directory and configure the necessary environment variables:
 
 ```env
-DATABASE_URL=your_database_url
 JWT_SECRET=your_jwt_secret
 DOMAIN=localhost
 REDIS_URL=database-url Redis
 PG_URL=database-url PostgreSQL
-JWT_SECRET=your-secret-value
-DOMAIN=localhost
 ```
 
 ### Running the backend Application
