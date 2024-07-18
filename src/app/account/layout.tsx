@@ -1,5 +1,6 @@
 import Lg_Navigation from '@/components/home/navigation/lg-navigation';
 import Sm_Navigation from '@/components/home/navigation/sm-navigation';
+import StatusbarColorInitial from '@/provider/StatusbarColor';
 import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Edit Profile • Sky Media',
@@ -13,6 +14,7 @@ export default async function RootLayout({ children }: {
 
   return (
     <>
+    <StatusbarColorInitial/>
       <div className='flex md:pb-0 pb-14'>
         <Lg_Navigation />
         {children}

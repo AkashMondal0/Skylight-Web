@@ -5,7 +5,6 @@ import NextAuth_Provider from "@/provider/NextAuth_Provider";
 import { Toaster } from "@/components/ui/sonner"
 import Redux_Provider from "@/provider/Redux_Provider";
 import type { Viewport } from 'next'
-import AppStart_Provider from "@/provider/AppStart_Provider";
  
 export const viewport: Viewport = {
   themeColor: [
@@ -38,9 +37,9 @@ export default function RootLayout({ children,
             <NextAuth_Provider>
               <ThemeProvider
                 attribute="class"
-                defaultTheme="dark"
+                defaultTheme="system"
                 enableSystem>
-                <AppStart_Provider />
+                {/* <AppStart_Provider /> */}
                 {children}
                 {modal}
               </ThemeProvider>
