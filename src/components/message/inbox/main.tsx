@@ -11,7 +11,7 @@ import { MessagePageSkeleton } from '../loading';
 
 const MainClientPage = ({ data }: { data: Conversation }) => {
     const dispatch = useDispatch()
-    const SelectedConversation = useSelector((state: RootState) => state.conversation)
+    const SelectedConversation = useSelector((Root: RootState)=> Root.conversation)
     const loadedRef = useRef(false)
     const [isClient, setIsClient] = useState(false)
 

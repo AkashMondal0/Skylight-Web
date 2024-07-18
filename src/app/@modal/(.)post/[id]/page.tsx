@@ -8,13 +8,14 @@ import { RootState } from '@/redux/store'
 import { createPostCommentApi, createPostLikeApi, destroyPostLikeApi, fetchOnePostApi } from '@/redux/services/post'
 import ImageView from '@/components/post/ImageView'
 import CommentView from '@/components/post/CommentView'
+import StatusbarColorInitial from '@/provider/StatusbarColor'
 
 
 export default function Page({ params }: { params: { id: string } }) {
   const router = useRouter()
   const dispatch = useDispatch()
-  const Post = useSelector((root: RootState) => root.postFeed)
-  const likeLoading = useSelector((root: RootState) => root.postFeed.likeLoading)
+  const Post = useSelector((Root: RootState) => Root.post)
+  const likeLoading = useSelector((Root: RootState) => Root.post.likeLoading)
   const session = useSession().data?.user
   const loadedRef = useRef(false)
 
@@ -61,6 +62,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <Dialog open onOpenChange={onOpenChange}>
+    <StatusbarColorInitial/>
       <DialogContent className="p-0 flex 
         overflow-y-auto flex-wrap gap-0
         max-w-[960px] min-h-min"

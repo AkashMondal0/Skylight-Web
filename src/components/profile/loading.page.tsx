@@ -1,29 +1,6 @@
-import { Separator } from "@/components/ui/separator"
-import { Skeleton } from "@/components/ui/skeleton"
-export const SkeletonFollowUserCard = () => {
+import { Skeleton } from "../ui/skeleton"
 
-    return (
-        <>
-            <div className='flex justify-between px-2'>
-                <div className='flex space-x-2 items-center'>
-                    <Skeleton className='h-12 w-12 mx-auto rounded-full' />
-                    <div className='space-y-1'>
-                        <div className='font-semibold text-base'>
-                            <Skeleton className='w-28 h-4' />
-                        </div>
-                        <div className='text-sm'>
-                            <Skeleton className='w-16 h-3' />
-                        </div>
-                    </div>
-                </div>
-                <div className='flex items-center'>
-                    <Skeleton className='w-20 h-9 rounded-xl' />
-                </div>
-            </div>
-        </>
-    )
-}
-const SkeletonProfile = () => {
+export const SkeletonProfilePage = () => {
     return <div className='w-full min-h-[100dvh] overflow-x-hidden'>
         <div className='mx-auto max-w-[960px]'>
             {/* md ->>> */}
@@ -83,22 +60,22 @@ const SkeletonProfile = () => {
                 <div className='flex gap-3 my-5 items-center px-2'>
                     <Skeleton className='w-24 h-24 rounded-full' />
                     <div className='flex flex-col gap-4'>
-                        <div className='flex gap-2'>
+                        <div className='flex gap-2 px-3'>
                             <Skeleton className='w-20 h-6 rounded-xl' />
                         </div>
                         <div className='flex justify-between gap-2 px-3'>
                             <div className='flex gap-1'>
-                                <Skeleton className='w-20 h-6 rounded-xl' />
+                                <Skeleton className='w-16 h-6 rounded-xl' />
                             </div>
                             <>
                                 <div className='sm:cursor-pointer flex gap-1'>
-                                    <Skeleton className='w-20 h-6 rounded-xl' />
+                                    <Skeleton className='w-16 h-6 rounded-xl' />
 
                                 </div>
                             </>
                             <>
                                 <div className='sm:cursor-pointer flex gap-1'>
-                                    <Skeleton className='w-20 h-6 rounded-xl' />
+                                    <Skeleton className='w-16 h-6 rounded-xl' />
 
                                 </div>
                             </>
@@ -148,43 +125,4 @@ const SkeletonProfile = () => {
 
         </div>
     </div >
-}
-
-export default SkeletonProfile
-
-
-export const SkeletonUserCardFollowPage = ({title}: {title:string}) => {
-    return <div className='w-full flex justify-center min-h-[100dvh] h-full'>
-        <div className='max-w-[600px] w-full p-4'>
-            <h1 className="font-semibold text-lg text-center mb-4">{title}</h1>
-            <Separator />
-            <div className='h-5' />
-
-            <>{Array(10).fill(0).map((_, i) => <SkeletonUserCard key={i} />)}</>
-        </div>
-    </div>
-}
-
-const SkeletonUserCard = () => {
-
-    return (
-        <>
-            <div className='flex justify-between px-2 my-4'>
-                <div className='flex space-x-2 items-center'>
-                    <Skeleton className='h-12 w-12 mx-auto rounded-full' />
-                    <div className='space-y-1'>
-                        <div className='font-semibold text-base'>
-                            <Skeleton className='w-28 h-4' />
-                        </div>
-                        <div className='text-sm'>
-                            <Skeleton className='w-16 h-3' />
-                        </div>
-                    </div>
-                </div>
-                <div className='flex items-center'>
-                    <Skeleton className='w-20 h-9 rounded-xl' />
-                </div>
-            </div>
-        </>
-    )
 }

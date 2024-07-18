@@ -1,3 +1,4 @@
+import StatusbarColorInitial from "@/provider/StatusbarColor";
 
 export default function RootLayout({ children,
 }: {
@@ -5,6 +6,7 @@ export default function RootLayout({ children,
 }) {
   return (
     <div className="w-full min-h-dvh">
+    <StatusbarColorInitial/>
       {children}
     </div>
   )

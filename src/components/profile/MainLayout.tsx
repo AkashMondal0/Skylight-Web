@@ -15,8 +15,9 @@ import React, { forwardRef } from 'react'
 import { ImageComponent } from './client/Post'
 import HeroSection from './client/hero'
 import { Button } from "../ui/button";
-import SkeletonProfile from "./loading/skeleton";
 import { fetchUserProfileDetailApi, fetchUserProfilePostsApi } from "@/redux/services/profile";
+import { SkeletonProfilePage } from "./loading.page";
+
 interface Props {
     isProfile: boolean
     user: User | null
@@ -26,7 +27,7 @@ const MainLayout = ({ username }: {
 }) => {
     const dispatch = useDispatch()
     const session = useSession().data?.user
-    const profile = useSelector((state: RootState) => state.profile)
+    const profile = useSelector((Root: RootState)=> Root.profile)
     const loadedRef = useRef(false)
     const isProfile = useMemo(() => session?.username === username, [session?.username, username])
 
@@ -43,7 +44,7 @@ const MainLayout = ({ username }: {
     }, []);
 
     if (profile.loading) {
-        return <SkeletonProfile />
+        return <SkeletonProfilePage />
     }
 
     if (profile.error) {

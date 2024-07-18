@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 import React, { useCallback } from 'react'
 import {
@@ -12,18 +11,18 @@ import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { User } from '@/types';
-import { SkeletonUserCard } from '@/components/home/loading/UserCard';
 import { useRouter } from 'next/navigation';
 import SkyAvatar from '@/components/sky/SkyAvatar';
 import { searchUsersProfileApi } from '@/redux/services/users';
 import { removeAllUserFormSearch, removeUserByIdFormSearch } from '@/redux/slice/users';
+import { SkeletonUserCardWithButton } from '../loading/UserCard';
 
 
 
 const SearchModel = ({ children }: { children: React.ReactNode }) => {
     const dispatch = useDispatch();
     const inputRef = React.useRef<any>("");
-    const Users = useSelector((state: RootState) => state.users);
+    const Users = useSelector((Root: RootState)=> Root.users);
 
     const handleSearch = useCallback(() => {
         if (inputRef?.current?.value) {
@@ -58,7 +57,9 @@ const SearchModel = ({ children }: { children: React.ReactNode }) => {
                     <div className='text-primary text-blue-00 cursor-pointer' onClick={clearAll}>Clear All</div>
                 </div>
                 {Users.searchUsersLoading ?
-                    <div className='space-y-4'>{Array(10).fill(0).map((_, i) => <SkeletonUserCard key={i} />)}</div> :
+                    <div className='space-y-4'>
+                    {Array(10).fill(0).map((_, i) => <SkeletonUserCardWithButton key={i} />)}
+                    </div> :
                     Users.searchUsers?.map((item, i) => <UserCard key={i} item={item} />)}
             </DrawerContent>
         </Drawer>

@@ -1,14 +1,8 @@
 import { configs } from "@/configs";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios, { AxiosError } from "axios";
 import { uploadFirebaseFile } from "@/lib/firebase/upload-file";
 import { graphqlQuery } from "../../../lib/graphqlQuery";
 import { ShowUploadImage } from "@/redux/slice/account";
-import { GraphqlError } from "@/types";
-
-export const DeleteAllCookie = async () => {
-    await axios.delete(`/api/v1/auth/logout`)
-}
 
 export const UploadImagesFireBaseApi = createAsyncThunk(
     'UploadImagesFireBaseApi/post',
@@ -72,7 +66,7 @@ export const UploadImagesFireBaseApi = createAsyncThunk(
 );
 
 const ErrorFunction = (error: any) => {
-    if (axios.isAxiosError(error)) {
+    if (error?.response?.data?.message) {
         return {
             data: null,
             message: error.response?.data.message,
@@ -97,12 +91,22 @@ export const loginApi = createAsyncThunk(
         password: string,
     }, thunkApi) => {
         try {
-            const res = await axios.post(`${configs.serverApi.baseUrl}/v1/auth/login`, {
-                email,
-                password
+            const res = await fetch(`${configs.serverApi.baseUrl}/v1/auth/login`, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
+                redirect: "follow",
+                body: JSON.stringify({
+                    email,
+                    password
+                }),
+                credentials: "include"
             })
+                .then((response) => response.json())
+
             return {
-                data: res.data,
+                data: res,
                 message: "Login successful",
                 code: 1
             }
@@ -126,14 +130,23 @@ export const registerApi = createAsyncThunk(
         username: string
     }, thunkApi) => {
         try {
-            const res = await axios.post(`${configs.serverApi.baseUrl}/v1/auth/register`, {
-                email: email,
-                password: password,
-                name: name,
-                username: username
+            const res = await fetch(`${configs.serverApi.baseUrl}/v1/auth/register`, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
+                redirect: "follow",
+                body: JSON.stringify({
+                    email,
+                    password,
+                    name,
+                    username
+                }),
+                credentials: "include"
             })
+                .then((response) => response.json())
             return {
-                data: res.data,
+                data: res,
                 message: "Register successful",
                 code: 1
             }
@@ -147,9 +160,17 @@ export const logoutApi = createAsyncThunk(
     'logoutApi/post',
     async (_, thunkApi) => {
         try {
-            await DeleteAllCookie()
-            const res = await axios.post(`${configs.serverApi.baseUrl}/v1/auth/logout`)
-            return res.data
+            const res = await fetch(`${configs.serverApi.baseUrl}/v1/auth/logout`, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
+                redirect: "follow",
+                credentials: "include",
+                body: JSON.stringify({}),
+            })
+                .then((response) => response.json())
+            return res
         } catch (error: any) {
             return ErrorFunction(error)
         }
@@ -187,3 +208,14 @@ export const fetchAccountFeedApi = createAsyncThunk(
         return res.feedTimelineConnection
     }
 );
+
+export const DeleteAllCookie = async () => {
+    await fetch(`/api/v1/auth/logout`,{
+        method:"DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        redirect: "follow",
+        credentials: "include",
+    })
+}

@@ -15,7 +15,7 @@ import { setConversations } from '@/redux/slice/conversation';
 export default function SidebarMessageClient({ data }: { data: Conversation[] }) {
 
     const dispatch = useDispatch()
-    const _Conversation = useSelector((state: RootState) => state.conversation)
+    const _Conversation = useSelector((Root: RootState)=> Root.conversation)
     const loadedRef = useRef(false)
 
     useEffect(() => {

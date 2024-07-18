@@ -21,7 +21,7 @@ const Page = ({
 }) => {
   const dispatch = useDispatch()
   const router = useRouter()
-  const profile = useSelector((state: RootState) => state.profile)
+  const profile = useSelector((Root: RootState)=> Root.profile)
   const session = useSession().data?.user
   const isProfile = useMemo(() => session?.username === params.profile, [profile, params.profile])
   const loadedRef = useRef(false)

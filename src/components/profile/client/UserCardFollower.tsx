@@ -6,7 +6,7 @@ import { FollowerRemoveDialog } from "../dialog/remove.follower"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 import { useDispatch } from "react-redux"
-import { createFriendshipApi, destroyFriendshipApi } from "@/redux/services/profile"
+import { RemoveFriendshipApi, createFriendshipApi, destroyFriendshipApi } from "@/redux/services/profile"
 import { UnFollowDialog } from "../dialog/unfollow"
 import { followUser, unFollowUser ,removeFollower} from "@/redux/slice/profile"
 
@@ -67,7 +67,7 @@ const UserCardFollower = ({
         setLoading(true)
         if (!session?.id) return alert('no user id from follow button')
         if (!user?.id) return alert('no user id from follow button')
-        await dispatch(destroyFriendshipApi({
+        await dispatch(RemoveFriendshipApi({
             authorUserId: user?.id,
             authorUsername: user?.username,
             followingUserId: session?.id,

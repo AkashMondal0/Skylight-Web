@@ -20,18 +20,18 @@ const ImageView = ({
     }
 
     if (error) {
-        return <div className='flex-1 h-auto m-auto'>
+        return <div className='sm:flex-1 flex-initial h-auto m-auto'>
             <ImageError />
         </div>
     }
 
     if (!data) {
-        return <div className='flex-1 h-auto m-auto'>
+        return <div className='sm:flex-1 flex-initial h-auto m-auto'>
             <ImageError />
         </div>
     }
 
-    return (<div className='flex-1 h-auto m-auto'>
+    return (<div className='sm:flex-1 flex-initial h-auto m-auto p-1'>
         <Carousel>
             <CarouselContent>
                 {data?.fileUrl?.map((url, index) => (

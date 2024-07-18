@@ -6,7 +6,7 @@ import { createPostCommentApi, createPostLikeApi, destroyPostLikeApi, fetchOnePo
 
 export type TypeActionLike = 'feeds' | 'singleFeed'
 // Define a type for the slice state
-export interface PostFeedState {
+export interface PostState {
     state: FeedPost[]
     loading: boolean
     error: {
@@ -26,7 +26,7 @@ export interface PostFeedState {
 }
 
 // Define the initial state using that type
-const PostFeedState: PostFeedState = {
+const PostState: PostState = {
     state: [],
     loading: false,
     error: null,
@@ -43,7 +43,7 @@ const PostFeedState: PostFeedState = {
 
 export const PostFeedSlice = createSlice({
     name: 'PostFeed',
-    initialState: PostFeedState,
+    initialState: PostState,
     reducers: {
 
     },

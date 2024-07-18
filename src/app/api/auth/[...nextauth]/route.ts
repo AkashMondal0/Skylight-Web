@@ -1,8 +1,6 @@
-// import redis from "@/lib/db/redis";
 import NextAuth from "next-auth"
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from "next-auth/providers/credentials"
-import { cookies } from "next/headers";
 const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
@@ -25,23 +23,6 @@ const authOptions: NextAuthOptions = {
       async authorize(credentials, req) {
         try {
           if (!credentials?.token) return null
-          cookies().set({
-            name: 'auth-session-token',
-            value: credentials?.token,
-            httpOnly: true,
-            path: '/',
-            expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-            secure: true,
-            sameSite: "lax"
-          })
-          const user = {
-            username: credentials.username,
-            name: credentials.name,
-            email: credentials.email,
-            profilePicture: credentials.image,
-            id: credentials.id
-          }
-          // await redis.hset(`session:${credentials?.id}`, user);
           return { ...credentials, profilePicture: credentials.image } as any
         } catch (error) {
           console.log("Error", error)

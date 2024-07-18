@@ -1,48 +1,53 @@
 'use client'
-import socket from '@/lib/socket-io'
-import { setMessage } from '@/redux/slice/conversation'
-import { useSession } from 'next-auth/react'
-import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { toast } from 'sonner'
-
+// import socket from '@/lib/socket-io'
+// import { setMessage } from '@/redux/slice/conversation'
+// import { useSession } from 'next-auth/react'
+import React, { useEffect } from 'react'
+// import { useDispatch } from 'react-redux'
+// import { toast } from 'sonner'
+import { useTheme } from "next-themes"
 
 
 const AppStart_Provider = () => {
-    const [isConnected, setIsConnected] = useState(socket.connected);
-    const session = useSession().data?.user
-    const loadedRef = React.useRef(false)
-    const dispatch = useDispatch()
+    // const [isConnected, setIsConnected] = useState(socket.connected);
+    // const session = useSession().data?.user
+    // const loadedRef = React.useRef(false)
+    // const dispatch = useDispatch()
     // const [isClient, setIsClient] = React.useState(false)
 
-    useEffect(() => {
-        if (!loadedRef.current && isConnected && session?.id) {
-            socket.emit('user-connect', session?.id)
-            loadedRef.current = true;
-        }
-        socket.on('connect', () => setIsConnected(true));
-        socket.on('disconnect', () => setIsConnected(false));
-
-        socket.on('messageEventHandle', (data) => {
-            dispatch(setMessage(data))
-        })
-        socket.on('messageSeenEventHandle', () => { })
-        socket.on('messageTypingEventHandle', () => { })
-        socket.on('connectionEventHandle', () => { })
-
-        return () => {
-            socket.off('connect')
-            socket.off('disconnect')
-            socket.off('messageEventHandle')
-            socket.off('messageSeenEventHandle')
-            socket.off('messageTypingEventHandle')
-            socket.off('connectionEventHandle')
-        }
-    }, [session?.id])
-
     // useEffect(() => {
-    //     setIsClient(true)
-    // }, [])
+    //     if (!loadedRef.current && isConnected && session?.id) {
+    //         socket.emit('user-connect', session?.id)
+    //         loadedRef.current = true;
+    //     }
+    //     socket.on('connect', () => setIsConnected(true));
+    //     socket.on('disconnect', () => setIsConnected(false));
+
+    //     socket.on('messageEventHandle', (data) => {
+    //         dispatch(setMessage(data))
+    //     })
+    //     socket.on('messageSeenEventHandle', () => { })
+    //     socket.on('messageTypingEventHandle', () => { })
+    //     socket.on('connectionEventHandle', () => { })
+
+    //     return () => {
+    //         socket.off('connect')
+    //         socket.off('disconnect')
+    //         socket.off('messageEventHandle')
+    //         socket.off('messageSeenEventHandle')
+    //         socket.off('messageTypingEventHandle')
+    //         socket.off('connectionEventHandle')
+    //     }
+    // }, [session?.id])
+    const { theme } = useTheme()
+    useEffect(() => {
+        const metaThemeColor = document.querySelector('meta[name=theme-color]');
+        if (theme && theme !== "system") {
+            metaThemeColor?.setAttribute(
+                'content', theme === "dark" ? "black" : "light"
+            );
+        }
+    }, [])
 
     // if (!isClient) return null
 

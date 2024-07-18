@@ -2,13 +2,11 @@
 import React, { useCallback } from 'react'
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { searchProfileApi } from '@/redux/slice/users/api-functions';
 import { RootState } from '@/redux/store';
 import { removeAllUserFormSearch } from '@/redux/slice/users';
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { SkeletonUserCard } from '@/components/home/loading/UserCard';
 import SkyAvatar from '@/components/sky/SkyAvatar';
 import { User } from '@/types';
 import { useRouter } from 'next/navigation';
@@ -19,12 +17,12 @@ import { MessagesSquare } from 'lucide-react';
 const FindUserForChat = ({ children }: { children: React.ReactNode }) => {
     const dispatch = useDispatch();
     const inputRef = React.useRef<any>();
-    const searchResultUser = useSelector((state: RootState) => state.users);
+    const searchResultUser = useSelector((Root: RootState)=> Root.users);
 
 
     const handleSearch = useCallback(() => {
         if (inputRef?.current?.value) {
-            dispatch(searchProfileApi({ keywords: inputRef?.current?.value }) as any)
+            // dispatch(searchProfileApi({ keywords: inputRef?.current?.value }) as any)
         }
     }, []);
 
@@ -57,11 +55,11 @@ const FindUserForChat = ({ children }: { children: React.ReactNode }) => {
                         <Separator />
                         <div className='h-5' />
                         <ScrollArea className='flex-1 h-96'>
-                            {searchResultUser.loading ?
+                            {/* {searchResultUser.loading ?
                                 <div className='space-y-4'>
                                     {Array(10).fill(0).map((_, i) => <SkeletonUserCard key={i} />)}
                                 </div> :
-                                searchResultUser.search_users.map((item, i) => <UserCard key={i} item={item} />)}
+                                searchResultUser.search_users.map((item, i) => <UserCard key={i} item={item} />)} */}
                         </ScrollArea>
                     </div>
                 </div>

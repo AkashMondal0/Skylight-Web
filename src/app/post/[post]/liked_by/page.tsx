@@ -6,11 +6,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { useSession } from 'next-auth/react'
 import { fetchPostLikesApi } from '@/redux/services/post'
+import { SkeletonUserCardWithButton } from '@/components/home/loading/UserCard'
 
 export default function Page({ params }: { params: { post: string } }) {
   const dispatch = useDispatch()
   const session = useSession().data?.user
-  const likes = useSelector((state: RootState) => state.postFeed)
+  const likes = useSelector((Root: RootState) => Root.post)
   const loadedRef = useRef(false)
 
   useEffect(() => {
@@ -29,10 +30,11 @@ export default function Page({ params }: { params: { post: string } }) {
         <h1 className="font-semibold text-lg text-center mb-4">Likes</h1>
         <Separator />
         <div className='h-5' />
-        {likes.likesUserList?.map((user, i) => (
-          <UserCardLikedView
-            key={i} user={user}
-            isProfile={session?.id === user.id} />))}
+        {likes.likeLoading ?
+          <>{Array(10).fill(0).map((_, i) => <SkeletonUserCardWithButton key={i} />)}</>
+          :
+          <>{likes.likesUserList?.map((user, i) => (
+            <UserCardLikedView key={i} user={user} isProfile={session?.id === user.id} />))}</>}
       </div>
     </div>
   )

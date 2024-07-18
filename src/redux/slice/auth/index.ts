@@ -1,7 +1,6 @@
 import { ApiPayloadData, User } from '@/types'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { loginApi, registerApi } from './api-functions'
 
 // Define a type for the slice state
 interface AuthState {
