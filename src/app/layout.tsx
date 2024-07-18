@@ -38,7 +38,7 @@ export default function RootLayout({ children,
             <NextAuth_Provider>
               <ThemeProvider
                 attribute="class"
-                defaultTheme="dark"
+                defaultTheme="system"
                 enableSystem>
                 <AppStart_Provider />
                 {children}
