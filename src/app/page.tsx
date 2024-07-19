@@ -47,6 +47,7 @@ export default function Page() {
         <div className='w-full md:py-0 py-14'>
           <Sm_Header />
           <VirtualizePostList posts={posts}
+            loading={posts.loading || !loadedRef.current}
             loadMore={loadMore} />
           <Sm_Navigation />
         </div>

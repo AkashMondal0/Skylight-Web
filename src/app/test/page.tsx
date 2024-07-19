@@ -1,93 +1,73 @@
-"use client"
-import React from "react";
-import axios from "axios";
+'use client'
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import React, { useState, useEffect, useCallback } from 'react';
 
-const page = () => {
-    const fetchData = async () => {
+// Define a type interface for Post
+interface PostType {
+  id: number;
+  title: string;
+  body: string;
+  i: number
+}
 
-        fetch("https://skylight-backend.skysolo.me/v1/auth/login", {
-            headers: {
-                "Content-Type": "application/json",
-            },
-            method: "POST",
-            redirect: "follow",
-            body: JSON.stringify({
-                "email": "akash@gmail.com",
-                "password": "123456"
-            }),
-            credentials:"include"
-        })
-            .then((response) => response.text())
-            .then((result) => console.log(result))
-            .catch((error) => console.error(error));
-    };
+// Post component, memoized to prevent unnecessary re-renders
+const Post: React.FC<{ post: PostType, i: number }> = React.memo(({ post, i }) => {
+  console.info("component -> ", i)
+  return (
+    <div>
+      <h2>{post.title.slice(0, 10)} -- {i}</h2>
+    </div>
+  );
+});
 
-    const fetchData2 = async () => {
-        try {
-            const response = await axios.get("https://skylight-backend.skysolo.me/v1/cookie", {
-                withCredentials: true
-            });
-            console.log(response.data);
-            // Process the response data here
-        } catch (error) {
-            console.error(error);
-            // Handle the error here
-        }
-    };
-
-    return (
-        <>
-            <button onClick={fetchData}>Fetch Data</button>
-            <button onClick={fetchData2}>Fetch cookie</button>
-
-            <p>hi baby</p>
-        </>
-    );
+// PostList component
+const PostList: React.FC<{ posts: PostType[] }> = ({ posts }) => {
+  return (
+    <div>
+      {posts.map((post, i) => (
+        <Post key={post.id} post={post} i={i} />
+      ))}
+    </div>
+  );
 };
 
-export default page;
+// Main App component
+const App: React.FC = () => {
+  const [posts, setPosts] = useState<PostType[]>([]);
+  const [page, setPage] = useState<number>(1);
 
-// "use client"
-// import React from "react";
+  const fetchPosts = async () => {
+    const response = await fetch(`https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=2`);
+    const data: PostType[] = await response.json();
+    setPosts((prevPosts) => [...prevPosts, ...data]);
+  };
 
-// const page = () => {
-//     const fetchData = async () => {
+  //   useEffect(() => {
+  //     fetchPosts();
+  //   }, []);
 
-//         fetch("http://localhost:5000/v1/cookie-set", {
-//             headers: {
-//                 "Content-Type": "application/json",
-//             },
-//             method: "GET",
-//             redirect: "follow",
-//             credentials: "include"
-//         })
-//             .then((response) => response.text())
-//             .then((result) => console.log(result))
-//             .catch((error) => console.error(error));
-//     };
+  const loadMorePosts = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
 
-//     const fetchData2 = async () => {
-//         fetch("http://localhost:5000/v1/cookie", {
-//             headers: {
-//                 "Content-Type": "application/json",
-//             },
-//             method: "GET",
-//             redirect: "follow",
-//             credentials: "include"
-//         })
-//             .then((response) => response.text())
-//             .then((result) => console.log(result))
-//             .catch((error) => console.error(error));
-//     };
+  const [counterValue, setCounterValue] = useState(0)
 
-//     return (
-//         <>
-//             <button onClick={fetchData}>Fetch Data</button>
-//             <button onClick={fetchData2}>Fetch cookie</button>
+  const counter = () => {
+    setCounterValue((pre)=>pre + 1)
+    setCounterValue((pre)=>pre + 1)
+    setCounterValue((pre)=>pre + 1)
 
-//             <p>hi baby</p>
-//         </>
-//     );
-// };
+  }
+  return (
+    <div>
+      {counterValue}
+      <Button onClick={counter}>counter</Button>
+      <button onClick={loadMorePosts}>Load More Posts</button>
+      <PostList posts={posts} />
+      <Link href={"/"}>go</Link>
+    </div>
+  );
+};
 
-// export default page;
+export default App;

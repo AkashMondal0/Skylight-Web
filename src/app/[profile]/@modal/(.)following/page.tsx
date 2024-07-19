@@ -51,7 +51,7 @@ const Page = ({
             <Separator />
             <div className='h-5' />
             <ScrollArea className='h-[400px]' >
-              {profile.followingListLoading ? <>{Array(10).fill(0).map((_,i)=><SkeletonUserCardWithButton key={i}/> )}</>: <>
+              {profile.followingListLoading || !loadedRef.current  ? <>{Array(10).fill(0).map((_,i)=><SkeletonUserCardWithButton key={i}/> )}</>: <>
                 {profile.followingList?.map((user, i) => <UserCardFollowing
                   key={i} user={user}
                   isProfile={isProfile}

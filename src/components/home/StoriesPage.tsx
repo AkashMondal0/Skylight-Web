@@ -1,6 +1,6 @@
 "use client"
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
-import { memo, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Carousel,
   CarouselContent,
@@ -56,4 +56,4 @@ function StoriesPage() {
   )
 }
 
-export default memo(StoriesPage)
+export default StoriesPage

@@ -18,7 +18,7 @@ import { SkeletonUserCardWithButton } from '@/components/home/loading/UserCard'
 const Page = ({ params }: { params: { profile: string } }) => {
     const dispatch = useDispatch()
     const router = useRouter()
-    const profile = useSelector((Root: RootState)=> Root.profile)
+    const profile = useSelector((Root: RootState) => Root.profile)
     const session = useSession().data?.user
     const isProfile = useMemo(() => session?.username === params.profile, [profile, params.profile])
     const loadedRef = useRef(false)
@@ -50,7 +50,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
                         <Separator />
                         <div className='h-5' />
                         <ScrollArea className='h-[400px]' >
-                            {profile.followerListLoading ?  <>{Array(10).fill(0).map((_,i)=><SkeletonUserCardWithButton key={i}/> )}</> : <>
+                            {profile.followerListLoading || !loadedRef.current ? <>{Array(10).fill(0).map((_, i) => <SkeletonUserCardWithButton key={i} />)}</> : <>
                                 {profile.followerList?.map((user, i) => <UserCardFollower
                                     key={i} user={user}
                                     isProfile={isProfile}

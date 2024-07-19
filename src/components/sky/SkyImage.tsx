@@ -1,7 +1,8 @@
 "use client";
 import { cn } from '@/lib/utils';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef ,memo} from 'react';
 import { ImageError } from './image.error';
+const MemorizeImageError = memo(ImageError)
 
 interface OptimizedImageProps {
     src: string;
@@ -16,7 +17,7 @@ interface OptimizedImageProps {
     onLoad?: () => void;
 }
 
-const OptimizedImage: React.FC<OptimizedImageProps> = ({
+const OptimizedImage: React.FC<OptimizedImageProps> = memo(({
     src,
     alt = "image not found",
     width,
@@ -58,7 +59,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
     }, []);
 
     if (error.current && showErrorIcon) {
-        return <ImageError />
+        return <MemorizeImageError />
     }
 
     return (
@@ -96,6 +97,6 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
             </picture>
         </>
     );
-};
+})
 
 export default OptimizedImage;
