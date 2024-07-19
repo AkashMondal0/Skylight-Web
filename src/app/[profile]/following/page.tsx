@@ -40,7 +40,7 @@ const Page = ({
         <h1 className="font-semibold text-lg text-center mb-4">Following</h1>
         <Separator />
         <div className='h-5' />
-        {profile.followingListLoading ? <>{Array(10).fill(0).map((_,i)=><SkeletonUserCardWithButton key={i}/> )}</>: <>
+        {profile.followingListLoading || !loadedRef.current  ? <>{Array(10).fill(0).map((_,i)=><SkeletonUserCardWithButton key={i}/> )}</>: <>
                 {profile.followingList?.map((user, i) => <UserCardFollowing
                   key={i} user={user}
                   isProfile={isProfile}

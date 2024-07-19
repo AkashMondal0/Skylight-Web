@@ -4,16 +4,17 @@ import { User } from '@/types'
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import StoriesComponent from './Stories'
 import FollowAndUnFollowButton from './FollowButton'
+import { memo } from 'react'
 
 
 interface Props {
     isProfile: boolean
     user: User | null
 }
-const HeroSection = ({
+const HeroSection = memo(function HeroSection({
     isProfile,
     user: userProfileData,
-}: Props) => {
+}: Props) {
 
     if (!userProfileData) return null
 
@@ -129,6 +130,6 @@ const HeroSection = ({
         </>
 
     )
-}
+})
 
 export default HeroSection

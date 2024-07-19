@@ -1,18 +1,17 @@
 "use client"
-import React, { useRef, useState } from 'react'
-import Image from 'next/image'
+import React, { memo, useState } from 'react'
 import { cn } from '@/lib/utils'
 import { Copy, Heart, MessageCircle, RotateCcw } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { FeedPost, networkImage_status } from '@/types'
+import { FeedPost } from '@/types'
 import OptimizedImage from '@/components/sky/SkyImage'
 import { ImageError } from '@/components/sky/image.error'
 
-export const ImageComponent = ({
+export const ImageComponent = memo(function ImageComponent({
     data
 }: {
     data: FeedPost
-}) => {
+}){
     const router = useRouter()
     const [error, setError] = useState(false)
 
@@ -50,4 +49,4 @@ export const ImageComponent = ({
             </div>
         </>
     )
-}
+})

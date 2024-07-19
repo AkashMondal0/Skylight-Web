@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import React from 'react'
 import { SkeletonStoriesCard } from './StoriesCard'
 
-const SkeletonPostCard = () => {
+const PageLoading = () => {
     return (
         <div className='w-full h-full'>
             <SkeletonStoriesCard />
@@ -38,4 +38,4 @@ const SkeletonPostCard = () => {
     )
 }
 
-export default SkeletonPostCard
+export default PageLoading

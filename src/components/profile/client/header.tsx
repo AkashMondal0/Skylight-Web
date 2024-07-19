@@ -1,7 +1,7 @@
 import { AtSign, ChevronDown, Menu, Settings } from 'lucide-react'
-import React from 'react'
+import React, { memo } from 'react'
 
-const ProfileHeader = ({ name, isProfile }: { name: string, isProfile?: boolean }) => {
+const ProfileHeader = memo(function ProfileHeader({ name, isProfile }: { name: string, isProfile?: boolean }) {
     if (isProfile) {
         return (
             <div>
@@ -27,6 +27,6 @@ const ProfileHeader = ({ name, isProfile }: { name: string, isProfile?: boolean 
             </div>
         </div>
     )
-}
+})
 
 export default ProfileHeader

@@ -1,93 +1,45 @@
-"use client"
-import React from "react";
-import axios from "axios";
+'use client'
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import React, { useState, useEffect, useCallback } from 'react';
 
-const page = () => {
-    const fetchData = async () => {
+// Main App component
+const App: React.FC = () => {
+  // const [posts, setPosts] = useState<PostType[]>([]);
+  // const [page, setPage] = useState<number>(1);
 
-        fetch("https://skylight-backend.skysolo.me/v1/auth/login", {
-            headers: {
-                "Content-Type": "application/json",
-            },
-            method: "POST",
-            redirect: "follow",
-            body: JSON.stringify({
-                "email": "akash@gmail.com",
-                "password": "123456"
-            }),
-            credentials:"include"
-        })
-            .then((response) => response.text())
-            .then((result) => console.log(result))
-            .catch((error) => console.error(error));
-    };
+  // const fetchPosts = async () => {
+  //   const response = await fetch(`https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=2`);
+  //   const data: PostType[] = await response.json();
+  //   setPosts((prevPosts) => [...prevPosts, ...data]);
+  // };
 
-    const fetchData2 = async () => {
-        try {
-            const response = await axios.get("https://skylight-backend.skysolo.me/v1/cookie", {
-                withCredentials: true
-            });
-            console.log(response.data);
-            // Process the response data here
-        } catch (error) {
-            console.error(error);
-            // Handle the error here
-        }
-    };
+  //   useEffect(() => {
+  //     fetchPosts();
+  //   }, []);
 
-    return (
-        <>
-            <button onClick={fetchData}>Fetch Data</button>
-            <button onClick={fetchData2}>Fetch cookie</button>
+  // const loadMorePosts = () => {
+  //   setPage((prevPage) => prevPage + 1);
+  // };
 
-            <p>hi baby</p>
-        </>
-    );
+  // const [counterValue, setCounterValue] = useState(0)
+
+  // const counter = () => {
+  //   setCounterValue((pre)=>pre + 1)
+  //   setCounterValue((pre)=>pre + 1)
+  //   setCounterValue((pre)=>pre + 1)
+
+  // }
+  return (
+    <div>
+      test
+      {/* {counterValue}
+      <Button onClick={counter}>counter</Button>
+      <button onClick={loadMorePosts}>Load More Posts</button>
+      <PostList posts={posts} />
+      <Link href={"/"}>go</Link> */}
+    </div>
+  );
 };
 
-export default page;
-
-// "use client"
-// import React from "react";
-
-// const page = () => {
-//     const fetchData = async () => {
-
-//         fetch("http://localhost:5000/v1/cookie-set", {
-//             headers: {
-//                 "Content-Type": "application/json",
-//             },
-//             method: "GET",
-//             redirect: "follow",
-//             credentials: "include"
-//         })
-//             .then((response) => response.text())
-//             .then((result) => console.log(result))
-//             .catch((error) => console.error(error));
-//     };
-
-//     const fetchData2 = async () => {
-//         fetch("http://localhost:5000/v1/cookie", {
-//             headers: {
-//                 "Content-Type": "application/json",
-//             },
-//             method: "GET",
-//             redirect: "follow",
-//             credentials: "include"
-//         })
-//             .then((response) => response.text())
-//             .then((result) => console.log(result))
-//             .catch((error) => console.error(error));
-//     };
-
-//     return (
-//         <>
-//             <button onClick={fetchData}>Fetch Data</button>
-//             <button onClick={fetchData2}>Fetch cookie</button>
-
-//             <p>hi baby</p>
-//         </>
-//     );
-// };
-
-// export default page;
+export default App;

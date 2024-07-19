@@ -3,7 +3,7 @@ import React from 'react'
 import { RootState } from '@/redux/store'
 import { useSelector } from 'react-redux'
 import { HardDriveUpload, Loader2 } from 'lucide-react'
-import Image from 'next/image'
+
 const ShowUpload = () => {
     const profile = useSelector((Root: RootState)=> Root.account)
     if (!profile.UploadFiles.loading) return null
@@ -16,7 +16,7 @@ const ShowUpload = () => {
             </div>
             <>
                 {profile.UploadFiles.currentUploadImg ?
-                    <Image
+                    <img
                         width={20}
                         height={20}
                         sizes="10vw"

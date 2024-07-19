@@ -11,6 +11,7 @@ import { RootState } from '@/redux/store';
 import StatusbarColorInitial from '@/provider/StatusbarColor';
 import { setMoreData } from '@/redux/slice/post';
 import { getRandomPost } from '@/components/sky/random';
+import { debounce } from 'lodash';
 
 export default function Page() {
   const dispatch = useDispatch()
@@ -28,11 +29,11 @@ export default function Page() {
     fetchPosts()
   }, []);
 
-  const loadMore = () => {
+  const loadMore = debounce(() => {
     const _posts = getRandomPost(size)
     dispatch(setMoreData(_posts) as any)
     setSize(size + 10)
-  }
+  },2500)
 
   if (posts.error) {
     return <NotFound message={posts.error?.message} />
@@ -47,6 +48,7 @@ export default function Page() {
         <div className='w-full md:py-0 py-14'>
           <Sm_Header />
           <VirtualizePostList posts={posts}
+            loading={posts.loading || !loadedRef.current}
             loadMore={loadMore} />
           <Sm_Navigation />
         </div>
