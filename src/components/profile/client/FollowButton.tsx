@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation"
 import { memo } from "react"
 import { useDispatch, useSelector } from "react-redux"
 
-const FollowAndUnFollowButton = memo(({
+const FollowAndUnFollowButton = memo(function FollowAndUnFollowButton({
     isProfile,
     user,
     isFollowing,
@@ -17,7 +17,7 @@ const FollowAndUnFollowButton = memo(({
     isProfile?: boolean
     user: User
     isFollowing?: boolean
-}) => {
+}) {
     const loading = useSelector((Root: RootState) => Root.profile.friendShipLoading)
     const router = useRouter()
     const dispatch = useDispatch()

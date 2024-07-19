@@ -21,20 +21,10 @@ import { setLoadMoreProfilePosts } from "@/redux/slice/profile";
 import { getRandomProfilePost } from "../sky/random";
 import NotFound from "../home/NotFound";
 import { CirclePlus } from "../sky/icons";
-const MemoizedImageComponent = React.memo(ImageComponent)
-const MemoizedHeroSection = React.memo(HeroSection)
 
-
-interface Props {
-    isProfile: boolean
-    user: User | null
-}
 const MainLayout = ({ username }: {
     username: User["username"]
 }) => {
-    if (!username) {
-        return <NotFound />
-    }
     const dispatch = useDispatch()
     const session = useSession().data?.user
     const profile = useSelector((Root: RootState) => Root.profile)
@@ -64,7 +54,7 @@ const MainLayout = ({ username }: {
     const renderHeader = useCallback(() => {
         // console.info("Header")
         return (<>
-            <MemoizedHeroSection isProfile={isProfile} user={profile.state} />
+            <HeroSection isProfile={isProfile} user={profile.state} />
         </>)
     }, [profile.state]);
 
@@ -141,7 +131,7 @@ const MainLayout = ({ username }: {
                     );
                 }),
             }}
-            itemContent={(index) => <MemoizedImageComponent data={profile.posts[index]} />}
+            itemContent={(index) => <ImageComponent data={profile.posts[index]} />}
         />
         <style>{`html, body, #root { height: 100% }`}</style>
     </>
