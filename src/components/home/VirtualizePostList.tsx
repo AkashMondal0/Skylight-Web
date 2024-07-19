@@ -6,6 +6,7 @@ import ShowUpload from './alert/show-upload';
 import { PostState } from '@/redux/slice/post';
 import { Button } from '../ui/button';
 import PageLoading from './loading/PageLoading';
+import { CirclePlus } from '../sky/icons';
 const MemorizeStoriesPage = React.memo(StoriesPage)
 const MemoizedPostItem = React.memo(PostItem)
 const MemoizedPostItemDummy = React.memo(PostItemDummy)
@@ -38,8 +39,10 @@ const VirtualizePostList = ({
                     display: 'flex',
                     justifyContent: 'center',
                 }}>
-                <Button onClick={loadMore}>
-                    Load Dummy Posts
+                <Button onClick={loadMore}
+                    variant={"outline"}
+                    className="rounded-full px-1">
+                    <CirclePlus />
                 </Button>
             </div>
         )
