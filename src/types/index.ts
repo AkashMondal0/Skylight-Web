@@ -86,17 +86,17 @@ interface Message {
 
 interface Conversation {
     id: string;
-    members: string[];
-    isGroup: boolean;
-    groupName: string | null;
-    groupImage: string | null;
-    groupDescription: string | null;
+    members?: string[];
     authorId: string;
-    createdAt: Date;
-    updatedAt: Date | string;
-    messages: Message[];
-    membersData: AuthorData[]
-    lastMessageContent: string
+    messages?: Message[]
+    user?: AuthorData | null
+    isGroup: boolean | null;
+    lastMessageContent: string | null;
+    createdAt?: Date | null;
+    updatedAt?: Date | null;
+    groupName?: string | null;
+    groupImage?: string | null;
+    groupDescription?: string | null;
 }
 
 interface Post {

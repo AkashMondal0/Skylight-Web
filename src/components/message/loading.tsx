@@ -20,7 +20,7 @@ export const UserCardLoading = () => {
     </div>
 }
 
-export const UserCardListSkeleton = () => {
+export const LoadingMessageSidebar = () => {
     return <div className={`md:border-r scroll-smooth duration-300 px-4 overflow-hidden
     hideScrollbar h-dvh md:max-w-[22rem] ease-in-out w-full`}>
         <div className='w-full my-4'>

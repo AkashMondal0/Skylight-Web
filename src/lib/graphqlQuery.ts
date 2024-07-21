@@ -44,7 +44,7 @@ export const graphqlQuery = async ({
 const graphqlErrorTypes = async (e: GraphqlError) => {
     switch (e.extensions.code) {
         case 'UNAUTHENTICATED':
-            await DeleteAllCookie()
+            // await DeleteAllCookie()
             throw new Error(e.message)
         case 'INTERNAL_SERVER_ERROR':
             throw new Error("Something went wrong!")

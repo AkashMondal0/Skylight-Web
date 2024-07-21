@@ -1,31 +1,29 @@
 "use client";
-import React, { useEffect, useRef, useState } from 'react'
-import { CardTitle } from '../../ui/card';
+import React, { memo, useEffect, useRef } from 'react'
+import { CardTitle } from '../ui/card';
 import { SquarePen } from 'lucide-react';
-import { Button } from '../../ui/button';
-import ConversationUserCard from '../UserCard';
+import { Button } from '../ui/button';
+import ConversationUserCard from './UserCard';
 import { Virtuoso } from 'react-virtuoso';
-import FindUserForChat from '../modal/FindUserForChat';
-import { Conversation } from '@/types';
+import FindUserForChat from './modal/FindUserForChat';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { setConversations } from '@/redux/slice/conversation';
+import { LoadingMessageSidebar } from './loading';
+const MemorizeConversationUserCard = memo(ConversationUserCard)
 
-
-export default function SidebarMessageClient({ data }: { data: Conversation[] }) {
-
+export default function SidebarMessageClient() {
     const dispatch = useDispatch()
-    const _Conversation = useSelector((Root: RootState)=> Root.conversation)
+    const rootConversation = useSelector((Root: RootState) => Root.conversation)
     const loadedRef = useRef(false)
 
     useEffect(() => {
         if (!loadedRef.current) {
-            dispatch(setConversations(data) as any)
             loadedRef.current = true;
         }
-    }, [dispatch, data]);
+    }, [])
 
-    // console.log(_Conversation.list)
+
+    if (rootConversation.listLoading || !loadedRef.current) return <LoadingMessageSidebar />
 
     return (
         <div className={`
@@ -34,10 +32,11 @@ export default function SidebarMessageClient({ data }: { data: Conversation[] })
             <Header />
             <Virtuoso
                 className='h-auto w-full hideScrollbar'
-                data={_Conversation.list}
+                data={rootConversation.conversationList}
                 increaseViewportBy={500}
                 itemContent={(i, conversation) => {
-                    return <ConversationUserCard data={conversation}/>
+                    return <MemorizeConversationUserCard data={conversation}
+                        key={conversation.id} />
                 }} />
         </div>
     )
@@ -46,7 +45,7 @@ export default function SidebarMessageClient({ data }: { data: Conversation[] })
 const Header = () => {
     return <div className='w-full p-4 pb-0 sticky top-0'>
         <div className="flex justify-between w-full items-center">
-            <CardTitle>Sky Chat</CardTitle>
+            <CardTitle>SkyLight</CardTitle>
             <div>
                 <FindUserForChat>
                     <Button variant={"ghost"} className='rounded-2xl'>
