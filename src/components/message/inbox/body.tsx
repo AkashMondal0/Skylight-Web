@@ -1,17 +1,22 @@
 "use client"
-import { useEffect, useRef } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
 import MessagesCard from './message_card';
 import { Virtuoso } from 'react-virtuoso';
 import React from 'react';
 import { Conversation } from '@/types';
 import { useSession } from 'next-auth/react';
-
+const MemorizeMessagesCard = memo(MessagesCard)
 
 
 const InBoxBody = ({ data }: { data: Conversation }) => {
-
     const session = useSession().data?.user
     const virtuosoMethods = useRef(null)
+    const messages = useMemo(() => {
+        if (!data.messages) {
+            return []
+        }
+        return data.messages
+    }, [])
 
     const loadMore = () => {
         // @ts-ignore
@@ -28,7 +33,7 @@ const InBoxBody = ({ data }: { data: Conversation }) => {
         }
     }, [data.messages])
 
-    const onScroll = (e:any) => {
+    const onScroll = (e: any) => {
         if (e.target.scrollTop < 100) {
             loadMore()
         }
@@ -44,10 +49,10 @@ const InBoxBody = ({ data }: { data: Conversation }) => {
                     increaseViewportBy={1000}
                     onScroll={onScroll}
                     itemContent={(index, post) => {
-                        return <MessagesCard
-                            data={data.messages[index]}
+                        return <MemorizeMessagesCard
+                            data={messages[index]}
                             seen={false}
-                            isProfile={session?.id === data.messages[index].authorId}
+                            isProfile={session?.id === messages[index]?.authorId}
                         />
                     }}
                     components={{

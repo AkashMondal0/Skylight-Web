@@ -1,30 +1,16 @@
-'use client'
 import Lg_Navigation from '@/components/home/navigation/lg-navigation';
 import SidebarMessageClient from '@/components/message/Sidebar';
-import { fetchConversationsApi } from '@/redux/services/conversation';
-// import type { Metadata } from 'next'
-import { useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import type { Metadata } from 'next'
 
-// export const metadata: Metadata = {
-//   title: 'Message',
-//   description: `Sky Media is a social media platform that 
-//   allows users to share their thoughts and ideas with the world.`,
-// }
+export const metadata: Metadata = {
+  title: 'Message',
+  description: `Sky Media is a social media platform that 
+  allows users to share their thoughts and ideas with the world.`,
+}
 
 export default function RootLayout({ children }: {
   children: React.ReactNode;
 }) {
-  const dispatch = useDispatch()
-  const loadedRef = useRef(false)
-
-  useEffect(() => {
-      if (!loadedRef.current) {
-          dispatch(fetchConversationsApi() as any)
-          loadedRef.current = true;
-      }
-  }, []);
-
   return (
     <>
       <div className='flex'>

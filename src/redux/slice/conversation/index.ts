@@ -1,4 +1,4 @@
-import { fetchConversationsApi } from '@/redux/services/conversation'
+import { fetchConversationApi, fetchConversationsApi } from '@/redux/services/conversation'
 import { Conversation, Message } from '@/types'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
@@ -76,6 +76,19 @@ export const ConversationSlice = createSlice({
         builder.addCase(fetchConversationsApi.rejected, (state, action) => {
             state.listLoading = false
             state.listError = "error"
+        })
+        // fetchConversationApi
+        builder.addCase(fetchConversationApi.pending, (state) => {
+            state.loading = true
+            state.error = null
+        })
+        builder.addCase(fetchConversationApi.fulfilled, (state, action: PayloadAction<Conversation>) => {
+            state.conversation = action.payload
+            state.loading = false
+        })
+        builder.addCase(fetchConversationApi.rejected, (state, action) => {
+            state.loading = false
+            state.error = "error"
         })
         // CreateConnectionWithMessageApi
         // builder.addCase(CreateConnectionWithMessageApi.pending, (state) => {

@@ -9,6 +9,8 @@ import FindUserForChat from './modal/FindUserForChat';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { LoadingMessageSidebar } from './loading';
+import { fetchConversationsApi } from '@/redux/services/conversation';
+import { ScrollArea } from '../ui/scroll-area';
 const MemorizeConversationUserCard = memo(ConversationUserCard)
 
 export default function SidebarMessageClient() {
@@ -18,9 +20,10 @@ export default function SidebarMessageClient() {
 
     useEffect(() => {
         if (!loadedRef.current) {
+            dispatch(fetchConversationsApi() as any)
             loadedRef.current = true;
         }
-    }, [])
+    }, []);
 
 
     if (rootConversation.listLoading || !loadedRef.current) return <LoadingMessageSidebar />
@@ -30,14 +33,18 @@ export default function SidebarMessageClient() {
         flex flex-col md:border-r scroll-smooth duration-300 p-1 
         hideScrollbar h-full md:max-w-[22rem] ease-in-out w-full`}>
             <Header />
-            <Virtuoso
-                className='h-auto w-full hideScrollbar'
+            {/* <Virtuoso
+                className='h-auto w-full '
                 data={rootConversation.conversationList}
                 increaseViewportBy={500}
                 itemContent={(i, conversation) => {
-                    return <MemorizeConversationUserCard data={conversation}
-                        key={conversation.id} />
-                }} />
+                    return 
+                }} /> */}
+            <ScrollArea className='hideScrollbar'>
+                {rootConversation.conversationList.map((conversation) => {
+                    return <MemorizeConversationUserCard data={conversation} />
+                })}
+            </ScrollArea>
         </div>
     )
 }

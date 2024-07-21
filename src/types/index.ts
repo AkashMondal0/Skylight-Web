@@ -75,20 +75,21 @@ type Friendship = {
 interface Message {
     id: string;
     content: string;
-    fileUrl: Assets[];
+    fileUrl: string[];
     authorId: string;
     deleted: boolean;
     seenBy: string[];
     conversationId: string;
     createdAt: Date;
     updatedAt: Date;
+    user?: AuthorData | null;
 }
 
 interface Conversation {
     id: string;
     members?: string[];
     authorId: string;
-    messages?: Message[]
+    messages?: Message[] | []
     user?: AuthorData | null
     isGroup: boolean | null;
     lastMessageContent: string | null;

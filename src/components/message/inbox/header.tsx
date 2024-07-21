@@ -1,27 +1,32 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 import { cn } from '@/lib/utils';
-import { ChevronLeft,Info } from 'lucide-react';
+import { ChevronLeft, Info } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import SkyAvatar from '@/components/sky/SkyAvatar';
 import { Conversation } from '@/types';
+import { useMemo } from 'react';
 
 const InBoxHeader = ({ data }: { data: Conversation }) => {
     const router = useRouter()
-    const Conversation = data?.isGroup ? {
-        image: data?.groupImage,
-        name: data?.groupName,
-        message: data?.lastMessageContent,
-        time: data?.updatedAt,
-        id: data?.id
-    } : {
-        image: data?.membersData[0]?.profilePicture,
-        name: data?.membersData[0]?.username,
-        message: data?.lastMessageContent,
-        time: data?.updatedAt,
-        id: data?.membersData[0]?.id
-    }
+    const Conversation = useMemo(() => {
+        return data?.isGroup ? {
+            image: data?.groupImage,
+            name: data?.groupName,
+            message: data?.lastMessageContent,
+            time: data?.updatedAt,
+            id: data?.id
+        } : {
+            image: data?.user?.profilePicture,
+            name: data?.user?.username,
+            message: data?.lastMessageContent,
+            time: data?.updatedAt,
+            id: data?.user?.id
+        }
+    }, [data])
+
+    
     if (!Conversation) return null
 
 
@@ -47,7 +52,7 @@ const InBoxHeader = ({ data }: { data: Conversation }) => {
                                 </div>
                                 <div className="text-sm text-gray-500 dark:text-gray-400 ml-1">
                                     {/* {data?.typing ? "typing..." : userData?.status ? "online" : "offline"} */}
-                                    
+
                                 </div>
                             </div>
                         </div>

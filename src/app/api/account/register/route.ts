@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import db from "@/lib/db/drizzle";
 import { NextRequest, NextResponse } from "next/server"
 import { users } from "@/lib/db/schema";
-import bcrypt from "bcryptjs";
+// import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { cookies } from 'next/headers';
 const secret = process.env.NEXTAUTH_SECRET || "secret";
@@ -35,12 +35,12 @@ export async function POST(request: NextRequest, response: NextResponse) {
       }, { status: 400 })
     }
 
-    const salt = bcrypt.genSaltSync(saltRounds);
-    const hash = bcrypt.hashSync(password, salt);
+    // const salt = bcrypt.genSaltSync(saltRounds);
+    // const hash = bcrypt.hashSync(password, salt);
 
     const newUser = await db.insert(users).values({
       email: email,
-      password: hash,
+      password: "hash",
       username: username,
       name: name
     }).returning()

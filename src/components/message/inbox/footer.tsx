@@ -11,7 +11,6 @@ import { debounce } from 'lodash';
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/navigation';
 import { Assets, Conversation } from '@/types';
-import { CreateConnectionWithMessageApi, CreateMessageApi } from '@/redux/slice/conversation/api-functions';
 import { useSession } from 'next-auth/react';
 
 
@@ -50,22 +49,22 @@ const InBoxFooter = ({ data }: { data: Conversation }) => {
         if (!session?.id) return
 
         if (!data.id) {
-            await dispatch(CreateConnectionWithMessageApi({
-                authorId: session?.id,
-                members: data.members,
-                membersData: data.membersData,
-                isGroup: false,
-                content: _data.message
-            }) as any)
+            // await dispatch(CreateConnectionWithMessageApi({
+            //     authorId: session?.id,
+            //     members: data.members,
+            //     membersData: data.membersData,
+            //     isGroup: false,
+            //     content: _data.message
+            // }) as any)
         } else {
-            await dispatch(CreateMessageApi({
-                conversationId: data.id,
-                authorId: session?.id,
-                content: _data.message,
-                isGroup: data.isGroup,
-                members: data.members.filter((member) => member !== session?.id),
-                // assets: assets
-            }) as any)
+            // await dispatch(CreateMessageApi({
+            //     conversationId: data.id,
+            //     authorId: session?.id,
+            //     content: _data.message,
+            //     isGroup: data.isGroup,
+            //     members: data.members.filter((member) => member !== session?.id),
+            //     // assets: assets
+            // }) as any)
         }
         reset()
         setAssets([])
