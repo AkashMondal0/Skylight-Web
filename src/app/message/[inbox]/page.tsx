@@ -7,7 +7,7 @@ import { notFound } from 'next/navigation';
 import React, { Suspense } from 'react'
 
 
-async function getConversationMessageApi(id: string) {
+async function getConversationMessagesApi(id: string) {
   try {
     const response = await fetch(`${configs.appUrl}/api/v1/inbox/${id}`, {
       headers: {
@@ -28,7 +28,7 @@ async function getConversationMessageApi(id: string) {
 }
 
 const RenderComponent = async ({ params }: { params: { inbox: string } }) => {
-  const data = await getConversationMessageApi(params.inbox);
+  const data = await getConversationMessagesApi(params.inbox);
   return <MainClientPage data={data}/>
 }
 

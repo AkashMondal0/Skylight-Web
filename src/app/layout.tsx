@@ -5,7 +5,8 @@ import NextAuth_Provider from "@/provider/NextAuth_Provider";
 import { Toaster } from "@/components/ui/sonner"
 import Redux_Provider from "@/provider/Redux_Provider";
 import type { Viewport } from 'next'
- 
+import Socket_Provider from "@/provider/Socket_Provider";
+
 export const viewport: Viewport = {
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: 'light' },
@@ -32,16 +33,17 @@ export default function RootLayout({ children,
     <>
       <html lang="en" suppressHydrationWarning={false}>
         <body className="ease-in-out duration-300 ">
-          <Toaster />
           <Redux_Provider>
             <NextAuth_Provider>
               <ThemeProvider
                 attribute="class"
                 defaultTheme="system"
                 enableSystem>
-                {/* <AppStart_Provider /> */}
-                {children}
-                {modal}
+                <Socket_Provider>
+                  <Toaster />
+                  {children}
+                  {modal}
+                </Socket_Provider>
               </ThemeProvider>
             </NextAuth_Provider>
           </Redux_Provider>
