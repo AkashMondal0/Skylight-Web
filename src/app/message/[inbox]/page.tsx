@@ -1,6 +1,6 @@
 "use client"
 import { RootState } from "@/redux/store"
-import { memo, useEffect, useRef, useState } from "react"
+import { memo, useEffect, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import InBoxBody from '@/components/message/inbox/body';
 import InBoxFooter from '@/components/message/inbox/footer';
