@@ -30,7 +30,7 @@ const VirtualizePostList = ({
         count,
         getScrollElement: () => parentRef.current,
         estimateSize: () => 45,
-        overscan: 1000,
+        overscan: 12,
         enabled: true,
     })
 
