@@ -6,21 +6,28 @@ import { getRandomPost } from "../sky/random";
 import { ImageComponent } from "./client/Post";
 import OptimizedImage from "../sky/SkyImage";
 
-const posts = getRandomPost(3)
-const VirtualizedList = ({ data, Header, Footer }: {
+const _posts = getRandomPost(10)
+
+const VirtualizedList = ({
+    Header, Footer,
+    ProfileDetail,
+    Navigation
+}: {
     data: FeedPost[],
     Header?: React.ReactNode
     Footer?: React.ReactNode
+    ProfileDetail: React.ReactNode,
+    Navigation?: React.ReactNode
 }) => {
     const parentRef = useRef<HTMLDivElement>(null)
     const dimension = useWindowDimensions()
     const [mounted, setMounted] = useState(false)
-    // const data = useMemo(() => posts.state, [posts.state])
-    const count = useMemo(() => data.length, [data.length])
+    const data = useMemo(() => _posts, [])
+    const count = useMemo(() => Math.ceil(data.length / 3), [data.length])
 
 
     const virtualizer = useVirtualizer({
-        count: Math.ceil(10 / 3),
+        count,
         getScrollElement: () => parentRef.current,
         estimateSize: () => 45,
         overscan: 9,
@@ -35,6 +42,21 @@ const VirtualizedList = ({ data, Header, Footer }: {
 
     if (!dimension.isMounted || !mounted) return <>dimension.isMounted</>
 
+    const RenderImg = ({ url }: { url: string }) => {
+        if (!url) return <div className="h-full aspect-square w-full" />
+        return <div className="h-full aspect-square w-full border">
+            {/* <ImageComponent data={profile.posts[index]}/>  */}
+            <OptimizedImage
+                src={url}
+                width={100}
+                height={100}
+                className="w-full h-full"
+                showErrorIcon
+                sizes="(min-width: 808px) 20vw, 40vw"
+            />
+        </div>
+    }
+
     return (
         <>
             <div ref={parentRef}
@@ -45,6 +67,7 @@ const VirtualizedList = ({ data, Header, Footer }: {
                     contain: 'strict',
                 }}>
                 {Header}
+                {ProfileDetail}
                 <div
                     className='mx-auto max-w-[960px]'
                     style={{
@@ -69,35 +92,22 @@ const VirtualizedList = ({ data, Header, Footer }: {
                                 className={virtualRow.index % 2 ? 'ListItemOdd' : 'ListItemEven'}>
                                 <div className="p-[1px] w-full flex h-full space-x-[2px]"
                                     style={{ aspectRatio: "3:1" }}
-                                    // key={posts[virtualRow.index].id}
-                                    >
-                                    {/* <ImageComponent data={profile.posts[index]}/> */}
-                                    {/* <img src={posts[virtualRow.index].fileUrl[0]} width={100} height={100} className="w-full h-full" /> */}
+                                    key={data[virtualRow.index].id}
+                                >
+                                    {/* {virtualRow.index * 3 + 1}
+                                    {virtualRow.index * 3 + 2}
+                                    {virtualRow.index * 3 + 3} */}
+                                    <RenderImg url={data[virtualRow.index * 3 + 0]?.fileUrl[0] ?? null} />
+                                    <RenderImg url={data[virtualRow.index * 3 + 1]?.fileUrl[0] ?? null} />
+                                    <RenderImg url={data[virtualRow.index * 3 + 3]?.fileUrl[0] ?? null} />
 
-                                    <OptimizedImage
-                                        fetchPriority="high"
-                                        src={'/user.jpg'}
-                                        width={100} height={100}
-                                        className="h-full aspect-square w-full"
-                                        sizes="(min-width: 808px) 20vw, 40vw" />
-                                    <OptimizedImage
-                                        fetchPriority="high"
-                                        src={'/user.jpg'}
-                                        width={100} height={100}
-                                        className="h-full aspect-square w-full"
-                                        sizes="(min-width: 808px) 20vw, 40vw" />
-                                    <OptimizedImage
-                                        fetchPriority="high"
-                                        src={'/user.jpg'}
-                                        width={100} height={100}
-                                        className="h-full aspect-square w-full"
-                                        sizes="(min-width: 808px) 20vw, 40vw" />
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
                 {Footer}
+                {Navigation}
             </div>
         </>
     )

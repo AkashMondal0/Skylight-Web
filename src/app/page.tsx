@@ -5,19 +5,23 @@ import Sm_Header from '@/components/home/navigation/sm-header';
 import Lg_Navigation from '@/components/home/navigation/lg-navigation';
 import NotFound from '@/components/home/NotFound';
 import { fetchAccountFeedApi } from '@/redux/services/account';
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import StatusbarColorInitial from '@/provider/StatusbarColor';
 import { setMoreData } from '@/redux/slice/post';
 import { getRandomPost } from '@/components/sky/random';
 import { debounce } from 'lodash';
+const MemorizeSm_Header = memo(Sm_Header)
+const MemoizedSm_Navigation = memo(Sm_Navigation)
+const MemoizedLg_Navigation = memo(Lg_Navigation)
+
+
 
 export default function Page() {
   const dispatch = useDispatch()
   const posts = useSelector((Root: RootState) => Root.post)
   const loadedRef = useRef(false)
-  const [size, setSize] = useState(160)
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -30,10 +34,9 @@ export default function Page() {
   }, []);
 
   const loadMore = debounce(() => {
-    const _posts = getRandomPost(size)
+    const _posts = getRandomPost(10)
     dispatch(setMoreData(_posts) as any)
-    setSize(size + 10)
-  },500)
+  }, 500)
 
   if (posts.error) {
     return <NotFound message={posts.error?.message} />
@@ -44,13 +47,14 @@ export default function Page() {
     <>
       <StatusbarColorInitial />
       <div className='w-full h-full flex'>
-        <Lg_Navigation />
-        <div className='w-full md:py-0 py-14'>
-          <Sm_Header />
-          <VirtualizePostList posts={posts}
+        <MemoizedLg_Navigation />
+        <div className='w-full'>
+          <VirtualizePostList
+            Header={<MemorizeSm_Header />}
+            Footer={<MemoizedSm_Navigation />}
+            posts={posts}
             loading={posts.loading || !loadedRef.current}
             loadMore={loadMore} />
-          <Sm_Navigation />
         </div>
       </div>
     </>

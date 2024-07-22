@@ -20,6 +20,7 @@ export default function SidebarMessageClient() {
     return (
         <div className={`
         flex flex-col md:border-r scroll-smooth duration-300 p-1 
+        bg-background text-foreground
         hideScrollbar h-full md:max-w-[22rem] ease-in-out w-full`}>
             <Header />
             <ScrollArea>

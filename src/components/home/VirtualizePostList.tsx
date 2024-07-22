@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import PostItem from './Card/PostCard';
 import StoriesPage from './StoriesPage';
 import ShowUpload from './alert/show-upload';
@@ -13,11 +13,15 @@ const MemoizedPostItem = React.memo(PostItem)
 const VirtualizePostList = ({
     posts,
     loadMore,
-    loading = false
+    loading = false,
+    Header,
+    Footer
 }: {
     posts: PostState
     loadMore: () => void
     loading: boolean
+    Header?: React.ReactNode
+    Footer?: React.ReactNode
 }) => {
     const parentRef = React.useRef<HTMLDivElement>(null)
     const dimension = useWindowDimensions()
@@ -44,16 +48,14 @@ const VirtualizePostList = ({
 
     return (
         <>
-            <div
-                ref={parentRef}
-                className="List"
+            <div ref={parentRef}
                 style={{
                     height: dimension.height ?? "100%",
                     width: '100%',
                     overflowY: 'auto',
                     contain: 'strict',
                 }}
-            >
+            >{Header}
                 <>
                     <MemorizeStoriesPage />
                     <ShowUpload />
@@ -94,6 +96,7 @@ const VirtualizePostList = ({
                         padding: '2rem',
                         display: 'flex',
                         justifyContent: 'center',
+                        height: `${data.length > 0 ? "auto" : "100%"}`
                     }}>
                     <Button onClick={loadMore}
                         variant={"outline"}
@@ -101,6 +104,7 @@ const VirtualizePostList = ({
                         <CirclePlus />
                     </Button>
                 </div>
+                {Footer}
             </div>
         </>
     )

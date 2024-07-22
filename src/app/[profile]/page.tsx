@@ -26,12 +26,10 @@ export default function Page({ params }: { params: { profile: string } }) {
     const profile = useSelector((Root: RootState) => Root.profile)
     const loadedRef = useRef(false)
     const isProfile = useMemo(() => session?.username === params.profile, [session?.username])
-    const [size, setSize] = useState(250)
 
     const loadMore = () => {
-        const _posts = getRandomProfilePost(size)
+        const _posts = getRandomProfilePost(10)
         dispatch(setLoadMoreProfilePosts(_posts))
-        setSize(size + 12)
     }
 
     useEffect(() => {
@@ -49,15 +47,18 @@ export default function Page({ params }: { params: { profile: string } }) {
 
     return (
         <div className="w-full">
-            <ProfileHeader name={params.profile} />
             <VirtualizedList data={profile.posts}
-                Header={<HeroSection isProfile={isProfile} user={profile.state} />}
+                Header={<ProfileHeader name={params.profile} />}
+                ProfileDetail={<HeroSection
+                    isProfile={isProfile}
+                    user={profile.state} />}
                 Footer={<Button onClick={loadMore}
                     variant={"outline"}
                     className="rounded-full px-1">
                     <CirclePlus />
-                </Button>} />
-            <Sm_Navigation />
+                </Button>}
+                Navigation={<Sm_Navigation />}
+            />
         </div>
     )
 }

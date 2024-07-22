@@ -5,18 +5,20 @@ import SkyAvatar from '@/components/sky/SkyAvatar'
 import StoriesComponent from './Stories'
 import FollowAndUnFollowButton from './FollowButton'
 import { memo } from 'react'
+import { SkeletonProfilePage } from '../loading.page'
 
 
 interface Props {
     isProfile: boolean
     user: User | null
+    loading?:boolean
 }
 const HeroSection = memo(function HeroSection({
     isProfile,
     user: userProfileData,
+    loading
 }: Props) {
-
-    if (!userProfileData) return null
+    if (!userProfileData) return <SkeletonProfilePage/>
 
     return (
         <>
