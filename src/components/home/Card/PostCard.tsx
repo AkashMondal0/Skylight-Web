@@ -45,6 +45,10 @@ const PostItem = ({
     }) as any)
   }
 
+  if(feed.isDummy){
+    return <PostItemDummy feed={feed}/>
+  }
+
   return (
     <div className='max-w-[480px] w-full mx-auto py-4 border-b'>
       <div className='flex justify-between px-2'>

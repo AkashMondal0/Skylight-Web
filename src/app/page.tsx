@@ -33,7 +33,7 @@ export default function Page() {
     const _posts = getRandomPost(size)
     dispatch(setMoreData(_posts) as any)
     setSize(size + 10)
-  },2500)
+  },500)
 
   if (posts.error) {
     return <NotFound message={posts.error?.message} />
