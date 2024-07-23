@@ -18,7 +18,7 @@ const VirtualizePostList = ({
     Footer
 }: {
     posts: PostState
-    loadMore: () => void
+    loadMore?: () => void
     loading: boolean
     Header?: React.ReactNode
     Footer?: React.ReactNode

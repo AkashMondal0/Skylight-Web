@@ -2,7 +2,7 @@ import useWindowDimensions from "@/lib/useWindowDimensions";
 import { FeedPost } from "@/types";
 import { useVirtualizer, } from "@tanstack/react-virtual";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ImageComponent } from "./client/Post";
+import OptimizedImage from "../sky/SkyImage";
 
 const VirtualizedList = ({
     Header,
@@ -27,7 +27,7 @@ const VirtualizedList = ({
         count,
         getScrollElement: () => parentRef.current,
         estimateSize: () => 45,
-        overscan: 9,
+        overscan: 24,
         enabled: true,
     })
 
@@ -41,9 +41,12 @@ const VirtualizedList = ({
 
     const RenderImg = ({ post }: { post: FeedPost }) => {
         if (!post) return <div className="h-full aspect-square w-full" />
-        return <div className="h-full aspect-square w-full border">
-            <ImageComponent data={post} />
-        </div>
+        return <OptimizedImage
+            fetchPriority="high"
+            src={post.fileUrl[0]}
+            width={100} height={100}
+            className="h-full aspect-square w-full object-cover"
+            sizes="(min-width: 808px) 20vw, 40vw" />
     }
 
     return (

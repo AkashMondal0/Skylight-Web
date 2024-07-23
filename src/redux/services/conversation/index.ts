@@ -2,9 +2,9 @@ import { graphqlQuery } from "@/lib/graphqlQuery";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchConversationsApi = createAsyncThunk(
-    'fetchConversationsApi/get',
-    async (_, thunkAPI) => {
-        let query = `query FindAllConversation($graphQlPageQuery: GraphQLPageQuery!) {
+  'fetchConversationsApi/get',
+  async (_, thunkAPI) => {
+    let query = `query FindAllConversation($graphQlPageQuery: GraphQLPageQuery!) {
             findAllConversation(GraphQLPageQuery: $graphQlPageQuery) {
               id
               isGroup
@@ -20,13 +20,13 @@ export const fetchConversationsApi = createAsyncThunk(
               }
             }
           }`
-        const res = await graphqlQuery({
-            query: query,
-            variables: { graphQlPageQuery: {id:"no need just for types"} }
-        })
+    const res = await graphqlQuery({
+      query: query,
+      variables: { graphQlPageQuery: { id: "no need just for types" } }
+    })
 
-        return res.findAllConversation
-    }
+    return res.findAllConversation
+  }
 );
 
 export const fetchConversationApi = createAsyncThunk(
@@ -42,12 +42,6 @@ export const fetchConversationApi = createAsyncThunk(
             conversationId
             authorId
             content
-            user {
-              username
-              email
-              name
-              profilePicture
-            }
             fileUrl
             deleted
             seenBy
@@ -58,6 +52,7 @@ export const fetchConversationApi = createAsyncThunk(
             id
             username
             email
+            profilePicture
             name
           }
           isGroup

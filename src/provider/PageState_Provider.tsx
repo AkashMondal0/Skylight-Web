@@ -1,6 +1,7 @@
 'use client'
 import { getRandomPost, getRandomProfilePost } from "@/components/sky/random"
 import { fetchAccountFeedApi } from "@/redux/services/account"
+import { fetchConversationsApi } from "@/redux/services/conversation"
 import { fetchUserProfileDetailApi, fetchUserProfilePostsApi } from "@/redux/services/profile"
 import { setMoreData } from "@/redux/slice/post"
 import { setLoadMoreProfilePosts } from "@/redux/slice/profile"
@@ -16,9 +17,11 @@ interface PageState_Context {
     loaded: {
         home: boolean,
         profile: boolean,
-        message: boolean
-    }
-
+        message: boolean,
+        inbox: boolean
+    },
+    fetchMessagePageInitial: () => void,
+    fetchInboxPageInitial: (id: string) => void
 }
 export const PageStateContext = createContext<PageState_Context>({
     fetchHomPageInitial: () => { },
@@ -28,8 +31,11 @@ export const PageStateContext = createContext<PageState_Context>({
     loaded: {
         home: false,
         profile: false,
-        message: false
-    }
+        message: false,
+        inbox: false
+    },
+    fetchMessagePageInitial: () => { },
+    fetchInboxPageInitial: () => { }
 })
 
 export default function PageState_Provider({
@@ -41,7 +47,8 @@ export default function PageState_Provider({
     const [loaded, setLoaded] = useState<PageState_Context["loaded"]>({
         home: false,
         profile: false,
-        message: false
+        message: false,
+        inbox: false
     })
     const fetchHomPageInitial = useCallback(async () => {
         dispatch(fetchAccountFeedApi() as any)
@@ -68,14 +75,24 @@ export default function PageState_Provider({
         dispatch(setLoadMoreProfilePosts(_posts))
     }
 
+    const fetchMessagePageInitial = async () => {
+        dispatch(fetchConversationsApi() as any)
+        setLoaded((pre) => ({ ...pre, message: true }))
+    }
 
+    const fetchInboxPageInitial = debounce(async () => {
+        dispatch(fetchConversationsApi() as any)
+        setLoaded((pre) => ({ ...pre, inbox: true }))
+    },100)
 
     return (<PageStateContext.Provider value={{
         fetchHomPageInitial,
         fetchHomePageMore,
         fetchProfilePageInitial,
         fetchProfilePageMore,
-        loaded
+        loaded,
+        fetchMessagePageInitial,
+        fetchInboxPageInitial
     }}>
         {children}
     </PageStateContext.Provider>)

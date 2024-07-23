@@ -1,5 +1,5 @@
 "use client";
-import React, { memo } from 'react'
+import React, { memo, useContext, useEffect } from 'react'
 import { CardTitle } from '../ui/card';
 import { SquarePen } from 'lucide-react';
 import { Button } from '../ui/button';
@@ -9,13 +9,20 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { LoadingMessageSidebar } from './loading';
 import { ScrollArea } from '../ui/scroll-area';
+import { PageStateContext } from '@/provider/PageState_Provider';
 const MemorizeConversationUserCard = memo(ConversationUserCard)
 
 export default function SidebarMessageClient() {
     const rootConversation = useSelector((Root: RootState) => Root.conversation)
+    const pageStateContext = useContext(PageStateContext)
+    useEffect(() => {
+        if (!pageStateContext?.loaded.message) {
+            pageStateContext?.fetchMessagePageInitial()
+        }
+    }, [])
 
 
-    if (rootConversation.listLoading) return <LoadingMessageSidebar />
+    // if (pageStateContext?.status.message === "loading") return <LoadingMessageSidebar />
 
     return (
         <div className={`
