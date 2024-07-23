@@ -45,8 +45,8 @@ const PostItem = ({
     }) as any)
   }
 
-  if(feed.isDummy){
-    return <PostItemDummy feed={feed}/>
+  if (feed.isDummy) {
+    return <PostItemDummy feed={feed} />
   }
 
   return (
@@ -72,11 +72,13 @@ const PostItem = ({
         </div>
       </div>
 
+
+      {/* image */}
       <div className='my-4'>
         <Carousel>
           <CarouselContent>
             {feed.fileUrl.map((url, index) => (
-              <CarouselItem key={index} className='flex flex-col m-auto'>
+              <CarouselItem key={index} className='min-h-80 flex items-center m-auto'>
                 <OptimizedImage
                   showErrorIcon
                   src={url}
@@ -96,7 +98,7 @@ const PostItem = ({
           </div>
         </Carousel>
       </div>
-
+      {/* action button */}
       <div className=' mt-5 mb-1 mx-3 flex justify-between'>
         <div className='flex space-x-3'>
           <Heart className={`w-7 h-7 cursor-pointer  ${feed.is_Liked ? "text-red-500 fill-red-500" : ""}`} onClick={handleLikeAndUndoLike} />
@@ -124,10 +126,14 @@ const PostItem = ({
 
         {/* close friend comments */}
         <div className='flex space-x-2'>
-          <div className='font-semibold cursor-pointer ' onClick={() => {
-            router.push(`/${feed.user.email}`)
-          }}>{feed.user.username}</div>
-          <div>{feed.content}</div>
+          <p>
+            <span
+              className='font-semibold cursor-pointer mr-2'
+              onClick={() => { router.push(`/${feed.user.username}`) }}>
+              {feed.user.username}
+            </span>
+            {feed.content}
+          </p>
         </div>
         {/* load more */}
 
@@ -221,10 +227,13 @@ export const PostItemDummy = ({
         <div className='font-semibold cursor-pointer hidden sm:block'>{feed.likeCount} likes</div>
 
         {/* close friend comments */}
-        <div className='flex space-x-2'>
-          <div className='font-semibold cursor-pointer'>{feed.user.username}</div>
-          <div>{feed.content}</div>
-        </div>
+        <p>
+          <span
+            className='font-semibold cursor-pointer mr-2'>
+            {feed.user.username}
+          </span>
+          {feed.content}
+        </p>
         {/* load more */}
 
         {/* lg*/}

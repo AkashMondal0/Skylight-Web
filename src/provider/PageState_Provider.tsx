@@ -1,12 +1,12 @@
 'use client'
 import { getRandomPost, getRandomProfilePost } from "@/components/sky/random"
 import { fetchAccountFeedApi } from "@/redux/services/account"
-import { fetchConversationsApi } from "@/redux/services/conversation"
+import { fetchConversationApi, fetchConversationsApi } from "@/redux/services/conversation"
 import { fetchUserProfileDetailApi, fetchUserProfilePostsApi } from "@/redux/services/profile"
 import { setMoreData } from "@/redux/slice/post"
 import { setLoadMoreProfilePosts } from "@/redux/slice/profile"
 import { debounce } from "lodash"
-import React, { createContext, useCallback, useState } from "react"
+import React, { Ref, createContext, useCallback, useRef, useState } from "react"
 import { useDispatch } from "react-redux"
 
 interface PageState_Context {
@@ -22,6 +22,7 @@ interface PageState_Context {
     },
     fetchMessagePageInitial: () => void,
     fetchInboxPageInitial: (id: string) => void
+    homePageScrollIndexCountRef: React.RefObject<number>
 }
 export const PageStateContext = createContext<PageState_Context>({
     fetchHomPageInitial: () => { },
@@ -35,7 +36,8 @@ export const PageStateContext = createContext<PageState_Context>({
         inbox: false
     },
     fetchMessagePageInitial: () => { },
-    fetchInboxPageInitial: () => { }
+    fetchInboxPageInitial: () => { },
+    homePageScrollIndexCountRef: 0 as any
 })
 
 export default function PageState_Provider({
@@ -44,6 +46,7 @@ export default function PageState_Provider({
     children: React.ReactNode
 }) {
     const dispatch = useDispatch()
+    const homePageScrollIndexCountRef = useRef(0);
     const [loaded, setLoaded] = useState<PageState_Context["loaded"]>({
         home: false,
         profile: false,
@@ -75,15 +78,15 @@ export default function PageState_Provider({
         dispatch(setLoadMoreProfilePosts(_posts))
     }
 
-    const fetchMessagePageInitial = async () => {
+    const fetchMessagePageInitial = debounce(async () => {
         dispatch(fetchConversationsApi() as any)
         setLoaded((pre) => ({ ...pre, message: true }))
-    }
+    }, 100)
 
-    const fetchInboxPageInitial = debounce(async () => {
-        dispatch(fetchConversationsApi() as any)
+    const fetchInboxPageInitial = debounce(async (id:string) => {
+        dispatch(fetchConversationApi(id) as any)
         setLoaded((pre) => ({ ...pre, inbox: true }))
-    },100)
+    }, 100)
 
     return (<PageStateContext.Provider value={{
         fetchHomPageInitial,
@@ -92,7 +95,8 @@ export default function PageState_Provider({
         fetchProfilePageMore,
         loaded,
         fetchMessagePageInitial,
-        fetchInboxPageInitial
+        fetchInboxPageInitial,
+        homePageScrollIndexCountRef
     }}>
         {children}
     </PageStateContext.Provider>)

@@ -19,12 +19,12 @@ export default function Page({ params }: { params: { inbox: string } }) {
   const pageStateContext = useContext(PageStateContext)
 
   useEffect(() => {
-    if (!pageStateContext?.loaded.inbox) {
+    if (!pageStateContext?.loaded.inbox || params.inbox !== rootConversation.conversation?.id) {
       pageStateContext?.fetchInboxPageInitial(params.inbox)
     }
   }, [params.inbox])
 
-  if (rootConversation.loading || pageStateContext?.loaded.inbox) {
+  if (rootConversation.loading || !pageStateContext?.loaded.inbox) {
     return <MessagePageSkeleton />
   }
 
