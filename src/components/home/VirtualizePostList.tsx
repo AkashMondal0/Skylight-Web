@@ -36,16 +36,14 @@ const VirtualizePostList = ({
 
     const setScrollIndex = debounce(() => {
         homePageScrollIndexCountRef.current = virtualizer.range?.endIndex
-    }, 600) // todo
-
-    const onChange = useCallback(()=>{
         if (!disableRef.current && previousScrollCount > 0) {
             // console.info("previousScrollCount", previousScrollCount)
             virtualizer?.scrollToIndex(previousScrollCount);
             disableRef.current = true
         } //! this is not permanent solution
-        setScrollIndex()
-    }, [])
+    }, disableRef ? 0 : 600)
+
+    const onChange = useCallback(setScrollIndex, [])
     // 
     const virtualizer = useVirtualizer({
         count,
