@@ -1,45 +1,89 @@
 'use client'
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import React, { useState, useEffect, useCallback } from 'react';
+import { getRandomPost } from '@/components/sky/random';
+import useWindowDimensions from '@/lib/useWindowDimensions';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import React, { memo, useEffect, useState } from 'react';
+const data = getRandomPost(300)
 
-// Main App component
-const App: React.FC = () => {
-  // const [posts, setPosts] = useState<PostType[]>([]);
-  // const [page, setPage] = useState<number>(1);
+const RenderText = memo(function renderText({ text }: { text: string }) {
+  console.log("render text component")
+  return <>
+    <div>{text}</div>
+  </>
+})
 
-  // const fetchPosts = async () => {
-  //   const response = await fetch(`https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=2`);
-  //   const data: PostType[] = await response.json();
-  //   setPosts((prevPosts) => [...prevPosts, ...data]);
-  // };
 
-  //   useEffect(() => {
-  //     fetchPosts();
-  //   }, []);
+export default function RowVirtualizerDynamic() {
+  const parentRef = React.useRef<HTMLDivElement>(null)
+  const dimension = useWindowDimensions()
+  const [mounted, setMounted] = useState(false)
+  const [enabled, setEnabled] = React.useState(true)
 
-  // const loadMorePosts = () => {
-  //   setPage((prevPage) => prevPage + 1);
-  // };
+  const count = data.length
+  const virtualizer = useVirtualizer({
+    count,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 45,
+    enabled,
+  })
 
-  // const [counterValue, setCounterValue] = useState(0)
+  useEffect(()=>{
+    setMounted(true)
+  },[])
 
-  // const counter = () => {
-  //   setCounterValue((pre)=>pre + 1)
-  //   setCounterValue((pre)=>pre + 1)
-  //   setCounterValue((pre)=>pre + 1)
+  const items = virtualizer.getVirtualItems()
 
-  // }
+  if (!dimension.isMounted || !mounted) return <>dimension.isMounted</>
+
   return (
-    <div>
-      test
-      {/* {counterValue}
-      <Button onClick={counter}>counter</Button>
-      <button onClick={loadMorePosts}>Load More Posts</button>
-      <PostList posts={posts} />
-      <Link href={"/"}>go</Link> */}
-    </div>
-  );
-};
+    <>
+      <div
+        ref={parentRef}
+        className="List"
+        style={{
+          height: dimension.height ?? "100%",
+          width: '100%',
+          overflowY: 'auto',
+          contain: 'strict',
+        }}
+      >
+        <div
+          style={{
+            height: virtualizer.getTotalSize(),
+            width: '100%',
+            position: 'relative',
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              transform: `translateY(${items[0]?.start ?? 0}px)`,
+            }}
+          >Header
+            {dimension.height}
 
-export default App;
+            {items.map((virtualRow) => (
+              <div
+                key={virtualRow.key}
+                data-index={virtualRow.index}
+                ref={virtualizer.measureElement}
+                className={
+                  virtualRow.index % 2 ? 'ListItemOdd' : 'ListItemEven'
+                }
+              >
+                <div style={{ padding: '10px 0' }}>
+                  <div>Row {virtualRow.index}</div>
+                  <div>{data[virtualRow.index].content}</div>
+                  <RenderText text={data[virtualRow.index].content} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}

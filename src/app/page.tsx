@@ -4,53 +4,44 @@ import Sm_Navigation from '@/components/home/navigation/sm-navigation';
 import Sm_Header from '@/components/home/navigation/sm-header';
 import Lg_Navigation from '@/components/home/navigation/lg-navigation';
 import NotFound from '@/components/home/NotFound';
-import { fetchAccountFeedApi } from '@/redux/services/account';
-import { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { memo, useContext, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import StatusbarColorInitial from '@/provider/StatusbarColor';
-import { setMoreData } from '@/redux/slice/post';
-import { getRandomPost } from '@/components/sky/random';
-import { debounce } from 'lodash';
+import { PageStateContext } from '@/provider/PageState_Provider';
+const MemorizeSm_Header = memo(Sm_Header)
+const MemoizedSm_Navigation = memo(Sm_Navigation)
+const MemoizedLg_Navigation = memo(Lg_Navigation)
+
+
 
 export default function Page() {
-  const dispatch = useDispatch()
   const posts = useSelector((Root: RootState) => Root.post)
-  const loadedRef = useRef(false)
-  const [size, setSize] = useState(160)
+  const pageStateContext = useContext(PageStateContext)
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      if (!loadedRef.current) {
-        dispatch(fetchAccountFeedApi() as any)
-        loadedRef.current = true
-      }
+    if (!pageStateContext.loaded.home) {
+      pageStateContext.fetchHomPageInitial()
     }
-    fetchPosts()
-  }, []);
-
-  const loadMore = debounce(() => {
-    const _posts = getRandomPost(size)
-    dispatch(setMoreData(_posts) as any)
-    setSize(size + 10)
-  },2500)
+  }, [])
 
   if (posts.error) {
     return <NotFound message={posts.error?.message} />
   }
 
-
   return (
     <>
       <StatusbarColorInitial />
       <div className='w-full h-full flex'>
-        <Lg_Navigation />
-        <div className='w-full md:py-0 py-14'>
-          <Sm_Header />
-          <VirtualizePostList posts={posts}
-            loading={posts.loading || !loadedRef.current}
-            loadMore={loadMore} />
-          <Sm_Navigation />
+        <MemoizedLg_Navigation />
+        <div className='w-full'>
+          <VirtualizePostList
+            Header={<MemorizeSm_Header />}
+            Footer={<MemoizedSm_Navigation />}
+            posts={posts}
+            homePageScrollIndexCountRef={pageStateContext.homePageScrollIndexCountRef}
+            loading={posts.loading}
+            loadMore={pageStateContext.fetchHomePageMore} />
         </div>
       </div>
     </>

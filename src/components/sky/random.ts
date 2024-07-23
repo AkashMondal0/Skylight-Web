@@ -43,7 +43,7 @@ export function getRandomCountryAndPlace() {
 }
 
 export function getRandomPost(size: number) {
-  const _posts: FeedPost[] = Array.from({ length: 10 }, (_, i) => {
+  const _posts: FeedPost[] = Array.from({ length: size }, (_, i) => {
     const a = Math.floor(Math.random() * (7 - 3 + 1)) + 3;
     const b = Math.floor(Math.random() * (7 - 3 + 1)) + 3;
     const generate_img = `https://picsum.photos/id/${i + size}/${a * 100}/${b * 100}`

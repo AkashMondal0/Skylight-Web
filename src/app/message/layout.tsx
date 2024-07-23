@@ -1,23 +1,23 @@
 import Lg_Navigation from '@/components/home/navigation/lg-navigation';
-import ChatListSidebar from '@/components/message/chatList';
-import type { Metadata } from 'next'
+import SidebarMessageClient from '@/components/message/Sidebar';
+import type { Metadata } from 'next/types';
 
 export const metadata: Metadata = {
-  title: 'Message',
+  title: 'SkyLight • Message',
   description: `Sky Media is a social media platform that 
   allows users to share their thoughts and ideas with the world.`,
 }
-
 export default function RootLayout({ children }: {
   children: React.ReactNode;
 }) {
+
   return (
     <>
       <div className='flex'>
         <Lg_Navigation hideLabel />
         {/* md */}
         <div className='w-full min-h-full hidden md:flex'>
-        <ChatListSidebar/>
+          <SidebarMessageClient />
           {children}
         </div>
         {/* sm */}

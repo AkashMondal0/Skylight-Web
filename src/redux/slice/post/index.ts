@@ -56,18 +56,15 @@ export const PostFeedSlice = createSlice({
             .addCase(fetchAccountFeedApi.pending, (state) => {
                 state.loading = true
                 state.error = null
-                state.state = []
             })
             .addCase(fetchAccountFeedApi.fulfilled, (state, action: PayloadAction<FeedPost[]>) => {
                 if (action.payload?.length > 0) {
                     state.state.push(...action.payload)
                 }
                 state.loading = false
-                state.error = null
             })
             .addCase(fetchAccountFeedApi.rejected, (state, action) => {
                 state.loading = false
-                state.state = []
                 state.error = {
                     message: action.error.message || 'Failed to fetch posts',
                     name: action.error.name,

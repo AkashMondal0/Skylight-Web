@@ -2,6 +2,7 @@
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import { Conversation } from "@/types"
 import { useRouter } from "next/navigation"
+import { useMemo } from "react"
 const timeFormat = (time: string | Date | undefined) => {
     if (!time) return ""
     return new Date(time).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
@@ -11,22 +12,25 @@ const ConversationUserCard = ({
 }: {
     data: Conversation | null
 }) => {
+
     const router = useRouter()
-    const Conversation = data?.isGroup ? {
-        image: data?.groupImage,
-        name: data?.groupName,
-        message: data?.lastMessageContent,
-        time: data?.updatedAt,
-        id: data?.id
-    } : {
-        image: data?.membersData[0]?.profilePicture,
-        name: data?.membersData[0]?.username,
-        message: data?.lastMessageContent,
-        time: data?.updatedAt,
-        id: data?.membersData[0]?.id
-    }
-    if (!Conversation) return null
-// console.log(Conversation)
+    const Conversation = useMemo(() => {
+        return data?.isGroup ? {
+            image: data?.groupImage,
+            name: data?.groupName,
+            message: data?.lastMessageContent,
+            time: data?.updatedAt,
+            id: data?.id
+        } : {
+            image: data?.user?.profilePicture,
+            name: data?.user?.username,
+            message: data?.lastMessageContent,
+            time: data?.updatedAt,
+            id: data?.user?.id
+        }
+    }, [data])
+
+    if (!Conversation) return <></>
     return (
         <>
             <div className='flex cursor-pointer
