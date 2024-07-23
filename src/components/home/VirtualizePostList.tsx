@@ -44,7 +44,7 @@ const VirtualizePostList = ({
 
     const items = virtualizer.getVirtualItems()
 
-    if (!dimension.isMounted || !mounted) return <>dimension.isMounted</>
+    if (!mounted) return<></>
 
     return (
         <>

@@ -2,16 +2,14 @@ import useWindowDimensions from "@/lib/useWindowDimensions";
 import { FeedPost } from "@/types";
 import { useVirtualizer, } from "@tanstack/react-virtual";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { getRandomPost } from "../sky/random";
 import { ImageComponent } from "./client/Post";
-import OptimizedImage from "../sky/SkyImage";
-
-const _posts = getRandomPost(10)
 
 const VirtualizedList = ({
-    Header, Footer,
+    Header,
+    Footer,
     ProfileDetail,
-    Navigation
+    Navigation,
+    data: profilePosts
 }: {
     data: FeedPost[],
     Header?: React.ReactNode
@@ -22,9 +20,8 @@ const VirtualizedList = ({
     const parentRef = useRef<HTMLDivElement>(null)
     const dimension = useWindowDimensions()
     const [mounted, setMounted] = useState(false)
-    const data = useMemo(() => _posts, [])
+    const data = useMemo(() => profilePosts, [profilePosts])
     const count = useMemo(() => Math.ceil(data.length / 3), [data.length])
-
 
     const virtualizer = useVirtualizer({
         count,
@@ -40,20 +37,12 @@ const VirtualizedList = ({
 
     const items = virtualizer.getVirtualItems()
 
-    if (!dimension.isMounted || !mounted) return <>dimension.isMounted</>
+    if (!mounted) return <></>
 
-    const RenderImg = ({ url }: { url: string }) => {
-        if (!url) return <div className="h-full aspect-square w-full" />
+    const RenderImg = ({ post }: { post: FeedPost }) => {
+        if (!post) return <div className="h-full aspect-square w-full" />
         return <div className="h-full aspect-square w-full border">
-            {/* <ImageComponent data={profile.posts[index]}/>  */}
-            <OptimizedImage
-                src={url}
-                width={100}
-                height={100}
-                className="w-full h-full"
-                showErrorIcon
-                sizes="(min-width: 808px) 20vw, 40vw"
-            />
+            <ImageComponent data={post} />
         </div>
     }
 
@@ -76,7 +65,6 @@ const VirtualizedList = ({
                         position: 'relative',
                     }}>
                     <div
-                        // className="grid grid-cols-3 gap-[1px]"
                         style={{
                             position: 'absolute',
                             top: 0,
@@ -97,9 +85,9 @@ const VirtualizedList = ({
                                     {/* {virtualRow.index * 3 + 1}
                                     {virtualRow.index * 3 + 2}
                                     {virtualRow.index * 3 + 3} */}
-                                    <RenderImg url={data[virtualRow.index * 3 + 0]?.fileUrl[0] ?? null} />
-                                    <RenderImg url={data[virtualRow.index * 3 + 1]?.fileUrl[0] ?? null} />
-                                    <RenderImg url={data[virtualRow.index * 3 + 3]?.fileUrl[0] ?? null} />
+                                    <RenderImg post={data[virtualRow.index * 3 + 0] ?? null} />
+                                    <RenderImg post={data[virtualRow.index * 3 + 1] ?? null} />
+                                    <RenderImg post={data[virtualRow.index * 3 + 3] ?? null} />
 
                                 </div>
                             </div>

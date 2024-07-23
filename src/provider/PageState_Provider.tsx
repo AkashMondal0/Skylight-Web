@@ -55,11 +55,11 @@ export default function PageState_Provider({
 
     const fetchProfilePageInitial = useCallback(async (profileId: string) => {
         dispatch(fetchUserProfileDetailApi(profileId) as any)
-        // dispatch(fetchUserProfilePostsApi({
-        //     username: profileId,
-        //     limit: 12,
-        //     offset: 0
-        // }) as any)
+        dispatch(fetchUserProfilePostsApi({
+            username: profileId,
+            limit: 12,
+            offset: 0
+        }) as any)
         setLoaded((pre) => ({ ...pre, profile: true }))
     }, [])
 

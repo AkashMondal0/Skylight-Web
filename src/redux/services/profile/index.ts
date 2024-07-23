@@ -38,23 +38,26 @@ export const fetchUserProfileDetailApi = createAsyncThunk(
 
 export const fetchUserProfilePostsApi = createAsyncThunk(
     'fetchUserProfilePostApi/get',
-    async (findPosts: findDataInput, thunkApi) => {
+    async (data: findDataInput, thunkApi) => {
+        const { username, ...findPosts } = data
+        findPosts.id = username
         try {
-            let query = `query FindProfilePosts($findPosts: SearchByUsernameInput!) {
+            let query = `query FindProfilePosts($findPosts: GraphQLPageQuery!) {
                 findProfilePosts(findPosts: $findPosts) {
+                  id
+                  content
+                  fileUrl
+                  title
+                  createdAt
+                  commentCount
+                  likeCount
+                  is_Liked
                   user {
                     username
-                    profilePicture
-                    name
                     email
+                    name
+                    profilePicture
                   }
-                  commentCount
-                  content
-                  createdAt
-                  fileUrl
-                  id
-                  is_Liked
-                  likeCount
                 }
               }`
             const res = await graphqlQuery({
@@ -86,7 +89,7 @@ export const createFriendshipApi = createAsyncThunk(
         try {
             let query = `mutation CreateFriendship($createFriendshipInput: CreateFriendshipInput!) {
                 createFriendship(createFriendshipInput: $createFriendshipInput) {
-                  friendShip
+                  __typename
                 }
               }`
             await graphqlQuery({
@@ -124,7 +127,7 @@ export const destroyFriendshipApi = createAsyncThunk(
         try {
             let query = `mutation DestroyFriendship($destroyFriendship: DestroyFriendship!) {
                 destroyFriendship(destroyFriendship: $destroyFriendship) {
-                  friendShip
+                __typename  
                 }
               }`
             await graphqlQuery({
@@ -162,7 +165,7 @@ export const RemoveFriendshipApi = createAsyncThunk(
         try {
             let query = `mutation DestroyFriendship($destroyFriendship: DestroyFriendship!) {
                 destroyFriendship(destroyFriendship: $destroyFriendship) {
-                  friendShip
+                __typename
                 }
               }`
             await graphqlQuery({

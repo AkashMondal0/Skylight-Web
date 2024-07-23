@@ -59,7 +59,7 @@ export const createPostLikeApi = createAsyncThunk(
         try {
             let query = `mutation CreateLike($createLikeId: String!) {
                 createLike(id: $createLikeId) {
-                  like
+                __typename
                 }
               }`
             const res = await graphqlQuery({
@@ -84,7 +84,7 @@ export const destroyPostLikeApi = createAsyncThunk(
         try {
             let query = `mutation DestroyLike($destroyLikeId: String!) {
                 destroyLike(id: $destroyLikeId) {
-                  like
+                __typename
                 }
               }`
             const res = await graphqlQuery({
