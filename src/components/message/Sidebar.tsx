@@ -22,7 +22,7 @@ export default function SidebarMessageClient() {
     }, [])
 
 
-    // if (pageStateContext?.status.message === "loading") return <LoadingMessageSidebar />
+    if (rootConversation.listLoading||!pageStateContext?.loaded.message) return <LoadingMessageSidebar />
 
     return (
         <div className={`
