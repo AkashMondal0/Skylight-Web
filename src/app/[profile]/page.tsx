@@ -5,45 +5,28 @@ import VirtualizedList from '@/components/profile/VirtualizedList';
 import { RootState } from "@/redux/store";
 import { useSession } from "next-auth/react";
 import {
+    useContext,
     useEffect,
     useMemo,
-    useRef,
-    useState
 } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchUserProfileDetailApi, fetchUserProfilePostsApi } from "@/redux/services/profile";
-import { setLoadMoreProfilePosts } from "@/redux/slice/profile";
-import { getRandomProfilePost } from "@/components/sky/random";
+import { useSelector } from "react-redux";
 import HeroSection from "@/components/profile/client/hero";
 import { Button } from "@/components/ui/button";
 import { CirclePlus } from "@/components/sky/icons";
+import { PageStateContext } from "@/provider/PageState_Provider";
 
 
 export default function Page({ params }: { params: { profile: string } }) {
-
-    const dispatch = useDispatch()
     const session = useSession().data?.user
     const profile = useSelector((Root: RootState) => Root.profile)
-    const loadedRef = useRef(false)
     const isProfile = useMemo(() => session?.username === params.profile, [session?.username])
-
-    const loadMore = () => {
-        const _posts = getRandomProfilePost(10)
-        dispatch(setLoadMoreProfilePosts(_posts))
-    }
+    const pageStateContext = useContext(PageStateContext)
 
     useEffect(() => {
-        if (!loadedRef.current) {
-            document.title = params.profile
-            dispatch(fetchUserProfileDetailApi(params.profile) as any)
-            dispatch(fetchUserProfilePostsApi({
-                username: params.profile,
-                limit: 12,
-                offset: 0
-            }) as any)
-            loadedRef.current = true;
+        if (!pageStateContext.loaded.profile || profile.state?.username !== params.profile) {
+            pageStateContext.fetchProfilePageInitial(params.profile)
         }
-    }, []);
+    }, [params.profile])
 
     return (
         <div className="w-full">
@@ -52,7 +35,7 @@ export default function Page({ params }: { params: { profile: string } }) {
                 ProfileDetail={<HeroSection
                     isProfile={isProfile}
                     user={profile.state} />}
-                Footer={<Button onClick={loadMore}
+                Footer={<Button onClick={pageStateContext.fetchProfilePageMore}
                     variant={"outline"}
                     className="rounded-full px-1">
                     <CirclePlus />
