@@ -81,8 +81,7 @@ const VirtualizedList = ({
                     style={{
                         height: virtualizer.getTotalSize(),
                         width: '100%',
-                        position: 'relative',
-                        minHeight: "80%"
+                        position: 'relative'
                     }}>
                     <div
                         style={{
@@ -109,10 +108,10 @@ const VirtualizedList = ({
                                     <RenderImg post={data[virtualRow.index * 3 + 2] ?? null} />
                                 </div>
                             </div>
-                        ))}
-                        {Footer}
+                        ))}        
                     </div>
                 </div>
+                {Footer}
                 {Navigation}
             </div>
         </>

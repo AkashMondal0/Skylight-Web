@@ -37,7 +37,7 @@ export default function Page({ params }: { params: { profile: string } }) {
                     isProfile={isProfile}
                     user={profile.state} />}
                 Footer={
-                    <div className='w-full text-center my-4'>
+                    <div className='w-full text-center my-4 h-[60%]'>
                         <Button onClick={pageStateContext.fetchProfilePageMore}
                             variant={"outline"}
                             className="rounded-full px-1 w-10 h-10">
