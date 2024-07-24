@@ -83,15 +83,13 @@ const VirtualizedList = ({
                                 className={virtualRow.index % 2 ? 'ListItemOdd' : 'ListItemEven'}>
                                 <div className="p-[1px] w-full flex h-full space-x-[2px]"
                                     style={{ aspectRatio: "3:1" }}
-                                    key={data[virtualRow.index].id}
-                                >
+                                    key={data[virtualRow.index].id}>
                                     {/* {virtualRow.index * 3 + 1}
                                     {virtualRow.index * 3 + 2}
                                     {virtualRow.index * 3 + 3} */}
                                     <RenderImg post={data[virtualRow.index * 3 + 0] ?? null} />
                                     <RenderImg post={data[virtualRow.index * 3 + 1] ?? null} />
-                                    <RenderImg post={data[virtualRow.index * 3 + 3] ?? null} />
-
+                                    <RenderImg post={data[virtualRow.index * 3 + 2] ?? null} />
                                 </div>
                             </div>
                         ))}

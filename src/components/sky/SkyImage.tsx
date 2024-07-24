@@ -71,6 +71,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = memo(function OptimizedIma
                 <source srcSet={src} type="image/png" />
                 <source srcSet={src} type="image/jpg" />
                 <img
+                    onContextMenu={event => event.preventDefault()}
                     ref={imgRef}
                     data-src={src}
                     src={src}

@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import OptimizedImage from "@/components/sky/SkyImage"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -93,11 +94,13 @@ const ShowSelectedImages = ({
 
     return (
         <div className="mx-auto space-y-2">
-            <img
+            <OptimizedImage
+                width={20}
+                height={20}
+                sizes="10vw"
+                alt='picture'
                 src={URL.createObjectURL(images)}
-                alt={`Image`}
-                className="w-80 h-80 object-cover rounded-xl mb-5"
-            />
+                className="w-80 h-80 object-cover rounded-xl mb-5" />
             <Button variant={"secondary"} onClick={AgainSelect} className="rounded-md p-2 w-full">
                 Choose
             </Button>
