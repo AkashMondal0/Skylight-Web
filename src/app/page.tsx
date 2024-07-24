@@ -37,7 +37,7 @@ export default function Page() {
             Header={<MemorizeSm_Header />}
             Footer={<MemoizedSm_Navigation />}
             posts={posts}
-            homePageScrollIndexCountRef={pageStateContext.homePageScrollIndexCountRef}
+            pageStateContext={pageStateContext}
             loading={posts.loading}
             loadMore={pageStateContext.fetchHomePageMore} />
         </div>
