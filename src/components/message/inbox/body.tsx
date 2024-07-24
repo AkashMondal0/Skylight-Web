@@ -1,7 +1,6 @@
 "use client"
 import { memo, useEffect, useMemo, useRef } from 'react';
 import MessagesCard from './message_card';
-import { Virtuoso } from 'react-virtuoso';
 import React from 'react';
 import { Conversation } from '@/types';
 import { useSession } from 'next-auth/react';
@@ -42,7 +41,7 @@ const InBoxBody = ({ data }: { data: Conversation }) => {
     return (
         <>
             <div className='h-full w-full flex-1' id='style-1'>
-                <Virtuoso
+                {/* <Virtuoso
                     className='h-full w-full'
                     data={data.messages}
                     ref={virtuosoMethods}
@@ -58,7 +57,7 @@ const InBoxBody = ({ data }: { data: Conversation }) => {
                     components={{
                         Header: () => <div className='flex justify-center h-2'></div>,
                         Footer: () => <div className='flex justify-center h-2'></div>
-                    }} />
+                    }} /> */}
                 <style>{`html, body, #root { height: 100% }`}</style>
             </div >
         </>
