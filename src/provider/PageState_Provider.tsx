@@ -58,13 +58,16 @@ export default function PageState_Provider({
         message: 0
     })
     const homeScrollOffset = debounce((offset: number) => {
+        // console.info(offset)
         pageScrollOffsetRef.current.home = offset
     }, 350)
 
-    const messageScrollOffset = debounce((offset: number) => {
+    const profileScrollOffset = debounce((offset: number) => {
+        // console.info(offset)
         pageScrollOffsetRef.current.profile = offset
     }, 500)
-    const profileScrollOffset = debounce((offset: number) => {
+
+    const messageScrollOffset = debounce((offset: number) => {
         pageScrollOffsetRef.current.message = offset
     }, 500)
 

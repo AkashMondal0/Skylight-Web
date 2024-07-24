@@ -40,7 +40,7 @@ const VirtualizePostList = ({
         if (!disableRef.current && (previousScrollCount ?? 0) > 0) {
             virtualizer.scrollToOffset(previousScrollCount ?? 0)
             disableRef.current = true
-        } //! this is not permanent solution
+        }
     }, !disableRef ? 0 : 150)
 
     // 
