@@ -50,7 +50,7 @@ const PostItem = ({
   }
 
   return (
-    <div className='max-w-[480px] w-full mx-auto py-4 border-b'>
+    <div className='sm:max-w-[480px] w-full sm:mx-auto py-4 border-b'>
       <div className='flex justify-between px-2'>
         <div className='flex space-x-2 items-center cursor-pointer' onClick={() => {
           router.push(`/${feed.user.username}`)
@@ -145,7 +145,7 @@ const PostItem = ({
         {/* sm */}
         <div className='text-sm cursor-pointer sm:hidden block'
           onClick={() => {
-            router.push(`/post/${feed.id}/comments`)
+            // router.push(`/post/${feed.id}/comments`)
           }}>View all {feed.commentCount} comments</div>
       </div>
 
