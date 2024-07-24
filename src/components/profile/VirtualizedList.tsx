@@ -4,6 +4,8 @@ import { useVirtualizer, } from "@tanstack/react-virtual";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import OptimizedImage from "../sky/SkyImage";
 import { PageState_Context } from "@/provider/PageState_Provider";
+import { Button } from "../ui/button";
+import { CirclePlus } from "../sky/icons";
 
 const VirtualizedList = ({
     Header,
@@ -79,7 +81,7 @@ const VirtualizedList = ({
                     style={{
                         height: virtualizer.getTotalSize(),
                         width: '100%',
-                        position: 'relative',
+                        position: 'relative'
                     }}>
                     <div
                         style={{
@@ -106,7 +108,7 @@ const VirtualizedList = ({
                                     <RenderImg post={data[virtualRow.index * 3 + 2] ?? null} />
                                 </div>
                             </div>
-                        ))}
+                        ))}        
                     </div>
                 </div>
                 {Footer}
