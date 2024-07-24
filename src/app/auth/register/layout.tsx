@@ -1,4 +1,3 @@
-import StatusbarColorInitial from '@/provider/StatusbarColor';
 import type { Metadata } from 'next'
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
@@ -18,7 +17,6 @@ export default async function RegisterLayout({ children }: {
 
   return (
     <>
-    <StatusbarColorInitial/>
       {children}
     </>
   )

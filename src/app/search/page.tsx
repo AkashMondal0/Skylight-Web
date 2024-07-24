@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
 'use client';
 import React, { useCallback } from 'react'
 import { X } from 'lucide-react'
@@ -13,7 +11,6 @@ import Sm_Navigation from '@/components/home/navigation/sm-navigation';
 import { searchUsersProfileApi } from '@/redux/services/users';
 import { removeAllUserFormSearch } from '@/redux/slice/users';
 import { SkeletonUserCardWithButton } from '@/components/home/loading/UserCard';
-import StatusbarColorInitial from '@/provider/StatusbarColor';
 
 const SearchModel = () => {
   const dispatch = useDispatch();
@@ -34,7 +31,6 @@ const SearchModel = () => {
 
   return (
     <>
-    <StatusbarColorInitial/>
       <div className='w-full p-4'>
         <div className='w-full space-y-4'>
           <div className={`w-full p-2 px-4 border bg-secondary

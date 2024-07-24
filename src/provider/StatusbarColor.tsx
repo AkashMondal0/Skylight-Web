@@ -9,10 +9,11 @@ const StatusbarColorInitial = () => {
         const metaThemeColor = document.querySelector('meta[name=theme-color]');
         if (theme && theme !== "system") {
             metaThemeColor?.setAttribute(
-                'content', theme === "dark" ? "black" : "light"
+                'content', theme === "dark" ? 
+                "rgb(10, 10, 10)" : "light"
             );
         }
-    }, [])
+    }, [theme])
 
     return <></>
 }

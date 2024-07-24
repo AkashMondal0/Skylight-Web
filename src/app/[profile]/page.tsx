@@ -31,6 +31,7 @@ export default function Page({ params }: { params: { profile: string } }) {
     return (
         <div className="w-full">
             <VirtualizedList data={profile.posts}
+                pageStateContext={pageStateContext}
                 Header={<ProfileHeader name={params.profile} />}
                 ProfileDetail={<HeroSection
                     isProfile={isProfile}

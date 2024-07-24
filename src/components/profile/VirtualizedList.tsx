@@ -1,34 +1,48 @@
 import useWindowDimensions from "@/lib/useWindowDimensions";
 import { FeedPost } from "@/types";
 import { useVirtualizer, } from "@tanstack/react-virtual";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import OptimizedImage from "../sky/SkyImage";
+import { PageState_Context } from "@/provider/PageState_Provider";
 
 const VirtualizedList = ({
     Header,
     Footer,
     ProfileDetail,
     Navigation,
-    data: profilePosts
+    data: profilePosts,
+    pageStateContext
 }: {
     data: FeedPost[],
     Header?: React.ReactNode
     Footer?: React.ReactNode
     ProfileDetail: React.ReactNode,
-    Navigation?: React.ReactNode
+    Navigation?: React.ReactNode,
+    pageStateContext: PageState_Context
 }) => {
     const parentRef = useRef<HTMLDivElement>(null)
     const dimension = useWindowDimensions()
     const [mounted, setMounted] = useState(false)
     const data = useMemo(() => profilePosts, [profilePosts])
     const count = useMemo(() => Math.ceil(data.length / 3), [data.length])
+    const previousScrollCount = pageStateContext?.pageScrollOffsetRef.current?.profile
+    const disableRef = useRef(false)
+
+    const onChange = useCallback(() => {
+        pageStateContext.profileScrollOffset(virtualizer.scrollOffset ?? 0);
+        if (!disableRef.current && (previousScrollCount ?? 0) > 0) {
+            virtualizer.scrollToOffset(previousScrollCount ?? 0)
+            disableRef.current = true
+        }
+    }, [])
 
     const virtualizer = useVirtualizer({
         count,
         getScrollElement: () => parentRef.current,
-        estimateSize: () => 45,
+        estimateSize: useCallback(() => 50, []),
         overscan: 24,
         enabled: true,
+        onChange
     })
 
     useEffect(() => {
@@ -83,15 +97,13 @@ const VirtualizedList = ({
                                 className={virtualRow.index % 2 ? 'ListItemOdd' : 'ListItemEven'}>
                                 <div className="p-[1px] w-full flex h-full space-x-[2px]"
                                     style={{ aspectRatio: "3:1" }}
-                                    key={data[virtualRow.index].id}
-                                >
+                                    key={data[virtualRow.index].id}>
                                     {/* {virtualRow.index * 3 + 1}
                                     {virtualRow.index * 3 + 2}
                                     {virtualRow.index * 3 + 3} */}
                                     <RenderImg post={data[virtualRow.index * 3 + 0] ?? null} />
                                     <RenderImg post={data[virtualRow.index * 3 + 1] ?? null} />
-                                    <RenderImg post={data[virtualRow.index * 3 + 3] ?? null} />
-
+                                    <RenderImg post={data[virtualRow.index * 3 + 2] ?? null} />
                                 </div>
                             </div>
                         ))}

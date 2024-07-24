@@ -8,7 +8,6 @@ import { RootState } from '@/redux/store'
 import { createPostCommentApi, createPostLikeApi, destroyPostLikeApi, fetchOnePostApi } from '@/redux/services/post'
 import ImageView from '@/components/post/ImageView'
 import CommentView from '@/components/post/CommentView'
-import StatusbarColorInitial from '@/provider/StatusbarColor'
 
 
 export default function Page({ params }: { params: { id: string } }) {
@@ -62,7 +61,6 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <Dialog open onOpenChange={onOpenChange}>
-    <StatusbarColorInitial/>
       <DialogContent className="p-0 flex 
         overflow-y-auto flex-wrap gap-0
         max-w-[960px] min-h-min"
