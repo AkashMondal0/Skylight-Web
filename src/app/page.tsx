@@ -7,7 +7,6 @@ import NotFound from '@/components/home/NotFound';
 import { memo, useContext, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import StatusbarColorInitial from '@/provider/StatusbarColor';
 import { PageStateContext } from '@/provider/PageState_Provider';
 const MemorizeSm_Header = memo(Sm_Header)
 const MemoizedSm_Navigation = memo(Sm_Navigation)
@@ -31,7 +30,6 @@ export default function Page() {
 
   return (
     <>
-      <StatusbarColorInitial />
       <div className='w-full h-full flex'>
         <MemoizedLg_Navigation />
         <div className='w-full'>

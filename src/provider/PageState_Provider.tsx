@@ -8,6 +8,7 @@ import { setLoadMoreProfilePosts } from "@/redux/slice/profile"
 import { debounce } from "lodash"
 import React, { Ref, createContext, useCallback, useRef, useState } from "react"
 import { useDispatch } from "react-redux"
+import StatusbarColorInitial from "./StatusbarColor"
 
 interface PageState_Context {
     fetchHomPageInitial: () => void
@@ -98,6 +99,7 @@ export default function PageState_Provider({
         fetchInboxPageInitial,
         homePageScrollIndexCountRef
     }}>
+        <StatusbarColorInitial/>
         {children}
     </PageStateContext.Provider>)
 }
