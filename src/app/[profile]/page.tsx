@@ -36,19 +36,14 @@ export default function Page({ params }: { params: { profile: string } }) {
                 ProfileDetail={<HeroSection
                     isProfile={isProfile}
                     user={profile.state} />}
-                Footer={<div
-                    className={`min-h-80`}
-                    style={{
-                        padding: '2rem',
-                        display: 'flex',
-                        justifyContent: 'center',
-                    }}>
-                    <Button onClick={pageStateContext.fetchProfilePageMore}
-                        variant={"outline"}
-                        className="rounded-full px-1">
-                        <CirclePlus />
-                    </Button>
-                </div>}
+                Footer={
+                    <div className='w-full text-center my-4'>
+                        <Button onClick={pageStateContext.fetchProfilePageMore}
+                            variant={"outline"}
+                            className="rounded-full px-1 w-10 h-10">
+                            <CirclePlus />
+                        </Button>
+                    </div>}
                 Navigation={<Sm_Navigation />}
             />
         </div>

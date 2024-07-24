@@ -10,8 +10,9 @@ import { RootState } from '@/redux/store';
 import { LoadingMessageSidebar } from './loading';
 import { ScrollArea } from '../ui/scroll-area';
 import { PageStateContext } from '@/provider/PageState_Provider';
+import Sm_Navigation from '../home/navigation/sm-navigation';
 const MemorizeConversationUserCard = memo(ConversationUserCard)
-
+const MemoizedSm_Navigation = memo(Sm_Navigation)
 export default function SidebarMessageClient() {
     const rootConversation = useSelector((Root: RootState) => Root.conversation)
     const pageStateContext = useContext(PageStateContext)
@@ -30,16 +31,17 @@ export default function SidebarMessageClient() {
         bg-background text-foreground
         hideScrollbar h-full md:max-w-[22rem] ease-in-out w-full`}>
             <Header />
-            <ScrollArea>
+            <ScrollArea className='min-h-full'>
                 {rootConversation.conversationList.map((conversation) => <MemorizeConversationUserCard data={conversation}
                     key={conversation.id} />)}
             </ScrollArea>
+            <MemoizedSm_Navigation/>
         </div>
     )
 }
 
 const Header = () => {
-    return <div className='w-full p-4 pb-0 sticky top-0'>
+    return <div className='w-full p-4 pb-0 sticky top-0 bg-background z-50'>
         <div className="flex justify-between w-full items-center">
             <CardTitle>SkyLight</CardTitle>
             <div>

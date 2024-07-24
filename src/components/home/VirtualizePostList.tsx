@@ -74,11 +74,19 @@ const VirtualizePostList = ({
                     <MemorizeStoriesPage />
                     <ShowUpload />
                 </>
+                <div className='w-full text-center'>
+                    <Button onClick={loadMore}
+                        variant={"outline"}
+                        className="rounded-full px-1 w-10 h-10">
+                        <CirclePlus />
+                    </Button>
+                </div>
                 <div
                     style={{
                         height: virtualizer.getTotalSize(),
                         width: '100%',
                         position: 'relative',
+                        minHeight: "80%"
                     }}>
                     <div
                         style={{
@@ -104,19 +112,6 @@ const VirtualizePostList = ({
                             </div>
                         ))}
                     </div>
-                </div>
-                <div
-                    style={{
-                        padding: '2rem',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        height: `${data.length > 0 ? "auto" : "100%"}`
-                    }}>
-                    <Button onClick={loadMore}
-                        variant={"outline"}
-                        className="rounded-full px-1">
-                        <CirclePlus />
-                    </Button>
                 </div>
                 {Footer}
             </div>

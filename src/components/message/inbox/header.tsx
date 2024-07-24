@@ -39,7 +39,7 @@ const InBoxHeader = ({ data }: { data: Conversation }) => {
                         {/* <SheetSide trigger={<Menu size={30} className='cursor-pointer'/>}>
                                 <Sidebar />
                             </SheetSide> */}
-                        <ChevronLeft size={30} onClick={() => router.replace("/message")} />
+                        <ChevronLeft size={30} onClick={() => router.back()} />
                     </div>
                     <div className="flex items-center gap-2">
                         <SkyAvatar className='h-12 w-12' url={Conversation.image || '/user.jpg'} />

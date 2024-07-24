@@ -4,6 +4,8 @@ import { useVirtualizer, } from "@tanstack/react-virtual";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import OptimizedImage from "../sky/SkyImage";
 import { PageState_Context } from "@/provider/PageState_Provider";
+import { Button } from "../ui/button";
+import { CirclePlus } from "../sky/icons";
 
 const VirtualizedList = ({
     Header,
@@ -80,6 +82,7 @@ const VirtualizedList = ({
                         height: virtualizer.getTotalSize(),
                         width: '100%',
                         position: 'relative',
+                        minHeight: "80%"
                     }}>
                     <div
                         style={{
@@ -107,9 +110,9 @@ const VirtualizedList = ({
                                 </div>
                             </div>
                         ))}
+                        {Footer}
                     </div>
                 </div>
-                {Footer}
                 {Navigation}
             </div>
         </>
