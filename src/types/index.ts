@@ -89,7 +89,7 @@ interface Conversation {
     id: string;
     members?: string[];
     authorId: string;
-    messages?: Message[] | []
+    messages: Message[]
     user?: AuthorData | null
     isGroup: boolean | null;
     lastMessageContent: string | null;

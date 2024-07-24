@@ -12,6 +12,7 @@ import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/navigation';
 import { Assets, Conversation } from '@/types';
 import { useSession } from 'next-auth/react';
+import { CreateMessageApi } from '@/redux/services/conversation';
 
 
 const schema = z.object({
@@ -33,11 +34,11 @@ const InBoxFooter = ({ data }: { data: Conversation }) => {
     });
 
     const onFocus = useCallback(() => {
-
+        // emit socket io typing event
     }, [])
 
     const onBlurType = useCallback(() => {
-
+        // emit socket io stop typing event
     }, [])
 
     const debouncedHandleOnblur = useCallback(debounce(onBlurType, 2000), []);
@@ -48,24 +49,13 @@ const InBoxFooter = ({ data }: { data: Conversation }) => {
         // create message with new conversation
         if (!session?.id) return
 
-        if (!data.id) {
-            // await dispatch(CreateConnectionWithMessageApi({
-            //     authorId: session?.id,
-            //     members: data.members,
-            //     membersData: data.membersData,
-            //     isGroup: false,
-            //     content: _data.message
-            // }) as any)
-        } else {
-            // await dispatch(CreateMessageApi({
-            //     conversationId: data.id,
-            //     authorId: session?.id,
-            //     content: _data.message,
-            //     isGroup: data.isGroup,
-            //     members: data.members.filter((member) => member !== session?.id),
-            //     // assets: assets
-            // }) as any)
-        }
+        if (!data.id) return
+        await dispatch(CreateMessageApi({
+            conversationId: data.id,
+            authorId: session?.id,
+            content: _data.message,
+            fileUrl: []
+        }) as any)
         reset()
         setAssets([])
         setLoading(false)
@@ -91,10 +81,10 @@ const InBoxFooter = ({ data }: { data: Conversation }) => {
             {/* <UploadFileComponent assets={assets} /> */}
             <div className={cn("w-full border-t items-center p-2 h-16 my-auto max-h-20 flex gap-2")}>
                 {/* <DropDownMenu data={dropdownData}> */}
-                    <Button type="submit"
-                        variant={"outline"} className='rounded-3xl'>
-                        <Paperclip />
-                    </Button>
+                <Button type="submit"
+                    variant={"outline"} className='rounded-3xl'>
+                    <Paperclip />
+                </Button>
                 {/* </DropDownMenu> */}
                 <input
                     type="file"

@@ -29,12 +29,13 @@ export default function Page({ params }: { params: { inbox: string } }) {
   }
 
   if (!rootConversation.conversation) {
-    return <MessagePageSkeleton />
-  }
-
-  if (rootConversation.error) {
+    if (!rootConversation.error) {
+      return <MessagePageSkeleton />
+    }
     return <NotFound />
   }
+
+
   return (
     <div className='w-full flex flex-col'>
       <MemorizeInBoxHeader data={rootConversation.conversation} />

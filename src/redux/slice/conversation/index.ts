@@ -1,4 +1,4 @@
-import { fetchConversationApi, fetchConversationsApi } from '@/redux/services/conversation'
+import { CreateMessageApi, fetchConversationApi, fetchConversationsApi } from '@/redux/services/conversation'
 import { Conversation, Message } from '@/types'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
@@ -15,6 +15,9 @@ interface ConversationState {
 
     createLoading: boolean
     createError: string | null
+
+    createMessageLoading: boolean
+    createMessageError: string | null
 }
 
 // Define the initial state using that type
@@ -29,6 +32,9 @@ const ConversationState: ConversationState = {
 
     createLoading: false,
     createError: null,
+
+    createMessageLoading: false,
+    createMessageError: null
 }
 
 export const ConversationSlice = createSlice({
@@ -46,17 +52,6 @@ export const ConversationSlice = createSlice({
         },
         // messages
         setMessage: (state, action: PayloadAction<Message>) => {
-            // const findConversationIndex = state.conversationList.findIndex((conversation) => conversation.id === action.payload.conversationId)
-            // if (findConversationIndex !== -1) {
-            //     state.conversationList[findConversationIndex].messages.unshift(action.payload)
-            //     state.conversationList[findConversationIndex].lastMessageContent = action.payload.content
-            //     state.conversationList[findConversationIndex].updatedAt = action.payload.createdAt
-            // }
-            // if (state.conversation?.id === action.payload.conversationId) {
-            //     state.conversation.messages.push(action.payload)
-            //     state.conversation.lastMessageContent = action.payload.content
-            //     state.conversation.updatedAt = action.payload.createdAt
-            // }
         },
         loadMessages: (state, action: PayloadAction<Conversation>) => { },
         // fetch members data
@@ -90,53 +85,21 @@ export const ConversationSlice = createSlice({
             state.loading = false
             state.error = "error"
         })
-        // CreateConnectionWithMessageApi
-        // builder.addCase(CreateConnectionWithMessageApi.pending, (state) => {
-        //     state.createLoading = true
-        //     state.createError = null
-        // })
-        // builder.addCase(CreateConnectionWithMessageApi.fulfilled, (state, action: PayloadAction<Conversation>) => {
-        //     state.createLoading = false
-        //     state.list.unshift(action.payload)
-        //     state.selectedConversation.Conversation = action.payload
-        // })
-        // builder.addCase(CreateConnectionWithMessageApi.rejected, (state, action) => {
-        //     state.createLoading = false
-        //     state.createError = action.error.message || 'Failed to create connection'
-        // })
-        // CreateConnectionApi
-        // builder.addCase(CreateConnectionApi.pending, (state) => {
-        //     state.createLoading = true
-        //     state.createError = null
-        // })
-        // builder.addCase(CreateConnectionApi.fulfilled, (state, action: PayloadAction<Conversation>) => {
-        //     state.createLoading = false
-        //     state.list.unshift(action.payload)
-        //     state.selectedConversation.Conversation = action.payload
-        // })
-        // builder.addCase(CreateConnectionApi.rejected, (state, action) => {
-        //     state.createLoading = false
-        //     state.createError = action.error.message || 'Failed to create connection'
-        // })
         // CreateMessageApi
-        // builder.addCase(CreateMessageApi.pending, (state) => {
-        //     state.message.sendLoading = true
-        // })
-        // builder.addCase(CreateMessageApi.fulfilled, (state, action: PayloadAction<Message>) => {
-        //     state.message.sendLoading = false
-        //     state.selectedConversation.Conversation?.messages.push(action.payload)
-        //     state.list.map((conversation) => {
-        //         if (conversation.id === action.payload.conversationId) {
-        //             conversation.messages.unshift(action.payload)
-        //             conversation.updatedAt = action.payload.createdAt
-        //             conversation.lastMessageContent = action.payload.content
-        //         }
-        //     })
-
-        // })
-        // builder.addCase(CreateMessageApi.rejected, (state, action) => {
-        //     state.message.sendError = action.error.message || 'Failed to send message'
-        // })
+        builder.addCase(CreateMessageApi.pending, (state) => {
+            state.createMessageLoading = true,
+                state.createMessageError = null
+        })
+        builder.addCase(CreateMessageApi.fulfilled, (state, action: PayloadAction<Message>) => {
+            if (state.conversation) {
+                state.conversation.messages.push(action.payload)
+            }
+            state.createMessageLoading = false
+        })
+        builder.addCase(CreateMessageApi.rejected, (state, action) => {
+            state.createMessageLoading = false,
+                state.createMessageError = "error"
+        })
     },
 })
 
