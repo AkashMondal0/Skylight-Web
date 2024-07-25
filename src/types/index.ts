@@ -1,4 +1,4 @@
-interface FeedPost {
+interface Post {
     id: string
     fileUrl: string[]
     commentCount: number
@@ -98,15 +98,6 @@ interface Conversation {
     groupName?: string | null;
     groupImage?: string | null;
     groupDescription?: string | null;
-}
-
-interface Post {
-    id: string;
-    caption: string;
-    fileUrl: string[];
-    authorId: string;
-    createdAt: Date;
-    updatedAt: Date;
 }
 
 interface Comment {
@@ -249,7 +240,6 @@ export type {
     StoryLike,
     SavedPost,
     ApiPayloadData,
-    FeedPost,
     AuthorData,
     networkImage_status,
     Assets,

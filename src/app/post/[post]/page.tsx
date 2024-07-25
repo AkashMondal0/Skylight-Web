@@ -22,8 +22,8 @@ import PostItem from '@/components/home/Card/PostCard'
 const PostPage = ({ params }: { params: { post: string } }) => {
   const router = useRouter()
   const dispatch = useDispatch()
-  const Post = useSelector((Root: RootState) => Root.post)
-  const likeLoading = useSelector((Root: RootState) => Root.post.likeLoading)
+  const Post = useSelector((Root: RootState) => Root.posts)
+  const likeLoading = useSelector((Root: RootState) => Root.posts.likeLoading)
   const session = useSession().data?.user
   const inputRef = useRef<HTMLInputElement>(null)
   const loadedRef = useRef(false)

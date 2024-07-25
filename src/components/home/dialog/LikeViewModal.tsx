@@ -17,7 +17,7 @@ const LikeViewModal = ({
   children: React.ReactNode
 }) => {
   const session = useSession().data?.user
-  const likes = useSelector((Root: RootState)=> Root.post)
+  const likes = useSelector((Root: RootState)=> Root.posts)
 
   return (
     <Dialog>

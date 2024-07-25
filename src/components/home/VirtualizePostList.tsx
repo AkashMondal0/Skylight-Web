@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PostItem from './Card/PostCard';
 import StoriesPage from './StoriesPage';
 import ShowUpload from './alert/show-upload';
@@ -7,41 +7,28 @@ import { Button } from '../ui/button';
 import { CirclePlus } from '../sky/icons';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import useWindowDimensions from '@/lib/useWindowDimensions';
-import { debounce } from 'lodash';
-import { PageScrollOffset, PageState_Context } from '@/provider/PageState_Provider';
 const MemorizeStoriesPage = React.memo(StoriesPage)
 const MemoizedPostItem = React.memo(PostItem)
+let _kSavedOffset = 0;
+let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 
 const VirtualizePostList = ({
     posts,
     loadMore,
-    loading = false,
     Header,
     Footer,
-    pageStateContext
 }: {
     posts: PostState
     loadMore?: () => void
     loading: boolean
     Header?: React.ReactNode
     Footer?: React.ReactNode
-    pageStateContext: PageState_Context
 }) => {
     const parentRef = React.useRef<HTMLDivElement>(null)
     const dimension = useWindowDimensions()
     const [mounted, setMounted] = useState(false)
-    const data = useMemo(() => posts.state, [posts.state])
+    const data = useMemo(() => posts.feeds, [posts.feeds])
     const count = useMemo(() => data.length, [data.length])
-    const previousScrollCount = pageStateContext?.pageScrollOffsetRef.current?.home
-    const disableRef = useRef(false)
-
-    const setScrollIndex = debounce(() => {
-        pageStateContext.homeScrollOffset(virtualizer.scrollOffset ?? 0);
-        if (!disableRef.current && (previousScrollCount ?? 0) > 0) {
-            virtualizer.scrollToOffset(previousScrollCount ?? 0)
-            disableRef.current = true
-        }
-    }, !disableRef ? 0 : 150)
 
     // 
     const virtualizer = useVirtualizer({
@@ -50,7 +37,14 @@ const VirtualizePostList = ({
         estimateSize: useCallback(() => 50, []),
         overscan: 12,
         enabled: true,
-        onChange: useCallback(setScrollIndex, []),
+        initialOffset: _kSavedOffset,
+        initialMeasurementsCache: _KMeasurementsCache,
+        onChange: (virtualizer) => {
+            if (!virtualizer.isScrolling) {
+                _KMeasurementsCache = virtualizer.measurementsCache;
+                _kSavedOffset = virtualizer.scrollOffset || 0;
+            }
+        },
     })
 
     useEffect(() => {
@@ -79,7 +73,6 @@ const VirtualizePostList = ({
                         height: virtualizer.getTotalSize(),
                         width: '100%',
                         position: 'relative',
-                        // minHeight: "80%"
                     }}>
                     <div
                         style={{
@@ -93,11 +86,7 @@ const VirtualizePostList = ({
                             <div
                                 key={virtualRow.key}
                                 data-index={virtualRow.index}
-                                ref={virtualizer.measureElement}
-                                className={
-                                    virtualRow.index % 2 ? 'ListItemOdd' : 'ListItemEven'
-                                }
-                            >
+                                ref={virtualizer.measureElement}>
                                 <div style={{ padding: '10px 0' }}>
                                     <MemoizedPostItem feed={data[virtualRow.index]}
                                         key={data[virtualRow.index].id} />

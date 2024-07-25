@@ -1,21 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { AuthorData, Comment, FeedPost } from '@/types'
+import { AuthorData, Comment, Post } from '@/types'
 import { fetchAccountFeedApi } from '@/redux/services/account'
 import { createPostCommentApi, createPostLikeApi, destroyPostLikeApi, fetchOnePostApi, fetchPostLikesApi } from '@/redux/services/post'
 
 export type TypeActionLike = 'feeds' | 'singleFeed'
 // Define a type for the slice state
 export interface PostState {
-    state: FeedPost[]
-    loading: boolean
-    error: {
+    feeds: Post[]
+    feedsLoading: boolean
+    feedsError: {
         message: string
         name?: string
         stack?: string
     } | null
     // 
-    viewPost: FeedPost | null
+    viewPost: Post | null
     viewPostLoading: boolean
     viewPostError: string | null
     // like
@@ -27,9 +27,9 @@ export interface PostState {
 
 // Define the initial state using that type
 const PostState: PostState = {
-    state: [],
-    loading: false,
-    error: null,
+    feeds: [],
+    feedsLoading: false,
+    feedsError: null,
 
     viewPost: null,
     viewPostLoading: false,
@@ -41,31 +41,31 @@ const PostState: PostState = {
     commentLoading: false
 }
 
-export const PostFeedSlice = createSlice({
+export const PostsSlice = createSlice({
     name: 'PostFeed',
     initialState: PostState,
     reducers: {
-        setMoreData:(state, action: PayloadAction<FeedPost[]>)=>{
+        setMoreData:(state, action: PayloadAction<Post[]>)=>{
             if (action.payload?.length > 0) {
-                state.state.push(...action.payload)
+                state.feeds.push(...action.payload)
             }
         }
     },
     extraReducers: (builder) => {
         builder
             .addCase(fetchAccountFeedApi.pending, (state) => {
-                state.loading = true
-                state.error = null
+                state.feedsLoading = true
+                state.feedsError = null
             })
-            .addCase(fetchAccountFeedApi.fulfilled, (state, action: PayloadAction<FeedPost[]>) => {
-                if (action.payload?.length > 0) {
-                    state.state.push(...action.payload)
-                }
-                state.loading = false
+            .addCase(fetchAccountFeedApi.fulfilled, (state, action: PayloadAction<Post[]>) => {
+                // if (action.payload?.length > 0) {
+                //     state.feeds.push(...action.payload)
+                // }
+                state.feedsLoading = false
             })
             .addCase(fetchAccountFeedApi.rejected, (state, action) => {
-                state.loading = false
-                state.error = {
+                state.feedsLoading = false
+                state.feedsError = {
                     message: action.error.message || 'Failed to fetch posts',
                     name: action.error.name,
                     stack: action.error.stack
@@ -77,7 +77,7 @@ export const PostFeedSlice = createSlice({
                 state.viewPostError = null
                 state.viewPost = null
             })
-            .addCase(fetchOnePostApi.fulfilled, (state, action: PayloadAction<FeedPost>) => {
+            .addCase(fetchOnePostApi.fulfilled, (state, action: PayloadAction<Post>) => {
                 state.viewPost = action.payload
                 state.viewPostLoading = false
                 state.viewPostError = null
@@ -92,10 +92,10 @@ export const PostFeedSlice = createSlice({
                 state.likeLoading = true
             })
             .addCase(createPostLikeApi.fulfilled, (state, action: PayloadAction<{ postId: string }>) => {
-                const postIndex = state.state.findIndex((post) => post.id === action.payload.postId)
+                const postIndex = state.feeds.findIndex((post) => post.id === action.payload.postId)
                 if (postIndex !== -1) {
-                    state.state[postIndex].likeCount += 1
-                    state.state[postIndex].is_Liked = true
+                    state.feeds[postIndex].likeCount += 1
+                    state.feeds[postIndex].is_Liked = true
                 }
                 if (state.viewPost?.id === action.payload.postId) {
                     state.viewPost.likeCount += 1
@@ -111,10 +111,10 @@ export const PostFeedSlice = createSlice({
                 state.likeLoading = true
             })
             .addCase(destroyPostLikeApi.fulfilled, (state, action: PayloadAction<{ postId: string }>) => {
-                const postIndex = state.state.findIndex((post) => post.id === action.payload.postId)
+                const postIndex = state.feeds.findIndex((post) => post.id === action.payload.postId)
                 if (postIndex !== -1) {
-                    state.state[postIndex].likeCount -= 1
-                    state.state[postIndex].is_Liked = false
+                    state.feeds[postIndex].likeCount -= 1
+                    state.feeds[postIndex].is_Liked = false
                 }
                 if (state.viewPost?.id === action.payload.postId) {
                     state.viewPost.likeCount -= 1
@@ -132,9 +132,9 @@ export const PostFeedSlice = createSlice({
             .addCase(createPostCommentApi.fulfilled, (state, action: PayloadAction<Comment>) => {
                 if (state.viewPost?.id === action.payload.postId) {
                     state.viewPost?.comments.unshift(action.payload)
-                    const index = state.state.findIndex((post) => post.id === action.payload.postId)
+                    const index = state.feeds.findIndex((post) => post.id === action.payload.postId)
                     if (index !== -1) {
-                        state.state[index].commentCount += 1
+                        state.feeds[index].commentCount += 1
                     }
                 }
                 state.commentLoading = false
@@ -160,6 +160,6 @@ export const PostFeedSlice = createSlice({
 
 export const {
     setMoreData
-} = PostFeedSlice.actions
+} = PostsSlice.actions
 
-export default PostFeedSlice.reducer
+export default PostsSlice.reducer
