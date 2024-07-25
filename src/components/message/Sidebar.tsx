@@ -30,15 +30,17 @@ export default function SidebarMessageClient() {
     if (rootConversation.listLoading) return <LoadingMessageSidebar />
 
     return (
-        <div className={`
+        <div className='w-full h-full'>
+            <div className={`
         flex flex-col md:border-r scroll-smooth duration-300 p-1 
         bg-background text-foreground
         hideScrollbar h-full md:max-w-[22rem] ease-in-out w-full`}>
-            <Header />
-            <ScrollArea className='min-h-full'>
-                {rootConversation.conversationList.map((conversation) => <MemorizeConversationUserCard data={conversation}
-                    key={conversation.id} />)}
-            </ScrollArea>
+                <Header />
+                <ScrollArea className='min-h-full'>
+                    {rootConversation.conversationList.map((conversation) => <MemorizeConversationUserCard data={conversation}
+                        key={conversation.id} />)}
+                </ScrollArea>
+            </div>
             <MemoizedSm_Navigation />
         </div>
     )

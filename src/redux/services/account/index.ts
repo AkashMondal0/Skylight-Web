@@ -178,8 +178,8 @@ export const logoutApi = createAsyncThunk(
 );
 
 export const fetchAccountFeedApi = createAsyncThunk(
-    'fetchProfileFeedApi/get',
-    async (_, thunkAPI) => {
+    'fetchAccountFeedApi/get',
+    async () => {
         try {
             let query = `query FeedTimelineConnection {
             feedTimelineConnection {
@@ -207,7 +207,6 @@ export const fetchAccountFeedApi = createAsyncThunk(
             })
 
             return res.feedTimelineConnection
-
         } catch (error) {
 
         }

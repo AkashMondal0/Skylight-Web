@@ -58,9 +58,9 @@ export const PostsSlice = createSlice({
                 state.feedsError = null
             })
             .addCase(fetchAccountFeedApi.fulfilled, (state, action: PayloadAction<Post[]>) => {
-                // if (action.payload?.length > 0) {
-                //     state.feeds.push(...action.payload)
-                // }
+                if (action.payload?.length > 0) {
+                    state.feeds.push(...action.payload)
+                }
                 state.feedsLoading = false
             })
             .addCase(fetchAccountFeedApi.rejected, (state, action) => {
