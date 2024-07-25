@@ -20,7 +20,7 @@ const ConversationUserCard = ({
             name: data?.groupName,
             message: data?.lastMessageContent,
             time: data?.updatedAt,
-            id: data?.id
+            id: data?.id // most important ==>  when it is a group conversation then it return conversation id,  if is it private conversation then return user id
         } : {
             image: data?.user?.profilePicture,
             name: data?.user?.username,
@@ -31,10 +31,12 @@ const ConversationUserCard = ({
     }, [data])
 
     if (!Conversation) return <></>
+
+
     return (
         <>
             <div className='flex cursor-pointer
-            rounded-2xl justify-between p-3 
+            rounded-2xl justify-between p-3 py-2 
             transition-colors duration-300 ease-in-out
             hover:bg-accent hover:text-accent-foreground'
                 onClick={() => router.push(`/message/${Conversation?.id || ""}`)}>

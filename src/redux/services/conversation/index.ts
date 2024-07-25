@@ -6,21 +6,32 @@ export const fetchConversationsApi = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       let query = `query FindAllConversation($graphQlPageQuery: GraphQLPageQuery!) {
-            findAllConversation(GraphQLPageQuery: $graphQlPageQuery) {
-              id
-              isGroup
-              groupName
-              groupImage
-              groupDescription
-              user {
-                username
-                profilePicture
-                name
-                id
-                email
-              }
-            }
-          }`
+        findAllConversation(GraphQLPageQuery: $graphQlPageQuery) {
+          id
+          members
+          authorId
+          user {
+            id
+            username
+            email
+            name
+            profilePicture
+          }
+          isGroup
+          lastMessageContent
+          createdAt
+          updatedAt
+          groupName
+          groupImage
+          groupDescription
+          messages {
+            content
+            authorId
+            conversationId
+            createdAt
+          }
+        }
+      }`
       const res = await graphqlQuery({
         query: query,
         variables: { graphQlPageQuery: { id: "no need just for types" } }
@@ -91,6 +102,7 @@ export const CreateMessageApi = createAsyncThunk(
     content: string,
     authorId: string,
     conversationId: string,
+    members: string[]
     fileUrl: string[]
   }, thunkAPI) => {
     try {

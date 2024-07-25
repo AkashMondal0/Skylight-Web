@@ -10,7 +10,6 @@ import { LoadingMessageSidebar } from './loading';
 import Sm_Navigation from '../home/navigation/sm-navigation';
 import { fetchConversationsApi } from '@/redux/services/conversation';
 import VirtualizeConversationList from './VirtualizeList';
-import CList from "../../../clist.json"
 const MemoizedSm_Navigation = memo(Sm_Navigation)
 let pageLoaded = false
 

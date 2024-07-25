@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
-import { useCallback, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Loader2Icon, Paperclip, Send } from 'lucide-react'
@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import { Assets, Conversation } from '@/types';
 import { useSession } from 'next-auth/react';
 import { CreateMessageApi } from '@/redux/services/conversation';
+import { SocketContext } from '@/provider/Socket_Provider';
 
 
 const schema = z.object({
@@ -21,10 +22,10 @@ const schema = z.object({
 const InBoxFooter = ({ data }: { data: Conversation }) => {
     const dispatch = useDispatch()
     const session = useSession().data?.user
-    const router = useRouter()
     const [stopTyping, setStopTyping] = useState(true)
     const [assets, setAssets] = useState<Assets[]>([])
     const [loading, setLoading] = useState(false)
+    const socketState = useContext(SocketContext)
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: zodResolver(schema),
@@ -48,14 +49,22 @@ const InBoxFooter = ({ data }: { data: Conversation }) => {
         setLoading(true)
         // create message with new conversation
         if (!session?.id) return
-
         if (!data.id) return
-        await dispatch(CreateMessageApi({
+        const members = data.members?.filter((i) => i !== session?.id)
+        const newMessage = await dispatch(CreateMessageApi({
             conversationId: data.id,
             authorId: session?.id,
             content: _data.message,
-            fileUrl: []
+            fileUrl: [],
+            members: members ?? [],
         }) as any)
+
+        if (newMessage?.payload?.id) {
+            socketState.socket?.emit("incoming-message-client", {
+                ...newMessage.payload,
+                members: members ?? []
+            })
+        }
         reset()
         setAssets([])
         setLoading(false)
@@ -80,13 +89,14 @@ const InBoxFooter = ({ data }: { data: Conversation }) => {
         <>
             {/* <UploadFileComponent assets={assets} /> */}
             <div className={`w-full border-t items-center
-             p-2 h-16 my-auto max-h-20 flex gap-1 sticky 
+             h-auto my-auto max-h-20 flex gap-1 sticky py-2 px-1
              bottom-0 z-50 bg-background`}>
                 {/* <DropDownMenu data={dropdownData}> */}
-                {/* <Button type="submit"
-                    variant={"outline"} className='rounded-3xl'>
+                <Button type="submit"
+                    variant={"outline"}
+                    className='rounded-3xl p-0 w-12'>
                     <Paperclip />
-                </Button> */}
+                </Button>
                 {/* </DropDownMenu> */}
                 <input
                     type="file"
@@ -100,8 +110,8 @@ const InBoxFooter = ({ data }: { data: Conversation }) => {
                     className="flex w-full items-center dark:bg-neutral-900
                 bg-neutral-200 dark:text-neutral-100 text-neutral-800 rounded-3xl">
                     <input id='message-input' className='outline-none focus:none 
-                    bg-transparent w-full px-2 py-3 dark:placeholder-neutral-100
-                     placeholder-neutral-800' type="text" placeholder="send a message"
+                    bg-transparent w-full p-2 dark:placeholder-neutral-100
+                     placeholder-neutral-800' type="text" placeholder="Send a message"
                         {...register("message", {
                             required: true,
                             onChange(e) {
@@ -123,7 +133,7 @@ const InBoxFooter = ({ data }: { data: Conversation }) => {
                     disabled={loading}
                     onClick={handleSubmit(sendMessageHandle)}
                     variant={"outline"}
-                    className='rounded-3xl h-12'>
+                    className='rounded-3xl h-10 px-3'>
                     {loading ? <Loader2Icon className='animate-spin' /> : <Send />}
                 </Button>
             </div>

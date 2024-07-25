@@ -4,6 +4,7 @@ import useWindowDimensions from '@/lib/useWindowDimensions';
 import { Conversation } from '@/types';
 import MessagesCard from './message_card';
 import { useSession } from 'next-auth/react';
+import { debounce } from 'lodash';
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 const MemorizeMessagesCard = memo(MessagesCard)
@@ -21,6 +22,8 @@ const VirtualizeMessageList = ({
 }) => {
     const session = useSession().data?.user
     const parentRef = useRef<HTMLDivElement>(null)
+    const bottomRef = useRef<HTMLDivElement>(null)
+
     // const dimension = useWindowDimensions()
     const [mounted, setMounted] = useState(false)
     const data = useMemo(() => conversation.messages, [conversation.messages])
@@ -47,6 +50,15 @@ const VirtualizeMessageList = ({
     }, [])
 
     const items = virtualizer.getVirtualItems()
+
+    const toBottom = useCallback(() => {
+        bottomRef.current?.scrollIntoView()
+    }, [data.length])
+
+    useEffect(() => {
+        toBottom()
+    }, [data.length]);
+
     if (!mounted) return <></>
 
     return (
@@ -83,6 +95,7 @@ const VirtualizeMessageList = ({
                                     data={data[virtualRow.index]} />
                             </div>
                         ))}
+                        <div id="bottom" ref={bottomRef} />
                     </div>
                 </div>
                 {Footer}
