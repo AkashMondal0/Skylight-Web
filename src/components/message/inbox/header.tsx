@@ -31,7 +31,7 @@ const InBoxHeader = ({ data }: { data: Conversation }) => {
 
 
     return (
-        <div className={cn("w-full h-[4.5rem] px-2 border-b")}>
+        <div className={cn("w-full h-14 md:h-[4rem] px-2 border-b sticky top-0 z-50 bg-background")}>
             <div className="flex justify-between items-center h-full w-full">
                 {/* logo */}
                 <div className='flex items-center'>
@@ -42,7 +42,7 @@ const InBoxHeader = ({ data }: { data: Conversation }) => {
                         <ChevronLeft size={30} onClick={() => router.back()} />
                     </div>
                     <div className="flex items-center gap-2">
-                        <SkyAvatar className='h-12 w-12' url={Conversation.image || '/user.jpg'} />
+                        <SkyAvatar className='md:h-12 md:w-12 w-10 h-10 my-2' url={Conversation.image || '/user.jpg'} />
                         <div className='w-40'>
                             <div className="text-xl font-bold text-gray-900 dark:text-gray-100 truncate">
                                 {Conversation?.name || "...."}

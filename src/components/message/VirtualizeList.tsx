@@ -1,34 +1,30 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import PostItem from './Card/PostCard';
-import StoriesPage from './StoriesPage';
-import ShowUpload from './alert/show-upload';
-import { PostState } from '@/redux/slice/post';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button } from '../ui/button';
 import { CirclePlus } from '../sky/icons';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import useWindowDimensions from '@/lib/useWindowDimensions';
-const MemorizeStoriesPage = React.memo(StoriesPage)
-const MemoizedPostItem = React.memo(PostItem)
+import { Conversation } from '@/types';
+import ConversationUserCard from './UserCard';
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
+const MemorizeConversationUserCard = memo(ConversationUserCard)
 
-const VirtualizePostList = ({
-    posts,
+const VirtualizeConversationList = ({
+    conversation,
     loadMore,
     Header,
     Footer,
 }: {
-    posts: PostState
+    conversation: Conversation[]
     loadMore?: () => void
     Header?: React.ReactNode
     Footer?: React.ReactNode
 }) => {
-    const parentRef = React.useRef<HTMLDivElement>(null)
-    const dimension = useWindowDimensions()
+    const parentRef = useRef<HTMLDivElement>(null)
+    // const dimension = useWindowDimensions()
     const [mounted, setMounted] = useState(false)
-    const data = useMemo(() => posts.feeds, [posts.feeds])
+    const data = useMemo(() => conversation, [conversation])
     const count = useMemo(() => data.length, [data.length])
-
     // 
     const virtualizer = useVirtualizer({
         count,
@@ -56,41 +52,34 @@ const VirtualizePostList = ({
     return (
         <>
             <div ref={parentRef}
+                id='style-1'
                 className='scrollbarStyle'
                 style={{
-                    height: dimension.height ?? "100%",
+                    height: "100%",
+                    width: '100%', overflowY: 'auto', contain: 'strict'
+                }}>
+                {Header}
+                <div style={{
+                    height: virtualizer.getTotalSize(),
                     width: '100%',
-                    overflowY: 'auto',
-                    contain: 'strict',
-                }}
-            >{Header}
-                <>
-                    <MemorizeStoriesPage />
-                    <ShowUpload />
-                </>
-                <div
-                    style={{
-                        height: virtualizer.getTotalSize(),
-                        width: '100%',
-                        position: 'relative',
-                    }}>
+                    position: 'relative',
+                }}>
                     <div
                         style={{
                             position: 'absolute',
                             top: 0,
                             left: 0,
                             width: '100%',
+                            padding: 4,
                             transform: `translateY(${items[0]?.start ?? 0}px)`,
                         }}>
                         {items.map((virtualRow) => (
-                            <div
-                                key={virtualRow.key}
+                            <div key={virtualRow.key}
                                 data-index={virtualRow.index}
                                 ref={virtualizer.measureElement}>
-                                <div style={{ padding: '10px 0' }}>
-                                    <MemoizedPostItem feed={data[virtualRow.index]}
-                                        key={data[virtualRow.index].id} />
-                                </div>
+                                <MemorizeConversationUserCard
+                                    data={data[virtualRow.index]}
+                                    key={data[virtualRow.index].id} />
                             </div>
                         ))}
                     </div>
@@ -108,6 +97,6 @@ const VirtualizePostList = ({
     )
 }
 
-export default VirtualizePostList
+export default VirtualizeConversationList
 
 

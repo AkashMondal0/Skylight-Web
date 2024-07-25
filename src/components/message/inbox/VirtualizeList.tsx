@@ -1,34 +1,30 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import PostItem from './Card/PostCard';
-import StoriesPage from './StoriesPage';
-import ShowUpload from './alert/show-upload';
-import { PostState } from '@/redux/slice/post';
-import { Button } from '../ui/button';
-import { CirclePlus } from '../sky/icons';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual';
 import useWindowDimensions from '@/lib/useWindowDimensions';
-const MemorizeStoriesPage = React.memo(StoriesPage)
-const MemoizedPostItem = React.memo(PostItem)
+import { Conversation } from '@/types';
+import MessagesCard from './message_card';
+import { useSession } from 'next-auth/react';
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
+const MemorizeMessagesCard = memo(MessagesCard)
 
-const VirtualizePostList = ({
-    posts,
+const VirtualizeMessageList = ({
+    conversation,
     loadMore,
     Header,
     Footer,
 }: {
-    posts: PostState
+    conversation: Conversation
     loadMore?: () => void
     Header?: React.ReactNode
     Footer?: React.ReactNode
 }) => {
-    const parentRef = React.useRef<HTMLDivElement>(null)
-    const dimension = useWindowDimensions()
+    const session = useSession().data?.user
+    const parentRef = useRef<HTMLDivElement>(null)
+    // const dimension = useWindowDimensions()
     const [mounted, setMounted] = useState(false)
-    const data = useMemo(() => posts.feeds, [posts.feeds])
+    const data = useMemo(() => conversation.messages, [conversation.messages])
     const count = useMemo(() => data.length, [data.length])
-
     // 
     const virtualizer = useVirtualizer({
         count,
@@ -56,18 +52,12 @@ const VirtualizePostList = ({
     return (
         <>
             <div ref={parentRef}
-                className='scrollbarStyle'
+                className='h-full w-full flex-1 scrollbarStyle' id='style-1'
                 style={{
-                    height: dimension.height ?? "100%",
-                    width: '100%',
-                    overflowY: 'auto',
-                    contain: 'strict',
-                }}
-            >{Header}
-                <>
-                    <MemorizeStoriesPage />
-                    <ShowUpload />
-                </>
+                    height: "100%",
+                    width: '100%', overflowY: 'auto', contain: 'strict'
+                }}>
+                {Header}
                 <div
                     style={{
                         height: virtualizer.getTotalSize(),
@@ -80,27 +70,20 @@ const VirtualizePostList = ({
                             top: 0,
                             left: 0,
                             width: '100%',
+                            padding: 4,
                             transform: `translateY(${items[0]?.start ?? 0}px)`,
                         }}>
                         {items.map((virtualRow) => (
-                            <div
-                                key={virtualRow.key}
+                            <div key={virtualRow.key}
                                 data-index={virtualRow.index}
                                 ref={virtualizer.measureElement}>
-                                <div style={{ padding: '10px 0' }}>
-                                    <MemoizedPostItem feed={data[virtualRow.index]}
-                                        key={data[virtualRow.index].id} />
-                                </div>
+                                <MemorizeMessagesCard
+                                    seen={false}
+                                    isProfile={session?.id === data[virtualRow.index].authorId}
+                                    data={data[virtualRow.index]} />
                             </div>
                         ))}
                     </div>
-                </div>
-                <div className='w-full text-center h-[80%]'>
-                    <Button onClick={loadMore}
-                        variant={"outline"}
-                        className="rounded-full px-1 w-10 h-10">
-                        <CirclePlus />
-                    </Button>
                 </div>
                 {Footer}
             </div>
@@ -108,6 +91,4 @@ const VirtualizePostList = ({
     )
 }
 
-export default VirtualizePostList
-
-
+export default VirtualizeMessageList

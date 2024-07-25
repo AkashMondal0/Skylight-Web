@@ -79,12 +79,14 @@ const InBoxFooter = ({ data }: { data: Conversation }) => {
     return (
         <>
             {/* <UploadFileComponent assets={assets} /> */}
-            <div className={cn("w-full border-t items-center p-2 h-16 my-auto max-h-20 flex gap-2")}>
+            <div className={`w-full border-t items-center
+             p-2 h-16 my-auto max-h-20 flex gap-1 sticky 
+             bottom-0 z-50 bg-background`}>
                 {/* <DropDownMenu data={dropdownData}> */}
-                <Button type="submit"
+                {/* <Button type="submit"
                     variant={"outline"} className='rounded-3xl'>
                     <Paperclip />
-                </Button>
+                </Button> */}
                 {/* </DropDownMenu> */}
                 <input
                     type="file"
@@ -93,16 +95,13 @@ const InBoxFooter = ({ data }: { data: Conversation }) => {
                     name="file"
                     id="files"
                     className='hidden'
-                    onChange={(e) => { onChangeFile(e) }}
-                />
-                <form onSubmit={handleSubmit(sendMessageHandle)} className="flex w-full items-center dark:bg-neutral-900
+                    onChange={(e) => { onChangeFile(e) }} />
+                <form onSubmit={handleSubmit(sendMessageHandle)}
+                    className="flex w-full items-center dark:bg-neutral-900
                 bg-neutral-200 dark:text-neutral-100 text-neutral-800 rounded-3xl">
-                    <input
-                        id='message-input'
-                        className='outline-none focus:none bg-transparent w-full p-2
-                    dark:placeholder-neutral-100 placeholder-neutral-800'
-                        type="text" placeholder="send a message"
-
+                    <input id='message-input' className='outline-none focus:none 
+                    bg-transparent w-full px-2 py-3 dark:placeholder-neutral-100
+                     placeholder-neutral-800' type="text" placeholder="send a message"
                         {...register("message", {
                             required: true,
                             onChange(e) {
@@ -123,7 +122,8 @@ const InBoxFooter = ({ data }: { data: Conversation }) => {
                 <Button type="submit"
                     disabled={loading}
                     onClick={handleSubmit(sendMessageHandle)}
-                    variant={"outline"} className='rounded-3xl'>
+                    variant={"outline"}
+                    className='rounded-3xl h-12'>
                     {loading ? <Loader2Icon className='animate-spin' /> : <Send />}
                 </Button>
             </div>
