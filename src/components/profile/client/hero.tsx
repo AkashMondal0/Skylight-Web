@@ -18,7 +18,7 @@ const HeroSection = memo(function HeroSection({
     user: userProfileData,
     loading
 }: Props) {
-    if (!userProfileData) return <SkeletonProfilePage/>
+    if (!userProfileData) return <></>
 
     return (
         <>

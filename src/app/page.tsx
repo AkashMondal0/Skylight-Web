@@ -10,6 +10,7 @@ import { RootState } from '@/redux/store';
 import { fetchAccountFeedApi } from '@/redux/services/account';
 import { setMoreData } from '@/redux/slice/post';
 import { getRandomPost } from '@/components/sky/random';
+import HomePageLoading from '@/components/home/loading/PageLoading';
 const MemorizeSm_Header = memo(Sm_Header)
 const MemoizedSm_Navigation = memo(Sm_Navigation)
 const MemoizedLg_Navigation = memo(Lg_Navigation)
@@ -31,23 +32,28 @@ export default function Page() {
     dispatch(setMoreData(_posts) as any)
   }, [])
 
-  if (posts.feedsError) {
+  if (posts.feedsLoading || !pageLoaded) {
+    return <HomePageLoading />
+  }
+
+  if (posts.feedsError && pageLoaded || !posts.feeds && pageLoaded) {
     return <NotFound message={posts.feedsError?.message} />
   }
 
-  return (
-    <>
-      <div className='w-full h-full flex'>
-        <MemoizedLg_Navigation />
-        <div className='w-full'>
-          <VirtualizePostList
-            Header={<MemorizeSm_Header />}
-            Footer={<MemoizedSm_Navigation />}
-            posts={posts}
-            loading={posts.feedsLoading}
-            loadMore={loadMore} />
+  if (posts.feeds) {
+    return (
+      <>
+        <div className='w-full h-full flex'>
+          <MemoizedLg_Navigation />
+          <div className='w-full'>
+            <VirtualizePostList
+              Header={<MemorizeSm_Header />}
+              Footer={<MemoizedSm_Navigation />}
+              posts={posts}
+              loadMore={loadMore} />
+          </div>
         </div>
-      </div>
-    </>
-  )
+      </>
+    )
+  }
 }

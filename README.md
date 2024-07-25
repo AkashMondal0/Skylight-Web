@@ -40,7 +40,7 @@ The client-side application is built using [Next.js](https://nextjs.org/), a Rea
 - `next-themes`: Theme switching for Next.js.
 - `react-hook-form`: Forms library for React.
 - `react-redux`: Official React bindings for Redux.
-- `react-virtuoso`: Virtualized list component for React.
+- `tanstack/react-virtual`: Virtualized list component for React.
 - `socket.io-client`: Real-time bidirectional event-based communication.
 - `sonner`: Notification library.
 - `tailwind-merge`: Utility for merging Tailwind CSS classes.
