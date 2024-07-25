@@ -11,7 +11,7 @@ import { SkeletonUserCardWithButton } from '@/components/home/loading/UserCard'
 export default function Page({ params }: { params: { post: string } }) {
   const dispatch = useDispatch()
   const session = useSession().data?.user
-  const likes = useSelector((Root: RootState) => Root.post)
+  const likes = useSelector((Root: RootState) => Root.posts)
   const loadedRef = useRef(false)
 
   useEffect(() => {

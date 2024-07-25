@@ -13,8 +13,8 @@ import CommentView from '@/components/post/CommentView'
 export default function Page({ params }: { params: { id: string } }) {
   const router = useRouter()
   const dispatch = useDispatch()
-  const Post = useSelector((Root: RootState) => Root.post)
-  const likeLoading = useSelector((Root: RootState) => Root.post.likeLoading)
+  const Post = useSelector((Root: RootState) => Root.posts)
+  const likeLoading = useSelector((Root: RootState) => Root.posts.likeLoading)
   const session = useSession().data?.user
   const loadedRef = useRef(false)
 

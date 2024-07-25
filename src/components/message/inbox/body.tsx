@@ -4,61 +4,29 @@ import MessagesCard from './message_card';
 import React from 'react';
 import { Conversation } from '@/types';
 import { useSession } from 'next-auth/react';
+import { ScrollArea } from '@/components/ui/scroll-area';
 const MemorizeMessagesCard = memo(MessagesCard)
 
 
 const InBoxBody = ({ data }: { data: Conversation }) => {
     const session = useSession().data?.user
-    const virtuosoMethods = useRef(null)
     const messages = useMemo(() => {
-        if (!data.messages) {
-            return []
-        }
         return data.messages
-    }, [])
-
-    const loadMore = () => {
-        // @ts-ignore
-        virtuosoMethods.current?.scrollToIndex({ index: 15 })
-    }
-
-    useEffect(() => {
-        const timeOut = setTimeout(() => {
-            //@ts-ignore
-            virtuosoMethods?.current?.scrollToIndex({ index: data.messages.length - 1 })
-        }, 100)
-        return () => {
-            clearTimeout(timeOut)
-        }
     }, [data.messages])
-
-    const onScroll = (e: any) => {
-        if (e.target.scrollTop < 100) {
-            loadMore()
-        }
-    }
 
     return (
         <>
             <div className='h-full w-full flex-1' id='style-1'>
-                {/* <Virtuoso
-                    className='h-full w-full'
-                    data={data.messages}
-                    ref={virtuosoMethods}
-                    increaseViewportBy={1000}
-                    onScroll={onScroll}
-                    itemContent={(index, post) => {
+                <ScrollArea className='h-full w-full'>
+                    {messages.map((message, i) => {
                         return <MemorizeMessagesCard
-                            data={messages[index]}
+                            key={message.id}
+                            data={message}
                             seen={false}
-                            isProfile={session?.id === messages[index]?.authorId}
+                            isProfile={session?.id === message.authorId}
                         />
-                    }}
-                    components={{
-                        Header: () => <div className='flex justify-center h-2'></div>,
-                        Footer: () => <div className='flex justify-center h-2'></div>
-                    }} /> */}
-                <style>{`html, body, #root { height: 100% }`}</style>
+                    })}
+                </ScrollArea>
             </div >
         </>
     );

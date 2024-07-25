@@ -1,42 +1,28 @@
 import useWindowDimensions from "@/lib/useWindowDimensions";
-import { FeedPost } from "@/types";
+import { Post } from "@/types";
 import { useVirtualizer, } from "@tanstack/react-virtual";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import OptimizedImage from "../sky/SkyImage";
-import { PageState_Context } from "@/provider/PageState_Provider";
-import { Button } from "../ui/button";
-import { CirclePlus } from "../sky/icons";
-
+let _kSavedOffset = 0;
+let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 const VirtualizedList = ({
     Header,
     Footer,
     ProfileDetail,
     Navigation,
     data: profilePosts,
-    pageStateContext
 }: {
-    data: FeedPost[],
+    data: Post[],
     Header?: React.ReactNode
     Footer?: React.ReactNode
     ProfileDetail: React.ReactNode,
     Navigation?: React.ReactNode,
-    pageStateContext: PageState_Context
 }) => {
     const parentRef = useRef<HTMLDivElement>(null)
     const dimension = useWindowDimensions()
     const [mounted, setMounted] = useState(false)
     const data = useMemo(() => profilePosts, [profilePosts])
     const count = useMemo(() => Math.ceil(data.length / 3), [data.length])
-    const previousScrollCount = pageStateContext?.pageScrollOffsetRef.current?.profile
-    const disableRef = useRef(false)
-
-    const onChange = useCallback(() => {
-        pageStateContext.profileScrollOffset(virtualizer.scrollOffset ?? 0);
-        if (!disableRef.current && (previousScrollCount ?? 0) > 0) {
-            virtualizer.scrollToOffset(previousScrollCount ?? 0)
-            disableRef.current = true
-        }
-    }, [])
 
     const virtualizer = useVirtualizer({
         count,
@@ -44,7 +30,14 @@ const VirtualizedList = ({
         estimateSize: useCallback(() => 50, []),
         overscan: 24,
         enabled: true,
-        onChange
+        initialOffset: _kSavedOffset,
+        initialMeasurementsCache: _KMeasurementsCache,
+        onChange: (virtualizer) => {
+            if (!virtualizer.isScrolling) {
+                _KMeasurementsCache = virtualizer.measurementsCache;
+                _kSavedOffset = virtualizer.scrollOffset || 0;
+            }
+        },
     })
 
     useEffect(() => {
@@ -55,7 +48,7 @@ const VirtualizedList = ({
 
     if (!mounted) return <></>
 
-    const RenderImg = ({ post }: { post: FeedPost }) => {
+    const RenderImg = ({ post }: { post: Post }) => {
         if (!post) return <div className="h-full aspect-square w-full" />
         return <OptimizedImage
             fetchPriority="high"
@@ -108,7 +101,7 @@ const VirtualizedList = ({
                                     <RenderImg post={data[virtualRow.index * 3 + 2] ?? null} />
                                 </div>
                             </div>
-                        ))}        
+                        ))}
                     </div>
                 </div>
                 {Footer}

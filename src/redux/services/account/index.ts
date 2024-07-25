@@ -180,38 +180,43 @@ export const logoutApi = createAsyncThunk(
 export const fetchAccountFeedApi = createAsyncThunk(
     'fetchProfileFeedApi/get',
     async (_, thunkAPI) => {
-        let query = `query FeedTimelineConnection {
-                feedTimelineConnection {
-                  id
-                  content
-                  title
-                  fileUrl
-                  createdAt
-                  updatedAt
-                  authorId
-                  commentCount
-                  likeCount
-                  is_Liked
-                  user {
-                    id
-                    username
-                    email
-                    name
-                    profilePicture
-                  }
-                }
-              }`
-        const res = await graphqlQuery({
-            query: query,
-        })
+        try {
+            let query = `query FeedTimelineConnection {
+            feedTimelineConnection {
+              id
+              content
+              title
+              fileUrl
+              createdAt
+              updatedAt
+              authorId
+              commentCount
+              likeCount
+              is_Liked
+              user {
+                id
+                username
+                email
+                name
+                profilePicture
+              }
+            }
+          }`
+            const res = await graphqlQuery({
+                query: query,
+            })
 
-        return res.feedTimelineConnection
+            return res.feedTimelineConnection
+
+        } catch (error) {
+
+        }
     }
 );
 
 export const DeleteAllCookie = async () => {
-    await fetch(`/api/v1/auth/logout`,{
-        method:"DELETE",
+    await fetch(`/api/v1/auth/logout`, {
+        method: "DELETE",
         headers: {
             "Content-Type": "application/json",
         },

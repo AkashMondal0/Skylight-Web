@@ -1,7 +1,7 @@
 import React from "react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel";
 import OptimizedImage from "../sky/SkyImage";
-import { FeedPost } from "@/types";
+import { Post } from "@/types";
 import { ImageViewLoading } from "./loading.components";
 import { ImageError } from "../sky/image.error";
 
@@ -10,7 +10,7 @@ const ImageView = ({
     loading,
     error
 }: {
-    data: FeedPost | null
+    data: Post | null
     loading: boolean
     error: unknown
 }) => {

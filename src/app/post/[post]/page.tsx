@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import {
   Smile,
   Heart, MessageCircle,
-  Send, BookMarked
+  Send, BookMarked, ChevronLeft
 } from 'lucide-react'
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,12 +17,13 @@ import OptimizedImage from '@/components/sky/SkyImage'
 import { createPostCommentApi, createPostLikeApi, destroyPostLikeApi, fetchOnePostApi } from '@/redux/services/post'
 import { PageLoading } from '@/components/post/loading.components'
 import NotFound from '@/components/home/NotFound'
+import PostItem from '@/components/home/Card/PostCard'
 
 const PostPage = ({ params }: { params: { post: string } }) => {
   const router = useRouter()
   const dispatch = useDispatch()
-  const Post = useSelector((Root: RootState) => Root.post)
-  const likeLoading = useSelector((Root: RootState) => Root.post.likeLoading)
+  const Post = useSelector((Root: RootState) => Root.posts)
+  const likeLoading = useSelector((Root: RootState) => Root.posts.likeLoading)
   const session = useSession().data?.user
   const inputRef = useRef<HTMLInputElement>(null)
   const loadedRef = useRef(false)
@@ -75,7 +76,7 @@ const PostPage = ({ params }: { params: { post: string } }) => {
 
   if (Post.viewPost) {
     return (
-      <div className='w-full h-full p-5'>
+      <div className='w-full h-full'>
         {/* lg */}
         <div className="hidden md:flex max-h-[690px] mx-auto my-5 flex-wrap md:border max-w-[860px] min-h-min">
           {/* left side */}
@@ -185,8 +186,19 @@ const PostPage = ({ params }: { params: { post: string } }) => {
         </div>
 
         {/* sm  */}
-        <div className='w-full h-full flex md:hidden'>
-          coming soon
+        <div className="w-full h-full flex md:hidden flex-col">
+          <div className={"w-full h-14 border-b"}>
+            <div className="flex justify-between items-center h-full w-full">
+              <div className='md:hidden cursor-pointer'>
+                <ChevronLeft size={30} onClick={() => router.back()} />
+              </div>
+              <p className='text-xl font-semibold'>
+                Post
+              </p>
+              <div className='w-10'/>
+            </div>
+          </div>
+          <PostItem feed={Post.viewPost} />
         </div>
       </div>
     )

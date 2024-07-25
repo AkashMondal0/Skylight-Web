@@ -2,7 +2,7 @@ import React, { useRef } from "react"
 import SkyAvatar from "../sky/SkyAvatar"
 import { ScrollArea } from "../ui/scroll-area"
 import { BookMarked, Heart, MessageCircle, Send, Smile } from "lucide-react"
-import { FeedPost } from "@/types"
+import { Post } from "@/types"
 import { useRouter } from "next/navigation"
 import { Button } from "../ui/button"
 import { CommentViewError, CommentViewLoading } from "./loading.components"
@@ -14,7 +14,7 @@ const CommentView = ({
     loading,
     error
 }: {
-    data: FeedPost | null
+    data: Post | null
     handleLikeAndUndoLike: () => void
     handleComment: (inputValue: string) => void
     loading: boolean,

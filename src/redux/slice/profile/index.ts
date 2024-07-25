@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { AuthorData, FeedPost, User } from '@/types'
+import { AuthorData, Post, User } from '@/types'
 import { RemoveFriendshipApi, createFriendshipApi, destroyFriendshipApi, fetchUserProfileDetailApi, fetchUserProfileFollowerUserApi, fetchUserProfileFollowingUserApi, fetchUserProfilePostsApi } from '@/redux/services/profile'
 
 // Define a type for the slice state
@@ -9,7 +9,7 @@ interface ProfileState {
     loading: boolean
     error: string | null
 
-    posts: FeedPost[]
+    posts: Post[]
     postLoading: boolean
     postError: string | null
 
@@ -88,7 +88,7 @@ export const profileSlice = createSlice({
                 state.state.followerCount -= 1
             }
         },
-        setLoadMoreProfilePosts:(state, action: PayloadAction<FeedPost[]>) => {
+        setLoadMoreProfilePosts:(state, action: PayloadAction<Post[]>) => {
             if (!state.posts) return
             state.posts.push(...action.payload)
         }
@@ -116,7 +116,7 @@ export const profileSlice = createSlice({
                 state.postLoading = true
                 state.postError = null
             })
-            .addCase(fetchUserProfilePostsApi.fulfilled, (state, action: PayloadAction<FeedPost[]>) => {
+            .addCase(fetchUserProfilePostsApi.fulfilled, (state, action: PayloadAction<Post[]>) => {
                 state.posts = action.payload
                 state.postLoading = false
             })

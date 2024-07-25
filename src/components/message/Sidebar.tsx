@@ -1,29 +1,33 @@
 "use client";
-import React, { memo, useContext, useEffect } from 'react'
+import React, { memo, useEffect } from 'react'
 import { CardTitle } from '../ui/card';
 import { SquarePen } from 'lucide-react';
 import { Button } from '../ui/button';
 import ConversationUserCard from './UserCard';
 import FindUserForChat from './modal/FindUserForChat';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { LoadingMessageSidebar } from './loading';
 import { ScrollArea } from '../ui/scroll-area';
-import { PageStateContext } from '@/provider/PageState_Provider';
 import Sm_Navigation from '../home/navigation/sm-navigation';
+import { fetchConversationsApi } from '@/redux/services/conversation';
 const MemorizeConversationUserCard = memo(ConversationUserCard)
 const MemoizedSm_Navigation = memo(Sm_Navigation)
+let pageLoaded = false
+
 export default function SidebarMessageClient() {
     const rootConversation = useSelector((Root: RootState) => Root.conversation)
-    const pageStateContext = useContext(PageStateContext)
+    const dispatch = useDispatch()
+
     useEffect(() => {
-        if (!pageStateContext?.loaded.message) {
-            pageStateContext?.fetchMessagePageInitial()
+        if (!pageLoaded) {
+            dispatch(fetchConversationsApi() as any)
+            pageLoaded = true
         }
     }, [])
 
 
-    if (rootConversation.listLoading||!pageStateContext?.loaded.message) return <LoadingMessageSidebar />
+    if (rootConversation.listLoading) return <LoadingMessageSidebar />
 
     return (
         <div className={`
@@ -35,7 +39,7 @@ export default function SidebarMessageClient() {
                 {rootConversation.conversationList.map((conversation) => <MemorizeConversationUserCard data={conversation}
                     key={conversation.id} />)}
             </ScrollArea>
-            <MemoizedSm_Navigation/>
+            <MemoizedSm_Navigation />
         </div>
     )
 }

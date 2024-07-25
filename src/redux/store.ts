@@ -2,17 +2,17 @@ import { configureStore } from '@reduxjs/toolkit'
 import profileReducer from '@/redux/slice/profile'
 import authReducer from '@/redux/slice/auth'
 import usersReducer from '@/redux/slice/users'
-import postFeedReducer from '@/redux/slice/post'
 import modalReducer from '@/redux/slice/modal'
 import conversationReducer from '@/redux/slice/conversation'
 import accountReducer from '@/redux/slice/account'
+import postsReducer from "@/redux/slice/post"
 
 export const store = configureStore({
   reducer: {
     profile: profileReducer,
     auth: authReducer,
     users: usersReducer,
-    post: postFeedReducer,
+    posts: postsReducer,
     modal: modalReducer,
     conversation: conversationReducer,
     account: accountReducer,

@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import SkyAvatar from '@/components/sky/SkyAvatar';
 import { useDispatch } from 'react-redux';
-import { FeedPost } from '@/types';
+import { Post } from '@/types';
 import OptimizedImage from '@/components/sky/SkyImage';
 import { createPostLikeApi, destroyPostLikeApi, fetchPostLikesApi } from '@/redux/services/post';
 import LikeViewModal from '../dialog/LikeViewModal';
@@ -20,7 +20,7 @@ import LikeViewModal from '../dialog/LikeViewModal';
 const PostItem = ({
   feed,
 }: {
-  feed: FeedPost
+  feed: Post
 }) => {
   const router = useRouter()
   const dispatch = useDispatch()
@@ -50,7 +50,7 @@ const PostItem = ({
   }
 
   return (
-    <div className='max-w-[480px] w-full mx-auto py-4 border-b'>
+    <div className='sm:max-w-[480px] w-full sm:mx-auto py-4 border-b'>
       <div className='flex justify-between px-2'>
         <div className='flex space-x-2 items-center cursor-pointer' onClick={() => {
           router.push(`/${feed.user.username}`)
@@ -145,7 +145,7 @@ const PostItem = ({
         {/* sm */}
         <div className='text-sm cursor-pointer sm:hidden block'
           onClick={() => {
-            router.push(`/post/${feed.id}/comments`)
+            // router.push(`/post/${feed.id}/comments`)
           }}>View all {feed.commentCount} comments</div>
       </div>
 
@@ -159,7 +159,7 @@ export default PostItem
 export const PostItemDummy = ({
   feed,
 }: {
-  feed: FeedPost
+  feed: Post
 }) => {
 
   return (
