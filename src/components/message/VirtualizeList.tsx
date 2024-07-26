@@ -5,6 +5,8 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import useWindowDimensions from '@/lib/useWindowDimensions';
 import { Conversation } from '@/types';
 import ConversationUserCard from './UserCard';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 const MemorizeConversationUserCard = memo(ConversationUserCard)
@@ -25,7 +27,8 @@ const VirtualizeConversationList = ({
     const [mounted, setMounted] = useState(false)
     const data = useMemo(() => conversation, [conversation])
     const count = useMemo(() => data.length, [data.length])
-    // 
+    const currentTyping = useSelector((Root: RootState) => Root.conversation.currentTyping)
+
     const virtualizer = useVirtualizer({
         count,
         getScrollElement: () => parentRef.current,
@@ -53,7 +56,6 @@ const VirtualizeConversationList = ({
         <>
             <div ref={parentRef}
                 id='style-1'
-                className='scrollbarStyle'
                 style={{
                     height: "100%",
                     width: '100%', overflowY: 'auto', contain: 'strict'
@@ -78,6 +80,10 @@ const VirtualizeConversationList = ({
                                 data-index={virtualRow.index}
                                 ref={virtualizer.measureElement}>
                                 <MemorizeConversationUserCard
+                                    TypingUser={!currentTyping
+                                        ? null :
+                                        currentTyping?.conversationId === data[virtualRow.index].id
+                                            ? currentTyping?.typing : null}
                                     data={data[virtualRow.index]}
                                     key={data[virtualRow.index].id} />
                             </div>

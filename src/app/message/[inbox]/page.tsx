@@ -8,7 +8,6 @@ import { MessagePageSkeleton } from "@/components/message/loading";
 import NotFound from "@/components/home/NotFound";
 import { fetchConversationApi } from "@/redux/services/conversation";
 import VirtualizeMessageList from "@/components/message/inbox/VirtualizeList";
-import MList from "../../../../mlist.json"
 
 const MemorizeInBoxFooter = memo(InBoxFooter)
 const MemorizeInBoxHeader = memo(InBoxHeader)
@@ -20,10 +19,10 @@ export default function Page({ params }: { params: { inbox: string } }) {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (!pageLoaded) {
-      dispatch(fetchConversationApi(params.inbox) as any)
-      pageLoaded = true
-    }
+    // if (!pageLoaded || params.inbox !== rootConversation.conversation?.id) {
+    dispatch(fetchConversationApi(params.inbox) as any)
+    pageLoaded = true
+    // }
   }, [params.inbox])
 
   if (rootConversation.loading) {

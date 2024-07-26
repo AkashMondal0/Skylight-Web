@@ -61,7 +61,6 @@ const VirtualizedList = ({
     return (
         <>
             <div ref={parentRef}
-                className='scrollbarStyle'
                 style={{
                     height: dimension.height ?? "100%",
                     width: '100%',

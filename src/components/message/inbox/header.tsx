@@ -1,15 +1,16 @@
-/* eslint-disable @next/next/no-img-element */
-'use client'
 import { cn } from '@/lib/utils';
 import { ChevronLeft, Info } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
 import SkyAvatar from '@/components/sky/SkyAvatar';
 import { Conversation } from '@/types';
 import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 const InBoxHeader = ({ data }: { data: Conversation }) => {
     const router = useRouter()
+    const currentTyping = useSelector((Root: RootState) => Root.conversation.currentTyping)
+
     const Conversation = useMemo(() => {
         return data?.isGroup ? {
             image: data?.groupImage,
@@ -48,8 +49,10 @@ const InBoxHeader = ({ data }: { data: Conversation }) => {
                                 {Conversation?.name || "...."}
                             </div>
                             <div className="text-sm text-gray-500 dark:text-gray-400">
-                                {/* {data?.typing ? "typing..." : userData?.status ? "online" : "offline"} */}
-                                online
+                                {!currentTyping
+                                    ? "status" :
+                                    currentTyping?.conversationId === data.id
+                                        ? currentTyping.typing ? "typing..." : "status" : "status"}
                             </div>
                         </div>
                     </div>

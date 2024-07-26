@@ -110,90 +110,6 @@ interface Comment {
     user: AuthorData
 }
 
-interface Like {
-    id: string;
-    authorId: string;
-    postId: string;
-    createdAt: Date;
-    updatedAt: Date;
-    authorData: AuthorData
-}
-
-interface Follower {
-    id: string;
-    followerUserId: string;
-    followingUserId: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-interface Notification {
-    id: string;
-    content: string;
-    authorId: string;
-    receiverId: string;
-    postId: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
-interface Story {
-    id: string;
-    fileUrl: string[];
-    caption: string;
-    authorId: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-interface StoryView {
-    id: string;
-    viewerId: string;
-    storyId: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-interface StoryReply {
-    id: string;
-    content: string;
-    authorId: string;
-    storyId: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-interface StoryLike {
-    id: string;
-    authorId: string;
-    storyId: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-interface SavedPost {
-    id: string;
-    postId: string;
-    userId: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-type code = 0 | 1
-interface ApiPayloadData<T> {
-    code: code,
-    message: string,
-    data: T,
-}
-
-interface RestApiPayload<T> {
-    code: number,
-    message: string,
-    data: T,
-    status_code: number
-}
-
-type networkImage_status = "error" | "loading" | "success"
-
 type Assets = {
     id?: string,
     url?: string,
@@ -225,28 +141,27 @@ type GraphqlError = {
     }
 }
 
+type Typing = {
+    typing: boolean
+    authorId: string
+    members: string[]
+    conversationId: string
+    isGroup: boolean
+    groupUser?: AuthorData
+}
+
 export type {
     User,
     Message,
     Conversation,
     Post,
     Comment,
-    Like,
-    Follower,
-    Notification,
-    Story,
-    StoryView,
-    StoryReply,
-    StoryLike,
-    SavedPost,
-    ApiPayloadData,
     AuthorData,
-    networkImage_status,
     Assets,
-    RestApiPayload,
     Friendship,
     Role,
     FriendshipStatus,
     findDataInput,
-    GraphqlError
+    GraphqlError,
+    Typing
 }

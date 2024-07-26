@@ -1,6 +1,7 @@
 'use client'
-import { setMessage } from "@/redux/slice/conversation";
-import { Conversation, Message } from "@/types";
+import { event_name } from "@/configs/socket.event";
+import { setMessage, setTyping } from "@/redux/slice/conversation";
+import { Message, Typing } from "@/types";
 import { useSession } from "next-auth/react";
 import { createContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -48,36 +49,23 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
             socket?.on('disconnect', () => {
                 toast("User Disconnected")
             });
-
             // incoming events
-            socket?.on('incoming-message-server', (data: Message) => {
+            socket?.on(event_name.conversation.message, (data: Message) => {
                 dispatch(setMessage(data))
             });
-
-            socket?.on('incoming-user-keyboard-pressing-server', (data: any) => {
-                toast("User Disconnected")
+            socket?.on(event_name.conversation.seen, (data: any) => {
+                
             });
-
-            socket?.on('incoming-message-seen-server', (data: any) => {
-                toast("User Disconnected")
+            socket?.on(event_name.conversation.typing, (data: Typing) => {
+                dispatch(setTyping(data))
             });
-
-            socket?.on('incoming-notification-server', (data: any) => {
-                toast("User Disconnected")
-            });
-
-            socket?.on('incoming-conversation-server', (data: Conversation) => {
-                toast("User Disconnected")
-            });
-            
             return () => {
-                socket?.off('connect')
+                socket.off('connect')
                 socket.off('disconnect')
-                socket?.off('incoming-message')
-                socket.off('incoming-user-keyboard-pressing')
-                socket?.off('incoming-message-seen')
-                socket?.off('incoming-notification')
-                socket?.off('incoming-conversation')
+                socket.off(event_name.conversation.message)
+                socket.off(event_name.conversation.seen)
+                socket.off(event_name.conversation.typing)
+
             }
         }
     }, [session, socket])

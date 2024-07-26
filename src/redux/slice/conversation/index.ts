@@ -1,5 +1,5 @@
 import { CreateMessageApi, fetchConversationApi, fetchConversationsApi } from '@/redux/services/conversation'
-import { Conversation, Message } from '@/types'
+import { Conversation, Message, Typing } from '@/types'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
@@ -12,6 +12,8 @@ interface ConversationState {
     conversation: Conversation | null
     loading: boolean
     error: string | null
+
+    currentTyping: Typing | null
 
     createLoading: boolean
     createError: string | null
@@ -30,6 +32,8 @@ const ConversationState: ConversationState = {
     loading: false,
     error: null,
 
+    currentTyping: null,
+
     createLoading: false,
     createError: null,
 
@@ -41,24 +45,18 @@ export const ConversationSlice = createSlice({
     name: 'conversation',
     initialState: ConversationState,
     reducers: {
-        // all conversations
-        setConversations: (state, action: PayloadAction<Conversation[]>) => {
-            state.conversationList = action.payload
-        },
-        loadMoreConversations(state, action: PayloadAction<Conversation[]>) { },
-        // selected conversation
-        setConversation: (state, action: PayloadAction<Conversation>) => {
-            state.conversation = action.payload
+        // typing 
+        setTyping: (state, action: PayloadAction<Typing>) => {
+            state.currentTyping = action.payload
         },
         // messages
         setMessage: (state, action: PayloadAction<Message>) => {
             const index = state.conversationList.findIndex((i) => i.id === action.payload.conversationId)
-            state.conversationList[index].messages?.push(action.payload)
+            state.conversationList[index]?.messages?.push(action.payload)
             if (state?.conversation && action.payload.conversationId === state?.conversation.id) {
                 state.conversation?.messages.push(action.payload)
             }
         },
-        loadMessages: (state, action: PayloadAction<Conversation>) => { },
         // fetch members data
         setMembersData: (state, action: PayloadAction<Conversation>) => { },
         loadMoreMembersData: (state, action: PayloadAction<Conversation>) => { },
@@ -109,13 +107,10 @@ export const ConversationSlice = createSlice({
 })
 
 export const {
-    setConversations,
     setMessage,
-    setConversation,
-    loadMoreConversations,
-    loadMessages,
     setMembersData,
     loadMoreMembersData,
+    setTyping
 } = ConversationSlice.actions
 
 export default ConversationSlice.reducer

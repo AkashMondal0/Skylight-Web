@@ -1,10 +1,8 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual';
-import useWindowDimensions from '@/lib/useWindowDimensions';
 import { Conversation } from '@/types';
 import MessagesCard from './message_card';
 import { useSession } from 'next-auth/react';
-import { debounce } from 'lodash';
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 const MemorizeMessagesCard = memo(MessagesCard)
@@ -64,7 +62,7 @@ const VirtualizeMessageList = ({
     return (
         <>
             <div ref={parentRef}
-                className='h-full w-full flex-1 scrollbarStyle' id='style-1'
+                className='h-full w-full flex-1' id='style-1'
                 style={{
                     height: "100%",
                     width: '100%', overflowY: 'auto', contain: 'strict'
@@ -90,7 +88,6 @@ const VirtualizeMessageList = ({
                                 data-index={virtualRow.index}
                                 ref={virtualizer.measureElement}>
                                 <MemorizeMessagesCard
-                                    seen={false}
                                     isProfile={session?.id === data[virtualRow.index].authorId}
                                     data={data[virtualRow.index]} />
                             </div>
