@@ -8,11 +8,12 @@ const timeFormat = (time: string | Date | undefined) => {
     return new Date(time).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
 }
 const ConversationUserCard = ({
-    data
+    data,
+    TypingUser
 }: {
     data: Conversation | null
+    TypingUser: boolean | null
 }) => {
-
     const router = useRouter()
     const Conversation = useMemo(() => {
         return data?.isGroup ? {
@@ -20,21 +21,24 @@ const ConversationUserCard = ({
             name: data?.groupName,
             message: data?.lastMessageContent,
             time: data?.updatedAt,
-            id: data?.id
+            isTyping: TypingUser,
+            id: data?.id // most important ==>  when it is a group conversation then it return conversation id,  if is it private conversation then return user id
         } : {
             image: data?.user?.profilePicture,
             name: data?.user?.username,
             message: data?.lastMessageContent,
             time: data?.updatedAt,
-            id: data?.user?.id
+            id: data?.user?.id,
+            isTyping: TypingUser
         }
-    }, [data])
+    }, [data, TypingUser])
 
     if (!Conversation) return <></>
+
     return (
         <>
             <div className='flex cursor-pointer
-            rounded-2xl justify-between p-3 
+            rounded-2xl justify-between p-3 py-2 
             transition-colors duration-300 ease-in-out
             hover:bg-accent hover:text-accent-foreground'
                 onClick={() => router.push(`/message/${Conversation?.id || ""}`)}>
@@ -45,7 +49,7 @@ const ConversationUserCard = ({
                             {Conversation.name || "group name"}
                         </div>
                         <div className='text-sm'>
-                            {Conversation?.message || "new conversation"}
+                            {Conversation?.isTyping ? "typing..." : Conversation.message ?? "new conversation"}
                         </div>
                     </div>
                 </div>

@@ -1,15 +1,16 @@
-/* eslint-disable @next/next/no-img-element */
-'use client'
 import { cn } from '@/lib/utils';
 import { ChevronLeft, Info } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
 import SkyAvatar from '@/components/sky/SkyAvatar';
 import { Conversation } from '@/types';
 import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 const InBoxHeader = ({ data }: { data: Conversation }) => {
     const router = useRouter()
+    const currentTyping = useSelector((Root: RootState) => Root.conversation.currentTyping)
+
     const Conversation = useMemo(() => {
         return data?.isGroup ? {
             image: data?.groupImage,
@@ -31,7 +32,7 @@ const InBoxHeader = ({ data }: { data: Conversation }) => {
 
 
     return (
-        <div className={cn("w-full h-[4.5rem] px-2 border-b")}>
+        <div className={cn("w-full h-14 md:h-[4rem] px-2 border-b sticky top-0 z-50 bg-background")}>
             <div className="flex justify-between items-center h-full w-full">
                 {/* logo */}
                 <div className='flex items-center'>
@@ -42,14 +43,16 @@ const InBoxHeader = ({ data }: { data: Conversation }) => {
                         <ChevronLeft size={30} onClick={() => router.back()} />
                     </div>
                     <div className="flex items-center gap-2">
-                        <SkyAvatar className='h-12 w-12' url={Conversation.image || '/user.jpg'} />
+                        <SkyAvatar className='md:h-12 md:w-12 w-10 h-10 my-2' url={Conversation.image || '/user.jpg'} />
                         <div className='w-40'>
                             <div className="text-xl font-bold text-gray-900 dark:text-gray-100 truncate">
                                 {Conversation?.name || "...."}
                             </div>
                             <div className="text-sm text-gray-500 dark:text-gray-400">
-                                {/* {data?.typing ? "typing..." : userData?.status ? "online" : "offline"} */}
-                                online
+                                {!currentTyping
+                                    ? "status" :
+                                    currentTyping?.conversationId === data.id
+                                        ? currentTyping.typing ? "typing..." : "status" : "status"}
                             </div>
                         </div>
                     </div>

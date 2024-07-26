@@ -1,8 +1,13 @@
 'use client'
+import { event_name } from "@/configs/socket.event";
+import { setMessage, setTyping } from "@/redux/slice/conversation";
+import { Message, Typing } from "@/types";
 import { useSession } from "next-auth/react";
-import { createContext, useEffect, useRef, useState } from "react";
+import { createContext, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Socket, io } from "socket.io-client";
 import { toast } from 'sonner'
+let loadedRef = true
 
 interface SocketStateType {
     socket: Socket | null
@@ -14,13 +19,13 @@ export const SocketContext = createContext<SocketStateType>({
 
 
 const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
-    const loadedRef = useRef(true)
-    // const [socketId, setSocketId] = useState<Socket['id'] | null>(null)
+    const dispatch = useDispatch()
     const [socket, setSocket] = useState<Socket | null>(null)
     const session = useSession().data?.user
 
+
     async function SocketConnection() {
-        if (loadedRef.current && session?.id) {
+        if (loadedRef && session?.id) {
             const connection = io('http://localhost:5000/chat', {
                 transports: ['websocket'],
                 withCredentials: true,
@@ -30,10 +35,10 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
                 }
             })
             setSocket(connection)
-            loadedRef.current = false
+            loadedRef = false
         }
     }
-    
+
     useEffect(() => {
         SocketConnection()
         if (socket) {
@@ -44,31 +49,23 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
             socket?.on('disconnect', () => {
                 toast("User Disconnected")
             });
-
             // incoming events
-            socket?.on('incoming-message', (data: any) => {
-                toast("User Connected")
+            socket?.on(event_name.conversation.message, (data: Message) => {
+                dispatch(setMessage(data))
             });
-
-            socket?.on('incoming-user-keyboard-pressing', (data: any) => {
-                toast("User Disconnected")
+            socket?.on(event_name.conversation.seen, (data: any) => {
+                
             });
-
-            socket?.on('incoming-message-seen', (data: any) => {
-                toast("User Disconnected")
+            socket?.on(event_name.conversation.typing, (data: Typing) => {
+                dispatch(setTyping(data))
             });
-
-            socket?.on('incoming-notification', (data: any) => {
-                toast("User Disconnected")
-            });
-
             return () => {
-                socket?.off('connect')
+                socket.off('connect')
                 socket.off('disconnect')
-                socket?.off('incoming-message')
-                socket.off('incoming-user-keyboard-pressing')
-                socket?.off('incoming-message-seen')
-                socket?.off('incoming-notification')
+                socket.off(event_name.conversation.message)
+                socket.off(event_name.conversation.seen)
+                socket.off(event_name.conversation.typing)
+
             }
         }
     }, [session, socket])
