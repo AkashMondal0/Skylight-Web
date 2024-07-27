@@ -9,7 +9,7 @@ import { RootState } from '@/redux/store';
 import { LoadingMessageSidebar } from './loading';
 import { fetchConversationsApi } from '@/redux/services/conversation';
 import VirtualizeConversationList from './VirtualizeList';
-import { NavigationBottom } from '@/components/Navigation/NavigationSidebar';
+import { NavigationBottom } from '../Navigation/NavigationBottom';
 let pageLoaded = false
 
 export default function SidebarMessageClient() {

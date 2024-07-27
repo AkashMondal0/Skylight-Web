@@ -11,8 +11,8 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
-import React, { memo, useEffect } from "react"
-import { usePathname, useRouter } from "next/navigation"
+import React, { memo } from "react"
+import { useRouter } from "next/navigation"
 import NotificationModel from "@/components/home/model/NotificationModel"
 import SearchModel from "@/components/home/model/SearchModel"
 import MoreDropdownMenu from "@/components/home/model/More_DropDown"
@@ -22,15 +22,10 @@ import SkyAvatar from "@/components/sky/SkyAvatar"
 import { configs } from "@/configs"
 
 // for large screen device 
-export const NavigationSidebar = memo(function NavigationSidebar({
-    hideLabel = false,
-    hideNavigation = false
-}: {
+export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel }: {
     hideLabel?: boolean
-    hideNavigation?: boolean
 }) {
     const router = useRouter()
-    const path = usePathname()
     const pageChange = (path: string) => router.push(path)
     const session = useSession().data?.user
     const SideIconData = [
@@ -43,18 +38,16 @@ export const NavigationSidebar = memo(function NavigationSidebar({
         { icon: <CopyPlus size={28} />, label: "Create", onClick: () => { } },
         { icon: <CircleUserRound size={28} />, label: "Profile", onClick: () => pageChange(`/${session?.username || ""}`) },
     ]
-
-    useEffect(()=>{
-        console.info("path", path)
-    },[path === "/message"])
+    // console.info('%c<NavigationSidebar/>', 'color: yellow; font-weight: bold;');
 
     return (
         <div className={cn(`border-r scroll-smooth overflow-y-auto ease-in-out duration-300
-       hidden md:flex md:w-20 lg:w-full max-w-72 min-h-dvh`,
-            hideNavigation ? "md:w-20" : "w-72"
+       hidden md:flex md:w-20 lg:w-full max-w-72 min-h-dvh overflow-x-hidden`,
+            hideLabel ? "max-w-20" : "max-w-72"
         )}>
-            <div className="w-full h-full flex flex-col space-y-2 justify-between py-8 px-2">
-                <div className="space-y-2">
+            <div className="w-full h-full flex flex-col space-y-2 justify-between p-1">
+                <div className="space-y-1">
+                    <div className="h-6" />
                     <Banner hideLabel={hideLabel} />
                     <div className="h-6" />
                     {SideIconData.map(({ icon, label, onClick }, index) => {
@@ -111,9 +104,10 @@ const NavigationItem = ({ children, active, label, onClick, hideLabel }: {
                 <TooltipTrigger asChild>
                     <MyButton onClick={onClick}>
                         {children}
-                        <p className={cn("hidden lg:block text-primary-500 text-base", active ? "font-bold" : "font-normal")}>
+                        {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden lg:block",
+                            active ? "font-bold" : "font-normal")}>
                             {label}
-                        </p>
+                        </p>}
                     </MyButton>
                 </TooltipTrigger>
                 <TooltipContent side="right">
@@ -134,11 +128,9 @@ const Banner = ({
     return (
         <MyButton onClick={onClick}>
             <img src={configs.AppDetails.logoUrl} alt="upload" className="w-8 h-8" />
-            <p className={cn(`hidden lg:flex text-lg font-semibold`,
-                hideLabel ? "hidden" : ""
-            )}>
+            {hideLabel ? <></> : <p className={cn(`hidden lg:flex text-lg font-semibold`)}>
                 {configs.AppDetails.name}
-            </p>
+            </p>}
         </MyButton>
     )
 }
@@ -150,9 +142,9 @@ const MoreButton = ({ hideLabel }: {
         <MoreDropdownMenu>
             <MyButton>
                 <Menu size={28} />
-                <p className={cn(`hidden lg:flex`, hideLabel ? "hidden" : "")}>
+                {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden lg:block")}>
                     More
-                </p>
+                </p>}
             </MyButton>
         </MoreDropdownMenu>
     )
@@ -161,17 +153,19 @@ const MoreButton = ({ hideLabel }: {
 
 const MyButton = ({
     children,
-    onClick
+    onClick,
+    hideLabel
 }: {
     children: React.ReactNode,
     onClick?: () => void
+    hideLabel?: boolean
 }) => {
     return (
         <div onClick={onClick}
-            className={`lg:w-full lg:justify-start lg:px-4 lg:gap-2
-        md:flex md:w-14 justify-center max-w-72 mx-auto 
-        h-14 items-center flex rounded-xl
-        hover:bg-accent hover:text-accent-foreground cursor-pointer`}>
+            className={cn(`max-w-72 mx-auto justify-center
+            h-14 items-center flex rounded-xl
+            hover:bg-accent hover:text-accent-foreground cursor-pointer`,
+                hideLabel ? "md:flex md:w-14 justify-center" : "lg:w-full lg:justify-start lg:px-4 lg:gap-2")}>
             {children}
         </div>
     )
