@@ -23,7 +23,7 @@ const PostVirtualList = ({ }: {}) => {
         count,
         getScrollElement: () => parentRef.current,
         estimateSize: useCallback(() => 50, []),
-        overscan: 12,
+        overscan: 5,
         enabled: true,
         initialOffset: _kSavedOffset,
         initialMeasurementsCache: _KMeasurementsCache,

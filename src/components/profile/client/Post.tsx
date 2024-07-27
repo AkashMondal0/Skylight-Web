@@ -5,7 +5,6 @@ import { Copy, Heart, MessageCircle, RotateCcw } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Post } from '@/types'
 import OptimizedImage from '@/components/sky/SkyImage'
-import { ImageError } from '@/components/sky/image.error'
 
 export const ImageComponent = memo(function ImageComponent({
     data
@@ -16,7 +15,7 @@ export const ImageComponent = memo(function ImageComponent({
     const [error, setError] = useState(false)
 
     if (error) {
-        return <ImageError />
+        return <></>
     }
 
     return (

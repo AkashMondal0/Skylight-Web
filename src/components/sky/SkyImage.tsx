@@ -1,8 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { cn } from '@/lib/utils';
-import React, { useEffect, useRef, memo } from 'react';
-import { ImageError } from './image.error';
-const MemorizeImageError = memo(ImageError)
+import { RotateCcw } from 'lucide-react';
+import React, { useEffect, useRef, memo, useState } from 'react';
 
 interface OptimizedImageProps {
     src: string;
@@ -13,6 +13,7 @@ interface OptimizedImageProps {
     fetchPriority?: 'auto' | 'high' | 'low';
     sizes?: string;
     showErrorIcon?: boolean;
+    showErrorIconSm?: boolean;
     onError?: () => void;
     onLoad?: () => void;
 }
@@ -27,10 +28,11 @@ const OptimizedImage: React.FC<OptimizedImageProps> = memo(function OptimizedIma
     sizes = '(min-width: 808px) 50vw, 100vw',
     onError,
     onLoad,
+    showErrorIconSm = false,
     showErrorIcon = false
 }) {
     const imgRef = useRef<HTMLImageElement>(null);
-    const error = useRef(false)
+    const [error, setError] = useState(false)
 
     // useEffect(() => {
     //     const img = imgRef.current;
@@ -58,8 +60,12 @@ const OptimizedImage: React.FC<OptimizedImageProps> = memo(function OptimizedIma
     //     };
     // }, []);
 
-    if (error.current && showErrorIcon) {
-        return <MemorizeImageError />
+    if (error && showErrorIcon) {
+        return <ImageError />
+    }
+
+    if (error && showErrorIconSm) {
+        return <ImageErrorSm className={className} />
     }
 
     return (
@@ -75,7 +81,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = memo(function OptimizedIma
                     ref={imgRef}
                     data-src={src}
                     src={src}
-                    alt={alt}
+                    alt={''}
                     width={width}
                     height={height}
                     loading="lazy"
@@ -89,8 +95,8 @@ const OptimizedImage: React.FC<OptimizedImageProps> = memo(function OptimizedIma
                     sizes={sizes}
                     className={cn('h-auto w-full', className)}
                     onError={() => {
-                        if (error.current) return;
-                        error.current = true
+                        if (error) return;
+                        setError(true)
                         onError && onError()
                     }}
                     onLoad={onLoad}
@@ -101,3 +107,17 @@ const OptimizedImage: React.FC<OptimizedImageProps> = memo(function OptimizedIma
 })
 
 export default OptimizedImage;
+
+export const ImageError = () => {
+    return (<div className={`aspect-square w-full object-cover
+    flex flex-col items-center justify-center space-y-4 userNotSelectImg bg-muted`}>
+        <RotateCcw className='w-10 h-10 cursor-pointer' strokeWidth={1.5} />
+        <p className="text-center cursor-pointer">{`Could't load image. Tap to retry`}</p>
+    </div>)
+}
+
+export const ImageErrorSm = ({ className }: { className?: string }) => {
+    return (<div className={cn(`w-full bg-muted rounded-full flex justify-center items-center p-1`, className)}>
+        <img src='/user.jpg' alt='' className='w-full h-full rounded-full'/>
+    </div>)
+}

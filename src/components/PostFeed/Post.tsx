@@ -12,12 +12,12 @@ export const Post = memo(function Post({
 }: {
     post: PostType
 }) {
-    console.log("<Post/>")
+    // console.log("<Post/>")
     const router = useRouter()
 
     const memoPost = useMemo(() => {
         return post
-    }, [post.is_Liked])
+    }, [post])
 
     const NavigatePage = (path:string) => {
         router.push(path)

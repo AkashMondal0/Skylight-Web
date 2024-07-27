@@ -16,6 +16,7 @@ const SkyAvatar = ({
             src={url || "/user.jpg"}
             width={50}
             height={50}
+            showErrorIconSm
             alt="Picture of the author"
             sizes={"(min-width: 808px) 20vw, 30vw"}
             fetchPriority="high"

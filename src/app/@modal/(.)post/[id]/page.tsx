@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useSession } from 'next-auth/react'
 import { RootState } from '@/redux/store'
 import { createPostCommentApi, createPostLikeApi, destroyPostLikeApi, fetchOnePostApi } from '@/redux/services/post'
-import ImageView from '@/components/post/ImageView'
 import CommentView from '@/components/post/CommentView'
 
 
@@ -68,10 +67,10 @@ export default function Page({ params }: { params: { id: string } }) {
           height: '95vh',
           maxHeight: '800px',
         }}>
-        <ImageView
+        {/* <ImageView
           data={Post.viewPost}
           loading={Post.viewPostLoading}
-          error={Post.viewPostError} />
+          error={Post.viewPostError} /> */}
         <CommentView
           error={Post.viewPostError}
           loading={Post.viewPostLoading}
