@@ -17,7 +17,7 @@ import OptimizedImage from '@/components/sky/SkyImage'
 import { createPostCommentApi, createPostLikeApi, destroyPostLikeApi, fetchOnePostApi } from '@/redux/services/post'
 import { PageLoading } from '@/components/post/loading.components'
 import NotFound from '@/components/home/NotFound'
-import PostItem from '@/components/home/Card/PostCard'
+import { Post as PostItem } from "@/components/PostFeed/Post"
 
 const PostPage = ({ params }: { params: { post: string } }) => {
   const router = useRouter()
@@ -198,7 +198,7 @@ const PostPage = ({ params }: { params: { post: string } }) => {
               <div className='w-10'/>
             </div>
           </div>
-          <PostItem feed={Post.viewPost} />
+          <PostItem post={Post.viewPost} />
         </div>
       </div>
     )

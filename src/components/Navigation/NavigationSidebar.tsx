@@ -102,7 +102,7 @@ const NavigationItem = ({ children, active, label, onClick, hideLabel }: {
         <TooltipProvider>
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <MyButton onClick={onClick}>
+                    <MyButton onClick={onClick} hideLabel={hideLabel}>
                         {children}
                         {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden lg:block",
                             active ? "font-bold" : "font-normal")}>
@@ -126,7 +126,7 @@ const Banner = ({
     onClick?: () => void
 }) => {
     return (
-        <MyButton onClick={onClick}>
+        <MyButton onClick={onClick} hideLabel={hideLabel}>
             <img src={configs.AppDetails.logoUrl} alt="upload" className="w-8 h-8" />
             {hideLabel ? <></> : <p className={cn(`hidden lg:flex text-lg font-semibold`)}>
                 {configs.AppDetails.name}
@@ -140,7 +140,7 @@ const MoreButton = ({ hideLabel }: {
 }) => {
     return (
         <MoreDropdownMenu>
-            <MyButton>
+            <MyButton hideLabel={hideLabel}>
                 <Menu size={28} />
                 {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden lg:block")}>
                     More
@@ -165,7 +165,7 @@ const MyButton = ({
             className={cn(`max-w-72 mx-auto justify-center
             h-14 items-center flex rounded-xl
             hover:bg-accent hover:text-accent-foreground cursor-pointer`,
-                hideLabel ? "md:flex md:w-14 justify-center" : "lg:w-full lg:justify-start lg:px-4 lg:gap-2")}>
+                hideLabel ? "md:flex justify-center" : "lg:w-full lg:px-4 lg:gap-2 lg:justify-start")}>
             {children}
         </div>
     )

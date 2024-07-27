@@ -14,7 +14,7 @@ export default function RootLayout({ children }: {
   return (
     <>
       <div className='flex'>
-        <NavigationSidebar hideLabel />
+        <NavigationSidebar hideLabel={true} />
         {/* md */}
         <div className='w-full min-h-full hidden md:flex'>
           <SidebarMessageClient />
