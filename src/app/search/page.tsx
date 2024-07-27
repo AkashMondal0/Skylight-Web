@@ -10,7 +10,7 @@ import SkyAvatar from '@/components/sky/SkyAvatar';
 import { searchUsersProfileApi } from '@/redux/services/users';
 import { removeAllUserFormSearch } from '@/redux/slice/users';
 import { SkeletonUserCardWithButton } from '@/components/home/loading/UserCard';
-import { NavigationBottom } from '@/components/NavigationSidebar/NavigationSidebar';
+import { NavigationBottom } from '@/components/Navigation/NavigationSidebar';
 
 const SearchModel = () => {
   const dispatch = useDispatch();

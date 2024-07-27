@@ -1,4 +1,4 @@
-import { NavigationSidebar } from '@/components/NavigationSidebar/NavigationSidebar';
+import { NavigationSidebar } from '@/components/Navigation/NavigationSidebar';
 import SidebarMessageClient from '@/components/message/Sidebar';
 import type { Metadata } from 'next/types';
 

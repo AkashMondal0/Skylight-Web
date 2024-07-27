@@ -41,7 +41,7 @@ export const graphqlQuery = async ({
     return responseBody.data;
 }
 
-const graphqlErrorTypes = async (e: GraphqlError) => {
+export const graphqlErrorTypes = async (e: GraphqlError) => {
     switch (e.extensions.code) {
         case 'UNAUTHENTICATED':
             // await DeleteAllCookie()

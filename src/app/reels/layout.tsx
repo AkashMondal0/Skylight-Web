@@ -1,4 +1,4 @@
-import { NavigationBottom } from '@/components/NavigationSidebar/NavigationSidebar';
+import { NavigationBottom } from '@/components/Navigation/NavigationSidebar';
 import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Reels',

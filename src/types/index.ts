@@ -154,6 +154,10 @@ type Typing = {
     isGroup: boolean
     groupUser?: AuthorData
 }
+type disPatchResponse<T> = {
+    payload: T,
+    error: any
+}
 
 export type {
     User,
@@ -169,5 +173,6 @@ export type {
     findDataInput,
     GraphqlError,
     Typing,
-    ApiPayloadData
+    ApiPayloadData,
+    disPatchResponse
 }

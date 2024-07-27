@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { AuthorData, Comment, Post } from '@/types'
 import { fetchAccountFeedApi } from '@/redux/services/account'
-import { createPostCommentApi, createPostLikeApi, destroyPostLikeApi, fetchOnePostApi, fetchPostLikesApi } from '@/redux/services/post'
+import { fetchOnePostApi, fetchPostLikesApi } from '@/redux/services/post'
 
 export type TypeActionLike = 'feeds' | 'singleFeed'
 // Define a type for the slice state
@@ -88,60 +88,60 @@ export const PostsSlice = createSlice({
                 state.viewPostError = action.error.message || 'Failed to fetch post'
             })
             // post like
-            .addCase(createPostLikeApi.pending, (state) => {
-                state.likeLoading = true
-            })
-            .addCase(createPostLikeApi.fulfilled, (state, action: PayloadAction<{ postId: string }>) => {
-                const postIndex = state.feeds.findIndex((post) => post.id === action.payload.postId)
-                if (postIndex !== -1) {
-                    state.feeds[postIndex].likeCount += 1
-                    state.feeds[postIndex].is_Liked = true
-                }
-                if (state.viewPost?.id === action.payload.postId) {
-                    state.viewPost.likeCount += 1
-                    state.viewPost.is_Liked = true
-                }
-                state.likeLoading = false
-            })
-            .addCase(createPostLikeApi.rejected, (state, action) => {
-                state.likeLoading = false
-            })
+            // .addCase(createPostLikeApi.pending, (state) => {
+            //     state.likeLoading = true
+            // })
+            // .addCase(createPostLikeApi.fulfilled, (state, action: PayloadAction<{ postId: string }>) => {
+            //     const postIndex = state.feeds.findIndex((post) => post.id === action.payload.postId)
+            //     if (postIndex !== -1) {
+            //         state.feeds[postIndex].likeCount += 1
+            //         state.feeds[postIndex].is_Liked = true
+            //     }
+            //     if (state.viewPost?.id === action.payload.postId) {
+            //         state.viewPost.likeCount += 1
+            //         state.viewPost.is_Liked = true
+            //     }
+            //     state.likeLoading = false
+            // })
+            // .addCase(createPostLikeApi.rejected, (state, action) => {
+            //     state.likeLoading = false
+            // })
             // post like undo
-            .addCase(destroyPostLikeApi.pending, (state) => {
-                state.likeLoading = true
-            })
-            .addCase(destroyPostLikeApi.fulfilled, (state, action: PayloadAction<{ postId: string }>) => {
-                const postIndex = state.feeds.findIndex((post) => post.id === action.payload.postId)
-                if (postIndex !== -1) {
-                    state.feeds[postIndex].likeCount -= 1
-                    state.feeds[postIndex].is_Liked = false
-                }
-                if (state.viewPost?.id === action.payload.postId) {
-                    state.viewPost.likeCount -= 1
-                    state.viewPost.is_Liked = false
-                }
-                state.likeLoading = false
-            })
-            .addCase(destroyPostLikeApi.rejected, (state, action) => {
-                state.likeLoading = false
-            })
+            // .addCase(destroyPostLikeApi.pending, (state) => {
+            //     state.likeLoading = true
+            // })
+            // .addCase(destroyPostLikeApi.fulfilled, (state, action: PayloadAction<{ postId: string }>) => {
+            //     const postIndex = state.feeds.findIndex((post) => post.id === action.payload.postId)
+            //     if (postIndex !== -1) {
+            //         state.feeds[postIndex].likeCount -= 1
+            //         state.feeds[postIndex].is_Liked = false
+            //     }
+            //     if (state.viewPost?.id === action.payload.postId) {
+            //         state.viewPost.likeCount -= 1
+            //         state.viewPost.is_Liked = false
+            //     }
+            //     state.likeLoading = false
+            // })
+            // .addCase(destroyPostLikeApi.rejected, (state, action) => {
+            //     state.likeLoading = false
+            // })
             // post comment create
-            .addCase(createPostCommentApi.pending, (state) => {
-                state.commentLoading = true
-            })
-            .addCase(createPostCommentApi.fulfilled, (state, action: PayloadAction<Comment>) => {
-                if (state.viewPost?.id === action.payload.postId) {
-                    state.viewPost?.comments.unshift(action.payload)
-                    const index = state.feeds.findIndex((post) => post.id === action.payload.postId)
-                    if (index !== -1) {
-                        state.feeds[index].commentCount += 1
-                    }
-                }
-                state.commentLoading = false
-            })
-            .addCase(createPostCommentApi.rejected, (state, action) => {
-                state.commentLoading = false
-            })
+            // .addCase(createPostCommentApi.pending, (state) => {
+            //     state.commentLoading = true
+            // })
+            // .addCase(createPostCommentApi.fulfilled, (state, action: PayloadAction<Comment>) => {
+            //     if (state.viewPost?.id === action.payload.postId) {
+            //         state.viewPost?.comments.unshift(action.payload)
+            //         const index = state.feeds.findIndex((post) => post.id === action.payload.postId)
+            //         if (index !== -1) {
+            //             state.feeds[index].commentCount += 1
+            //         }
+            //     }
+            //     state.commentLoading = false
+            // })
+            // .addCase(createPostCommentApi.rejected, (state, action) => {
+            //     state.commentLoading = false
+            // })
             // fetchPostLikesApi
             .addCase(fetchPostLikesApi.pending, (state) => {
                 state.likeLoading = true

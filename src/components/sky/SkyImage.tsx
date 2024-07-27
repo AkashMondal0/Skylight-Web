@@ -32,31 +32,31 @@ const OptimizedImage: React.FC<OptimizedImageProps> = memo(function OptimizedIma
     const imgRef = useRef<HTMLImageElement>(null);
     const error = useRef(false)
 
-    useEffect(() => {
-        const img = imgRef.current;
+    // useEffect(() => {
+    //     const img = imgRef.current;
 
-        if (!img) return;
+    //     if (!img) return;
 
-        const onIntersection = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const imgElement = entry.target as HTMLImageElement;
-                    imgElement.src = imgElement.dataset.src!;
-                    imgElement.onload = () => imgElement.removeAttribute('data-src');
-                    observer.unobserve(imgElement);
-                }
-            });
-        };
+    //     const onIntersection = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+    //         entries.forEach(entry => {
+    //             if (entry.isIntersecting) {
+    //                 const imgElement = entry.target as HTMLImageElement;
+    //                 imgElement.src = imgElement.dataset.src!;
+    //                 imgElement.onload = () => imgElement.removeAttribute('data-src');
+    //                 observer.unobserve(imgElement);
+    //             }
+    //         });
+    //     };
 
-        const observer = new IntersectionObserver(onIntersection);
+    //     const observer = new IntersectionObserver(onIntersection);
 
-        observer.observe(img);
+    //     observer.observe(img);
 
-        // Cleanup on component unmount
-        return () => {
-            observer.disconnect();
-        };
-    }, []);
+    //     // Cleanup on component unmount
+    //     return () => {
+    //         observer.disconnect();
+    //     };
+    // }, []);
 
     if (error.current && showErrorIcon) {
         return <MemorizeImageError />

@@ -1,4 +1,5 @@
-import { NavigationBottom, NavigationSidebar } from '@/components/NavigationSidebar/NavigationSidebar';
+import { NavigationBottom } from '@/components/Navigation/NavigationBottom';
+import { NavigationSidebar } from '@/components/Navigation/NavigationSidebar';
 import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Edit Profile • Sky Media',
