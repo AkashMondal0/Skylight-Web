@@ -1,4 +1,4 @@
-import Lg_Navigation from "@/components/home/navigation/lg-navigation"
+import {NavigationSidebar} from "@/components/NavigationSidebar/NavigationSidebar"
 
 
 export default async function RootLayout({ children, modal }: {
@@ -9,7 +9,7 @@ export default async function RootLayout({ children, modal }: {
   return (
     <>
       <div className="flex h-full">
-        <Lg_Navigation />
+        <NavigationSidebar />
         {children}
         {modal}
       </div>

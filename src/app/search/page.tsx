@@ -7,10 +7,10 @@ import { RootState } from '@/redux/store';
 import { User } from '@/types';
 import { useRouter } from 'next/navigation';
 import SkyAvatar from '@/components/sky/SkyAvatar';
-import Sm_Navigation from '@/components/home/navigation/sm-navigation';
 import { searchUsersProfileApi } from '@/redux/services/users';
 import { removeAllUserFormSearch } from '@/redux/slice/users';
 import { SkeletonUserCardWithButton } from '@/components/home/loading/UserCard';
+import { NavigationBottom } from '@/components/NavigationSidebar/NavigationSidebar';
 
 const SearchModel = () => {
   const dispatch = useDispatch();
@@ -51,7 +51,7 @@ const SearchModel = () => {
           </div> :
           Users.searchUsers?.map((item, i) => <UserCard key={i} item={item} />)}
       </div>
-      <Sm_Navigation />
+      <NavigationBottom />
     </>
   )
 }

@@ -1,4 +1,4 @@
-import Lg_Navigation from '@/components/home/navigation/lg-navigation';
+import { NavigationSidebar } from '@/components/NavigationSidebar/NavigationSidebar';
 import SidebarMessageClient from '@/components/message/Sidebar';
 import type { Metadata } from 'next/types';
 
@@ -14,7 +14,7 @@ export default function RootLayout({ children }: {
   return (
     <>
       <div className='flex'>
-        <Lg_Navigation hideLabel />
+        <NavigationSidebar hideLabel />
         {/* md */}
         <div className='w-full min-h-full hidden md:flex'>
           <SidebarMessageClient />
