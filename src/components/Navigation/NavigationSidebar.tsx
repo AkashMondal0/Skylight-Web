@@ -1,8 +1,7 @@
 "use client"
-import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import {
-    AtSign, CircleUserRound, Compass,
+    CircleUserRound, Compass,
     CopyPlus, Film, Heart, Home, Menu,
     MessageCircleCode, Search
 } from "lucide-react"
@@ -12,8 +11,8 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
-import React, { memo } from "react"
-import { useRouter } from "next/navigation"
+import React, { memo, useEffect } from "react"
+import { usePathname, useRouter } from "next/navigation"
 import NotificationModel from "@/components/home/model/NotificationModel"
 import SearchModel from "@/components/home/model/SearchModel"
 import MoreDropdownMenu from "@/components/home/model/More_DropDown"
@@ -31,6 +30,7 @@ export const NavigationSidebar = memo(function NavigationSidebar({
     hideNavigation?: boolean
 }) {
     const router = useRouter()
+    const path = usePathname()
     const pageChange = (path: string) => router.push(path)
     const session = useSession().data?.user
     const SideIconData = [
@@ -44,53 +44,53 @@ export const NavigationSidebar = memo(function NavigationSidebar({
         { icon: <CircleUserRound size={28} />, label: "Profile", onClick: () => pageChange(`/${session?.username || ""}`) },
     ]
 
+    useEffect(()=>{
+        console.info("path", path)
+    },[path === "/message"])
+
     return (
-        <div className={cn(`
-        border-r scroll-smooth hideScrollbar
-        h-[100dvh] overflow-y-auto md:flex
-        hidden ease-in-out sticky top-0
-        duration-300`,
-            hideLabel ? "w-20" : "w-72 2xl:w-96 max-w-[20rem] md:w-20 xl:w-72"
+        <div className={cn(`border-r scroll-smooth overflow-y-auto ease-in-out duration-300
+       hidden md:flex md:w-20 lg:w-full max-w-72 min-h-dvh`,
+            hideNavigation ? "md:w-20" : "w-72"
         )}>
-            <div className="p-1 w-full flex flex-col justify-between">
-                <div>
+            <div className="w-full h-full flex flex-col space-y-2 justify-between py-8 px-2">
+                <div className="space-y-2">
                     <Banner hideLabel={hideLabel} />
-                    <div className="space-y-3">
-                        {SideIconData.map(({ icon, label, onClick }, index) => {
-                            if (label === "Notifications") {
-                                return <NotificationModel key={index}>
-                                    <NavigationItem label={label} onClick={onClick} hideLabel={hideLabel}>
-                                        {icon}
-                                    </NavigationItem>
-                                </NotificationModel>
-                            }
-                            if (label === "Search") {
-                                return <SearchModel key={index}>
-                                    <NavigationItem label={label} onClick={onClick} hideLabel={hideLabel}>
-                                        {icon}
-                                    </NavigationItem>
-                                </SearchModel>
-                            }
-                            if (label === "Create") {
-                                return <UploadPostDialog key={index}>
-                                    <NavigationItem key={index} label={label} hideLabel={hideLabel}
-                                        onClick={onClick}>
-                                        {icon}
-                                    </NavigationItem>
-                                </UploadPostDialog>
-                            }
-                            if (label === "Profile") {
-                                return <NavigationItem key={index} label={label} hideLabel={hideLabel}
-                                    onClick={onClick}>
-                                    <SkyAvatar url={session?.image || null} className="h-full w-full max-h-8 max-w-8" />
+                    <div className="h-6" />
+                    {SideIconData.map(({ icon, label, onClick }, index) => {
+                        if (label === "Notifications") {
+                            return <NotificationModel key={index}>
+                                <NavigationItem label={label} onClick={onClick} hideLabel={hideLabel}>
+                                    {icon}
                                 </NavigationItem>
-                            }
+                            </NotificationModel>
+                        }
+                        if (label === "Search") {
+                            return <SearchModel key={index}>
+                                <NavigationItem label={label} onClick={onClick} hideLabel={hideLabel}>
+                                    {icon}
+                                </NavigationItem>
+                            </SearchModel>
+                        }
+                        if (label === "Create") {
+                            return <UploadPostDialog key={index}>
+                                <NavigationItem key={index} label={label} hideLabel={hideLabel}
+                                    onClick={onClick}>
+                                    {icon}
+                                </NavigationItem>
+                            </UploadPostDialog>
+                        }
+                        if (label === "Profile") {
                             return <NavigationItem key={index} label={label} hideLabel={hideLabel}
                                 onClick={onClick}>
-                                {icon}
+                                <SkyAvatar url={session?.image || null} className="h-8 w-8" />
                             </NavigationItem>
-                        })}
-                    </div>
+                        }
+                        return <NavigationItem key={index} label={label} hideLabel={hideLabel}
+                            onClick={onClick}>
+                            {icon}
+                        </NavigationItem>
+                    })}
                 </div>
                 <MoreButton hideLabel={hideLabel} />
             </div>
@@ -105,41 +105,16 @@ const NavigationItem = ({ children, active, label, onClick, hideLabel }: {
     onClick?: () => void
     hideLabel?: boolean
 }) => {
-
-    if (hideLabel) {
-        return (
-            <TooltipProvider>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Button
-                            onClick={onClick}
-                            variant={"ghost"}
-                            className={`w-full justify-start gap-4 h-full py-2 rounded-xl`}>
-                            {children}
-                        </Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="right">
-                        <p>{label}</p>
-                    </TooltipContent>
-                </Tooltip>
-            </TooltipProvider>
-        )
-    }
     return (
         <TooltipProvider>
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <Button
-                        onClick={onClick}
-                        variant={"ghost"}
-                        className={`w-full justify-start gap-4 h-full py-2 rounded-xl`}>
+                    <MyButton onClick={onClick}>
                         {children}
-                        <p className={cn(
-                            "hidden xl:block text-primary-500 text-base",
-                            active ? "font-bold" : "font-normal")}>
+                        <p className={cn("hidden lg:block text-primary-500 text-base", active ? "font-bold" : "font-normal")}>
                             {label}
                         </p>
-                    </Button>
+                    </MyButton>
                 </TooltipTrigger>
                 <TooltipContent side="right">
                     <p>{label}</p>
@@ -149,65 +124,55 @@ const NavigationItem = ({ children, active, label, onClick, hideLabel }: {
     )
 }
 
-const Banner = ({ hideLabel }: {
+const Banner = ({
+    hideLabel,
+    onClick
+}: {
     hideLabel?: boolean
+    onClick?: () => void
 }) => {
-    if (hideLabel) {
-        return (
-            <div>
-                <Button
-                    variant="ghost"
-                    className={`w-full justify-start gap-3 h-full rounded-xl my-8`}>
-                    <img src={configs.AppDetails.logoUrl} alt="logo" className="w-6 h-6" />
-                </Button>
-            </div>
-        )
-    }
     return (
-        <div>
-            <Button
-                variant="ghost"
-                className={`w-full justify-start gap-3 xl:hidden h-full rounded-xl my-8`}>
-                <img src={configs.AppDetails.logoUrl} alt="logo" className="w-6 h-6" />
-            </Button>
-            <div className={`hidden xl:block my-8
-      text-primary-500 text-xl px-5
-      font-semibold`}>
-                <div className="flex items-center">
-                    <img src={configs.AppDetails.logoUrl} alt="upload" className="w-6 h-6" />
-                    {configs.AppDetails.name}
-                </div>
-            </div>
-        </div>
+        <MyButton onClick={onClick}>
+            <img src={configs.AppDetails.logoUrl} alt="upload" className="w-8 h-8" />
+            <p className={cn(`hidden lg:flex text-lg font-semibold`,
+                hideLabel ? "hidden" : ""
+            )}>
+                {configs.AppDetails.name}
+            </p>
+        </MyButton>
     )
 }
 
 const MoreButton = ({ hideLabel }: {
     hideLabel?: boolean
 }) => {
-
-    if (hideLabel) {
-        return <div>
-            <MoreDropdownMenu>
-                <Button
-                    variant={"ghost"}
-                    className={`w-full justify-start gap-4 h-full py-2 rounded-xl`}>
-                    <Menu size={28} />
-                </Button>
-            </MoreDropdownMenu>
-        </div>
-    }
-
-    return <div>
+    return (
         <MoreDropdownMenu>
-            <Button
-                variant={"ghost"}
-                className={`w-full justify-start gap-4 h-full py-2 rounded-xl`}>
+            <MyButton>
                 <Menu size={28} />
-                <p className={cn("hidden xl:block text-primary-500 text-base font-normal")}>
+                <p className={cn(`hidden lg:flex`, hideLabel ? "hidden" : "")}>
                     More
                 </p>
-            </Button>
+            </MyButton>
         </MoreDropdownMenu>
-    </div>
+    )
+
+}
+
+const MyButton = ({
+    children,
+    onClick
+}: {
+    children: React.ReactNode,
+    onClick?: () => void
+}) => {
+    return (
+        <div onClick={onClick}
+            className={`lg:w-full lg:justify-start lg:px-4 lg:gap-2
+        md:flex md:w-14 justify-center max-w-72 mx-auto 
+        h-14 items-center flex rounded-xl
+        hover:bg-accent hover:text-accent-foreground cursor-pointer`}>
+            {children}
+        </div>
+    )
 }
