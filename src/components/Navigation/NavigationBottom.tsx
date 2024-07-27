@@ -1,15 +1,17 @@
-'use client'
-import React from 'react'
+"use client"
 import {
-    CircleUserRound, Film, Home,
+    CircleUserRound,
+    Film, Home,
     MessageCircleCode, Search
 } from "lucide-react"
-import { useRouter } from 'next/navigation'
-import { useSession } from 'next-auth/react'
-import SkyAvatar from '@/components/sky/SkyAvatar'
 
-
-const Sm_Navigation = () => {
+import React, { memo } from "react"
+import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
+import SkyAvatar from "@/components/sky/SkyAvatar"
+// for small screen device 
+export const NavigationBottom = memo(function NavigationBottom() {
+    // console.info("<NavigationBottom/>")
     const router = useRouter()
     const pageChange = (path: string) => router.push(path)
     const session = useSession().data?.user
@@ -27,31 +29,15 @@ const Sm_Navigation = () => {
             <div className="p-1 w-full flex justify-around">
                 {SideIconData.map(({ icon, label, onClick }, index) => {
                     if (label === "Profile") {
-                        return <NavigationItem key={index} label={label}
-                            onClick={onClick} active={label === "Profile"}>
-                            <SkyAvatar url={session?.image || null} className="h-full w-full max-h-8 max-w-8" />
-                        </NavigationItem>
+                        return <div key={index} onClick={onClick}>
+                            <SkyAvatar url={session?.image ?? null} className="h-7 w-7" />
+                        </div>
                     }
-                    return <NavigationItem key={index} label={label}
-                        onClick={onClick} active={label === "Home"}>
+                    return <div key={index} onClick={onClick}>
                         {React.createElement(icon, { size: 28 })}
-                    </NavigationItem>
+                    </div>
                 })}
             </div>
         </div>
     )
-}
-
-const NavigationItem = ({ children, active, label, onClick }: {
-    children: React.ReactNode
-    active?: boolean
-    label?: string
-    onClick: () => void
-}) => {
-    return (
-        <div onClick={onClick}>
-            {children}
-        </div>
-    )
-}
-export default Sm_Navigation
+})

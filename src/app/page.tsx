@@ -1,59 +1,37 @@
 "use client"
-import VirtualizePostList from '@/components/home/VirtualizePostList';
-import Sm_Navigation from '@/components/home/navigation/sm-navigation';
-import Sm_Header from '@/components/home/navigation/sm-header';
-import Lg_Navigation from '@/components/home/navigation/lg-navigation';
-import NotFound from '@/components/home/NotFound';
-import { memo, useCallback, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { fetchAccountFeedApi } from '@/redux/services/account';
-import { setMoreData } from '@/redux/slice/post';
 import { getRandomPost } from '@/components/sky/random';
-import HomePageLoading from '@/components/home/loading/PageLoading';
-const MemorizeSm_Header = memo(Sm_Header)
-const MemoizedSm_Navigation = memo(Sm_Navigation)
-const MemoizedLg_Navigation = memo(Lg_Navigation)
+import { NavigationSidebar } from '@/components/Navigation/NavigationSidebar';
+import dynamic from 'next/dynamic';
+import { setMoreData } from '@/redux/slice/post';
+const DynamicPostVirtualList = dynamic(() => import('@/components/PostFeed/PostVirtualList'),{
+  loading:()=><></>
+})
+
 let pageLoaded = false
-const _posts = getRandomPost(10)
+const _posts = getRandomPost(20)
 
 export default function Page() {
-  const posts = useSelector((Root: RootState) => Root.posts)
   const dispatch = useDispatch()
 
   useEffect(() => {
     if (!pageLoaded) {
       dispatch(fetchAccountFeedApi() as any)
+      dispatch(setMoreData(_posts) as any)
       pageLoaded = true
     }
   }, [])
-
-  const loadMore = useCallback(() => {
-    dispatch(setMoreData(_posts) as any)
-  }, [])
-
-  if (posts.feedsLoading || !pageLoaded) {
-    return <HomePageLoading />
-  }
-
-  if (posts.feedsError && pageLoaded || !posts.feeds && pageLoaded) {
-    return <NotFound message={posts.feedsError?.message} />
-  }
-
-  if (posts.feeds) {
-    return (
-      <>
-        <div className='w-full h-full flex'>
-          <MemoizedLg_Navigation />
-          <div className='w-full'>
-            <VirtualizePostList
-              Header={<MemorizeSm_Header />}
-              Footer={<MemoizedSm_Navigation />}
-              posts={posts}
-              loadMore={loadMore} />
-          </div>
+  
+  return (
+    <>
+      <div className='w-full h-full flex'>
+        <NavigationSidebar />
+        <div className='w-full'>
+          <DynamicPostVirtualList />
         </div>
-      </>
-    )
-  }
+      </div>
+    </>
+  )
 }

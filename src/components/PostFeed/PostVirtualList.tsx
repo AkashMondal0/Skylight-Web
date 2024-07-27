@@ -1,40 +1,29 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import PostItem from './Card/PostCard';
-import StoriesPage from './StoriesPage';
-import ShowUpload from './alert/show-upload';
-import { PostState } from '@/redux/slice/post';
-import { Button } from '../ui/button';
-import { CirclePlus } from '../sky/icons';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import useWindowDimensions from '@/lib/useWindowDimensions';
-const MemorizeStoriesPage = React.memo(StoriesPage)
-const MemoizedPostItem = React.memo(PostItem)
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { Post } from '@/components/PostFeed/Post';
+import { NavigationBottom } from '@/components/Navigation/NavigationBottom';
+import { AppHeader } from '@/components/Header/Header';
+import ShowUpload from '@/components/home/alert/show-upload';
+import { Stories } from '../Stories/Story';
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 
-const VirtualizePostList = ({
-    posts,
-    loadMore,
-    Header,
-    Footer,
-}: {
-    posts: PostState
-    loadMore?: () => void
-    Header?: React.ReactNode
-    Footer?: React.ReactNode
-}) => {
+const PostVirtualList = ({ }: {}) => {
+    const posts = useSelector((Root: RootState) => Root.posts)
     const parentRef = React.useRef<HTMLDivElement>(null)
     const dimension = useWindowDimensions()
     const [mounted, setMounted] = useState(false)
     const data = useMemo(() => posts.feeds, [posts.feeds])
     const count = useMemo(() => data.length, [data.length])
-
     // 
     const virtualizer = useVirtualizer({
         count,
         getScrollElement: () => parentRef.current,
         estimateSize: useCallback(() => 50, []),
-        overscan: 12,
+        overscan: 5,
         enabled: true,
         initialOffset: _kSavedOffset,
         initialMeasurementsCache: _KMeasurementsCache,
@@ -62,11 +51,10 @@ const VirtualizePostList = ({
                     overflowY: 'auto',
                     contain: 'strict',
                 }}
-            >{Header}
-                <>
-                    <MemorizeStoriesPage />
-                    <ShowUpload />
-                </>
+            >
+                <AppHeader />
+                <Stories/>
+                <ShowUpload />
                 <div
                     style={{
                         height: virtualizer.getTotalSize(),
@@ -87,26 +75,19 @@ const VirtualizePostList = ({
                                 data-index={virtualRow.index}
                                 ref={virtualizer.measureElement}>
                                 <div style={{ padding: '10px 0' }}>
-                                    <MemoizedPostItem feed={data[virtualRow.index]}
+                                    <Post post={data[virtualRow.index]}
                                         key={data[virtualRow.index].id} />
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
-                <div className='w-full text-center h-[80%]'>
-                    <Button onClick={loadMore}
-                        variant={"outline"}
-                        className="rounded-full px-1 w-10 h-10">
-                        <CirclePlus />
-                    </Button>
-                </div>
-                {Footer}
+                <NavigationBottom />
             </div>
         </>
     )
 }
 
-export default VirtualizePostList
+export default PostVirtualList
 
 

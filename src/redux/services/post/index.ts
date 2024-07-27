@@ -66,10 +66,7 @@ export const createPostLikeApi = createAsyncThunk(
                 query: query,
                 variables: { createLikeId }
             })
-
-            return {
-                postId: createLikeId
-            }
+            return res
         } catch (error: any) {
             return thunkApi.rejectWithValue({
                 ...error?.response?.data,
@@ -91,10 +88,7 @@ export const destroyPostLikeApi = createAsyncThunk(
                 query: query,
                 variables: { destroyLikeId }
             })
-
-            return {
-                postId: destroyLikeId
-            }
+            return res
         } catch (error: any) {
             return thunkApi.rejectWithValue({
                 ...error?.response?.data,

@@ -7,10 +7,9 @@ import FindUserForChat from './modal/FindUserForChat';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { LoadingMessageSidebar } from './loading';
-import Sm_Navigation from '../home/navigation/sm-navigation';
 import { fetchConversationsApi } from '@/redux/services/conversation';
 import VirtualizeConversationList from './VirtualizeList';
-const MemoizedSm_Navigation = memo(Sm_Navigation)
+import { NavigationBottom } from '../Navigation/NavigationBottom';
 let pageLoaded = false
 
 export default function SidebarMessageClient() {
@@ -40,7 +39,7 @@ export default function SidebarMessageClient() {
             <VirtualizeConversationList
                 conversation={rootConversation.conversationList}
                 Header={<Header />}/>
-            <MemoizedSm_Navigation />
+            <NavigationBottom />
         </div>
     )
 }

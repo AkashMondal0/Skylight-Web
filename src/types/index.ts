@@ -140,7 +140,12 @@ type GraphqlError = {
         stacktrace: string[]
     }
 }
-
+type code = 0 | 1
+interface ApiPayloadData<T> {
+    code: code,
+    message: string,
+    data: T,
+}
 type Typing = {
     typing: boolean
     authorId: string
@@ -148,6 +153,10 @@ type Typing = {
     conversationId: string
     isGroup: boolean
     groupUser?: AuthorData
+}
+type disPatchResponse<T> = {
+    payload: T,
+    error: any
 }
 
 export type {
@@ -163,5 +172,7 @@ export type {
     FriendshipStatus,
     findDataInput,
     GraphqlError,
-    Typing
+    Typing,
+    ApiPayloadData,
+    disPatchResponse
 }

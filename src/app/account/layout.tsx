@@ -1,5 +1,5 @@
-import Lg_Navigation from '@/components/home/navigation/lg-navigation';
-import Sm_Navigation from '@/components/home/navigation/sm-navigation';
+import { NavigationBottom } from '@/components/Navigation/NavigationBottom';
+import { NavigationSidebar } from '@/components/Navigation/NavigationSidebar';
 import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Edit Profile • Sky Media',
@@ -14,10 +14,10 @@ export default async function RootLayout({ children }: {
   return (
     <>
       <div className='flex md:pb-0 pb-14'>
-        <Lg_Navigation />
+        <NavigationSidebar />
         {children}
       </div>
-      <Sm_Navigation />
+      <NavigationBottom />
     </>
   )
 }

@@ -1,11 +1,12 @@
 "use client"
 import { CopyPlus, Heart } from 'lucide-react'
-import React from 'react'
+import React, { memo } from 'react'
 import { useRouter } from 'next/navigation'
-import UploadPostDialog from '../dialog/upload-post'
 import { configs } from '@/configs'
+import UploadPostDialog from '@/components/home/dialog/upload-post'
 
-const Sm_Header = () => {
+export const AppHeader = memo(function AppHeader() {
+    // console.info("<AppHeader/>")
     const router = useRouter()
     return (
         <div className="md:hidden flex sticky top-0 z-10 w-full
@@ -28,6 +29,5 @@ const Sm_Header = () => {
             </div>
         </div>
     )
-}
+})
 
-export default Sm_Header

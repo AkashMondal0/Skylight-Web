@@ -1,5 +1,4 @@
 'use client'
-import Sm_Navigation from "@/components/home/navigation/sm-navigation";
 import ProfileHeader from "@/components/profile/client/header";
 import VirtualizedList from '@/components/profile/VirtualizedList';
 import { RootState } from "@/redux/store";
@@ -18,6 +17,7 @@ import { getRandomProfilePost } from "@/components/sky/random";
 import { setLoadMoreProfilePosts } from "@/redux/slice/profile";
 import NotFound from "@/components/home/NotFound";
 import { SkeletonProfilePage } from "@/components/profile/loading.page";
+import { NavigationBottom } from "@/components/Navigation/NavigationBottom";
 const _posts = getRandomProfilePost(10)
 let profileUsername = "no_username"
 let loaded = false
@@ -68,8 +68,7 @@ export default function Page({ params }: { params: { profile: string } }) {
                                 <CirclePlus />
                             </Button>
                         </div>}
-                    Navigation={<Sm_Navigation />}
-                />
+                    Navigation={<NavigationBottom />}/>
             </div>
         )
     }
