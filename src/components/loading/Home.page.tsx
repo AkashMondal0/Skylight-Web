@@ -1,9 +1,8 @@
 import { Skeleton } from "../ui/skeleton"
-import ProfileHeader from "./client/header"
 
 export const SkeletonProfilePage = () => {
     return <div className='w-full min-h-[100dvh] overflow-x-hidden overflow-hidden'>
-        <ProfileHeader name="loading..." />
+        {/* <ProfileHeader name="loading..." /> */}
         <div className='mx-auto max-w-[960px]'>
             {/* md ->>> */}
             <div className="hidden sm:block">

@@ -15,8 +15,8 @@ import { useSession } from 'next-auth/react'
 import { RootState } from '@/redux/store'
 import OptimizedImage from '@/components/sky/SkyImage'
 import { createPostCommentApi, createPostLikeApi, destroyPostLikeApi, fetchOnePostApi } from '@/redux/services/post'
-import { PageLoading } from '@/components/post/loading.components'
-import NotFound from '@/components/home/NotFound'
+import { PageLoading } from '@/components/loading/Post.Page'
+import NotFound from '@/components/Error/NotFound'
 import { Post as PostItem } from "@/components/PostFeed/Post"
 
 const PostPage = ({ params }: { params: { post: string } }) => {

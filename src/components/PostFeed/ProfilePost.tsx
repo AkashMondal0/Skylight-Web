@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Post } from '@/types'
 import OptimizedImage from '@/components/sky/SkyImage'
 
-export const ImageComponent = memo(function ImageComponent({
+export const ProfilePost = memo(function ImageComponent({
     data
 }: {
     data: Post

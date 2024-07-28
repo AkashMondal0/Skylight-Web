@@ -1,16 +1,16 @@
+import React, { useState } from "react"
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import { Button } from "@/components/ui/button"
 import { AuthorData } from "@/types"
-import { UnFollowDialog } from "../dialog/unfollow"
+import { FollowerRemoveDialog } from "../Dialog/remove.follower"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 import { useDispatch } from "react-redux"
-import { createFriendshipApi, destroyFriendshipApi } from "@/redux/services/profile"
-import { useState } from "react"
-import { followUser, unFollowUser } from "@/redux/slice/profile"
+import { RemoveFriendshipApi, createFriendshipApi, destroyFriendshipApi } from "@/redux/services/profile"
+import { UnFollowDialog } from "../Dialog/unfollow"
+import { followUser, unFollowUser ,removeFollower} from "@/redux/slice/profile"
 
-
-const UserCardFollowing = ({
+const UserCardFollower = ({
     user,
     isProfile,
     itself
@@ -41,7 +41,7 @@ const UserCardFollowing = ({
             updateCount: false
         }) as any)
         if (!itself) {
-            dispatch(unFollowUser({ userId: user.id, side: "following" }))
+            dispatch(unFollowUser({ userId: user.id, side: "follower" }))
         }
         setLoading(false)
     }
@@ -59,11 +59,27 @@ const UserCardFollowing = ({
             updateCount: false
         }) as any)
         if (!itself) {
-            dispatch(followUser({ userId: user.id, side: "following" }))
+            dispatch(followUser({ userId: user.id, side: "follower" }))
         }
         setLoading(false)
     }
-
+    const handleRemoveFollow = async () => {
+        setLoading(true)
+        if (!session?.id) return alert('no user id from follow button')
+        if (!user?.id) return alert('no user id from follow button')
+        await dispatch(RemoveFriendshipApi({
+            authorUserId: user?.id,
+            authorUsername: user?.username,
+            followingUserId: session?.id,
+            followingUsername: session?.username,
+            sessionId: session?.id,
+            updateCount: false
+        }) as any)
+        if (!itself && isProfile) {
+            dispatch(removeFollower({ userId: user.id}))
+        }
+        setLoading(false)
+    }
     const HandleRejected = () => { }
 
     if (!user) return null
@@ -77,30 +93,34 @@ const UserCardFollowing = ({
                             {user.username}
                         </div>
                         <div className='text-sm'>
-                            {user.email}
+                            {user.name}
                         </div>
                     </div>
                 </div>
-                <div className='flex items-center'>
+                <div className='flex items-center space-x-2'>
                     {isProfile ? <>
-                        {/* if profile */}
                         {itself ? <p className="text-sm">You</p> : <>
-                            {user.following ?
-                                <UnFollowDialog
-                                    user={user}
-                                    HandleRejected={HandleRejected}
-                                    HandleConfirm={handleUnFollow}>
-                                    <Button variant={"secondary"}
-                                        className="rounded-xl">
-                                        Following  {/* UnFollow */}
-                                    </Button>
-                                </UnFollowDialog>
-                                :
-                                <Button variant={"default"}
+                            {/* if your not following this user */}
+                            {!user.following &&
+                                <Button variant={"link"}
+                                    onClick={handleFollow}
                                     disabled={loading}
-                                    onClick={handleFollow} className="rounded-xl">
+                                    className="rounded-xl
+                                    hover:text-white
+                                    hover:no-underline
+                                    text-blue-500">
                                     Follow
                                 </Button>}
+                            {/* if user following you */}
+                            {user.followed_by &&
+                                <FollowerRemoveDialog
+                                    user={user}
+                                    HandleRejected={HandleRejected}
+                                    HandleConfirm={handleRemoveFollow}>
+                                    <Button variant={"secondary"} className="rounded-xl">
+                                        Remove
+                                    </Button>
+                                </FollowerRemoveDialog>}
                         </>}
                     </> : <>
                         {
@@ -110,14 +130,13 @@ const UserCardFollowing = ({
                                         user={user}
                                         HandleRejected={HandleRejected}
                                         HandleConfirm={handleUnFollow}>
-                                        <Button variant={"secondary"}
-                                            className="rounded-xl">
-                                            Following  {/* UnFollow */}
+                                        <Button variant={"secondary"} className="rounded-xl">
+                                            Following
                                         </Button>
-                                    </UnFollowDialog> :
-                                    <Button variant={"default"}
-                                        onClick={handleFollow}
-                                        disabled={loading}
+                                    </UnFollowDialog>
+                                    :
+                                    <Button onClick={handleFollow}
+                                        disabled={loading} variant={"default"}
                                         className="rounded-xl">
                                         Follow
                                     </Button>}
@@ -130,4 +149,4 @@ const UserCardFollowing = ({
     )
 }
 
-export default UserCardFollowing
+export default UserCardFollower

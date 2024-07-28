@@ -9,8 +9,8 @@ import { useRouter } from 'next/navigation';
 import SkyAvatar from '@/components/sky/SkyAvatar';
 import { searchUsersProfileApi } from '@/redux/services/users';
 import { removeAllUserFormSearch } from '@/redux/slice/users';
-import { SkeletonUserCardWithButton } from '@/components/home/loading/UserCard';
 import { NavigationBottom } from '@/components/Navigation/NavigationBottom';
+import { LoadingUserCardWithButton } from '@/components/loading/Card';
 
 const SearchModel = () => {
   const dispatch = useDispatch();
@@ -47,7 +47,7 @@ const SearchModel = () => {
         </div> : <></>}
         {Users.searchUsersLoading ?
           <div className='space-y-4'>
-            {Array(10).fill(0).map((_, i) => <SkeletonUserCardWithButton key={i} />)}
+            {Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)}
           </div> :
           Users.searchUsers?.map((item, i) => <UserCard key={i} item={item} />)}
       </div>

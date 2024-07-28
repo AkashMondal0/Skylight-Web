@@ -3,7 +3,7 @@ import { CopyPlus, Heart } from 'lucide-react'
 import React, { memo } from 'react'
 import { useRouter } from 'next/navigation'
 import { configs } from '@/configs'
-import UploadPostDialog from '@/components/home/dialog/upload-post'
+import UploadPostDialog from '@/components/Dialog/upload-post'
 
 export const AppHeader = memo(function AppHeader() {
     // console.info("<AppHeader/>")

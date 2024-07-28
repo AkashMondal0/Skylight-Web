@@ -3,20 +3,16 @@ import { Post } from "@/types";
 import { useVirtualizer, } from "@tanstack/react-virtual";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import OptimizedImage from "../sky/SkyImage";
+import { ProfileHeader } from "@/components/Header/ProfileHeader";
+import { NavigationBottom } from "@/components/Navigation/NavigationBottom";
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
-const VirtualizedList = ({
-    Header,
-    Footer,
-    ProfileDetail,
-    Navigation,
-    data: profilePosts,
+
+
+const PostGridListVirtualList = ({
+    profilePosts
 }: {
-    data: Post[],
-    Header?: React.ReactNode
-    Footer?: React.ReactNode
-    ProfileDetail: React.ReactNode,
-    Navigation?: React.ReactNode,
+    profilePosts: Post[]
 }) => {
     const parentRef = useRef<HTMLDivElement>(null)
     const dimension = useWindowDimensions()
@@ -67,8 +63,7 @@ const VirtualizedList = ({
                     overflowY: 'auto',
                     contain: 'strict',
                 }}>
-                {Header}
-                {ProfileDetail}
+               <ProfileHeader/>
                 <div
                     className='mx-auto max-w-[960px]'
                     style={{
@@ -104,11 +99,10 @@ const VirtualizedList = ({
                         ))}
                     </div>
                 </div>
-                {Footer}
-                {Navigation}
+                <NavigationBottom/>
             </div>
         </>
     )
 }
 
-export default VirtualizedList
+export default PostGridListVirtualList

@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton"
 
 
-export const SkeletonUserCardWithButton = () => {
+export const LoadingUserCardWithButton = () => {
 
   return (
     <>

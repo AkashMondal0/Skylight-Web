@@ -6,8 +6,8 @@ import { RootState } from '@/redux/store';
 import { Post } from '@/components/PostFeed/Post';
 import { NavigationBottom } from '@/components/Navigation/NavigationBottom';
 import { AppHeader } from '@/components/Header/Header';
-import ShowUpload from '@/components/home/alert/show-upload';
-import { Stories } from '../Stories/Story';
+import { Stories } from '@/components/Stories/Story';
+import { PostUploadProgress } from '@/components/Alert/PostUploadProgress';
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 
@@ -54,7 +54,7 @@ const PostVirtualList = ({ }: {}) => {
             >
                 <AppHeader />
                 <Stories/>
-                <ShowUpload />
+                <PostUploadProgress />
                 <div
                     style={{
                         height: virtualizer.getTotalSize(),

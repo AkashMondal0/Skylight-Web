@@ -1,4 +1,4 @@
-import { UnFollowDialog } from '@/components/profile/dialog/unfollow'
+import { UnFollowDialog } from '@/components/Dialog/unfollow'
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import { Button } from '@/components/ui/button'
 import { createFriendshipApi, destroyFriendshipApi } from '@/redux/services/profile'

@@ -12,7 +12,7 @@ import { User } from '@/types';
 import { useRouter } from 'next/navigation';
 import { MessagesSquare } from 'lucide-react';
 import { searchUsersProfileApi } from '@/redux/services/users';
-import { SkeletonUserCardWithButton } from '@/components/home/loading/UserCard';
+import { LoadingUserCardWithButton } from '@/components/loading/Card';
 
 
 
@@ -61,7 +61,7 @@ const FindUserForChat = ({ children }: { children: React.ReactNode }) => {
                         <ScrollArea className='flex-1 h-96'>
                             {Users.searchUsersLoading ?
                                 <div className='space-y-4'>
-                                    {Array(10).fill(0).map((_, i) => <SkeletonUserCardWithButton key={i} />)}
+                                    {Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)}
                                 </div> :
                                 Users.searchUsers.map((item, i) => <UserCard key={i} item={item} />)}
                         </ScrollArea>

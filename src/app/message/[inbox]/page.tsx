@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import InBoxFooter from '@/components/message/inbox/footer';
 import InBoxHeader from '@/components/message/inbox/header';
 import { MessagePageSkeleton } from "@/components/message/loading";
-import NotFound from "@/components/home/NotFound";
+import NotFound from "@/components/Error/NotFound";
 import { fetchConversationApi } from "@/redux/services/conversation";
 import VirtualizeMessageList from "@/components/message/inbox/VirtualizeList";
 

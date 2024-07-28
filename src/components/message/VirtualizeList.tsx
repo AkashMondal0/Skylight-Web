@@ -1,12 +1,10 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Button } from '../ui/button';
-import { CirclePlus } from '../sky/icons';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import useWindowDimensions from '@/lib/useWindowDimensions';
 import { Conversation } from '@/types';
 import ConversationUserCard from './UserCard';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 const MemorizeConversationUserCard = memo(ConversationUserCard)
@@ -90,13 +88,13 @@ const VirtualizeConversationList = ({
                         ))}
                     </div>
                 </div>
-                <div className='w-full text-center h-[80%]'>
+                {/* <div className='w-full text-center h-[80%]'>
                     <Button onClick={loadMore}
                         variant={"outline"}
                         className="rounded-full px-1 w-10 h-10">
                         <CirclePlus />
                     </Button>
-                </div>
+                </div> */}
                 {Footer}
             </div>
         </>

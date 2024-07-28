@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { HardDriveUpload, Loader2 } from 'lucide-react'
 import OptimizedImage from '@/components/sky/SkyImage'
 
-const ShowUpload = () => {
+export const PostUploadProgress = () => {
     const profile = useSelector((Root: RootState) => Root.account)
     if (!profile.UploadFiles.loading) return null
     return (
@@ -35,5 +35,3 @@ const ShowUpload = () => {
         </div>
     )
 }
-
-export default ShowUpload

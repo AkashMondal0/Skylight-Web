@@ -11,8 +11,8 @@ import { Separator } from "@/components/ui/separator"
 import { RootState } from '@/redux/store'
 import { useSession } from 'next-auth/react'
 import { fetchUserProfileFollowerUserApi } from '@/redux/services/profile'
-import UserCardFollower from '@/components/profile/client/UserCardFollower'
-import { SkeletonUserCardWithButton } from '@/components/home/loading/UserCard'
+import UserCardFollower from '@/components/Card/UserCardFollower'
+import { LoadingUserCardWithButton } from '@/components/loading/Card'
 
 
 const Page = ({ params }: { params: { profile: string } }) => {
@@ -50,7 +50,7 @@ const Page = ({ params }: { params: { profile: string } }) => {
                         <Separator />
                         <div className='h-5' />
                         <ScrollArea className='h-[400px]' >
-                            {profile.followerListLoading || !loadedRef.current ? <>{Array(10).fill(0).map((_, i) => <SkeletonUserCardWithButton key={i} />)}</> : <>
+                            {profile.followerListLoading || !loadedRef.current ? <>{Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)}</> : <>
                                 {profile.followerList?.map((user, i) => <UserCardFollower
                                     key={i} user={user}
                                     isProfile={isProfile}

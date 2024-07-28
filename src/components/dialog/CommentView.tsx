@@ -5,7 +5,7 @@ import { BookMarked, Heart, MessageCircle, Send, Smile } from "lucide-react"
 import { Post } from "@/types"
 import { useRouter } from "next/navigation"
 import { Button } from "../ui/button"
-import { CommentViewError, CommentViewLoading } from "./loading.components"
+import { CommentViewError, CommentViewLoading } from "../loading/Post.Page"
 
 const CommentView = ({
     data,

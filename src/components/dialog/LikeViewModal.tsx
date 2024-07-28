@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useSession } from 'next-auth/react'
-import { SkeletonUserCardWithButton } from '../loading/UserCard'
+import { LoadingUserCardWithButton } from '../loading/Card'
 
 
 
@@ -32,7 +32,7 @@ const LikeViewModal = ({
             <div className='h-5' />
             <ScrollArea className='h-[400px]' >
               {likes.likeLoading ?
-                <>{Array(10).fill(0).map((_, i) => <SkeletonUserCardWithButton key={i} />)}</>
+                <>{Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)}</>
                 :
                 <>{likes.likesUserList?.map((user, i) => (<UserCardLikedView key={i} user={user} isProfile={session?.id === user.id} />))}</>}
             </ScrollArea>

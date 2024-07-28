@@ -11,8 +11,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useSession } from "next-auth/react"
 import { fetchUserProfileFollowingUserApi } from "@/redux/services/profile"
-import UserCardFollowing from "@/components/profile/client/UserCardFollowing"
-import { SkeletonUserCardWithButton } from "@/components/home/loading/UserCard"
+import UserCardFollowing from "@/components/Card/UserCardFollowing"
+import { LoadingUserCardWithButton } from "@/components/loading/Card"
 
 const Page = ({
   params
@@ -51,7 +51,7 @@ const Page = ({
             <Separator />
             <div className='h-5' />
             <ScrollArea className='h-[400px]' >
-              {profile.followingListLoading || !loadedRef.current  ? <>{Array(10).fill(0).map((_,i)=><SkeletonUserCardWithButton key={i}/> )}</>: <>
+              {profile.followingListLoading || !loadedRef.current  ? <>{Array(10).fill(0).map((_,i)=><LoadingUserCardWithButton key={i}/> )}</>: <>
                 {profile.followingList?.map((user, i) => <UserCardFollowing
                   key={i} user={user}
                   isProfile={isProfile}
