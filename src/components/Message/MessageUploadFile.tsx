@@ -18,7 +18,7 @@ const dropdownData = [{
     label: "Document",
     onClick: () => { }
 }]
-const UploadFileComponent = ({
+export const MessageUploadFile = ({
     assets
 }: {
     assets: Assets[]

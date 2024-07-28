@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 
-const InBoxHeader = ({ data }: { data: Conversation }) => {
+export const MessageHeader = ({ data }: { data: Conversation }) => {
     const router = useRouter()
     const currentTyping = useSelector((Root: RootState) => Root.conversation.currentTyping)
 
@@ -62,5 +62,3 @@ const InBoxHeader = ({ data }: { data: Conversation }) => {
         </div>
     );
 };
-
-export default InBoxHeader;

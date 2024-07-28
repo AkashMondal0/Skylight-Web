@@ -3,16 +3,16 @@ import React, { memo, useEffect } from 'react'
 import { CardTitle } from '../ui/card';
 import { ServerCrash, SquarePen } from 'lucide-react';
 import { Button } from '../ui/button';
-import FindUserForChat from './modal/FindUserForChat';
+import UserToMessage from '@/components/Model/UserToMessage';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { LoadingMessageSidebar } from './loading';
 import { fetchConversationsApi } from '@/redux/services/conversation';
-import VirtualizeConversationList from './VirtualizeList';
 import { NavigationBottom } from '../Navigation/NavigationBottom';
+import { LoadingMessageSidebar } from '../loading/Message.page';
+import { VirtualUserList } from './VirtualUserList';
 let pageLoaded = false
 
-export default function SidebarMessageClient() {
+export default function MessageSideBar() {
     const rootConversation = useSelector((Root: RootState) => Root.conversation)
     const dispatch = useDispatch()
 
@@ -39,7 +39,7 @@ export default function SidebarMessageClient() {
         <div className={`flex flex-col md:border-r scroll-smooth 
             duration-300 bg-background text-foreground 
             h-full md:max-w-[22rem] ease-in-out w-full`}>
-            <VirtualizeConversationList
+            <VirtualUserList
                 conversation={rootConversation.conversationList}
                 Header={<Header />} />
             <NavigationBottom />
@@ -52,11 +52,11 @@ const Header = () => {
         <div className="flex justify-between w-full items-center">
             <CardTitle>SkyLight</CardTitle>
             <div>
-                <FindUserForChat>
+                <UserToMessage>
                     <Button variant={"ghost"} className='rounded-2xl'>
                         <SquarePen className='w-6 h-6 cursor-pointer' />
                     </Button>
-                </FindUserForChat>
+                </UserToMessage>
 
             </div>
         </div>

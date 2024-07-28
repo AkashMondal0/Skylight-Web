@@ -1,5 +1,5 @@
 import { NavigationSidebar } from '@/components/Navigation/NavigationSidebar';
-import SidebarMessageClient from '@/components/message/Sidebar';
+import MessageSideBar from '@/components/Message/MessageSideBar';
 import type { Metadata } from 'next/types';
 
 export const metadata: Metadata = {
@@ -17,7 +17,7 @@ export default function RootLayout({ children }: {
         <NavigationSidebar hideLabel={true} />
         {/* md */}
         <div className='w-full min-h-full hidden md:flex'>
-          <SidebarMessageClient />
+          <MessageSideBar />
           {children}
         </div>
         {/* sm */}

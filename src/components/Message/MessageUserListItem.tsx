@@ -7,7 +7,7 @@ const timeFormat = (time: string | Date | undefined) => {
     if (!time) return ""
     return new Date(time).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
 }
-const ConversationUserCard = ({
+export const MessageUserListItem = ({
     data,
     TypingUser
 }: {
@@ -60,5 +60,3 @@ const ConversationUserCard = ({
         </>
     )
 }
-
-export default ConversationUserCard

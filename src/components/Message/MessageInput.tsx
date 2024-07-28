@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 import { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -17,7 +16,7 @@ import { event_name } from '@/configs/socket.event';
 const schema = z.object({
     message: z.string().min(1)
 })
-const InBoxFooter = ({ data }: { data: Conversation }) => {
+export const MessageInput = ({ data }: { data: Conversation }) => {
     const dispatch = useDispatch()
     const session = useSession().data?.user
     const [assets, setAssets] = useState<Assets[]>([])
@@ -37,7 +36,7 @@ const InBoxFooter = ({ data }: { data: Conversation }) => {
 
     const typingSetter = (typing: boolean) => {
         if (session?.id && data.id) {
-            console.log("typing")
+            // console.log("typing")
             socketState.socket?.emit(event_name.conversation.typing, {
                 typing: typing,
                 authorId: session?.id,
@@ -140,5 +139,3 @@ const InBoxFooter = ({ data }: { data: Conversation }) => {
         </>
     );
 };
-
-export default InBoxFooter;

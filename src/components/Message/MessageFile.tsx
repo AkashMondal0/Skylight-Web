@@ -1,29 +1,12 @@
-"use client"
-// import { memo, useEffect, useMemo, useRef } from 'react';
-// import MessagesCard from './message_card';
-// import React from 'react';
-// import { Conversation } from '@/types';
-// import { useSession } from 'next-auth/react';
-// import { ScrollArea } from '@/components/ui/scroll-area';
-// const MemorizeMessagesCard = memo(MessagesCard)
+import React from 'react'
 
+const MessageFile = () => {
+  return (
+    <div>MessageFile</div>
+  )
+}
 
-const InBoxBody = () => {
-    // const session = useSession().data?.user
-    // const messages = useMemo(() => {
-    //     return data.messages
-    // }, [data.messages])
-
-    return (
-        <>
-           
-        </>
-    );
-
-};
-
-export default InBoxBody;
-
+export default MessageFile
 
 // const FileComponent = ({
 //     data,

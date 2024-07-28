@@ -1,4 +1,4 @@
-import SidebarMessageClient from '@/components/message/Sidebar';
+import MessageSideBar from '@/components/Message/MessageSideBar';
 import OptimizedImage from '@/components/sky/SkyImage';
 import { LinkButton } from '@/components/ui/LinkButton';
 import React from 'react'
@@ -22,7 +22,7 @@ export default function Page() {
       </div>
       {/* sm */}
       <div className='w-full h-full flex md:hidden'>
-        <SidebarMessageClient />
+        <MessageSideBar />
       </div>
     </>
   )

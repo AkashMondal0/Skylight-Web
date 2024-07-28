@@ -8,7 +8,7 @@ interface MessagesCardProps {
     seen?: boolean
     isProfile?: boolean
 }
-const MessagesCard: FC<MessagesCardProps> = ({
+export const MessageItem: FC<MessagesCardProps> = ({
     data,
     isProfile
 }) => {
@@ -39,5 +39,3 @@ const MessagesCard: FC<MessagesCardProps> = ({
         </div>
     );
 };
-
-export default MessagesCard;

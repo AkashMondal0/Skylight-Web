@@ -16,7 +16,7 @@ import { LoadingUserCardWithButton } from '@/components/loading/Card';
 
 
 
-const FindUserForChat = ({ children }: { children: React.ReactNode }) => {
+const UserToMessage = ({ children }: { children: React.ReactNode }) => {
     const dispatch = useDispatch();
     const inputRef = React.useRef<any>();
     const Users = useSelector((Root: RootState)=> Root.users);
@@ -72,7 +72,7 @@ const FindUserForChat = ({ children }: { children: React.ReactNode }) => {
     )
 }
 
-export default FindUserForChat
+export default UserToMessage
 
 
 const UserCard = ({
