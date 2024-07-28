@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useContext, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Loader2Icon, Paperclip, Send } from 'lucide-react'
 import { z } from 'zod';
@@ -16,7 +16,7 @@ import { event_name } from '@/configs/socket.event';
 const schema = z.object({
     message: z.string().min(1)
 })
-export const MessageInput = ({ data }: { data: Conversation }) => {
+export const MessageInput = memo(function MessageInput({ data }: { data: Conversation }) {
     const dispatch = useDispatch()
     const session = useSession().data?.user
     const [assets, setAssets] = useState<Assets[]>([])
@@ -138,4 +138,6 @@ export const MessageInput = ({ data }: { data: Conversation }) => {
             </div>
         </>
     );
-};
+}, ((preProps: any, nestProps: any) => {
+    return preProps.id === nestProps.id
+}))

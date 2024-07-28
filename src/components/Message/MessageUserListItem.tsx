@@ -1,19 +1,19 @@
 "use client"
 import SkyAvatar from "@/components/sky/SkyAvatar"
+import { RootState } from "@/redux/store"
 import { Conversation } from "@/types"
 import { useRouter } from "next/navigation"
-import { useMemo } from "react"
+import { memo, useMemo } from "react"
+import { useSelector } from "react-redux"
 const timeFormat = (time: string | Date | undefined) => {
     if (!time) return ""
     return new Date(time).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
 }
-export const MessageUserListItem = ({
-    data,
-    TypingUser
+export const MessageUserListItem = memo(function MessageUserListItem({
+    data
 }: {
     data: Conversation | null
-    TypingUser: boolean | null
-}) => {
+}) {
     const router = useRouter()
     const Conversation = useMemo(() => {
         return data?.isGroup ? {
@@ -21,7 +21,6 @@ export const MessageUserListItem = ({
             name: data?.groupName,
             message: data?.lastMessageContent,
             time: data?.updatedAt,
-            isTyping: TypingUser,
             id: data?.id // most important ==>  when it is a group conversation then it return conversation id,  if is it private conversation then return user id
         } : {
             image: data?.user?.profilePicture,
@@ -29,9 +28,8 @@ export const MessageUserListItem = ({
             message: data?.lastMessageContent,
             time: data?.updatedAt,
             id: data?.user?.id,
-            isTyping: TypingUser
         }
-    }, [data, TypingUser])
+    }, [data])
 
     if (!Conversation) return <></>
 
@@ -48,9 +46,8 @@ export const MessageUserListItem = ({
                         <div className='font-semibold text-base'>
                             {Conversation.name || "group name"}
                         </div>
-                        <div className='text-sm'>
-                            {Conversation?.isTyping ? "typing..." : Conversation.message ?? "new conversation"}
-                        </div>
+                        <UserStatus lastText={Conversation.message}
+                            conversationId={data?.id} />
                     </div>
                 </div>
                 <div className='flex items-center'>
@@ -58,5 +55,16 @@ export const MessageUserListItem = ({
                 </div>
             </div>
         </>
+    )
+}, ((preProps: any, nextProps: any) => {
+    return preProps.data.id === nextProps.data.id
+}))
+
+const UserStatus = ({ lastText, conversationId }: { lastText: string | any, conversationId: string | any }) => {
+    const currentTyping = useSelector((Root: RootState) => Root.conversation.currentTyping)
+    return (
+        <div className='text-sm'>
+            {currentTyping?.conversationId === conversationId && currentTyping?.typing ? "typing..." : lastText ?? "new conversation"}
+        </div>
     )
 }

@@ -1,13 +1,16 @@
 "use client"
 import { RootState } from "@/redux/store"
-import {useEffect } from "react"
+import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import NotFound from "@/components/Error/NotFound";
 import { fetchConversationApi } from "@/redux/services/conversation";
 import { MessageHeader } from "@/components/Message/MessageHeader";
 import { MessageInput } from "@/components/Message/MessageInput";
-import VirtualizeMessageList from "@/components/Message/VirtualMessageList";
 import { MessagePageSkeleton } from "@/components/loading/Message.page";
+import dynamic from "next/dynamic";
+const VirtualizeMessageList = dynamic(() => import("@/components/Message/VirtualMessageList"), {
+  loading: () => <MessagePageSkeleton />
+})
 
 let pageLoaded = false
 

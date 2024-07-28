@@ -1,14 +1,12 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Conversation } from '@/types';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
 import { MessageUserListItem } from './MessageUserListItem';
 
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 
-export const VirtualUserList = ({
+export const VirtualUserList = memo(function VirtualUserList({
     conversation,
     loadMore,
     Header,
@@ -18,13 +16,11 @@ export const VirtualUserList = ({
     loadMore?: () => void
     Header?: React.ReactNode
     Footer?: React.ReactNode
-}) => {
+}) {
     const parentRef = useRef<HTMLDivElement>(null)
-    // const dimension = useWindowDimensions()
     const [mounted, setMounted] = useState(false)
     const data = useMemo(() => conversation, [conversation])
     const count = useMemo(() => data.length, [data.length])
-    const currentTyping = useSelector((Root: RootState) => Root.conversation.currentTyping)
 
     const virtualizer = useVirtualizer({
         count,
@@ -77,10 +73,6 @@ export const VirtualUserList = ({
                                 data-index={virtualRow.index}
                                 ref={virtualizer.measureElement}>
                                 <MessageUserListItem
-                                    TypingUser={!currentTyping
-                                        ? null :
-                                        currentTyping?.conversationId === data[virtualRow.index].id
-                                            ? currentTyping?.typing : null}
                                     data={data[virtualRow.index]}
                                     key={data[virtualRow.index].id} />
                             </div>
@@ -98,6 +90,6 @@ export const VirtualUserList = ({
             </div>
         </>
     )
-}
-
-
+}, ((preProps: any, nestProps: any) => {
+    return preProps.conversation.length === nestProps.conversation.length
+}))

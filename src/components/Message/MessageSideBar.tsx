@@ -12,7 +12,7 @@ import { LoadingMessageSidebar } from '../loading/Message.page';
 import { VirtualUserList } from './VirtualUserList';
 let pageLoaded = false
 
-export default function MessageSideBar() {
+export const MessageSideBar = memo(function MessageSideBar() {
     const rootConversation = useSelector((Root: RootState) => Root.conversation)
     const dispatch = useDispatch()
 
@@ -45,9 +45,10 @@ export default function MessageSideBar() {
             <NavigationBottom />
         </div>
     )
-}
+},(()=>true))
 
-const Header = () => {
+const Header = memo(function Header(){
+    
     return <div className='w-full p-4 pb-0 sticky top-0 bg-background z-50'>
         <div className="flex justify-between w-full items-center">
             <CardTitle>SkyLight</CardTitle>
@@ -65,4 +66,4 @@ const Header = () => {
             <div className='text-gray-500 text-sm'>Requests</div>
         </div>
     </div>
-}
+},(()=>true))

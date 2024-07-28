@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, memo, useMemo } from 'react';
 import { CheckCheck } from 'lucide-react';
 import { AuthorData, Message } from '@/types';
 interface MessagesCardProps {
@@ -8,10 +8,10 @@ interface MessagesCardProps {
     seen?: boolean
     isProfile?: boolean
 }
-export const MessageItem: FC<MessagesCardProps> = ({
+export const MessageItem: FC<MessagesCardProps> = memo(function MessageItem({
     data,
     isProfile
-}) => {
+}) {
     const message = useMemo(() => {
         return {
             content: data.content,
@@ -38,4 +38,6 @@ export const MessageItem: FC<MessagesCardProps> = ({
 
         </div>
     );
-};
+},((preProps: any, nestProps: any) => {
+    return preProps.data.id === nestProps.data.id
+}))

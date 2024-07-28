@@ -6,7 +6,7 @@ import { MessageItem } from './MessageItem';
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 
-const VirtualizeMessageList = ({
+const VirtualizeMessageList = memo(function VirtualizeMessageList({
     conversation,
     loadMore,
     Header,
@@ -16,11 +16,10 @@ const VirtualizeMessageList = ({
     loadMore?: () => void
     Header?: React.ReactNode
     Footer?: React.ReactNode
-}) => {
+}) {
     const session = useSession().data?.user
     const parentRef = useRef<HTMLDivElement>(null)
     const bottomRef = useRef<HTMLDivElement>(null)
-
     // const dimension = useWindowDimensions()
     const [mounted, setMounted] = useState(false)
     const data = useMemo(() => conversation.messages, [conversation.messages])
@@ -98,6 +97,8 @@ const VirtualizeMessageList = ({
             </div>
         </>
     )
-}
+}, ((preProps: any, nestProps: any) => {
+    return preProps.conversation.messages.length === nestProps.conversation.messages.length
+}))
 
 export default VirtualizeMessageList

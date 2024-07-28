@@ -1,12 +1,7 @@
+'use client'
 import { NavigationSidebar } from '@/components/Navigation/NavigationSidebar';
-import MessageSideBar from '@/components/Message/MessageSideBar';
-import type { Metadata } from 'next/types';
+import {MessageSideBar} from '@/components/Message/MessageSideBar';
 
-export const metadata: Metadata = {
-  title: 'SkyLight • Message',
-  description: `Sky Media is a social media platform that 
-  allows users to share their thoughts and ideas with the world.`,
-}
 export default function RootLayout({ children }: {
   children: React.ReactNode;
 }) {

@@ -3,13 +3,12 @@ import { ChevronLeft, Info } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import SkyAvatar from '@/components/sky/SkyAvatar';
 import { Conversation } from '@/types';
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 
-export const MessageHeader = ({ data }: { data: Conversation }) => {
+export const MessageHeader = memo(function MessageHeader({ data }: { data: Conversation }) {
     const router = useRouter()
-    const currentTyping = useSelector((Root: RootState) => Root.conversation.currentTyping)
 
     const Conversation = useMemo(() => {
         return data?.isGroup ? {
@@ -48,12 +47,7 @@ export const MessageHeader = ({ data }: { data: Conversation }) => {
                             <div className="text-xl font-bold text-gray-900 dark:text-gray-100 truncate">
                                 {Conversation?.name || "...."}
                             </div>
-                            <div className="text-sm text-gray-500 dark:text-gray-400">
-                                {!currentTyping
-                                    ? "status" :
-                                    currentTyping?.conversationId === data.id
-                                        ? currentTyping.typing ? "typing..." : "status" : "status"}
-                            </div>
+                            <UserStatus conversationId={data.id} />
                         </div>
                     </div>
                 </div>
@@ -61,4 +55,15 @@ export const MessageHeader = ({ data }: { data: Conversation }) => {
             </div>
         </div>
     );
-};
+}, ((preProps: any, nestProps: any) => {
+    return preProps.id === nestProps.id
+}))
+
+const UserStatus = ({conversationId}:any) => {
+    const currentTyping = useSelector((Root: RootState) => Root.conversation.currentTyping)
+    return (
+        <div className="text-sm text-gray-500 dark:text-gray-400">
+            {currentTyping?.conversationId === conversationId && currentTyping?.typing ? "typing..." : "status"}
+        </div>
+    )
+}
