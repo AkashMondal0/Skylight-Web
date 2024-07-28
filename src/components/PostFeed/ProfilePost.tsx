@@ -10,14 +10,8 @@ export const ProfilePost = memo(function ImageComponent({
     data
 }: {
     data: Post
-}){
+}) {
     const router = useRouter()
-    const [error, setError] = useState(false)
-
-    if (error) {
-        return <></>
-    }
-
     return (
         <>
             <div className='relative transition-all duration-300 ease-in-out w-full h-full cursor-pointer' onClick={() => {
@@ -42,10 +36,11 @@ export const ProfilePost = memo(function ImageComponent({
                     src={data.fileUrl[0]}
                     width={300}
                     height={300}
-                    onError={() => {if (!error) setError(true)}}
+                    showErrorIcon
                     sizes="(min-width: 808px) 20vw, 40vw"
-                    className={cn(`aspect-square hover:opacity-50 w-full h-full object-cover userNotSelectImg bg-muted`)} />
+                    className={cn(`aspect-square hover:opacity-50 
+                    w-full h-full object-cover userNotSelectImg bg-muted`)} />
             </div>
         </>
     )
-})
+}, (() => true))

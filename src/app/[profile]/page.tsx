@@ -5,14 +5,11 @@ import {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfileDetailApi} from "@/redux/services/profile";
-// import { getRandomProfilePost } from "@/components/sky/random";
 import dynamic from "next/dynamic";
 
 const DynamicPostGridListVirtualList = dynamic(() => import('@/components/PostFeed/PostGridListVirtualList'), {
     loading: () => <>loading page</>
 })
-
-// const _posts = getRandomProfilePost(10)
 let profileUsername = "no_username"
 let loaded = false
 

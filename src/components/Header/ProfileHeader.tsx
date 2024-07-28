@@ -9,7 +9,6 @@ import FollowButton from '@/components/Button/FollowButton'
 import { ProfileStories } from '@/components/Stories/ProfileStories'
 import { fetchUserProfilePostsApi } from '@/redux/services/profile'
 
-
 export const ProfileHeader = memo(function ProfileHeader() {
     const dispatch = useDispatch()
     const profileUser = useSelector((Root: RootState) => Root.profile.state)
@@ -22,7 +21,6 @@ export const ProfileHeader = memo(function ProfileHeader() {
                 offset: 0
             }) as any)
         }
-        // dispatch(setLoadMoreProfilePosts(_posts))
     }, [profileUser?.username])
 
 

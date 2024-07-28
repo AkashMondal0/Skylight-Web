@@ -2,9 +2,9 @@ import useWindowDimensions from "@/lib/useWindowDimensions";
 import { Post } from "@/types";
 import { useVirtualizer, } from "@tanstack/react-virtual";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import OptimizedImage from "../sky/SkyImage";
 import { ProfileHeader } from "@/components/Header/ProfileHeader";
 import { NavigationBottom } from "@/components/Navigation/NavigationBottom";
+import { ProfilePost } from "@/components/PostFeed/ProfilePost";
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 
@@ -24,7 +24,7 @@ const PostGridListVirtualList = ({
         count,
         getScrollElement: () => parentRef.current,
         estimateSize: useCallback(() => 50, []),
-        overscan: 24,
+        overscan: 12,
         enabled: true,
         initialOffset: _kSavedOffset,
         initialMeasurementsCache: _KMeasurementsCache,
@@ -46,12 +46,7 @@ const PostGridListVirtualList = ({
 
     const RenderImg = ({ post }: { post: Post }) => {
         if (!post) return <div className="h-full aspect-square w-full" />
-        return <OptimizedImage
-            fetchPriority="high"
-            src={post.fileUrl[0]}
-            width={100} height={100}
-            className="h-full aspect-square w-full object-cover"
-            sizes="(min-width: 808px) 20vw, 40vw" />
+        return <ProfilePost data={post}/>
     }
 
     return (

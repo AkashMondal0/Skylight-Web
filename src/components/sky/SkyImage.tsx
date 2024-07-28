@@ -2,7 +2,7 @@
 "use client";
 import { cn } from '@/lib/utils';
 import { RotateCcw } from 'lucide-react';
-import React, { useEffect, useRef, memo, useState } from 'react';
+import React, { memo, useState } from 'react';
 
 interface OptimizedImageProps {
     src: string;
@@ -31,7 +31,6 @@ const OptimizedImage: React.FC<OptimizedImageProps> = memo(function OptimizedIma
     showErrorIconSm = false,
     showErrorIcon = false
 }) {
-    const imgRef = useRef<HTMLImageElement>(null);
     const [error, setError] = useState(false)
 
     // useEffect(() => {
@@ -78,7 +77,6 @@ const OptimizedImage: React.FC<OptimizedImageProps> = memo(function OptimizedIma
                 <source srcSet={src} type="image/jpg" />
                 <img
                     onContextMenu={event => event.preventDefault()}
-                    ref={imgRef}
                     data-src={src}
                     src={src}
                     alt={''}

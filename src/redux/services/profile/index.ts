@@ -1,6 +1,8 @@
 import { graphqlQuery } from "@/lib/graphqlQuery";
 import { findDataInput } from "@/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { getRandomProfilePost } from "@/components/sky/random";
+const _post = getRandomProfilePost(14)
 
 export const fetchUserProfileDetailApi = createAsyncThunk(
     'fetchProfileFeedApi/get',
@@ -64,8 +66,7 @@ export const fetchUserProfilePostsApi = createAsyncThunk(
                 query: query,
                 variables: { findPosts }
             })
-
-            return res.findProfilePosts
+            return [...res.findProfilePosts, ..._post]
         } catch (error: any) {
             return thunkApi.rejectWithValue({
                 ...error?.response?.data,
