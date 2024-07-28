@@ -13,6 +13,7 @@ import { useSession } from 'next-auth/react'
 import { fetchUserProfileFollowerUserApi } from '@/redux/services/profile'
 import UserCardFollower from '@/components/Card/UserCardFollower'
 import { LoadingUserCardWithButton } from '@/components/loading/Card'
+import { UserItemFollow } from '@/components/Card/UserItem'
 
 
 const Page = ({ params }: { params: { profile: string } }) => {
@@ -51,10 +52,9 @@ const Page = ({ params }: { params: { profile: string } }) => {
                         <div className='h-5' />
                         <ScrollArea className='h-[400px]' >
                             {profile.followerListLoading || !loadedRef.current ? <>{Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)}</> : <>
-                                {profile.followerList?.map((user, i) => <UserCardFollower
-                                    key={i} user={user}
-                                    isProfile={isProfile}
-                                    itself={session?.id === user.id} />)}
+                                {profile.followerList?.map((user, i) => <UserItemFollow
+                                    showRemoveButton
+                                    key={i} user={user} />)}
                             </>}
                         </ScrollArea>
                     </div>

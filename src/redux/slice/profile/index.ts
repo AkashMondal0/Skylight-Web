@@ -152,8 +152,8 @@ export const profileSlice = createSlice({
             })
             //  createFriendshipApi
             .addCase(createFriendshipApi.pending, (state) => {
-                state.friendShipLoading = true
-                state.friendShipError = null
+                // state.friendShipLoading = true
+                // state.friendShipError = null
             })
             .addCase(createFriendshipApi.fulfilled, (state, action: PayloadAction<{ userId: string, sessionId: string, updateCount: boolean }>) => {
                 if (state.state && action.payload.updateCount && state.state.id !== action.payload.sessionId) {
@@ -163,20 +163,20 @@ export const profileSlice = createSlice({
                     }
                     state.state.followerCount += 1
                 }
-                // if is profile update user follower
-                if (state.state && state.state.id === action.payload.sessionId) {
-                    state.state.followingCount += 1
-                }
-                state.friendShipLoading = false
+                // // if is profile update user follower
+                // if (state.state && state.state.id === action.payload.sessionId) {
+                //     state.state.followingCount += 1
+                // }
+                // state.friendShipLoading = false
             })
             .addCase(createFriendshipApi.rejected, (state, action) => {
-                state.friendShipLoading = false
-                state.friendShipError = action.error.message || null
+                // state.friendShipLoading = false
+                // state.friendShipError = action.error.message || null
             })
             // destroyFriendshipApi
             .addCase(destroyFriendshipApi.pending, (state) => {
-                state.friendShipLoading = true
-                state.friendShipError = null
+                // state.friendShipLoading = true
+                // state.friendShipError = null
             })
             .addCase(destroyFriendshipApi.fulfilled, (state, action: PayloadAction<{ userId: string, sessionId: string, updateCount: boolean }>) => {
                 if (state.state && action.payload.updateCount && state.state.id !== action.payload.sessionId) {
@@ -187,19 +187,19 @@ export const profileSlice = createSlice({
                     }
                 }
                 // if is profile update user following
-                if (state.state && state.state.id === action.payload.sessionId) {
-                    state.state.followingCount -= 1
-                }
-                state.friendShipLoading = false
+                // if (state.state && state.state.id === action.payload.sessionId) {
+                //     state.state.followingCount -= 1
+                // }
+                // state.friendShipLoading = false
             })
             .addCase(destroyFriendshipApi.rejected, (state, action) => {
-                state.friendShipLoading = false
-                state.friendShipError = action.error.message || null
+                // state.friendShipLoading = false
+                // state.friendShipError = action.error.message || null
             })
             // RemoveFriendshipApi
             .addCase(RemoveFriendshipApi.pending, (state) => {
-                state.friendShipLoading = true
-                state.friendShipError = null
+                // state.friendShipLoading = true
+                // state.friendShipError = null
             })
             .addCase(RemoveFriendshipApi.fulfilled, (state, action: PayloadAction<{ userId: string, sessionId: string, updateCount: boolean }>) => {
                 if (state.state && action.payload.updateCount && state.state.id !== action.payload.sessionId) {
@@ -210,14 +210,14 @@ export const profileSlice = createSlice({
                     }
                 }
                 // if is profile update user following
-                if (state.state && action.payload.updateCount && state.state.id === action.payload.sessionId) {
-                    state.state.followingCount -= 1
-                }
-                state.friendShipLoading = false
+                // if (state.state && action.payload.updateCount && state.state.id === action.payload.sessionId) {
+                //     state.state.followingCount -= 1
+                // }
+                // state.friendShipLoading = false
             })
             .addCase(RemoveFriendshipApi.rejected, (state, action) => {
-                state.friendShipLoading = false
-                state.friendShipError = action.error.message || null
+                // state.friendShipLoading = false
+                // state.friendShipError = action.error.message || null
             })
     },
 })

@@ -3,6 +3,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { uploadFirebaseFile } from "@/lib/firebase/upload-file";
 import { graphqlQuery } from "../../../lib/graphqlQuery";
 import { ShowUploadImage } from "@/redux/slice/account";
+import { getRandomPost } from "@/components/sky/random";
+const _posts = getRandomPost(20)
 
 export const UploadImagesFireBaseApi = createAsyncThunk(
     'UploadImagesFireBaseApi/post',
@@ -206,7 +208,7 @@ export const fetchAccountFeedApi = createAsyncThunk(
                 query: query,
             })
 
-            return res.feedTimelineConnection
+            return [...res.feedTimelineConnection,..._posts]
         } catch (error) {
 
         }

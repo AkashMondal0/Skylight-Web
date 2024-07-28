@@ -1,5 +1,6 @@
 "use client";
 import UserCardFollower from '@/components/Card/UserCardFollower';
+import { UserItemFollow } from '@/components/Card/UserItem';
 import { LoadingUserCardWithButton } from '@/components/loading/Card';
 import { Separator } from '@/components/ui/separator';
 import { fetchUserProfileFollowerUserApi } from '@/redux/services/profile';
@@ -41,10 +42,9 @@ const Page = ({
         <Separator />
         <div className='h-5' />
         {profile.followerListLoading || !loadedRef.current ? <>{Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)}</> : <>
-          {profile.followerList?.map((user, i) => <UserCardFollower
-            key={i} user={user}
-            isProfile={isProfile}
-            itself={session?.id === user.id} />)}
+          {profile.followerList?.map((user, i) => <UserItemFollow
+            showRemoveButton
+            key={i} user={user} />)}
         </>}
       </div>
     </div>

@@ -1,9 +1,10 @@
 import React, { useCallback, useState } from 'react'
 import { Heart, Send, MessageCircle, BookMarked } from 'lucide-react';
 import { Post, disPatchResponse } from '@/types';
-import { createPostLikeApi, destroyPostLikeApi } from '@/redux/services/post';
+import { createPostLikeApi, destroyPostLikeApi, fetchPostLikesApi } from '@/redux/services/post';
 import { useDispatch } from 'react-redux';
 import { toast } from 'sonner';
+import LikeViewModal from '@/components/Dialog/LikeViewModal';
 const PostActions = ({
     post,
     onNavigate
@@ -34,6 +35,14 @@ const PostActions = ({
         }
         toast("Something went wrong!")
     }, [])
+
+    const fetchLikes = async () => {
+        dispatch(fetchPostLikesApi({
+          offset: 0,
+          limit: 16,
+          id: post.id
+        }) as any)
+      }
     return (
         <>
             <div className=' mt-5 mb-1 mx-3 flex justify-between'>
@@ -57,11 +66,11 @@ const PostActions = ({
                     onNavigate(`/post/${post.id}/liked_by`)
                 }}>{like.likeCount} likes</div>
                 {/* sm */}
-                {/* <LikeViewModal> */}
-                <div className='font-semibold cursor-pointer hidden sm:block'>
+                <LikeViewModal>
+                <div className='font-semibold cursor-pointer hidden sm:block' onClick={fetchLikes}>
                     {like.likeCount} likes
                 </div>
-                {/* </LikeViewModal> */}
+                </LikeViewModal>
             </div>
         </>
 
