@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { cn } from '@/lib/utils'
 import OptimizedImage from './SkyImage'
 
-const SkyAvatar = ({
+const SkyAvatar = memo(function ProfileHeader({
     url,
     className,
 }:
@@ -10,7 +10,7 @@ const SkyAvatar = ({
         url: string | null,
         className: string
         sizeImage?: string
-    }) => {
+    }) {
     return <div>
         <OptimizedImage
             src={url || "/user.jpg"}
@@ -23,6 +23,8 @@ const SkyAvatar = ({
             className={cn('w-12 h-12 cursor-pointer rounded-full userNotSelectImg bg-muted object-cover', className)}
         />
     </div>
-}
+}, ((prevProps: any, nextProps: any) => {
+    return prevProps.url === nextProps.url
+}))
 
 export default SkyAvatar

@@ -99,6 +99,7 @@ const PostGridListVirtualList = ({
                         ))}
                     </div>
                 </div>
+                <div className="h-96"/>
                 <NavigationBottom/>
             </div>
         </>

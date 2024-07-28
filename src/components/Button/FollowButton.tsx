@@ -1,21 +1,18 @@
 "use client"
 import { Button } from "@/components/ui/button"
-import { Skeleton } from "@/components/ui/skeleton"
 import { createFriendshipApi, destroyFriendshipApi } from "@/redux/services/profile"
 import { RootState } from "@/redux/store"
 import { User } from "@/types"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { memo } from "react"
+import { memo, useMemo } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { EllipsisVertical } from "../sky/icons"
 
 const FollowButton = memo(function FollowAndUnFollowButton({
-    isProfile,
     user,
     isFollowing,
 }: {
-    isProfile?: boolean
     user: User
     isFollowing?: boolean
 }) {
@@ -23,6 +20,7 @@ const FollowButton = memo(function FollowAndUnFollowButton({
     const router = useRouter()
     const dispatch = useDispatch()
     const session = useSession().data?.user
+    const isProfile = useMemo(() => session?.username === user?.username, [session?.username,user.username])
 
     const handleFollow = async () => {
         if (!session?.id) return alert('no user id from follow button')
@@ -32,7 +30,7 @@ const FollowButton = memo(function FollowAndUnFollowButton({
             authorUsername: session?.username,
             followingUserId: user?.id,
             followingUsername: user?.username,
-            sessionId:session?.id,
+            sessionId: session?.id,
             updateCount:true
         }) as any)
     }
@@ -50,12 +48,7 @@ const FollowButton = memo(function FollowAndUnFollowButton({
         }) as any)
     }
 
-    if (!user) return <div className='flex justify-between gap-2 items-center'>
-        <Skeleton className='w-32 h-6 rounded-xl' />
-        <Skeleton className='w-32 h-10 rounded-xl' />
-        <Skeleton className='w-32 h-10 rounded-xl' />
-        <Skeleton className='w-8 h-8 rounded-xl' />
-    </div>
+    if (!user) return <div></div>
 
 
     if (isProfile) {

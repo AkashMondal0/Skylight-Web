@@ -1,13 +1,13 @@
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import { User } from '@/types'
 import { Plus } from 'lucide-react'
-import React from 'react'
+import React, { memo } from 'react'
 
-export const ProfileStories = ({
+export const ProfileStories = memo(function ProfileStories({
   user
 }: {
   user: User
-}) => {
+}) {
   // await new Promise((resolve) => setTimeout(resolve, 5000))
   return (
     <div className='flex sm:gap-10 m-5 sm:my-10 gap-5 my-5 px-2'>
@@ -20,4 +20,4 @@ export const ProfileStories = ({
       </div>
     </div>
   )
-}
+}, (() => true))

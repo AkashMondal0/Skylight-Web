@@ -22,20 +22,10 @@ export default function Page({ params }: { params: { profile: string } }) {
     useEffect(() => {
         if (profileUsername !== params.profile) {
             dispatch(fetchUserProfileDetailApi(params.profile) as any)
-            // dispatch(fetchUserProfilePostsApi({
-            //     username: params.profile,
-            //     limit: 12,
-            //     offset: 0
-            // }) as any)
-            // dispatch(setLoadMoreProfilePosts(_posts))
         }
         profileUsername = params.profile
         loaded = true
     }, [params.profile])
-
-    // const loadMorePosts = useCallback(() => {
-    //     dispatch(setLoadMoreProfilePosts(_posts))
-    // }, [])
 
     return <DynamicPostGridListVirtualList profilePosts={profilePosts} />
 

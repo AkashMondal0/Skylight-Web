@@ -104,7 +104,9 @@ const OptimizedImage: React.FC<OptimizedImageProps> = memo(function OptimizedIma
             </picture>
         </>
     );
-})
+},((prevProps: any, nextProps: any) => {
+    return prevProps.src === nextProps.src
+}))
 
 export default OptimizedImage;
 
