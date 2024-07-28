@@ -10,7 +10,7 @@ import { UserItemFollow } from '../Card/UserItem'
 
 
 
-const LikeViewModal = ({
+const ViewLikeDialog = ({
   children
 }: {
   children: React.ReactNode
@@ -41,5 +41,5 @@ const LikeViewModal = ({
   )
 }
 
-export default LikeViewModal
+export default ViewLikeDialog
 

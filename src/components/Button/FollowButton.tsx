@@ -2,50 +2,61 @@
 import { Button } from "@/components/ui/button"
 import { createFriendshipApi, destroyFriendshipApi } from "@/redux/services/profile"
 import { RootState } from "@/redux/store"
-import { User } from "@/types"
+import { User, disPatchResponse } from "@/types"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { memo, useMemo } from "react"
+import { memo, useMemo, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { EllipsisVertical } from "../sky/icons"
+import { followUser, unFollowUser } from "@/redux/slice/profile"
 
-const FollowButton = memo(function FollowAndUnFollowButton({
+const FollowButton = ({
     user,
     isFollowing,
 }: {
     user: User
     isFollowing?: boolean
-}) {
-    const loading = useSelector((Root: RootState) => Root.profile.friendShipLoading)
+})=> {
     const router = useRouter()
     const dispatch = useDispatch()
     const session = useSession().data?.user
-    const isProfile = useMemo(() => session?.username === user?.username, [session?.username,user.username])
+    const isProfile = useMemo(() => session?.username === user?.username, [session?.username, user.username])
+    const [loading, setLoading] = useState(false)
 
     const handleFollow = async () => {
+        setLoading(true)
         if (!session?.id) return alert('no user id from follow button')
         if (!user?.id) return alert('no user id from follow button')
-        await dispatch(createFriendshipApi({
+        const res = await dispatch(createFriendshipApi({
             authorUserId: session?.id,
             authorUsername: session?.username,
             followingUserId: user?.id,
             followingUsername: user?.username,
-            sessionId: session?.id,
-            updateCount:true
-        }) as any)
+        }) as any) as disPatchResponse<any>
+        if (!isProfile && res.payload) {
+            dispatch(followUser())
+        } else {
+            alert("Something's went Wrong")
+        }
+        setLoading(false)
     }
 
     const handleUnFollow = async () => {
+        setLoading(true)
         if (!session?.id) return alert('no user id from unfollow button')
         if (!user?.id) return alert('no user id from unfollow button')
-        await dispatch(destroyFriendshipApi({
+        const res = await dispatch(destroyFriendshipApi({
             authorUserId: session?.id,
             authorUsername: session?.username,
             followingUserId: user?.id,
-            followingUsername: user?.username,
-            sessionId:session?.id,
-            updateCount:true
-        }) as any)
+            followingUsername: user?.username
+        }) as any) as disPatchResponse<any>
+        if (!isProfile && res.payload) {
+            dispatch(unFollowUser())
+        } else {
+            alert("Something's went Wrong")
+        }
+        setLoading(false)
     }
 
     if (!user) return <div></div>
@@ -88,5 +99,5 @@ const FollowButton = memo(function FollowAndUnFollowButton({
         </Button>
         {EllipsisVertical('w-6 h-6 cursor-pointer hidden sm:block')}
     </div>
-})
+}
 export default FollowButton

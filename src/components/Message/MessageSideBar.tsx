@@ -3,7 +3,7 @@ import React, { memo, useEffect } from 'react'
 import { CardTitle } from '../ui/card';
 import { ServerCrash, SquarePen } from 'lucide-react';
 import { Button } from '../ui/button';
-import UserToMessage from '@/components/Model/UserToMessage';
+import UserToMessage from '@/components/Dialog/UserToMessage.Dialog';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { fetchConversationsApi } from '@/redux/services/conversation';

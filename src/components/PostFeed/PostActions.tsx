@@ -4,7 +4,7 @@ import { Post, disPatchResponse } from '@/types';
 import { createPostLikeApi, destroyPostLikeApi, fetchPostLikesApi } from '@/redux/services/post';
 import { useDispatch } from 'react-redux';
 import { toast } from 'sonner';
-import LikeViewModal from '@/components/Dialog/LikeViewModal';
+import LikeViewModal from '@/components/Dialog/View.Like.Dialog';
 const PostActions = ({
     post,
     onNavigate

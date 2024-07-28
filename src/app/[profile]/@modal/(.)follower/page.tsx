@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import {
     Dialog,
     DialogContent,
@@ -9,9 +9,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { RootState } from '@/redux/store'
-import { useSession } from 'next-auth/react'
 import { fetchUserProfileFollowerUserApi } from '@/redux/services/profile'
-import UserCardFollower from '@/components/Card/UserCardFollower'
 import { LoadingUserCardWithButton } from '@/components/loading/Card'
 import { UserItemFollow } from '@/components/Card/UserItem'
 
@@ -20,8 +18,6 @@ const Page = ({ params }: { params: { profile: string } }) => {
     const dispatch = useDispatch()
     const router = useRouter()
     const profile = useSelector((Root: RootState) => Root.profile)
-    const session = useSession().data?.user
-    const isProfile = useMemo(() => session?.username === params.profile, [profile, params.profile])
     const loadedRef = useRef(false)
 
 

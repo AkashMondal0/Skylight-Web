@@ -23,7 +23,6 @@ export const ProfileHeader = memo(function ProfileHeader() {
         }
     }, [profileUser?.username])
 
-
     if (!profileUser) return <></>
 
     return (
@@ -132,7 +131,6 @@ export const ProfileHeader = memo(function ProfileHeader() {
                 </>
             </div>
         </div>
-
     )
 }, (() => true))
 

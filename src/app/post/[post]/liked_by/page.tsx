@@ -1,5 +1,4 @@
 "use client"
-import UserCardLikedView from '@/components/Card/LikedCard'
 import { Separator } from '@/components/ui/separator'
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -7,6 +6,7 @@ import { RootState } from '@/redux/store'
 import { useSession } from 'next-auth/react'
 import { fetchPostLikesApi } from '@/redux/services/post'
 import { LoadingUserCardWithButton } from '@/components/loading/Card'
+import { UserItemFollow } from '@/components/Card/UserItem'
 
 export default function Page({ params }: { params: { post: string } }) {
   const dispatch = useDispatch()
@@ -34,7 +34,7 @@ export default function Page({ params }: { params: { post: string } }) {
           <>{Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)}</>
           :
           <>{likes.likesUserList?.map((user, i) => (
-            <UserCardLikedView key={i} user={user} isProfile={session?.id === user.id} />))}</>}
+            <UserItemFollow key={i} user={user}/>))}</>}
       </div>
     </div>
   )

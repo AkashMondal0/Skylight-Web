@@ -1,12 +1,10 @@
 "use client";
-import UserCardFollower from '@/components/Card/UserCardFollower';
 import { UserItemFollow } from '@/components/Card/UserItem';
 import { LoadingUserCardWithButton } from '@/components/loading/Card';
 import { Separator } from '@/components/ui/separator';
 import { fetchUserProfileFollowerUserApi } from '@/redux/services/profile';
 import { RootState } from '@/redux/store';
-import { useSession } from 'next-auth/react';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect,useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Page = ({
@@ -16,8 +14,6 @@ const Page = ({
 }) => {
   const dispatch = useDispatch()
   const profile = useSelector((Root: RootState) => Root.profile)
-  const session = useSession().data?.user
-  const isProfile = useMemo(() => session?.username === params.profile, [profile, params.profile])
   const loadedRef = useRef(false)
 
   useEffect(() => {

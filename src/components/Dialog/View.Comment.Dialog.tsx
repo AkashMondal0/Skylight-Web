@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "../ui/button"
 import { CommentViewError, CommentViewLoading } from "../loading/Post.Page"
 
-const CommentView = ({
+const ViewCommentDialog = ({
     data,
     handleLikeAndUndoLike,
     handleComment,
@@ -122,4 +122,4 @@ const CommentView = ({
     )
 }
 
-export default CommentView
+export default ViewCommentDialog

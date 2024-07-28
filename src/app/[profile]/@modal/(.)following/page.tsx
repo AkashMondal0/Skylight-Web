@@ -6,13 +6,12 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/navigation'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { fetchUserProfileFollowingUserApi } from "@/redux/services/profile"
 import { LoadingUserCardWithButton } from "@/components/loading/Card"
 import { UserItemFollow } from "@/components/Card/UserItem"
-let loadedRef = false
 const Page = ({
   params
 }: {
@@ -21,15 +20,15 @@ const Page = ({
   const dispatch = useDispatch()
   const router = useRouter()
   const profile = useSelector((Root: RootState) => Root.profile)
-
+  const loadedRef = useRef(false)
   useEffect(() => {
-    if (!loadedRef) {
+    if (!loadedRef.current) {
       dispatch(fetchUserProfileFollowingUserApi({
         username: params.profile,
         offset: 0,
         limit: 10
       }) as any)
-      loadedRef = true;
+      loadedRef.current = true;
     }
   }, []);
 
