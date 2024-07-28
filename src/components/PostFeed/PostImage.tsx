@@ -16,7 +16,7 @@ const PostImage = ({
     post: Post
 }) => {
     return (
-        <div className='my-4'>
+        <div className='my-4  border-[1px]'>
             <Carousel>
                 <CarouselContent>
                     {post.fileUrl.map((url, index) => (

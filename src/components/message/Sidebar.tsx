@@ -1,7 +1,7 @@
 "use client";
 import React, { memo, useEffect } from 'react'
 import { CardTitle } from '../ui/card';
-import { SquarePen } from 'lucide-react';
+import { ServerCrash, SquarePen } from 'lucide-react';
 import { Button } from '../ui/button';
 import FindUserForChat from './modal/FindUserForChat';
 import { useDispatch, useSelector } from 'react-redux';
@@ -29,7 +29,10 @@ export default function SidebarMessageClient() {
     }
 
     if (rootConversation.listError && pageLoaded) {
-        return <>Not Found</>
+        return <div className='md:border-r scroll-smooth flex justify-center items-center text-center
+        duration-300 bg-background text-foreground h-dvh md:max-w-[22rem] ease-in-out w-full mx-auto'>
+            <ServerCrash className='w-16 h-16' />
+        </div>
     }
 
     return (
@@ -38,7 +41,7 @@ export default function SidebarMessageClient() {
             h-full md:max-w-[22rem] ease-in-out w-full`}>
             <VirtualizeConversationList
                 conversation={rootConversation.conversationList}
-                Header={<Header />}/>
+                Header={<Header />} />
             <NavigationBottom />
         </div>
     )

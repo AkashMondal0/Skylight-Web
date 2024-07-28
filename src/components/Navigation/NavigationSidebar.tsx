@@ -140,12 +140,15 @@ const MoreButton = ({ hideLabel }: {
 }) => {
     return (
         <MoreDropdownMenu>
-            <MyButton hideLabel={hideLabel}>
+            <div className={cn(`max-w-72 mx-auto justify-center
+            h-14 items-center flex rounded-xl
+            hover:bg-accent hover:text-accent-foreground cursor-pointer`,
+                hideLabel ? "md:flex justify-center" : "lg:w-full lg:px-4 lg:gap-2 lg:justify-start")}>
                 <Menu size={28} />
                 {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden lg:block")}>
                     More
                 </p>}
-            </MyButton>
+            </div>
         </MoreDropdownMenu>
     )
 

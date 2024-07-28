@@ -11,7 +11,7 @@ export const StoryItem = memo(function Story({
         label: string
     }
 }) {
-    console.info('%c<StoryItem/>', 'color: yellow; font-weight: bold;');
+    // console.info('%c<StoryItem/>', 'color: yellow; font-weight: bold;');
 
     return <div className="w-16 h-16">
         <SkyAvatar url={story.url} className={'rounded-full object-cover h-16 w-16 border-fuchsia-500 border-[3px] p-[2px]'} />
