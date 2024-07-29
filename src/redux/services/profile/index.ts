@@ -2,7 +2,7 @@ import { graphqlQuery } from "@/lib/graphqlQuery";
 import { findDataInput } from "@/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getRandomProfilePost } from "@/components/sky/random";
-const _post = getRandomProfilePost(14)
+const _post = getRandomProfilePost(20)
 
 export const fetchUserProfileDetailApi = createAsyncThunk(
     'fetchProfileFeedApi/get',
@@ -66,7 +66,8 @@ export const fetchUserProfilePostsApi = createAsyncThunk(
                 query: query,
                 variables: { findPosts }
             })
-            return [...res.findProfilePosts, ..._post]
+            return [...res.findProfilePosts, ..._post,..._post,..._post,..._post,..._post,..._post,..._post,..._post,..._post]
+
         } catch (error: any) {
             return thunkApi.rejectWithValue({
                 ...error?.response?.data,
@@ -83,7 +84,7 @@ export const createFriendshipApi = createAsyncThunk(
         followingUserId: string,
         followingUsername: string
     }, thunkApi) => {
-        const {  ...createFriendshipInput } = data
+        const { ...createFriendshipInput } = data
 
         try {
             let query = `mutation CreateFriendship($createFriendshipInput: CreateFriendshipInput!) {
@@ -147,7 +148,7 @@ export const RemoveFriendshipApi = createAsyncThunk(
         followingUserId: string,
         followingUsername: string
     }, thunkApi) => {
-        const {...destroyFriendship } = data
+        const { ...destroyFriendship } = data
 
         try {
             let query = `mutation DestroyFriendship($destroyFriendship: DestroyFriendship!) {

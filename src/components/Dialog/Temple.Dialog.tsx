@@ -29,7 +29,7 @@ export const TempleDialog = ({
                     {headerTitle ? <h1 className="font-semibold text-xl text-center border-b py-4 flex-none mx-5">{headerTitle}</h1> : <></>}
                     {header}
                     <div className='px-4 flex-1 overflow-y-auto scrollbarStyle'>
-                        <div>
+                        <div className='h-full'>
                             {children}
                         </div>
                     </div>

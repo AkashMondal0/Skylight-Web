@@ -56,6 +56,7 @@ const PostVirtualList = memo(function PostVirtualList() {
                 <Stories />
                 <PostUploadProgress />
                 <div
+                    className='min-h-full'
                     style={{
                         height: virtualizer.getTotalSize(),
                         width: '100%',

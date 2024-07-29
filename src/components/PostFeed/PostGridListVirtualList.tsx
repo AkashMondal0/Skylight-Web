@@ -60,7 +60,7 @@ const PostGridListVirtualList = ({
                 }}>
                <ProfileHeader/>
                 <div
-                    className='mx-auto max-w-[960px]'
+                    className='mx-auto max-w-[960px] min-h-full'
                     style={{
                         height: virtualizer.getTotalSize(),
                         width: '100%',
@@ -78,8 +78,7 @@ const PostGridListVirtualList = ({
                             <div
                                 key={virtualRow.key}
                                 data-index={virtualRow.index}
-                                ref={virtualizer.measureElement}
-                                className={virtualRow.index % 2 ? 'ListItemOdd' : 'ListItemEven'}>
+                                ref={virtualizer.measureElement}>
                                 <div className="p-[1px] w-full flex h-full space-x-[2px]"
                                     style={{ aspectRatio: "3:1" }}
                                     key={data[virtualRow.index].id}>
@@ -94,7 +93,6 @@ const PostGridListVirtualList = ({
                         ))}
                     </div>
                 </div>
-                <div className="h-96"/>
                 <NavigationBottom/>
             </div>
         </>

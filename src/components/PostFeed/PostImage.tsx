@@ -16,7 +16,7 @@ const PostImage = ({
     post: Post
 }) => {
     return (
-        <div className='px-1 w-auto h-auto'>
+        <div className='px-[2px] w-auto h-auto'>
             <div className='my-4 border-[1px] rounded-xl overflow-hidden'>
                 <Carousel>
                     <CarouselContent>
@@ -30,8 +30,7 @@ const PostImage = ({
                                     alt="Picture of the author"
                                     fetchPriority={"high"}
                                     sizes={"(min-width: 808px) 50vw, 100vw"}
-                                    className={cn('h-auto w-full cursor-pointer userNotSelectImg bg-muted')}
-                                />
+                                    className={cn('h-auto w-full cursor-pointer userNotSelectImg bg-muted rounded-xl')}/>
                             </CarouselItem>
                         ))}
                     </CarouselContent>

@@ -43,4 +43,4 @@ export const ProfilePost = memo(function ImageComponent({
             </div>
         </>
     )
-}, (() => true))
+})

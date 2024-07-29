@@ -90,18 +90,18 @@ export const UserItemFollow = ({
     const HandleRejected = () => { }
     return (
         <>
-            <div className='flex justify-between px-2 my-4'>
-                <div className='flex space-x-2 items-center cursor-pointer' onClick={() => { router.push(`/${user?.username}`) }}>
+            <div className='flex justify-between px-2 my-4 flex-wrap space-y-4'>
+                <div className='flex space-x-2 items-center cursor-pointer mr-2' onClick={() => { router.push(`/${user?.username}`) }}>
                     <SkyAvatar url={user?.profilePicture || "/user.jpg"}
-                        className='h-12 w-12 mx-auto ' />
-                    <div>
-                        <div className='font-semibold text-base'>{user?.username}</div>
-                        <div className='text-sm'>
+                        className='h-12 w-12 mx-auto' />
+                    <div className='max-w-60 truncate'>
+                        <div className='font-semibold text-base truncate'>{user?.username}</div>
+                        <div className='text-sm truncate'>
                             {user?.email}
                         </div>
                     </div>
                 </div>
-                <div className='flex items-center gap-1'>
+                <div className='flex items-center gap-2'>
                     {isProfile ? <>You</> :
                         <>
                             {userData?.following ?

@@ -53,10 +53,12 @@ const UserToMessage = ({ children }: { children: React.ReactNode }) => {
                     className='bg-transparent focus:outline-none focus:ring-0' />
             </div>}
             TriggerChildren={children}>
-            {Users.searchUsersLoading ?
-                Array(1).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)
+           <div>
+           {Users.searchUsersLoading ?
+                Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)
                 :
                 Users.searchUsers.map((item, i) => <UserCard key={i} item={item} />)}
+           </div>
         </TempleDialog>
     )
 }
