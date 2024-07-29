@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import {
     Carousel,
     CarouselContent,
@@ -10,13 +10,16 @@ import OptimizedImage from '../sky/SkyImage'
 import { Post } from '@/types'
 import { cn } from '@/lib/utils'
 
-const PostImage = ({
+const PostImage = memo(function PostImage({
     post,
 }: {
-    post: Post
-}) => {
+    post: Post | null
+}) {
+
+    if (!post) return null
+
     return (
-        <div className='px-[2px] w-auto h-auto'>
+        <div className='px-[2px] w-auto h-auto m-auto'>
             <div className='my-4 border-[1px] rounded-xl overflow-hidden'>
                 <Carousel>
                     <CarouselContent>
@@ -30,7 +33,7 @@ const PostImage = ({
                                     alt="Picture of the author"
                                     fetchPriority={"high"}
                                     sizes={"(min-width: 808px) 50vw, 100vw"}
-                                    className={cn('h-auto w-full cursor-pointer userNotSelectImg bg-muted rounded-xl')}/>
+                                    className={cn('h-auto w-full cursor-pointer userNotSelectImg bg-muted rounded-xl')} />
                             </CarouselItem>
                         ))}
                     </CarouselContent>
@@ -42,6 +45,8 @@ const PostImage = ({
             </div>
         </div>
     )
-}
+}, ((pre: any, next: any) => {
+    return false
+}))
 
 export default PostImage

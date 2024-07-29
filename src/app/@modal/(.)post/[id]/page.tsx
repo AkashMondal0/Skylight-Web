@@ -7,6 +7,7 @@ import { useSession } from 'next-auth/react'
 import { RootState } from '@/redux/store'
 import { createPostCommentApi, createPostLikeApi, destroyPostLikeApi, fetchOnePostApi } from '@/redux/services/post'
 import CommentView from '@/components/Dialog/View.Comment.Dialog'
+import PostImage from '@/components/PostFeed/PostImage'
 
 
 export default function Page({ params }: { params: { id: string } }) {
@@ -60,17 +61,14 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <Dialog open onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 flex 
-        overflow-y-auto flex-wrap gap-0
-        max-w-[960px] min-h-min"
+      <DialogContent className="p-0 flex w-[96%] md:w-full
+        overflow-y-auto md:flex-nowrap flex-wrap gap-0
+        max-w-[960px] min-h-min hideScrollbar"
         style={{
-          height: '95vh',
+          height: '100vh',
           maxHeight: '800px',
         }}>
-        {/* <ImageView
-          data={Post.viewPost}
-          loading={Post.viewPostLoading}
-          error={Post.viewPostError} /> */}
+        <PostImage post={Post.viewPost} />
         <CommentView
           error={Post.viewPostError}
           loading={Post.viewPostLoading}
