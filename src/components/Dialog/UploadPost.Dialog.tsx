@@ -91,13 +91,15 @@ export default function UploadPostDialog({
         <Dialog onOpenChange={onOpenChange}>
             <TempleDialog
                 onChange={onOpenChange}
-                TriggerChildren={children}>
-                <div className="flex flex-col h-full">
-                    <div className="flex justify-between items-center border-b py-4 px-2 flex-1">
-                        {step > 0 ? <ChevronLeft onClick={() => setStep(0)} className="cursor-pointer" /> : <div />}
+                header={<>
+                    <div className="flex justify-between items-center border-b py-4 px-4 flex-none">
+                        <div> {step > 0 ? <ChevronLeft onClick={() => setStep(0)} className="cursor-pointer" /> : <div />}</div>
                         <h1 className="text-xl font-semibold">Upload Post</h1>
                         <div />
                     </div>
+                </>}
+                TriggerChildren={children}>
+                <div className="flex flex-col h-full">
                     <div className="h-full flex-1">
                         {isFile.length > 0 ?
                             <ShowSelectedImages
@@ -213,38 +215,41 @@ const AllFileList = memo(function ({
     const captionRef = useRef<HTMLTextAreaElement | any>()
 
     return (<>
-        <div className="flex flex-col space-y-4">
-            {images.map((image: File, i) => (
-                <div key={i} className="flex my-2 justify-between items-center border p-2 rounded-xl">
-                    <div className="flex items-center space-x-2">
-                        <OptimizedImage
-                            width={320}
-                            height={320}
-                            sizes="(min-width: 808px) 10vw, 15vw"
-                            src={URL.createObjectURL(image)}
-                            alt={image.name}
-                            className="w-16 h-16 object-cover rounded-xl"
-                        />
-                        <p>{image.name.slice(0, 11)}...</p>
-                    </div>
-                    <Button onClick={() => handleDeleteImage(i)} variant={"outline"} className="rounded-xl p-2">
-                        <Trash2 className="text-red-500" />
-                    </Button>
-                </div>))}
-            <textarea
-                className="border rounded-xl p-2"
-                placeholder="Write a caption..."
-                ref={captionRef}
-            />
-            <DialogClose id="closeDialog"></DialogClose>
-            <Button variant={"secondary"}
-                onClick={() => {
-                    handleUpload(captionRef.current.value)
-                }}
-                className="rounded-xl p-2 w-full">
-                Upload
-            </Button>
-            <div className="h-10"/>
+        <div className="flex flex-col space-y-4 justify-between h-full">
+            <div>
+                {images.map((image: File, i) => (
+                    <div key={i} className="flex my-2 justify-between items-center border p-2 rounded-xl">
+                        <div className="flex items-center space-x-2">
+                            <OptimizedImage
+                                width={320}
+                                height={320}
+                                sizes="(min-width: 808px) 10vw, 15vw"
+                                src={URL.createObjectURL(image)}
+                                alt={image.name}
+                                className="w-16 h-16 object-cover rounded-xl"
+                            />
+                            <p>{image.name.slice(0, 11)}...</p>
+                        </div>
+                        <Button onClick={() => handleDeleteImage(i)} variant={"outline"} className="rounded-xl p-2">
+                            <Trash2 className="text-red-500" />
+                        </Button>
+                    </div>))}
+            </div>
+            <div className="w-full">
+                <textarea
+                    className="border rounded-xl p-2 w-full"
+                    placeholder="Write a caption..."
+                    ref={captionRef} />
+                <DialogClose id="closeDialog"></DialogClose>
+                <Button variant={"secondary"}
+                    onClick={() => {
+                        handleUpload(captionRef.current.value)
+                    }}
+                    className="rounded-xl p-2 w-full">
+                    Upload
+                </Button>
+                <div className="h-5" />
+            </div>
         </div>
     </>)
 }, ((preProps: any, nextProps: any) => {

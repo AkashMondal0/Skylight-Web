@@ -32,11 +32,15 @@ export const TempleDialog = ({
     TriggerChildren,
     children,
     headerTitle,
-    onChange
+    header,
+    onChange,
+    footer
 }: {
     TriggerChildren: React.ReactNode
     children: React.ReactNode
     headerTitle?: string
+    header?: React.ReactNode
+    footer?:React.ReactNode
     onChange?: (e: boolean) => void
 }) => {
     return (
@@ -46,10 +50,12 @@ export const TempleDialog = ({
             </DialogTrigger>
             <DialogContent className="p-0 h-[70%] overflow-hidden" style={{ borderRadius: 30 }}>
                 <div className='flex flex-col overflow-hidden h-full'>
-                    {headerTitle ?<h1 className="font-semibold text-xl text-center border-b py-4 flex-none mx-5">{headerTitle}</h1>:<></>}
+                    {header}
+                    {headerTitle ? <h1 className="font-semibold text-xl text-center border-b py-4 flex-none mx-5">{headerTitle}</h1> : <></>}
                     <div className='px-4 flex-1 overflow-y-auto scrollbarStyle'>
                         {children}
                     </div>
+                    {footer}
                 </div>
             </DialogContent>
         </Dialog>
