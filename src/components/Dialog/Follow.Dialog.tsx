@@ -1,18 +1,16 @@
 import React from "react"
 import { Button } from "@/components/ui/button"
 import {
-    Dialog,
-    DialogContent,
     DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
 import { AuthorData } from "@/types"
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import { DialogClose } from "@radix-ui/react-dialog"
+import { TempleAlertDialog } from "./Temple.Dialog"
 
-interface FollowerRemoveDialogProps {
+interface Props {
     children: React.ReactNode
     HandleConfirm: () => void
     HandleRejected: () => void
@@ -24,13 +22,11 @@ export function FollowerRemoveDialog({
     HandleRejected,
     HandleConfirm,
     user
-}: FollowerRemoveDialogProps) {
+}: Props) {
     return (
-        <Dialog>
-            <DialogTrigger asChild>
-                {children}
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+        <TempleAlertDialog
+            TriggerChildren={children}>
+            <div className="space-y-4 my-8">
                 <SkyAvatar
                     sizeImage='10vw'
                     url={user.profilePicture ?? "/user.jpg"}
@@ -53,16 +49,9 @@ export function FollowerRemoveDialog({
                         </Button>
                     </DialogClose>
                 </div>
-            </DialogContent>
-        </Dialog>
+            </div>
+        </TempleAlertDialog>
     )
-}
-
-interface UnFollowDialogProps {
-    children: React.ReactNode
-    HandleConfirm: () => void
-    HandleRejected: () => void
-    user: AuthorData
 }
 
 export function UnFollowDialog({
@@ -70,13 +59,11 @@ export function UnFollowDialog({
     HandleRejected,
     HandleConfirm,
     user
-}: UnFollowDialogProps) {
+}: Props) {
     return (
-        <Dialog>
-            <DialogTrigger asChild>
-                {children}
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+        <TempleAlertDialog
+            TriggerChildren={children}>
+            <div className="space-y-4 my-8">
                 <SkyAvatar
                     sizeImage='10vw'
                     url={user.profilePicture ?? "/user.jpg"}
@@ -99,7 +86,7 @@ export function UnFollowDialog({
                         </Button>
                     </DialogClose>
                 </div>
-            </DialogContent>
-        </Dialog>
+            </div>
+        </TempleAlertDialog>
     )
 }

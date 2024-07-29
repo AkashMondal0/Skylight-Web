@@ -14,13 +14,13 @@ import {
     CarouselPrevious,
     type CarouselApi,
 } from "@/components/ui/carousel"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { useDispatch } from "react-redux"
 import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 import OptimizedImage from "@/components/sky/SkyImage"
 import { UploadImagesFireBaseApi } from "@/redux/services/account"
 import { TempleDialog } from "./Temple.Dialog"
+
 export default function UploadPostDialog({
     children
 }: {
@@ -88,44 +88,42 @@ export default function UploadPostDialog({
 
     return (
 
-        <Dialog onOpenChange={onOpenChange}>
-            <TempleDialog
-                onChange={onOpenChange}
-                header={<>
-                    <div className="flex justify-between items-center border-b py-4 px-4 flex-none">
-                        <div> {step > 0 ? <ChevronLeft onClick={() => setStep(0)} className="cursor-pointer" /> : <div />}</div>
-                        <h1 className="text-xl font-semibold">Upload Post</h1>
-                        <div />
-                    </div>
-                </>}
-                TriggerChildren={children}>
-                <div className="flex flex-col h-full">
-                    <div className="h-full flex-1">
-                        {isFile.length > 0 ?
-                            <ShowSelectedImages
-                                setStep={setStep}
-                                step={step}
-                                handleUpload={handleUpload}
-                                selectFile={selectFile}
-                                handleDeleteImage={handleDeleteImage}
-                                images={isFile} />
-                            : <div className="flex flex-col items-center justify-center h-full">
-                                <ImageUp className="w-32 h-32 mx-auto cursor-pointer" onClick={selectFile} />
-                                <div className="flex justify-center my-4 px-5">
-                                    <Button onClick={selectFile} variant={"default"} className="rounded-xl p-2 w-52">
-                                        Upload
-                                    </Button>
-                                </div>
-                            </div>}
-                    </div>
+        <TempleDialog
+            onOpenChange={onOpenChange}
+            header={<>
+                <div className="flex justify-between items-center border-b py-4 px-4 flex-none mx-4">
+                    <div> {step > 0 ? <ChevronLeft onClick={() => setStep(0)} className="cursor-pointer" /> : <div />}</div>
+                    <h1 className="text-xl font-semibold">Upload Post</h1>
+                    <div />
                 </div>
-                <input
-                    // video and photo upload
-                    type="file" accept="image/*"
-                    id="file" multiple onChange={onChangeFilePicker}
-                    className="hidden" />
-            </TempleDialog>
-        </Dialog>
+            </>}
+            TriggerChildren={children}>
+            <div className="flex flex-col h-full">
+                <div className="h-full flex-1">
+                    {isFile.length > 0 ?
+                        <ShowSelectedImages
+                            setStep={setStep}
+                            step={step}
+                            handleUpload={handleUpload}
+                            selectFile={selectFile}
+                            handleDeleteImage={handleDeleteImage}
+                            images={isFile} />
+                        : <div className="flex flex-col items-center justify-center h-full">
+                            <ImageUp className="w-32 h-32 mx-auto cursor-pointer" onClick={selectFile} />
+                            <div className="flex justify-center my-4 px-5">
+                                <Button onClick={selectFile} variant={"default"} className="rounded-xl p-2 w-52">
+                                    Upload
+                                </Button>
+                            </div>
+                        </div>}
+                </div>
+            </div>
+            <input
+                // video and photo upload
+                type="file" accept="image/*"
+                id="file" multiple onChange={onChangeFilePicker}
+                className="hidden" />
+        </TempleDialog>
     )
 }
 
@@ -203,7 +201,7 @@ const ShowSelectedImages = ({
     )
 }
 
-const AllFileList = memo(function ({
+const AllFileList = ({
     images,
     handleDeleteImage,
     handleUpload
@@ -211,7 +209,7 @@ const AllFileList = memo(function ({
     images: File[],
     handleDeleteImage: (id: number) => void
     handleUpload: (caption: string) => void
-}) {
+}) => {
     const captionRef = useRef<HTMLTextAreaElement | any>()
 
     return (<>
@@ -252,6 +250,4 @@ const AllFileList = memo(function ({
             </div>
         </div>
     </>)
-}, ((preProps: any, nextProps: any) => {
-    return preProps.images.length === nextProps.images.length
-}))
+}

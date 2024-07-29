@@ -13,13 +13,14 @@ import { useRouter } from 'next/navigation';
 import { MessagesSquare } from 'lucide-react';
 import { searchUsersProfileApi } from '@/redux/services/users';
 import { LoadingUserCardWithButton } from '@/components/loading/Card';
+import { TempleDialog } from '@/components/Dialog/Temple.Dialog';
 
 
 
 const UserToMessage = ({ children }: { children: React.ReactNode }) => {
     const dispatch = useDispatch();
     const inputRef = React.useRef<any>();
-    const Users = useSelector((Root: RootState)=> Root.users);
+    const Users = useSelector((Root: RootState) => Root.users);
 
     const handleSearch = useCallback(() => {
         if (inputRef?.current?.value) {
@@ -40,35 +41,23 @@ const UserToMessage = ({ children }: { children: React.ReactNode }) => {
     }
 
     return (
-        <Dialog onOpenChange={onOpenChange}>
-            <DialogTrigger asChild>
-                {children}
-            </DialogTrigger>
-            <DialogContent className="p-0 max-h-none flex flex-col">
-                <div className='w-full flex justify-center h-full'>
-                    <div className='max-w-[600px] w-full p-4'>
-                        <h1 className="font-semibold text-lg text-center mb-4">New message</h1>
-                        <Separator />
-                        <div className={`w-full p-2 px-4 border bg-secondary my-4 flex items-center gap-3
-                    text-secondary-foreground rounded-xl focus:outline-none focus:ring-0`}>
-                            <p className='font-semibold'>To:</p>  <input type="text" placeholder='Search'
-                                ref={inputRef}
-                                onChange={debouncedHandleSearch}
-                                className='w-full bg-transparent focus:outline-none focus:ring-0' />
-                        </div>
-                        <Separator />
-                        <div className='h-5' />
-                        <ScrollArea className='flex-1 h-96'>
-                            {Users.searchUsersLoading ?
-                                <div className='space-y-4'>
-                                    {Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)}
-                                </div> :
-                                Users.searchUsers.map((item, i) => <UserCard key={i} item={item} />)}
-                        </ScrollArea>
-                    </div>
-                </div>
-            </DialogContent>
-        </Dialog>
+        <TempleDialog
+            onOpenChange={onOpenChange}
+            headerTitle='New Message'
+            header={<div className={`p-2 border bg-secondary my-4 flex items-center gap-3
+            text-secondary-foreground rounded-xl focus:outline-none focus:ring-0 mx-4`}>
+                <p className='font-semibold'>To:</p>
+                <input type="text" placeholder='Search'
+                    ref={inputRef}
+                    onChange={debouncedHandleSearch}
+                    className='bg-transparent focus:outline-none focus:ring-0' />
+            </div>}
+            TriggerChildren={children}>
+            {Users.searchUsersLoading ?
+                Array(1).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)
+                :
+                Users.searchUsers.map((item, i) => <UserCard key={i} item={item} />)}
+        </TempleDialog>
     )
 }
 
