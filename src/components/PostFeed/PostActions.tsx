@@ -18,6 +18,7 @@ const PostActions = ({
         likeCount: post.likeCount
     })
     const likeHandle = useCallback(async () => {
+        if (post.isDummy) return toast("this dummy post")
         const res = await dispatch(createPostLikeApi(post.id) as any) as disPatchResponse<any>
         if (!res.error) {
             setLike((pre) => ({ ...pre, isLike: true, likeCount: pre.likeCount + 1 }))
@@ -28,6 +29,7 @@ const PostActions = ({
 
 
     const disLikeHandle = useCallback(async () => {
+        if (post.isDummy) return toast("this dummy post")
         const res = await dispatch(destroyPostLikeApi(post.id) as any) as disPatchResponse<any>
         if (!res.error) {
             setLike((pre) => ({ ...pre, isLike: false, likeCount: pre.likeCount - 1 }))
@@ -37,12 +39,13 @@ const PostActions = ({
     }, [])
 
     const fetchLikes = async () => {
+        if (post.isDummy) return toast("this dummy post")
         dispatch(fetchPostLikesApi({
-          offset: 0,
-          limit: 16,
-          id: post.id
+            offset: 0,
+            limit: 16,
+            id: post.id
         }) as any)
-      }
+    }
     return (
         <>
             <div className=' mt-5 mb-1 mx-3 flex justify-between'>
@@ -67,9 +70,9 @@ const PostActions = ({
                 }}>{like.likeCount} likes</div>
                 {/* sm */}
                 <LikeViewModal>
-                <div className='font-semibold cursor-pointer hidden sm:block' onClick={fetchLikes}>
-                    {like.likeCount} likes
-                </div>
+                    <div className='font-semibold cursor-pointer hidden sm:block' onClick={fetchLikes}>
+                        {like.likeCount} likes
+                    </div>
                 </LikeViewModal>
             </div>
         </>

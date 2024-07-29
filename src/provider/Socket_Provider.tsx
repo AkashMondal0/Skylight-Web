@@ -52,6 +52,7 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
             // incoming events
             socket?.on(event_name.conversation.message, (data: Message) => {
                 dispatch(setMessage(data))
+                toast("User Disconnected")
             });
             socket?.on(event_name.conversation.seen, (data: any) => {
                 
@@ -59,9 +60,13 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
             socket?.on(event_name.conversation.typing, (data: Typing) => {
                 dispatch(setTyping(data))
             });
+            socket?.on("test", (data: Typing) => {
+                toast("From Server Test Event Message")
+            });
             return () => {
                 socket.off('connect')
                 socket.off('disconnect')
+                socket.off('test')
                 socket.off(event_name.conversation.message)
                 socket.off(event_name.conversation.seen)
                 socket.off(event_name.conversation.typing)

@@ -45,7 +45,7 @@ export const PostsSlice = createSlice({
     name: 'PostFeed',
     initialState: PostState,
     reducers: {
-        setMoreData:(state, action: PayloadAction<Post[]>)=>{
+        setMoreData: (state, action: PayloadAction<Post[]>) => {
             if (action.payload?.length > 0) {
                 state.feeds.push(...action.payload)
             }
@@ -53,6 +53,16 @@ export const PostsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(fetchAccountFeedApi.pending, (state) => {
+                state.feedsLoading = false
+                state.feedsError = null
+            })
+            .addCase(fetchAccountFeedApi.fulfilled, (state, action: PayloadAction<Post[]>) => {
+                if (action.payload?.length > 0) {
+                    state.feeds.push(...action.payload)
+                }
+                state.feedsLoading = false
+            })
             .addCase(fetchAccountFeedApi.rejected, (state, action) => {
                 state.feedsLoading = false
                 state.feedsError = {

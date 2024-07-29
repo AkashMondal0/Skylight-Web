@@ -35,7 +35,7 @@ export const ProfileHeader = memo(function ProfileHeader() {
                     <SkyAvatar
                         sizeImage='20vw'
                         url={profileUser.profilePicture || "/user.jpg"}
-                        className={'sm:w-36 object-cover bg-slate-400 sm:h-36 w-28 h-28 rounded-full sm:mr-8'} />
+                        className={'sm:w-36 object-cover sm:h-36 w-28 h-28 rounded-full sm:mr-8'} />
                     <div className='flex flex-col justify-between gap-5'>
                         <FollowButton
                             isFollowing={profileUser.friendship.following}

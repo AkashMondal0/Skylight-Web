@@ -208,7 +208,7 @@ export const fetchAccountFeedApi = createAsyncThunk(
                 query: query,
             })
 
-            return [...res.feedTimelineConnection,..._posts]
+            return res.feedTimelineConnection.concat(_posts)
         } catch (error) {
 
         }

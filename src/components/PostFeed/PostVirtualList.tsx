@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual';
 import useWindowDimensions from '@/lib/useWindowDimensions';
 import { useSelector } from 'react-redux';
@@ -11,7 +11,7 @@ import { PostUploadProgress } from '@/components/Alert/PostUploadProgress';
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 
-const PostVirtualList = ({ }: {}) => {
+const PostVirtualList = memo(function PostVirtualList() {
     const posts = useSelector((Root: RootState) => Root.posts)
     const parentRef = React.useRef<HTMLDivElement>(null)
     const dimension = useWindowDimensions()
@@ -53,7 +53,7 @@ const PostVirtualList = ({ }: {}) => {
                 }}
             >
                 <AppHeader />
-                <Stories/>
+                <Stories />
                 <PostUploadProgress />
                 <div
                     style={{
@@ -86,7 +86,7 @@ const PostVirtualList = ({ }: {}) => {
             </div>
         </>
     )
-}
+}, (() => true))
 
 export default PostVirtualList
 
