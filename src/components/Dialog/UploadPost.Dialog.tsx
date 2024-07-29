@@ -3,11 +3,9 @@ import { Button } from "@/components/ui/button"
 import {
     Dialog,
     DialogClose,
-    DialogContent,
-    DialogTrigger,
 } from "@/components/ui/dialog"
 import { ChevronLeft, ImageUp, Trash2 } from "lucide-react"
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import React, { memo, useCallback, useEffect, useRef, useState } from "react"
 import {
     Carousel,
     CarouselContent,
@@ -22,6 +20,7 @@ import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 import OptimizedImage from "@/components/sky/SkyImage"
 import { UploadImagesFireBaseApi } from "@/redux/services/account"
+import { TempleDialog } from "./Temple.Dialog"
 export default function UploadPostDialog({
     children
 }: {
@@ -29,7 +28,6 @@ export default function UploadPostDialog({
 }) {
     const dispatch = useDispatch()
     const [isFile, setIsFile] = useState<File[]>([])
-    const isCaption = useRef<HTMLTextAreaElement>()
     const session = useSession().data?.user
     const [step, setStep] = useState(0)
 
@@ -58,7 +56,7 @@ export default function UploadPostDialog({
         setIsFile(filteredImages)
     }
 
-    const handleUpload = async () => {
+    const handleUpload = async (caption: string) => {
         if (!session?.id) {
             return ToastAlert('Please login to upload post')
         }
@@ -70,7 +68,7 @@ export default function UploadPostDialog({
         }
         dispatch(UploadImagesFireBaseApi({
             isFile,
-            isCaption: isCaption?.current?.value ? isCaption?.current?.value : "",
+            isCaption: caption ?? "",
             profileId: session?.id
         }) as any)
         setIsFile([])
@@ -89,41 +87,42 @@ export default function UploadPostDialog({
     }
 
     return (
+
         <Dialog onOpenChange={onOpenChange}>
-            <DialogTrigger asChild>
-                {children}
-            </DialogTrigger>
-            <DialogContent className="w-4/5 p-2 rounded-xl">
-                <div className="flex flex-col space-y-4">
-                    <div className="flex justify-between items-center border-b pb-4 px-2">
+            <TempleDialog
+                onChange={onOpenChange}
+                TriggerChildren={children}>
+                <div className="flex flex-col h-full">
+                    <div className="flex justify-between items-center border-b py-4 px-2 flex-1">
                         {step > 0 ? <ChevronLeft onClick={() => setStep(0)} className="cursor-pointer" /> : <div />}
                         <h1 className="text-xl font-semibold">Upload Post</h1>
                         <div />
                     </div>
-                    {isFile.length > 0 ?
-                        <ShowSelectedImages
-                            setStep={setStep}
-                            step={step}
-                            isCaption={isCaption}
-                            uploadFiles={handleUpload}
-                            selectFile={selectFile}
-                            handleDeleteImage={handleDeleteImage}
-                            images={isFile} />
-                        : <div>
-                            <ImageUp className="w-32 h-32 mx-auto cursor-pointer" onClick={selectFile} />
-                            <div className="flex justify-center my-4 px-5">
-                                <Button onClick={selectFile} variant={"default"} className="rounded-xl p-2 w-full">
-                                    Upload
-                                </Button>
-                            </div>
-                        </div>}
-                    <input
-                        // video and photo upload
-                        type="file" accept="image/*"
-                        id="file" multiple onChange={onChangeFilePicker}
-                        className="hidden" />
+                    <div className="h-full flex-1">
+                        {isFile.length > 0 ?
+                            <ShowSelectedImages
+                                setStep={setStep}
+                                step={step}
+                                handleUpload={handleUpload}
+                                selectFile={selectFile}
+                                handleDeleteImage={handleDeleteImage}
+                                images={isFile} />
+                            : <div className="flex flex-col items-center justify-center h-full">
+                                <ImageUp className="w-32 h-32 mx-auto cursor-pointer" onClick={selectFile} />
+                                <div className="flex justify-center my-4 px-5">
+                                    <Button onClick={selectFile} variant={"default"} className="rounded-xl p-2 w-52">
+                                        Upload
+                                    </Button>
+                                </div>
+                            </div>}
+                    </div>
                 </div>
-            </DialogContent>
+                <input
+                    // video and photo upload
+                    type="file" accept="image/*"
+                    id="file" multiple onChange={onChangeFilePicker}
+                    className="hidden" />
+            </TempleDialog>
         </Dialog>
     )
 }
@@ -132,8 +131,7 @@ export default function UploadPostDialog({
 const ShowSelectedImages = ({
     images,
     handleDeleteImage,
-    uploadFiles,
-    isCaption,
+    handleUpload,
     step,
     setStep,
     selectFile
@@ -141,8 +139,7 @@ const ShowSelectedImages = ({
     images: File[]
     handleDeleteImage: (index: number) => void
     NextStep?: () => void
-    uploadFiles?: () => void
-    isCaption: any
+    handleUpload: (caption: string) => void
     step: number
     selectFile: () => void
     setStep: (step: number) => void
@@ -164,56 +161,25 @@ const ShowSelectedImages = ({
 
     // scroll list of images
     if (step === 1) {
-        return <>
-            <div className="flex flex-col space-y-4">
-                <ScrollArea className="max-h-96 h-auto">
-                    {images.map((image: File, i) => (
-                        <div key={i} className="flex my-2 justify-between items-center border p-2 rounded-xl">
-                            <div className="flex items-center space-x-2">
-                                <OptimizedImage
-                                    width={320}
-                                    height={320}
-                                    sizes="(min-width: 808px) 10vw, 15vw"
-                                    src={URL.createObjectURL(image)}
-                                    alt={image.name}
-                                    className="w-16 h-16 object-cover rounded-xl"
-                                />
-                                <p>{image.name.slice(0, 11)}...</p>
-                            </div>
-                            <Button onClick={() => handleDeleteImage(i)} variant={"outline"} className="rounded-xl p-2">
-                                <Trash2 className="text-red-500" />
-                            </Button>
-                        </div>))}
-                </ScrollArea>
-                <textarea
-                    className="border rounded-xl p-2"
-                    placeholder="Write a caption..."
-                    ref={isCaption}
-                />
-                <DialogClose id="closeDialog"></DialogClose>
-                <Button variant={"secondary"}
-                    onClick={uploadFiles}
-                    className="rounded-xl p-2 w-full">
-                    Upload
-                </Button>
-
-            </div>
-        </>
+        return <AllFileList
+            handleDeleteImage={handleDeleteImage}
+            images={images}
+            handleUpload={handleUpload} />
     }
 
     return (
         <div className="mx-auto">
-            <Carousel setApi={setApi} className="w-full max-w-80 max-h-80">
+            <Carousel setApi={setApi} className="w-full max-h-80">
                 <CarouselContent>
                     {images.map((_, index) => (
-                        <CarouselItem key={index} className=" m-auto">
+                        <CarouselItem key={index} className="m-auto">
                             <OptimizedImage
                                 width={320}
                                 height={320}
                                 sizes="(min-width: 808px) 30vw, 50vw"
                                 src={URL.createObjectURL(images[index])}
                                 alt={`Image ${index + 1}`}
-                                className="w-auto h-auto max-h-80 object-cover rounded-xl"
+                                className="w-auto h-auto max-h-80 object-cover rounded-xl mx-auto"
                             />
                         </CarouselItem>
                     ))}
@@ -228,11 +194,59 @@ const ShowSelectedImages = ({
                 className="rounded-xl p-2 mb-4 w-full">
                 Add
             </Button>
-            <Button variant={"default"} onClick={() => {
-                setStep(1)
-            }} className="rounded-xl p-2 mb-4 w-full">
+            <Button variant={"default"} onClick={() => { setStep(1) }} className="rounded-xl p-2 mb-4 w-full">
                 Next
             </Button>
         </div>
     )
 }
+
+const AllFileList = memo(function ({
+    images,
+    handleDeleteImage,
+    handleUpload
+}: {
+    images: File[],
+    handleDeleteImage: (id: number) => void
+    handleUpload: (caption: string) => void
+}) {
+    const captionRef = useRef<HTMLTextAreaElement | any>()
+
+    return (<>
+        <div className="flex flex-col space-y-4">
+            {images.map((image: File, i) => (
+                <div key={i} className="flex my-2 justify-between items-center border p-2 rounded-xl">
+                    <div className="flex items-center space-x-2">
+                        <OptimizedImage
+                            width={320}
+                            height={320}
+                            sizes="(min-width: 808px) 10vw, 15vw"
+                            src={URL.createObjectURL(image)}
+                            alt={image.name}
+                            className="w-16 h-16 object-cover rounded-xl"
+                        />
+                        <p>{image.name.slice(0, 11)}...</p>
+                    </div>
+                    <Button onClick={() => handleDeleteImage(i)} variant={"outline"} className="rounded-xl p-2">
+                        <Trash2 className="text-red-500" />
+                    </Button>
+                </div>))}
+            <textarea
+                className="border rounded-xl p-2"
+                placeholder="Write a caption..."
+                ref={captionRef}
+            />
+            <DialogClose id="closeDialog"></DialogClose>
+            <Button variant={"secondary"}
+                onClick={() => {
+                    handleUpload(captionRef.current.value)
+                }}
+                className="rounded-xl p-2 w-full">
+                Upload
+            </Button>
+            <div className="h-10"/>
+        </div>
+    </>)
+}, ((preProps: any, nextProps: any) => {
+    return preProps.images.length === nextProps.images.length
+}))
