@@ -21,8 +21,10 @@ const Page = ({
     </div>
   )
 }
-
-export default Page
+const App = () =>{
+  return <>coming soon</>
+}
+export default App
 
 
 const ReelPost = ({ defaultPlay, index }: { defaultPlay: boolean, index: number }) => {

@@ -14,7 +14,7 @@ export const PostUploadProgress = () => {
             <div className='flex-1 flex gap-2 pr-4'>
                 <HardDriveUpload className="h-10 w-10 rounded-md" />
                 <div className='w-full space-y-2'>
-                    <p className='text-lg font-semibold'>Upload a post</p>
+                    <p className='text-lg font-semibold'>Uploading a post</p>
                     <div className='loader'></div>
                 </div>
             </div>

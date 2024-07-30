@@ -3,14 +3,12 @@ import { Separator } from '@/components/ui/separator'
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import { useSession } from 'next-auth/react'
 import { fetchPostLikesApi } from '@/redux/services/post'
 import { LoadingUserCardWithButton } from '@/components/loading/Card'
 import { UserItemFollow } from '@/components/Card/UserItem'
 
 export default function Page({ params }: { params: { post: string } }) {
   const dispatch = useDispatch()
-  const session = useSession().data?.user
   const likes = useSelector((Root: RootState) => Root.posts)
   const loadedRef = useRef(false)
 
