@@ -1,6 +1,7 @@
 import React from 'react'
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import { Post } from '@/types'
+import { timeAgoFormat } from '@/lib/timeFormat'
 
 const PostHeader = ({
     post,
@@ -15,8 +16,8 @@ const PostHeader = ({
                 onClick={() => onNavigate(`/${post.user.username}`)}>
                 <SkyAvatar url={post.user.profilePicture || "/user.jpg"} className='h-12 w-12 mx-auto border-fuchsia-500 border-[3px] p-[2px]' />
                 <div>
-                    <div className='font-semibold text-base'>{post.user.username} .
-                        <span className='font-light text-base'>1d</span>
+                    <div className='font-semibold text-base'>{post.user.username+" • "} 
+                        <span className='font-light text-base'>{timeAgoFormat(post.createdAt)}</span>
                     </div>
                     <div className='text-sm'>Los Angeles, California</div>
                 </div>

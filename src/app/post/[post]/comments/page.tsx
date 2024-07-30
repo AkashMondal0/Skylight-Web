@@ -1,50 +1,53 @@
 "use client"
+import { CommentInput } from '@/components/comment/Comment.Input'
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Separator } from '@/components/ui/separator'
-import { User } from '@/types'
-import { Smile } from 'lucide-react'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import React, { useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { timeAgoFormat } from '@/lib/timeFormat'
+import { fetchOnePostApi } from '@/redux/services/post'
+import { RootState } from '@/redux/store'
+import { Comment } from '@/types'
+import { Heart, Smile } from 'lucide-react'
+import React, { memo, useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-const Page = () => {
-  const router = useRouter()
+const Page = ({ params }: { params: { post: string } }) => {
   const dispatch = useDispatch()
-  const inputRef = useRef<HTMLInputElement>(null)
-  const session = useSession().data?.user
+  const loadedRef = useRef(false)
+  const post = useSelector((Root: RootState) => Root.posts.viewPost)
 
-  const handleComment = () => {
-    console.log({
-      // postId: data.id,
-      userId: session?.id,
-      comment: inputRef.current?.value
-    })
-    // if (session) {
-    //   dispatch(createPostCommentApi({
-    //     postId: data.id,
-    //     userId: session?.id,
-    //     comment: inputRef.current
-    //   }) as any)
-    // }
-  }
+  useEffect(() => {
+    if (!loadedRef.current) {
+      dispatch(fetchOnePostApi(params.post) as any)
+      loadedRef.current = true;
+    }
+  }, []);
+
+  if (!post) return null
+
   return (
     <>
-      <div className='w-full flex flex-col justify-center min-h-dvh px-2'>
-        <div className='h-auto'>
-          {[...Array(50)].map((_, i) => <UserCard key={i} />)}
+      {/* header */}
+      <div className='max-w-[600px] w-full min-h-dvh'>
+        <div className='sticky top-0 bg-background z-10 py-3 border-b'>
+          <h1 className="font-semibold text-lg text-center">Comments</h1>
         </div>
-      </div>
-      <div className='w-auto h-auto rounded-2xl gap-1 bg-background flex items-center m-2 sticky bottom-0'>
-        <div> <Smile className="w-6 h-6" /></div>
-        <input type="text"
-          placeholder='Add a comment'
-          multiple
-          ref={inputRef}
-          className='w-full h-12 p-4 outline-none rounded-2xl border' />
-        <Button variant={"default"} onClick={handleComment} className='w-full h-12 flex-1 rounded-2xl'>Post</Button>
+
+        <div className='h-full px-3 space-y-3'>
+          <div className="flex border-b py-4 mb-4">
+            <SkyAvatar url={post?.user?.profilePicture || "/user.jpg"} className='h-12 w-12 border-fuchsia-500 border-[3px] p-[2px]' />
+            <div className="flex flex-col ml-4">
+              <p className="break-all"><span className='font-semibold text-lg'>
+                {post?.user?.username}</span> {post?.content}
+              </p>
+              <div className="text-sm text-gray-500">{timeAgoFormat(post?.createdAt)}</div>
+            </div>
+          </div>
+          {/* list */}
+          {post?.comments.map((comment, i) => <CommentItem key={i} comment={comment} />)}
+        </div>
+
+        {/* input */}
+        <CommentInput data={post} hideActionButtons />
       </div>
     </>
   )
@@ -52,29 +55,43 @@ const Page = () => {
 
 export default Page
 
-const UserCard = ({
-  user
+const CommentItem = memo(function CommentItem({
+  comment
 }: {
-  user?: User
-}) => {
+  comment?: Comment
+}) {
   return (
     <>
-      <div className='flex justify-between px-2 my-4'>
-        <div className='flex space-x-2 items-center'>
-          <SkyAvatar url={user?.profilePicture || "/user.jpg"} className='h-12 w-12 mx-auto ' />
+      <div className="flex gap-2">
+        <SkyAvatar url={comment?.user?.profilePicture || "/user.jpg"}
+          className='h-12 w-12 border-fuchsia-500 border-[3px] p-[2px]' />
+
+        <div className="flex justify-between items-center w-full flex-1">
           <div>
-            <div className='font-semibold text-base'>{user?.username}</div>
-            <div className='text-sm'>
-              {user?.email}
-            </div>
+            <p className="break-all text-base font-light">
+              <span className='font-semibold text-lg mr-2'>
+                {comment?.user?.username}
+              </span>
+              {comment?.content}
+            </p>
+            <div className="text-sm text-gray-500">{timeAgoFormat(comment?.createdAt)}</div>
           </div>
-        </div>
-        <div className='flex items-center'>
-          <Button variant={"default"} className=" rounded-xl">
-            follow
-          </Button>
+
+          {/* button */}
+          <div className='flex items-center'>
+            <Heart className="w-5 h-5" />
+          </div>
         </div>
       </div>
     </>
   )
+})
+
+const EmptyComment = () => {
+  return <div className='flex justify-center items-center h-96'>
+    <div>
+      <p className='font-bold text-2xl text-center'>No comments yet</p>
+      <p className='text-center'>Start the conversation.</p>
+    </div>
+  </div>
 }

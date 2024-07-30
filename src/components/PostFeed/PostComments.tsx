@@ -33,7 +33,7 @@ export const PostComments = ({
             {/* sm */}
             <div className='text-sm cursor-pointer sm:hidden block'
                 onClick={() => {
-                    onNavigate(`/post/${post.id}`)
+                    onNavigate(`/post/${post.id}/comments`)
                 }}>View all {post.commentCount} comments</div>
         </div>
     )

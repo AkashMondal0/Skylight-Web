@@ -46,7 +46,7 @@ const PostImage = memo(function PostImage({
         </div>
     )
 }, ((pre: any, next: any) => {
-    return false
+    return pre.post.id == next.post.id
 }))
 
 export default PostImage

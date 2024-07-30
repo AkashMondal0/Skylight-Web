@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { AuthorData, Post } from '@/types'
+import { AuthorData, Comment, Post } from '@/types'
 import { fetchAccountFeedApi } from '@/redux/services/account'
-import { fetchOnePostApi, fetchPostLikesApi } from '@/redux/services/post'
+import { createPostCommentApi, fetchOnePostApi, fetchPostLikesApi } from '@/redux/services/post'
 
 export type TypeActionLike = 'feeds' | 'singleFeed'
 // Define a type for the slice state
@@ -98,6 +98,18 @@ export const PostsSlice = createSlice({
             .addCase(fetchPostLikesApi.rejected, (state, action) => {
                 state.likeLoading = false
                 state.likesUserList = []
+            })
+            // createPostCommentApi
+            .addCase(createPostCommentApi.pending, (state) => {
+                state.commentLoading = true
+            })
+            .addCase(createPostCommentApi.fulfilled, (state, action: PayloadAction<Comment>) => {
+                console.info(action.payload)
+                state.viewPost?.comments.unshift(action.payload)
+                state.commentLoading = false
+            })
+            .addCase(createPostCommentApi.rejected, (state, action) => {
+                state.commentLoading = false
             })
     },
 })
