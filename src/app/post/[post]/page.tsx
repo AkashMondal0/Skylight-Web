@@ -1,18 +1,17 @@
 "use client"
-import React, { useEffect, useRef } from 'react'
+import React, { Fragment, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { ChevronLeft } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { fetchOnePostApi } from '@/redux/services/post'
-import { PageLoading } from '@/components/loading/Post.Page'
 import NotFound from '@/components/Error/NotFound'
 import { Post as PostItem } from "@/components/PostFeed/Post"
 import { CommentHeader } from '@/components/Header/CommentHeader'
 import { CommentList } from '@/components/comment/Comment.List'
 import { CommentInput } from '@/components/comment/Comment.Input'
 import PostImage from '@/components/PostFeed/PostImage'
-import { ProfilePost } from '@/components/PostFeed/ProfilePost'
+import { PostPostLoading } from '@/components/loading/Post.Page'
 
 const PostPage = ({ params }: { params: { post: string } }) => {
   const router = useRouter()
@@ -28,26 +27,26 @@ const PostPage = ({ params }: { params: { post: string } }) => {
     }
   }, []);
 
-  if (!Post.viewPostLoading && Post.viewPostError) {
+  if (Post.viewPostLoading || !loadedRef.current) {
+    return <Fragment><PostPostLoading /></Fragment>
+  }
+
+  if (!Post.viewPostLoading && Post.viewPostError || !Post.viewPost) {
     return <NotFound />
   }
 
-  if (Post.viewPostLoading) {
-    return <PageLoading />
-  }
-
-  if (Post.viewPost) {
-    return (
-      <div className='w-full h-full'>
-        {/* lg */}
-        <div className='max-h-[690px] max-w-[860px] mx-auto p-4 md:flex hidden '>
+  return (
+    <div className='w-full h-full'>
+      {/* lg */}
+      <div className='w-full max-h-full max-w-[760px] mx-auto p-4 md:flex hidden '>
+        <div className='justify-center'>
           <div className='flex border'>
             {/* left side */}
             <div className='w-96 h-auto m-auto'>
               <PostImage post={Post.viewPost} />
             </div>
             {/* right side */}
-            <div className="flex max-h-[688px] flex-col justify-between w-80 flex-1 border-l">
+            <div className="flex max-h-[688px] flex-col justify-between w-full sm:w-96 flex-1 border-l">
               {/* header comment input  */}
               <CommentHeader data={Post.viewPost} />
               {/* body comments list  */}
@@ -56,35 +55,26 @@ const PostPage = ({ params }: { params: { post: string } }) => {
               <CommentInput data={Post.viewPost} />
             </div>
           </div>
-          {/* post */}
-          <div className="grid grid-cols-3 w-full gap-1 my-10">
-            <ProfilePost data={Post.viewPost} />
-            <ProfilePost data={Post.viewPost} />
-            <ProfilePost data={Post.viewPost} />
-            <ProfilePost data={Post.viewPost} />
-            <ProfilePost data={Post.viewPost} />
-            <ProfilePost data={Post.viewPost} />
-          </div>
-        </div>
-
-        {/* sm  */}
-        <div className="w-full h-full flex md:hidden flex-col">
-          <div className={"w-full h-14 border-b"}>
-            <div className="flex justify-between items-center h-full w-full">
-              <div className='md:hidden cursor-pointer'>
-                <ChevronLeft size={30} onClick={() => router.back()} />
-              </div>
-              <p className='text-xl font-semibold'>
-                Post
-              </p>
-              <div className='w-10' />
-            </div>
-          </div>
-          <PostItem post={Post.viewPost} />
         </div>
       </div>
-    )
-  }
+
+      {/* sm  */}
+      <div className="w-full h-full flex md:hidden flex-col">
+        <div className={"w-full h-14 border-b"}>
+          <div className="flex justify-between items-center h-full w-full">
+            <div className='md:hidden cursor-pointer'>
+              <ChevronLeft size={30} onClick={() => router.back()} />
+            </div>
+            <div className='text-xl font-semibold'>
+              Post
+            </div>
+            <div className='w-10' />
+          </div>
+        </div>
+        <PostItem post={Post.viewPost} />
+      </div>
+    </div>
+  )
 }
 
 export default PostPage

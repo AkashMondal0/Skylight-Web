@@ -1,5 +1,7 @@
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton"
+import { PostLoading } from "./Home.page";
+import { ChevronLeft } from "lucide-react";
 
 export const CommentViewLoading = () => {
     return (<>
@@ -46,7 +48,7 @@ export const CommentViewLoading = () => {
 export const ImageViewLoading = () => {
     return (<>
         <div className='sm:flex-1 flex-initial h-auto m-auto overflow-hidden'>
-            <Skeleton className="w-[500px] h-[500px]" />
+            <Skeleton className="w-98 h-[600px]" />
         </div>
     </>)
 }
@@ -87,22 +89,79 @@ export const CommentViewError = () => {
     </>)
 }
 
-export const PageLoading = ()=>{
+export const ModelPostLoading = () => {
+
+    return (<>
+        <div className="p-0 flex w-[96%] md:w-full
+        overflow-hidden md:flex-nowrap flex-wrap gap-0
+        max-w-[960px] min-h-min hideScrollbar"
+            style={{
+                height: '100vh',
+                maxHeight: '800px',
+            }}>
+            <Skeleton className="w-98 h-full sm:flex-1" />
+            <div className="flex h-full flex-col justify-between w-full border-l flex-1">
+                {/* header comment input  */}
+                <div className="flex justify-between bg-background items-center p-4 border-b h-20 z-10 sticky top-0 rounded-lg">
+                    <div className='flex space-x-2 items-center cursor-pointer'>
+                        <Skeleton className='h-12 w-12 mx-auto border-[3px] p-[2px] rounded-full' />
+                        <div className=" space-y-2">
+                            <Skeleton className="w-32 h-4" />
+                            <Skeleton className="w-60 h-4" />
+                        </div>
+                    </div>
+                    <div className="flex items-center">
+                        <Skeleton className="w-6 h-6" />
+                    </div>
+                </div>
+                {/* body comments list  */}
+                {Array(20).fill(0).map((i) => {
+                    return (
+                        <div className="flex p-4 my-auto">
+                            <Skeleton className='h-12 w-12 border-[3px] p-[2px] rounded-full' />
+                            <div className="flex flex-col ml-4 gap-1">
+                                <div className="break-all text-base font-light">
+                                    <Skeleton className="w-60 h-4" />
+                                </div>
+                                <Skeleton className="w-32 h-3" />
+                                <Skeleton className="w-12 h-4" />
+                            </div>
+                        </div>
+                    )
+                })}
+                {/* footer comment input  */}
+                {/* <CommentInput data={post} /> */}
+            </div>
+        </div>
+    </>)
+}
+
+export const PostPostLoading = () => {
+
     return (
-        <div className='w-full h-full p-5 overflow-hidden'>
-        <div className="hidden md:flex max-h-[690px] mx-auto my-5 flex-wrap md:border max-w-[860px] min-h-min">
-          {/* left side */}
-          <div className='flex-1 h-auto m-auto'>
-            <ImageViewLoading />
-          </div>
-          {/* right side */}
-          <div className="flex max-h-[688px] flex-col justify-between w-80 flex-1 border-l">
-            <CommentViewLoading />
-          </div>
+        <div className='w-full h-full smp-5 overflow-hidden'>
+            <div className="hidden md:flex max-h-[690px] mx-auto my-5 flex-wrap md:border max-w-[860px] min-h-min">
+                {/* left side */}
+                <div className='flex-1 h-auto m-auto'>
+                    <ImageViewLoading />
+                </div>
+                {/* right side */}
+                <div className="flex max-h-[688px] flex-col justify-between w-80 flex-1 border-l">
+                    <CommentViewLoading />
+                </div>
+            </div>
+            <div className='w-full h-full block md:hidden'>
+                <div className="flex justify-between items-center h-full w-full py-5 border-b">
+                    <div className='md:hidden cursor-pointer'>
+                        <ChevronLeft size={30} />
+                    </div>
+                    <p className='text-xl font-semibold'>
+                        Post
+                    </p>
+                    <div className='w-10' />
+                </div>
+                <PostLoading />
+            </div>
         </div>
-        <div className='w-full h-full flex md:hidden'>
-          {/* <PostItem feed={data} /> */}
-        </div>
-      </div>
     )
 }
