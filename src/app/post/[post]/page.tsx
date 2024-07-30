@@ -40,7 +40,7 @@ const PostPage = ({ params }: { params: { post: string } }) => {
     return (
       <div className='w-full h-full'>
         {/* lg */}
-        <div className='max-h-[690px] max-w-[860px] mx-auto p-4'>
+        <div className='max-h-[690px] max-w-[860px] mx-auto p-4 md:flex hidden '>
           <div className='flex border'>
             {/* left side */}
             <div className='w-96 h-auto m-auto'>
