@@ -2,9 +2,9 @@ import { Skeleton } from "../ui/skeleton"
 
 export const PostLoading = ({ size = 1 }: { size?: number }) => {
     return (
-        <>{Array(size).fill(0).map(() => {
+        <>{Array(size).fill(0).map((_,i) => {
             return (
-                <div className='sm:max-w-[480px] w-full sm:mx-auto py-6 border-b p-1'>
+                <div className='sm:max-w-[480px] w-full sm:mx-auto py-6 border-b p-1' key={i}>
                     {/* post header */}
                     <div className='flex justify-between px-2'>
                         <div className='flex space-x-2 items-center cursor-pointer'>

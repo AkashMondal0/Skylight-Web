@@ -115,9 +115,9 @@ export const ModelPostLoading = () => {
                     </div>
                 </div>
                 {/* body comments list  */}
-                {Array(20).fill(0).map((i) => {
+                {Array(20).fill(0).map((_, i) => {
                     return (
-                        <div className="flex p-4 my-auto">
+                        <div className="flex p-4 my-auto" key={i}>
                             <Skeleton className='h-12 w-12 border-[3px] p-[2px] rounded-full' />
                             <div className="flex flex-col ml-4 gap-1">
                                 <div className="break-all text-base font-light">
