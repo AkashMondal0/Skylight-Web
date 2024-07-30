@@ -76,8 +76,8 @@ export function getRandomPost(size: number) {
 }
 
 export function getRandomProfilePost(size: number) {
-  const _posts: Post[] = Array.from({ length: 10 }, (_, i) => {
-    const generate_img = `https://picsum.photos/id/${i + size}/200/200`
+  const _posts: Post[] = Array.from({ length: size }, (_, i) => {
+    const generate_img = `https://picsum.photos/id/${i + size}/100/100`
     return {
       id: `${i + size}`,
       content: `Caption ${i + size}`,

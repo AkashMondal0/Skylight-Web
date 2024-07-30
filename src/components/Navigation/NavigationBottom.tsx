@@ -40,4 +40,4 @@ export const NavigationBottom = memo(function NavigationBottom() {
             </div>
         </div>
     )
-})
+}, (() => true))

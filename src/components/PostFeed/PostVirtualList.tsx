@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual';
 import useWindowDimensions from '@/lib/useWindowDimensions';
 import { useSelector } from 'react-redux';
@@ -6,12 +6,12 @@ import { RootState } from '@/redux/store';
 import { Post } from '@/components/PostFeed/Post';
 import { NavigationBottom } from '@/components/Navigation/NavigationBottom';
 import { AppHeader } from '@/components/Header/Header';
-import ShowUpload from '@/components/home/alert/show-upload';
-import { Stories } from '../Stories/Story';
+import { Stories } from '@/components/Stories/Story';
+import { PostUploadProgress } from '@/components/Alert/PostUploadProgress';
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 
-const PostVirtualList = ({ }: {}) => {
+const PostVirtualList = memo(function PostVirtualList() {
     const posts = useSelector((Root: RootState) => Root.posts)
     const parentRef = React.useRef<HTMLDivElement>(null)
     const dimension = useWindowDimensions()
@@ -53,9 +53,10 @@ const PostVirtualList = ({ }: {}) => {
                 }}
             >
                 <AppHeader />
-                <Stories/>
-                <ShowUpload />
+                <Stories />
+                <PostUploadProgress />
                 <div
+                    className='min-h-full'
                     style={{
                         height: virtualizer.getTotalSize(),
                         width: '100%',
@@ -86,7 +87,7 @@ const PostVirtualList = ({ }: {}) => {
             </div>
         </>
     )
-}
+}, (() => true))
 
 export default PostVirtualList
 

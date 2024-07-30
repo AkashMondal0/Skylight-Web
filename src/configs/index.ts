@@ -3,12 +3,6 @@ const _configs = {
     appUrl: process.env.NEXTAUTH_URL,
     serverApi: {
         baseUrl: process.env.SERVER_API_URL,
-        dataBaseUrl: process.env.DATABASE_URL,
-    },
-    supabase: {
-        bucketUrl: process.env.SUPABASE_BUCKET_URL,
-        clientKey: process.env.SUPABASE_CLIENT_KEY,
-        clientUrl: process.env.SUPABASE_CLIENT
     },
     firebaseConfig: {
         apiKey: process.env.FIREBASE_API_KEY,
@@ -20,7 +14,7 @@ const _configs = {
     },
     AppDetails: {
         name: process.env.APP_NAME || "Skylight",
-        description: process.env.APP_DESCRIPTION || "Sky Media is a social media platform that allows users to share their thoughts and ideas with the world.",
+        description: process.env.APP_DESCRIPTION || "SkyLight is a social media platform that allows users to share their thoughts and ideas with the world.",
         version: process.env.APP_VERSION || "1.0.0",
         logoUrl: process.env.APP_LOGO_URL || "/skylight_logo.png",
     }

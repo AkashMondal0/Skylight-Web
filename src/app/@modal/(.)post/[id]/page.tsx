@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useSession } from 'next-auth/react'
 import { RootState } from '@/redux/store'
 import { createPostCommentApi, createPostLikeApi, destroyPostLikeApi, fetchOnePostApi } from '@/redux/services/post'
-import CommentView from '@/components/post/CommentView'
+import CommentView from '@/components/Dialog/View.Comment.Dialog'
 
 
 export default function Page({ params }: { params: { id: string } }) {

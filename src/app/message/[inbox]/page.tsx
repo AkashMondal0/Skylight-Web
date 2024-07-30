@@ -1,17 +1,17 @@
 "use client"
 import { RootState } from "@/redux/store"
-import { memo, useEffect } from "react"
+import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import InBoxFooter from '@/components/message/inbox/footer';
-import InBoxHeader from '@/components/message/inbox/header';
-import { MessagePageSkeleton } from "@/components/message/loading";
-import NotFound from "@/components/home/NotFound";
+import NotFound from "@/components/Error/NotFound";
 import { fetchConversationApi } from "@/redux/services/conversation";
-import VirtualizeMessageList from "@/components/message/inbox/VirtualizeList";
+import { MessageHeader } from "@/components/Message/MessageHeader";
+import { MessageInput } from "@/components/Message/MessageInput";
+import { MessagePageSkeleton } from "@/components/loading/Message.page";
+import dynamic from "next/dynamic";
+const VirtualizeMessageList = dynamic(() => import("@/components/Message/VirtualMessageList"), {
+  loading: () => <MessagePageSkeleton />
+})
 
-const MemorizeInBoxFooter = memo(InBoxFooter)
-const MemorizeInBoxHeader = memo(InBoxHeader)
-const MemorizeInBoxBody = memo(VirtualizeMessageList)
 let pageLoaded = false
 
 export default function Page({ params }: { params: { inbox: string } }) {
@@ -39,9 +39,9 @@ export default function Page({ params }: { params: { inbox: string } }) {
 
   return (
     <div className='w-full flex flex-col'>
-      <MemorizeInBoxHeader data={rootConversation.conversation} />
-      <MemorizeInBoxBody conversation={rootConversation.conversation} />
-      <MemorizeInBoxFooter data={rootConversation.conversation} />
+      <MessageHeader data={rootConversation.conversation} />
+      <VirtualizeMessageList conversation={rootConversation.conversation} />
+      <MessageInput data={rootConversation.conversation} />
     </div>
   )
 }

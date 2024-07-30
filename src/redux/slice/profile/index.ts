@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { AuthorData, Post, User } from '@/types'
-import { RemoveFriendshipApi, createFriendshipApi, destroyFriendshipApi, fetchUserProfileDetailApi, fetchUserProfileFollowerUserApi, fetchUserProfileFollowingUserApi, fetchUserProfilePostsApi } from '@/redux/services/profile'
+import { fetchUserProfileDetailApi, fetchUserProfileFollowerUserApi, fetchUserProfileFollowingUserApi, fetchUserProfilePostsApi } from '@/redux/services/profile'
 
 // Define a type for the slice state
 interface ProfileState {
@@ -51,44 +51,25 @@ export const profileSlice = createSlice({
     name: 'Profile',
     initialState: profileState,
     reducers: {
-        followUser: (state, action: PayloadAction<{ userId: string, side: "following" | "follower" }>) => {
-            if (action.payload.side === "following") {
-                const index = state.followingList.findIndex((user) => user.id === action.payload.userId)
-                if (index !== -1) {
-                    state.followingList[index].following = true
+        followUser: (state, action: PayloadAction) => {
+            if (state.state) {
+                state.state.friendship = {
+                    ...state.state.friendship,
+                    following: true,
                 }
+                state.state.followerCount += 1
             }
-            else if (action.payload.side === "follower") {
-                const index = state.followerList.findIndex((user) => user.id === action.payload.userId)
-                if (index !== -1) {
-                    state.followerList[index].following = true
-                }
-            }
-            else state
         },
-        unFollowUser: (state, action: PayloadAction<{ userId: string, side: "following" | "follower" }>) => {
-            if (action.payload.side === "following") {
-                const index = state.followingList.findIndex((user) => user.id === action.payload.userId)
-                if (index !== -1) {
-                    state.followingList[index].following = false
+        unFollowUser: (state, action: PayloadAction) => {
+            if (state.state) {
+                state.state.friendship = {
+                    ...state.state.friendship,
+                    following: false,
                 }
-            }
-            else if (action.payload.side === "follower") {
-                const index = state.followerList.findIndex((user) => user.id === action.payload.userId)
-                if (index !== -1) {
-                    state.followerList[index].following = false
-                }
-            }
-            else state
-        },
-        removeFollower: (state, action: PayloadAction<{ userId: string }>) => {
-            const index = state.followerList.findIndex((user) => user.id === action.payload.userId)
-            if (index !== -1 && state?.state) {
-                state.followerList[index].followed_by = false
                 state.state.followerCount -= 1
             }
         },
-        setLoadMoreProfilePosts:(state, action: PayloadAction<Post[]>) => {
+        setLoadMoreProfilePosts: (state, action: PayloadAction<Post[]>) => {
             if (!state.posts) return
             state.posts.push(...action.payload)
         }
@@ -150,82 +131,81 @@ export const profileSlice = createSlice({
                 state.followerListLoading = false
                 state.followerListError = action.error.message || null
             })
-            //  createFriendshipApi
-            .addCase(createFriendshipApi.pending, (state) => {
-                state.friendShipLoading = true
-                state.friendShipError = null
-            })
-            .addCase(createFriendshipApi.fulfilled, (state, action: PayloadAction<{ userId: string, sessionId: string, updateCount: boolean }>) => {
-                if (state.state && action.payload.updateCount && state.state.id !== action.payload.sessionId) {
-                    state.state.friendship = {
-                        ...state.state.friendship,
-                        following: true,
-                    }
-                    state.state.followerCount += 1
-                }
-                // if is profile update user follower
-                if (state.state && state.state.id === action.payload.sessionId) {
-                    state.state.followingCount += 1
-                }
-                state.friendShipLoading = false
-            })
-            .addCase(createFriendshipApi.rejected, (state, action) => {
-                state.friendShipLoading = false
-                state.friendShipError = action.error.message || null
-            })
-            // destroyFriendshipApi
-            .addCase(destroyFriendshipApi.pending, (state) => {
-                state.friendShipLoading = true
-                state.friendShipError = null
-            })
-            .addCase(destroyFriendshipApi.fulfilled, (state, action: PayloadAction<{ userId: string, sessionId: string, updateCount: boolean }>) => {
-                if (state.state && action.payload.updateCount && state.state.id !== action.payload.sessionId) {
-                    state.state.followerCount -= 1
-                    state.state.friendship = {
-                        ...state.state.friendship,
-                        following: false,
-                    }
-                }
-                // if is profile update user following
-                if (state.state && state.state.id === action.payload.sessionId) {
-                    state.state.followingCount -= 1
-                }
-                state.friendShipLoading = false
-            })
-            .addCase(destroyFriendshipApi.rejected, (state, action) => {
-                state.friendShipLoading = false
-                state.friendShipError = action.error.message || null
-            })
-            // RemoveFriendshipApi
-            .addCase(RemoveFriendshipApi.pending, (state) => {
-                state.friendShipLoading = true
-                state.friendShipError = null
-            })
-            .addCase(RemoveFriendshipApi.fulfilled, (state, action: PayloadAction<{ userId: string, sessionId: string, updateCount: boolean }>) => {
-                if (state.state && action.payload.updateCount && state.state.id !== action.payload.sessionId) {
-                    state.state.followerCount -= 1
-                    state.state.friendship = {
-                        ...state.state.friendship,
-                        following: false,
-                    }
-                }
-                // if is profile update user following
-                if (state.state && action.payload.updateCount && state.state.id === action.payload.sessionId) {
-                    state.state.followingCount -= 1
-                }
-                state.friendShipLoading = false
-            })
-            .addCase(RemoveFriendshipApi.rejected, (state, action) => {
-                state.friendShipLoading = false
-                state.friendShipError = action.error.message || null
-            })
+        // //  createFriendshipApi
+        // .addCase(createFriendshipApi.pending, (state) => {
+        //     // state.friendShipLoading = true
+        //     // state.friendShipError = null
+        // })
+        // .addCase(createFriendshipApi.fulfilled, (state, action: PayloadAction<{ userId: string, sessionId: string, updateCount: boolean }>) => {
+        //     if (state.state && action.payload.updateCount && state.state.id !== action.payload.sessionId) {
+        //         state.state.friendship = {
+        //             ...state.state.friendship,
+        //             following: true,
+        //         }
+        //         state.state.followerCount += 1
+        //     }
+        //     // // if is profile update user follower
+        //     // if (state.state && state.state.id === action.payload.sessionId) {
+        //     //     state.state.followingCount += 1
+        //     // }
+        //     // state.friendShipLoading = false
+        // })
+        // .addCase(createFriendshipApi.rejected, (state, action) => {
+        //     // state.friendShipLoading = false
+        //     // state.friendShipError = action.error.message || null
+        // })
+        // // destroyFriendshipApi
+        // .addCase(destroyFriendshipApi.pending, (state) => {
+        //     // state.friendShipLoading = true
+        //     // state.friendShipError = null
+        // })
+        // .addCase(destroyFriendshipApi.fulfilled, (state, action: PayloadAction<{ userId: string, sessionId: string, updateCount: boolean }>) => {
+        //     if (state.state && action.payload.updateCount && state.state.id !== action.payload.sessionId) {
+        //         state.state.followerCount -= 1
+        //         state.state.friendship = {
+        //             ...state.state.friendship,
+        //             following: false,
+        //         }
+        //     }
+        //     // if is profile update user following
+        //     // if (state.state && state.state.id === action.payload.sessionId) {
+        //     //     state.state.followingCount -= 1
+        //     // }
+        //     // state.friendShipLoading = false
+        // })
+        // .addCase(destroyFriendshipApi.rejected, (state, action) => {
+        //     // state.friendShipLoading = false
+        //     // state.friendShipError = action.error.message || null
+        // })
+        // // RemoveFriendshipApi
+        // .addCase(RemoveFriendshipApi.pending, (state) => {
+        //     // state.friendShipLoading = true
+        //     // state.friendShipError = null
+        // })
+        // .addCase(RemoveFriendshipApi.fulfilled, (state, action: PayloadAction<{ userId: string, sessionId: string, updateCount: boolean }>) => {
+        //     if (state.state && action.payload.updateCount && state.state.id !== action.payload.sessionId) {
+        //         state.state.followerCount -= 1
+        //         state.state.friendship = {
+        //             ...state.state.friendship,
+        //             following: false,
+        //         }
+        //     }
+        //     // if is profile update user following
+        //     // if (state.state && action.payload.updateCount && state.state.id === action.payload.sessionId) {
+        //     //     state.state.followingCount -= 1
+        //     // }
+        //     // state.friendShipLoading = false
+        // })
+        // .addCase(RemoveFriendshipApi.rejected, (state, action) => {
+        //     // state.friendShipLoading = false
+        //     // state.friendShipError = action.error.message || null
+        // })
     },
 })
 
 export const {
     followUser,
     unFollowUser,
-    removeFollower,
     setLoadMoreProfilePosts
 } = profileSlice.actions
 

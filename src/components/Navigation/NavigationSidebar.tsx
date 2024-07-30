@@ -13,10 +13,10 @@ import {
 } from "@/components/ui/tooltip"
 import React, { memo } from "react"
 import { useRouter } from "next/navigation"
-import NotificationModel from "@/components/home/model/NotificationModel"
-import SearchModel from "@/components/home/model/SearchModel"
-import MoreDropdownMenu from "@/components/home/model/More_DropDown"
-import UploadPostDialog from "@/components/home/dialog/upload-post"
+import NotificationModel from "@/components/Model/NotificationModel"
+import SearchModel from "@/components/Model/SearchModel"
+import MoreDropdownMenu from "@/components/Model/More_DropDown"
+import UploadPostDialog from "@/components/Dialog/UploadPost.Dialog"
 import { useSession } from "next-auth/react"
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import { configs } from "@/configs"
@@ -42,7 +42,7 @@ export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel }: 
 
     return (
         <div className={cn(`border-r scroll-smooth overflow-y-auto ease-in-out duration-300
-       hidden md:flex md:w-20 lg:w-full max-w-72 min-h-dvh overflow-x-hidden`,
+       hidden md:flex md:w-20 lg:w-full max-w-72 min-h-full overflow-x-hidden h-dvh hideScrollbar`,
             hideLabel ? "max-w-20" : "max-w-72"
         )}>
             <div className="w-full h-full flex flex-col space-y-2 justify-between p-1">
@@ -89,7 +89,7 @@ export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel }: 
             </div>
         </div>
     )
-})
+}, (() => true))
 
 const NavigationItem = ({ children, active, label, onClick, hideLabel }: {
     children: React.ReactNode
@@ -139,17 +139,21 @@ const MoreButton = ({ hideLabel }: {
     hideLabel?: boolean
 }) => {
     return (
-        <MoreDropdownMenu>
-            <div className={cn(`max-w-72 mx-auto justify-center
+        <div>
+            <div className="h-10" />
+            <MoreDropdownMenu>
+                <div className={cn(`max-w-72 mx-auto justify-center
             h-14 items-center flex rounded-xl
             hover:bg-accent hover:text-accent-foreground cursor-pointer`,
-                hideLabel ? "md:flex justify-center" : "lg:w-full lg:px-4 lg:gap-2 lg:justify-start")}>
-                <Menu size={28} />
-                {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden lg:block")}>
-                    More
-                </p>}
-            </div>
-        </MoreDropdownMenu>
+                    hideLabel ? "md:flex justify-center" : "lg:w-full lg:px-4 lg:gap-2 lg:justify-start")}>
+                    <Menu size={28} />
+                    {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden lg:block")}>
+                        More
+                    </p>}
+                </div>
+            </MoreDropdownMenu>
+            <div className="h-2" />
+        </div>
     )
 
 }

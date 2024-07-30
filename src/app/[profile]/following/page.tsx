@@ -1,11 +1,10 @@
 'use client'
-import { SkeletonUserCardWithButton } from '@/components/home/loading/UserCard'
-import UserCardFollowing from '@/components/profile/client/UserCardFollowing'
+import { UserItemFollow } from '@/components/Card/UserItem'
+import { LoadingUserCardWithButton } from '@/components/loading/Card'
 import { Separator } from '@/components/ui/separator'
 import { fetchUserProfileFollowingUserApi } from '@/redux/services/profile'
 import { RootState } from '@/redux/store'
-import { useSession } from 'next-auth/react'
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 const Page = ({
@@ -14,9 +13,7 @@ const Page = ({
   params: { profile: string }
 }) => {
   const dispatch = useDispatch()
-  const profile = useSelector((Root: RootState)=> Root.profile)
-  const session = useSession().data?.user
-  const isProfile = useMemo(() => session?.username === params.profile, [profile, params.profile])
+  const profile = useSelector((Root: RootState) => Root.profile)
   const loadedRef = useRef(false)
 
   useEffect(() => {
@@ -40,12 +37,9 @@ const Page = ({
         <h1 className="font-semibold text-lg text-center mb-4">Following</h1>
         <Separator />
         <div className='h-5' />
-        {profile.followingListLoading || !loadedRef.current  ? <>{Array(10).fill(0).map((_,i)=><SkeletonUserCardWithButton key={i}/> )}</>: <>
-                {profile.followingList?.map((user, i) => <UserCardFollowing
-                  key={i} user={user}
-                  isProfile={isProfile}
-                  itself={session?.id === user.id} />)}
-              </>}
+        {profile.followingListLoading || !loadedRef.current ? <>{Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)}</> : <>
+          {profile.followingList?.map((user, i) => <UserItemFollow key={i} user={user} />)}
+        </>}
       </div>
     </div>
   )

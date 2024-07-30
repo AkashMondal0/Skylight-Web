@@ -1,6 +1,5 @@
 import {NavigationSidebar} from "@/components/Navigation/NavigationSidebar"
 
-
 export default async function RootLayout({ children, modal }: {
   children: React.ReactNode
   modal: React.ReactNode

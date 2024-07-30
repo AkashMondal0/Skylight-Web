@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback } from 'react'
+import React, { memo, useCallback } from 'react'
 import { X } from 'lucide-react'
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,8 +9,8 @@ import { useRouter } from 'next/navigation';
 import SkyAvatar from '@/components/sky/SkyAvatar';
 import { searchUsersProfileApi } from '@/redux/services/users';
 import { removeAllUserFormSearch } from '@/redux/slice/users';
-import { SkeletonUserCardWithButton } from '@/components/home/loading/UserCard';
 import { NavigationBottom } from '@/components/Navigation/NavigationBottom';
+import { LoadingUserCardWithButton } from '@/components/loading/Card';
 
 const SearchModel = () => {
   const dispatch = useDispatch();
@@ -33,8 +33,7 @@ const SearchModel = () => {
     <>
       <div className='w-full p-4 min-h-screen'>
         <div className='w-full space-y-4'>
-          <div className={`w-full p-2 px-4 border bg-secondary
-                    text-secondary-foreground rounded-xl focus:outline-none focus:ring-0`}>
+          <div className={`w-full p-2 px-4 border bg-secondary text-secondary-foreground rounded-xl focus:outline-none focus:ring-0`}>
             <input type="text" placeholder='Search'
               ref={inputRef}
               onChange={debouncedHandleSearch}
@@ -47,9 +46,9 @@ const SearchModel = () => {
         </div> : <></>}
         {Users.searchUsersLoading ?
           <div className='space-y-4'>
-            {Array(10).fill(0).map((_, i) => <SkeletonUserCardWithButton key={i} />)}
+            {Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)}
           </div> :
-          Users.searchUsers?.map((item, i) => <UserCard key={i} item={item} />)}
+          Users.searchUsers?.map((item, i) => <UserItem key={i} item={item} />)}
       </div>
       <NavigationBottom />
     </>
@@ -57,11 +56,11 @@ const SearchModel = () => {
 }
 
 
-const UserCard = ({
+const UserItem = memo(function UserItem({
   item
 }: {
   item: User
-}) => {
+}) {
 
   const dispatch = useDispatch();
   const router = useRouter()
@@ -93,6 +92,6 @@ const UserCard = ({
       </div>
     </>
   )
-}
+}, (() => true))
 
 export default SearchModel

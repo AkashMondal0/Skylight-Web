@@ -16,29 +16,30 @@ const PostImage = ({
     post: Post
 }) => {
     return (
-        <div className='my-4  border-[1px]'>
-            <Carousel>
-                <CarouselContent>
-                    {post.fileUrl.map((url, index) => (
-                        <CarouselItem key={index} className='min-h-80 flex items-center m-auto'>
-                            <OptimizedImage
-                                showErrorIcon
-                                src={url}
-                                width={500}
-                                height={500}
-                                alt="Picture of the author"
-                                fetchPriority={"high"}
-                                sizes={"(min-width: 808px) 50vw, 100vw"}
-                                className={cn('h-auto w-full cursor-pointer userNotSelectImg bg-muted')}
-                            />
-                        </CarouselItem>
-                    ))}
-                </CarouselContent>
-                <div className='flex'>
-                    <CarouselPrevious variant={"outline"} className='md:flex hidden left-2' />
-                    <CarouselNext variant={"outline"} className='md:flex hidden right-2' />
-                </div>
-            </Carousel>
+        <div className='px-[2px] w-auto h-auto'>
+            <div className='my-4 border-[1px] rounded-xl overflow-hidden'>
+                <Carousel>
+                    <CarouselContent>
+                        {post.fileUrl.map((url, index) => (
+                            <CarouselItem key={index} className='min-h-80 flex items-center m-auto'>
+                                <OptimizedImage
+                                    showErrorIcon
+                                    src={url}
+                                    width={500}
+                                    height={500}
+                                    alt="Picture of the author"
+                                    fetchPriority={"high"}
+                                    sizes={"(min-width: 808px) 50vw, 100vw"}
+                                    className={cn('h-auto w-full cursor-pointer userNotSelectImg bg-muted rounded-xl')}/>
+                            </CarouselItem>
+                        ))}
+                    </CarouselContent>
+                    <div className='flex'>
+                        <CarouselPrevious variant={"outline"} className='md:flex hidden left-2' />
+                        <CarouselNext variant={"outline"} className='md:flex hidden right-2' />
+                    </div>
+                </Carousel>
+            </div>
         </div>
     )
 }

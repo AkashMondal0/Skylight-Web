@@ -2,7 +2,7 @@
 "use client";
 import { cn } from '@/lib/utils';
 import { RotateCcw } from 'lucide-react';
-import React, { useEffect, useRef, memo, useState } from 'react';
+import React, { useState } from 'react';
 
 interface OptimizedImageProps {
     src: string;
@@ -18,7 +18,7 @@ interface OptimizedImageProps {
     onLoad?: () => void;
 }
 
-const OptimizedImage: React.FC<OptimizedImageProps> = memo(function OptimizedImage({
+const OptimizedImage: React.FC<OptimizedImageProps> = ({
     src,
     alt = "image not found",
     width,
@@ -30,8 +30,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = memo(function OptimizedIma
     onLoad,
     showErrorIconSm = false,
     showErrorIcon = false
-}) {
-    const imgRef = useRef<HTMLImageElement>(null);
+}) => {
     const [error, setError] = useState(false)
 
     // useEffect(() => {
@@ -78,7 +77,6 @@ const OptimizedImage: React.FC<OptimizedImageProps> = memo(function OptimizedIma
                 <source srcSet={src} type="image/jpg" />
                 <img
                     onContextMenu={event => event.preventDefault()}
-                    ref={imgRef}
                     data-src={src}
                     src={src}
                     alt={''}
@@ -104,7 +102,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = memo(function OptimizedIma
             </picture>
         </>
     );
-})
+}
 
 export default OptimizedImage;
 
@@ -118,6 +116,6 @@ export const ImageError = () => {
 
 export const ImageErrorSm = ({ className }: { className?: string }) => {
     return (<div className={cn(`w-full bg-muted rounded-full flex justify-center items-center p-1`, className)}>
-        <img src='/user.jpg' alt='' className='w-full h-full rounded-full'/>
+        <img src='/user.jpg' alt='' className='w-full h-full rounded-full' />
     </div>)
 }

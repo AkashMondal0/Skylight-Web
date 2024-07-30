@@ -17,6 +17,7 @@ import { useDispatch } from 'react-redux'
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import { signOut, useSession } from 'next-auth/react'
 import { logoutApi } from '@/redux/services/account'
+import OptionAvatarDialog from '@/components/Dialog/Options.Dialog'
 
 const Page = () => {
     const profile = useSession().data
@@ -40,11 +41,11 @@ const Page = () => {
                             </div>
                         </div>
                         <div className='flex items-center'>
-                            {/* <OptionAvatarDialog profile={profile.user}> */}
-                            <Button variant={"default"} className="rounded-xl">
-                                change photo
-                            </Button>
-                            {/* </OptionAvatarDialog> */}
+                            <OptionAvatarDialog>
+                                <Button variant={"default"} className="rounded-xl">
+                                    change photo
+                                </Button>
+                            </OptionAvatarDialog>
 
                         </div>
                     </div>

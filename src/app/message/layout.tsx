@@ -1,12 +1,7 @@
+'use client'
 import { NavigationSidebar } from '@/components/Navigation/NavigationSidebar';
-import SidebarMessageClient from '@/components/message/Sidebar';
-import type { Metadata } from 'next/types';
+import {MessageSideBar} from '@/components/Message/MessageSideBar';
 
-export const metadata: Metadata = {
-  title: 'SkyLight • Message',
-  description: `Sky Media is a social media platform that 
-  allows users to share their thoughts and ideas with the world.`,
-}
 export default function RootLayout({ children }: {
   children: React.ReactNode;
 }) {
@@ -17,7 +12,7 @@ export default function RootLayout({ children }: {
         <NavigationSidebar hideLabel={true} />
         {/* md */}
         <div className='w-full min-h-full hidden md:flex'>
-          <SidebarMessageClient />
+          <MessageSideBar />
           {children}
         </div>
         {/* sm */}
