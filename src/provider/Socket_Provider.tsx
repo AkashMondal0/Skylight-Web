@@ -1,4 +1,5 @@
 'use client'
+import { configs } from "@/configs";
 import { event_name } from "@/configs/socket.event";
 import { setMessage, setTyping } from "@/redux/slice/conversation";
 import { Message, Typing } from "@/types";
@@ -26,7 +27,7 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
 
     async function SocketConnection() {
         if (loadedRef && session?.id) {
-            const connection = io('http://localhost:5000/chat', {
+            const connection = io(`${configs.serverApi.baseUrl}/chat`, {
                 transports: ['websocket'],
                 withCredentials: true,
                 query: {
