@@ -57,7 +57,7 @@ const PostActions = ({
                         onClick={() => onNavigate(`/post/${post.id}`)} />
                     {/* sm */}
                     <MessageCircle className='w-7 h-7 cursor-pointer sm:hidden block'
-                        onClick={() => onNavigate(`/post/${post.id}`)} />
+                        onClick={() => onNavigate(`/post/${post.id}/comments`)} />
 
                     <Send className='w-7 h-7 cursor-pointer' />
                 </div>

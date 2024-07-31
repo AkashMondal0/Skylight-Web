@@ -64,3 +64,36 @@ export const MessagePageSkeleton = () => {
         </div>
     </div>
 }
+
+export const CommentPageLoading = () => {
+    return <div className='w-full h-[100dvh] overflow-hidden mx-auto flex flex-col max-w-[600px]'>
+        <div className='sticky top-0 bg-background z-10 py-3 border-b'>
+            <h1 className="font-semibold text-lg text-center">Comments</h1>
+        </div>
+        <div className="flex-col flex gap-2 px-3 my-2 w-full">
+            <div className="flex border-b py-4 mb-4">
+                <Skeleton className='h-12 w-12 rounded-full border-fuchsia-500 border-[3px] p-[2px]' />
+                <div className="flex flex-col ml-2 space-y-1">
+                    <Skeleton className='w-40 h-4' />
+                    <Skeleton className='w-28 h-4' />
+                </div>
+            </div>
+            {Array(20).fill(0).map((_, i) => <div key={i} className="flex gap-1 items-center justify-between">
+                <div className="flex">
+                    <Skeleton className='h-12 w-12 rounded-full border-fuchsia-500 border-[3px] p-[2px]' />
+                    <div className="flex flex-col ml-2 space-y-1">
+                        <Skeleton className='w-40 h-4' />
+                        <Skeleton className='w-28 h-4' />
+                    </div>
+                </div>
+                <Skeleton className='w-5 h-5' />
+            </div>)}
+        </div>
+
+        <div className='px-2 sm:hidden h-16 sticky bottom-0 z-1 my-2 border-t py-2 flex gap-1 items-center bg-background'>
+            <Skeleton className="h-8 w-8 rounded-full" />
+            <Skeleton className="h-10 w-full rounded-3xl flex-1" />
+            <Skeleton className="h-10 w-10 rounded-2xl" />
+        </div>
+    </div>
+}
