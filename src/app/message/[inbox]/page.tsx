@@ -7,11 +7,7 @@ import { fetchConversationApi } from "@/redux/services/conversation";
 import { MessageHeader } from "@/components/Message/MessageHeader";
 import { MessageInput } from "@/components/Message/MessageInput";
 import { MessagePageSkeleton } from "@/components/loading/Message.page";
-import dynamic from "next/dynamic";
-const VirtualizeMessageList = dynamic(() => import("@/components/Message/VirtualMessageList"), {
-  loading: () => <MessagePageSkeleton />
-})
-
+import VirtualizeMessageList from "@/components/Message/VirtualMessageList";
 let pageLoaded = false
 
 export default function Page({ params }: { params: { inbox: string } }) {
@@ -19,23 +15,17 @@ export default function Page({ params }: { params: { inbox: string } }) {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    // if (!pageLoaded || params.inbox !== rootConversation.conversation?.id) {
     dispatch(fetchConversationApi(params.inbox) as any)
     pageLoaded = true
-    // }
   }, [params.inbox])
 
-  if (rootConversation.loading) {
+  if (rootConversation.loading || !pageLoaded) {
     return <MessagePageSkeleton />
   }
 
-  if (!rootConversation.conversation) {
-    if (!rootConversation.error) {
-      return <MessagePageSkeleton />
-    }
+  if (rootConversation.error || !rootConversation.conversation) {
     return <NotFound />
   }
-
 
   return (
     <div className='w-full flex flex-col'>

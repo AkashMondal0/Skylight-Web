@@ -12,22 +12,24 @@ import { CommentList } from '@/components/comment/Comment.List'
 import { CommentInput } from '@/components/comment/Comment.Input'
 import PostImage from '@/components/PostFeed/PostImage'
 import { PostPostLoading } from '@/components/loading/Post.Page'
-
+let loadedRef = false
+let previousPostId = "noPost"
 const PostPage = ({ params }: { params: { post: string } }) => {
   const router = useRouter()
   const dispatch = useDispatch()
   const Post = useSelector((Root: RootState) => Root.posts)
-  const loadedRef = useRef(false)
+
 
 
   useEffect(() => {
-    if (!loadedRef.current) {
+    if (previousPostId !== params.post) {
       dispatch(fetchOnePostApi(params.post) as any)
-      loadedRef.current = true;
+      previousPostId = params.post
+      loadedRef = true
     }
   }, []);
 
-  if (Post.viewPostLoading || !loadedRef.current) {
+  if (Post.viewPostLoading || !loadedRef) {
     return <Fragment><PostPostLoading /></Fragment>
   }
 

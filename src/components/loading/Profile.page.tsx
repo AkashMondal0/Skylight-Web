@@ -1,8 +1,9 @@
+import { ProfileNavbar } from "../Header/ProfileHeader"
 import { Skeleton } from "../ui/skeleton"
 
 export const SkeletonProfilePage = () => {
-    return <div className='w-full min-h-[100dvh] overflow-x-hidden overflow-hidden'>
-        {/* <ProfileHeader name="loading..." /> */}
+    return <div className='w-full overflow-hidden'>
+        <ProfileNavbar name="loading..." />
         <div className='mx-auto max-w-[960px]'>
             {/* md ->>> */}
             <div className="hidden sm:block">
@@ -84,46 +85,42 @@ export const SkeletonProfilePage = () => {
                     </div>
                 </div>
                 {/*  */}
-                <>
-                    <div className='flex justify-between flex-col px-3 space-y-2'>
-                        <Skeleton className='w-40 h-6 rounded-xl' />
-                        <Skeleton className='w-72 h-5 rounded-xl' />
-                        <Skeleton className='w-80 h-6 rounded-xl' />
+
+                <div className='flex justify-between flex-col px-3 space-y-2'>
+                    <Skeleton className='w-40 h-6 rounded-xl' />
+                    <Skeleton className='w-72 h-5 rounded-xl' />
+                    <Skeleton className='w-80 h-6 rounded-xl' />
+                </div>
+
+                {/* stories */}
+                <div className='flex gap-5 my-5 px-2'>
+                    <Skeleton className='w-16 h-16 rounded-full' />
+                    <Skeleton className='w-16 h-16 rounded-full' />
+                    <Skeleton className='w-16 h-16 rounded-full' />
+                </div>
+
+                {/* followers and following */}
+                <div className='flex justify-around p-2 border-y'>
+                    <div className='text-center'>
+                        <Skeleton className='w-24 h-12 rounded-xl' />
                     </div>
 
-                    {/* stories */}
-                    <div className='flex gap-5 my-5 px-2'>
-                        <Skeleton className='w-16 h-16 rounded-full' />
-                        <Skeleton className='w-16 h-16 rounded-full' />
-                        <Skeleton className='w-16 h-16 rounded-full' />
+                    <div className='cursor-pointer text-center' >
+                        <Skeleton className='w-24 h-12 rounded-xl' />
                     </div>
 
-                    {/* followers and following */}
-                    <div className='flex justify-around p-2 border-y'>
-                        <div className='text-center'>
-                            <Skeleton className='w-24 h-12 rounded-xl' />
-                        </div>
-
-                        <div className='cursor-pointer text-center' >
-                            <Skeleton className='w-24 h-12 rounded-xl' />
-                        </div>
-
-                        <div className='cursor-pointer text-center'>
-                            <Skeleton className='w-24 h-12 rounded-xl' />
-                        </div>
-
+                    <div className='cursor-pointer text-center'>
+                        <Skeleton className='w-24 h-12 rounded-xl' />
                     </div>
 
-                </>
+                </div>
                 {/* posts */}
                 <div className="grid grid-cols-3 gap-1 w-full p-1">
                     {Array(9).fill(0).map((post, index) => (
                         <Skeleton key={index} className='aspect-square w-full h-full object-cover' />
                     ))}
                 </div>
-                <div className='h-10 w-full'></div>
             </div>
-
         </div>
     </div >
 }

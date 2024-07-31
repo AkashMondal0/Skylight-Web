@@ -4,17 +4,16 @@ import {
     useEffect,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserProfileDetailApi} from "@/redux/services/profile";
-import dynamic from "next/dynamic";
-
-const DynamicPostGridListVirtualList = dynamic(() => import('@/components/PostFeed/PostGridListVirtualList'), {
-    loading: () => <>loading page</>
-})
+import { fetchUserProfileDetailApi } from "@/redux/services/profile";
+import NotFound from "@/components/Error/NotFound";
+import { SkeletonProfilePage } from "@/components/loading/Profile.page";
+import { NavigationBottom } from "@/components/Navigation/NavigationBottom";
+import PostGridListVirtualList from "@/components/PostFeed/PostGridListVirtualList";
 let profileUsername = "no_username"
 let loaded = false
 
 export default function Page({ params }: { params: { profile: string } }) {
-    const profilePosts = useSelector((Root: RootState) => Root.profile.posts)
+    const profilePosts = useSelector((Root: RootState) => Root.profile)
     const dispatch = useDispatch()
     useEffect(() => {
         if (profileUsername !== params.profile) {
@@ -24,6 +23,18 @@ export default function Page({ params }: { params: { profile: string } }) {
         loaded = true
     }, [params.profile])
 
-    return <DynamicPostGridListVirtualList profilePosts={profilePosts} />
+    if (profilePosts.error && loaded) {
+        return <NotFound />
+    }
+
+    if (!loaded || profilePosts.loading) {
+        return <div className="w-full">
+            <SkeletonProfilePage />
+            <NavigationBottom />
+        </div>
+    }
+
+    return <PostGridListVirtualList
+        profilePosts={profilePosts.posts} />
 
 }

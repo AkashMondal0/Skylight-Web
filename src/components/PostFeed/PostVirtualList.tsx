@@ -1,22 +1,27 @@
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual';
 import useWindowDimensions from '@/lib/useWindowDimensions';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
 import { Post } from '@/components/PostFeed/Post';
 import { NavigationBottom } from '@/components/Navigation/NavigationBottom';
 import { AppHeader } from '@/components/Header/Header';
 import { Stories } from '@/components/Stories/Story';
 import { PostUploadProgress } from '@/components/Alert/PostUploadProgress';
+import { PostLoading } from '../loading/Home.page';
+import { Post as PostType } from "@/types"
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 
-const PostVirtualList = memo(function PostVirtualList() {
-    const posts = useSelector((Root: RootState) => Root.posts)
+const PostVirtualList = memo(function PostVirtualList({
+    Loading,
+    posts
+}: {
+    Loading: boolean
+    posts: PostType[]
+}) {
     const parentRef = React.useRef<HTMLDivElement>(null)
     const dimension = useWindowDimensions()
     const [mounted, setMounted] = useState(false)
-    const data = useMemo(() => posts.feeds, [posts.feeds])
+    const data = useMemo(() => posts, [posts])
     const count = useMemo(() => data.length, [data.length])
     // 
     const virtualizer = useVirtualizer({
@@ -55,39 +60,42 @@ const PostVirtualList = memo(function PostVirtualList() {
                 <AppHeader />
                 <Stories />
                 <PostUploadProgress />
-                <div
-                    className='min-h-full'
-                    style={{
-                        height: virtualizer.getTotalSize(),
-                        width: '100%',
-                        position: 'relative',
-                    }}>
+                {Loading ? <PostLoading size={2} /> :
                     <div
+                        className='min-h-full'
                         style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
+                            height: virtualizer.getTotalSize(),
                             width: '100%',
-                            transform: `translateY(${items[0]?.start ?? 0}px)`,
+                            position: 'relative',
                         }}>
-                        {items.map((virtualRow) => (
-                            <div
-                                key={virtualRow.key}
-                                data-index={virtualRow.index}
-                                ref={virtualizer.measureElement}>
-                                <div style={{ padding: '10px 0' }}>
-                                    <Post post={data[virtualRow.index]}
-                                        key={data[virtualRow.index].id} />
+                        <div
+                            style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                transform: `translateY(${items[0]?.start ?? 0}px)`,
+                            }}>
+                            {items.map((virtualRow) => (
+                                <div
+                                    key={virtualRow.key}
+                                    data-index={virtualRow.index}
+                                    ref={virtualizer.measureElement}>
+                                    <div style={{ padding: '10px 0' }}>
+                                        <Post post={data[virtualRow.index]}
+                                            key={data[virtualRow.index].id} />
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+                            ))}
+                        </div>
+                    </div>}
                 <NavigationBottom />
             </div>
         </>
     )
-}, (() => true))
+}, ((preProps: any, nextProps: any) => {
+    return preProps.posts.length === nextProps.posts.length
+}))
 
 export default PostVirtualList
 

@@ -24,7 +24,7 @@ const PostGridListVirtualList = ({
         count,
         getScrollElement: () => parentRef.current,
         estimateSize: useCallback(() => 50, []),
-        overscan: 12,
+        overscan: 20,
         enabled: true,
         initialOffset: _kSavedOffset,
         initialMeasurementsCache: _KMeasurementsCache,
