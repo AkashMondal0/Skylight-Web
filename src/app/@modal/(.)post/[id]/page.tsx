@@ -41,15 +41,17 @@ export default function Page({ params }: { params: { id: string } }) {
           maxHeight: "85%",
           borderRadius: 20,
           marginTop: 15,
-          marginBottom: 15
+          marginBottom: 15,
+          marginRight:5,
+          marginLeft:5
         }}>
         {post.viewPostLoading || !loadedRef ? <ModelPostLoading /> :
           post.viewPostError && loadedRef || !post.viewPost ? <NotFound /> :
-            <div className='flex'>
-              <div className='h-full flex items-center'>
+            <div className='flex flex-wrap mx-auto'>
+              <div className='h-full flex items-center md:flex-1'>
                 <PostImage post={post.viewPost} />
               </div>
-              <div className="flex h-full flex-col justify-between w-full md:min-w-96 md:max-w-[90%] border-l">
+              <div className="flex flex-1 h-full flex-col justify-between w-full md:min-w-96 md:max-w-[90%] border-l">
                 {/* header comment input  */}
                 <CommentHeader data={post.viewPost} />
                 {/* body comments list  */}
