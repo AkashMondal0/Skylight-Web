@@ -1,3 +1,4 @@
+'use client'
 import Link from 'next/link'
 
 export default function NotFound({
@@ -12,7 +13,11 @@ export default function NotFound({
         or the page may have been removed.
         Go back to SkyLight Home Page.
       </p>
-      <Link href='/'className='text-blue-500 hover:underline'>
+      <Link href='/'
+        onClick={() => {
+          window.location.replace('/')
+        }}
+        className='text-blue-500 hover:underline'>
         Go back to Home
       </Link>
     </div>
