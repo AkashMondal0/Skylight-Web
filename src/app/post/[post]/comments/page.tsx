@@ -74,7 +74,7 @@ const CommentItem = memo(function CommentItem({
 
         <div className="flex justify-between items-center w-full flex-1">
           <div>
-            <p className="break-all text-base font-light">
+            <p className="break-all text-base">
               <span className='font-semibold text-lg mr-2'>
                 {comment?.user?.username}
               </span>

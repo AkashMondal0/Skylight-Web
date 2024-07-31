@@ -60,14 +60,14 @@ const PostVirtualList = memo(function PostVirtualList({
                 <AppHeader />
                 <Stories />
                 <PostUploadProgress />
-                <div
-                    className='min-h-full'
-                    style={{
-                        height: virtualizer.getTotalSize(),
-                        width: '100%',
-                        position: 'relative',
-                    }}>
-                    {Loading ? <PostLoading size={2} /> :
+                {Loading ? <PostLoading size={2} /> :
+                    <div
+                        className='min-h-full'
+                        style={{
+                            height: virtualizer.getTotalSize(),
+                            width: '100%',
+                            position: 'relative',
+                        }}>
                         <div
                             style={{
                                 position: 'absolute',
@@ -87,8 +87,8 @@ const PostVirtualList = memo(function PostVirtualList({
                                     </div>
                                 </div>
                             ))}
-                        </div>}
-                </div>
+                        </div>
+                    </div>}
                 <NavigationBottom />
             </div>
         </>
