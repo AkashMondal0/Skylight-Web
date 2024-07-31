@@ -224,4 +224,5 @@ export const DeleteAllCookie = async () => {
         redirect: "follow",
         credentials: "include",
     })
+    window?.location?.reload()
 }

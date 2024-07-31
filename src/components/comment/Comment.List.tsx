@@ -39,6 +39,7 @@ export const CommentList = memo(function CommentList({ data }: { data: Post }) {
                     ))}
                 </>
             }
+            <div className="h-96"/>
         </ScrollArea>
     )
 }, ((preProps, nextProps) => {

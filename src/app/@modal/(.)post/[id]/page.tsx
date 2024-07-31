@@ -38,14 +38,17 @@ export default function Page({ params }: { params: { id: string } }) {
         overflow-y-auto md:flex-nowrap flex-wrap gap-0
         max-w-[960px] min-h-min hideScrollbar"
         style={{
-          height: '100vh',
-          maxHeight: '800px',
-          borderRadius:20
+          maxHeight: "85%",
+          borderRadius: 20,
+          marginTop: 15,
+          marginBottom: 15
         }}>
         {post.viewPostLoading || !loadedRef ? <ModelPostLoading /> :
           post.viewPostError && loadedRef || !post.viewPost ? <NotFound /> :
-            <>
-              <PostImage post={post.viewPost} />
+            <div className='flex'>
+              <div className='h-full flex items-center'>
+                <PostImage post={post.viewPost} />
+              </div>
               <div className="flex h-full flex-col justify-between w-full md:min-w-96 md:max-w-[90%] border-l">
                 {/* header comment input  */}
                 <CommentHeader data={post.viewPost} />
@@ -54,7 +57,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 {/* footer comment input  */}
                 <CommentInput data={post.viewPost} />
               </div>
-            </>
+            </div>
         }
       </DialogContent>
     </Dialog>

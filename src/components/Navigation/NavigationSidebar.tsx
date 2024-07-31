@@ -47,7 +47,7 @@ export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel }: 
         )}>
             <div className="w-full h-full flex flex-col space-y-2 justify-between p-1">
                 <div className="space-y-1">
-                    <div className="h-6" />
+                    <div className="h-3" />
                     <Banner hideLabel={hideLabel} />
                     <div className="h-6" />
                     {SideIconData.map(({ icon, label, onClick }, index) => {
@@ -140,7 +140,7 @@ const MoreButton = ({ hideLabel }: {
 }) => {
     return (
         <div>
-            <div className="h-10" />
+            <div className="h-3" />
             <MoreDropdownMenu>
                 <div className={cn(`max-w-72 mx-auto justify-center
             h-14 items-center flex rounded-xl
