@@ -26,7 +26,7 @@ export const UploadYourStory = memo(function YourStory({className}:{className?:s
     return <div className="mr-4">
         <div className="flex justify-end items-end">
             <div className={cn(`w-16 h-16 border-[1px] rounded-full cursor-pointer`, className)}>
-                <SkyAvatar url={session?.image} className={'rounded-full object-cover w-16 h-16'} />
+                <SkyAvatar url={session?.image} className={'rounded-full object-cover w-full h-full'} />
             </div>
             <Plus className='w-5 h-5 bg-[#478fee] absolute rounded-full border-[0.5px] border-white text-white' />
         </div>

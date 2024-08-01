@@ -179,7 +179,7 @@ export const logoutApi = createAsyncThunk(
                 credentials: "include",
                 body: JSON.stringify({}),
             })
-                .then((response) => response.json())
+            DeleteAllCookie()
             return res
         } catch (error: any) {
             return ErrorFunction(error)
@@ -189,7 +189,7 @@ export const logoutApi = createAsyncThunk(
 
 export const fetchAccountFeedApi = createAsyncThunk(
     'fetchAccountFeedApi/get',
-    async (_,thunkApi) => {
+    async (_, thunkApi) => {
         try {
             let query = `query FeedTimelineConnection {
             feedTimelineConnection {
@@ -217,7 +217,7 @@ export const fetchAccountFeedApi = createAsyncThunk(
             })
 
             return res.feedTimelineConnection.concat(_posts)
-        } catch (error:any) {
+        } catch (error: any) {
             return thunkApi.rejectWithValue({
                 ...error?.response?.data,
             })
