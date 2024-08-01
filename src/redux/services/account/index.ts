@@ -189,7 +189,7 @@ export const logoutApi = createAsyncThunk(
 
 export const fetchAccountFeedApi = createAsyncThunk(
     'fetchAccountFeedApi/get',
-    async () => {
+    async (_,thunkApi) => {
         try {
             let query = `query FeedTimelineConnection {
             feedTimelineConnection {
@@ -217,8 +217,10 @@ export const fetchAccountFeedApi = createAsyncThunk(
             })
 
             return res.feedTimelineConnection.concat(_posts)
-        } catch (error) {
-
+        } catch (error:any) {
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
         }
     }
 );
