@@ -19,14 +19,21 @@ export const UploadImagesFireBaseApi = createAsyncThunk(
     }, thunkApi) => {
         try {
             var photoUrls: string[] = []
-            for (let index = 0; index < isFile.length; index++) {
+            // for (let index = 0; index < isFile.length; index++) {
+            //     thunkApi.dispatch(ShowUploadImage(URL.createObjectURL(isFile[index])) as any)
+            //     const url = await uploadFirebaseFile(isFile[index], profileId)
+            //     if (url) {
+            //         photoUrls.push(url)
+            //     }
+            // }
+            await Promise.all(isFile.map(async (_,index) => {
                 thunkApi.dispatch(ShowUploadImage(URL.createObjectURL(isFile[index])) as any)
-                await new Promise(resolve => setTimeout(resolve, 500));
                 const url = await uploadFirebaseFile(isFile[index], profileId)
                 if (url) {
                     photoUrls.push(url)
                 }
-            }
+            }))
+
             if (photoUrls.length === 0) {
                 return thunkApi.rejectWithValue({
                     message: 'Upload file failed'
