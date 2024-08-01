@@ -1,6 +1,8 @@
 'use client'
 import SkyAvatar from "@/components/sky/SkyAvatar"
+import { cn } from "@/lib/utils"
 import { Plus } from "lucide-react"
+import { useSession } from "next-auth/react"
 import { memo } from "react"
 
 export const StoryItem = memo(function Story({
@@ -19,11 +21,15 @@ export const StoryItem = memo(function Story({
     </div>
 })
 
-export const YourStory = () => {
-    return <div className="w-16 h-16 mr-4">
-        <div className='w-16 h-16 border-[2px] rounded-full flex justify-center items-center cursor-pointer'>
-            <Plus className='w-10 h-10' />
+export const UploadYourStory = memo(function YourStory({className}:{className?:string}) {
+    const session = useSession().data?.user
+    return <div className="mr-4">
+        <div className="flex justify-end items-end">
+            <div className={cn(`w-16 h-16 border-[1px] rounded-full cursor-pointer`, className)}>
+                <SkyAvatar url={session?.image} className={'rounded-full object-cover h-full w-full'} />
+            </div>
+            <Plus className='w-5 h-5 bg-blue-500 absolute rounded-full border-[0.5px] border-white' />
         </div>
         <p className="text-xs font-normal text-center">Your Story</p>
     </div>
-}
+})

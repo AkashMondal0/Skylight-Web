@@ -3,11 +3,11 @@ import { cn } from '@/lib/utils'
 import OptimizedImage from './SkyImage'
 
 const SkyAvatar = memo(function ProfileHeader({
-    url,
+    url = "/user.jpg",
     className,
 }:
     {
-        url: string | null,
+        url?: string | null,
         className: string
         sizeImage?: string
     }) {
