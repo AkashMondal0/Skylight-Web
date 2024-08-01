@@ -12,8 +12,10 @@ import { cn } from '@/lib/utils'
 
 const PostImage = memo(function PostImage({
     post,
+    onImageError
 }: {
     post: Post | null
+    onImageError?:()=>void
 }) {
 
     if (!post) return null
@@ -30,6 +32,7 @@ const PostImage = memo(function PostImage({
                                     src={url}
                                     width={500}
                                     height={500}
+                                    onError={onImageError}
                                     alt="Picture of the author"
                                     fetchPriority={"high"}
                                     sizes={"(min-width: 808px) 50vw, 100vw"}

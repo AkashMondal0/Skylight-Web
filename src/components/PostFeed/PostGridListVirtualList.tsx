@@ -44,11 +44,6 @@ const PostGridListVirtualList = ({
 
     if (!mounted) return <></>
 
-    const RenderImg = ({ post }: { post: Post }) => {
-        if (!post) return <div className="h-full aspect-square w-full" />
-        return <ProfilePost data={post}/>
-    }
-
     return (
         <>
             <div ref={parentRef}
@@ -85,9 +80,9 @@ const PostGridListVirtualList = ({
                                     {/* {virtualRow.index * 3 + 1}
                                     {virtualRow.index * 3 + 2}
                                     {virtualRow.index * 3 + 3} */}
-                                    <RenderImg post={data[virtualRow.index * 3 + 0] ?? null} />
-                                    <RenderImg post={data[virtualRow.index * 3 + 1] ?? null} />
-                                    <RenderImg post={data[virtualRow.index * 3 + 2] ?? null} />
+                                    <ProfilePost data={data[virtualRow.index * 3 + 0] ?? null} />
+                                    <ProfilePost data={data[virtualRow.index * 3 + 1] ?? null} />
+                                    <ProfilePost data={data[virtualRow.index * 3 + 2] ?? null} />
                                 </div>
                             </div>
                         ))}
