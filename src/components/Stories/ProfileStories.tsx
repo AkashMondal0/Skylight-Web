@@ -12,10 +12,10 @@ export const ProfileStories = memo(function ProfileStories({
   return (
     <div className='flex sm:gap-10 m-5 sm:my-10 gap-5 my-5 px-2'>
       <UploadYourStory className='sm:w-20 sm:h-20 w-16 h-16 border-[2px]' />
-      <SkyAvatar
+      {/* <SkyAvatar
         sizeImage='10vw'
         url={user.profilePicture || "/user.jpg"}
-        className={'sm:w-20 sm:h-20 rounded-full object-cover cursor-pointer h-16 w-16'} />
+        className={'sm:w-20 sm:h-20 rounded-full object-cover cursor-pointer h-16 w-16'} /> */}
     </div>
   )
 }, (() => true))

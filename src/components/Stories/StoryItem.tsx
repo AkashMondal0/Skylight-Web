@@ -21,15 +21,16 @@ export const StoryItem = memo(function Story({
     </div>
 })
 
-export const UploadYourStory = memo(function YourStory({className}:{className?:string}) {
+export const UploadYourStory = memo(function YourStory({ className }: { className?: string }) {
     const session = useSession().data?.user
-    return <div className="mr-4">
-        <div className="flex justify-end items-end">
-            <div className={cn(`w-16 h-16 border-[1px] rounded-full cursor-pointer`, className)}>
-                <SkyAvatar url={session?.image} className={'rounded-full object-cover w-full h-full'} />
+    return <div className="">
+        <div className="ml-5 flex justify-end items-end">
+            <div className={cn(`w-16 h-16 rounded-full cursor-pointer`, className)}>
+                <SkyAvatar url={session?.image}
+                    className={cn('rounded-full object-cover w-16 h-16', className)} />
             </div>
-            <Plus className='w-5 h-5 bg-[#478fee] absolute rounded-full border-[0.5px] border-white text-white' />
+            <Plus className='w-5 h-5 bg-[#478fee] relative right-5 rounded-full border-[0.5px] border-white text-white' />
         </div>
         <p className="text-xs font-normal text-center">Your Story</p>
     </div>
-})
+}, (() => true))
