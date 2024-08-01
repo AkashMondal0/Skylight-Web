@@ -99,7 +99,7 @@ export const ModelPostLoading = () => {
                 height: '100vh',
                 maxHeight: '800px',
             }}>
-            <Skeleton className="w-98 h-full sm:flex-1" />
+            <Skeleton className="w-96 h-full sm:flex-1" />
             <div className="flex h-full flex-col justify-between w-full border-l flex-1">
                 {/* header comment input  */}
                 <div className="flex justify-between bg-background items-center p-4 border-b h-20 z-10 sticky top-0 rounded-lg">

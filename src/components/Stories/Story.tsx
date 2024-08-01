@@ -1,8 +1,6 @@
 "use client"
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { StoryItem, YourStory } from '@/components/Stories/StoryItem';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import { StoryItem, UploadYourStory } from '@/components/Stories/StoryItem';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { generateRandomUsername } from '../sky/random';
 const story = Array.from({ length: 20 }, (_, i) => {
@@ -48,14 +46,14 @@ export const Stories = memo(function Story({
         <>
             <div
                 ref={parentRef}
-                className="w-full md:max-w-[580px] mx-auto px-3 flex border-b md:border-none hideScrollbar mt-4"
+                className="w-full md:max-w-[580px] mx-auto px-3 flex border-b md:border-none hideScrollbar mt-4 gap-5"
                 style={{
                     width: `100%`,
                     height: `100px`,
                     overflow: 'auto',
                 }}
             >
-              <YourStory/>
+              <UploadYourStory/>
                 <div
                     style={{
                         width: `${columnVirtualizer.getTotalSize()}px`,

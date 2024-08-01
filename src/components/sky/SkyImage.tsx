@@ -67,6 +67,8 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
         return <ImageErrorSm className={className} />
     }
 
+    if (!src) return <ImageError />
+
     return (
         <>
             <picture className='h-auto w-full cursor-pointer'>
@@ -107,7 +109,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
 export default OptimizedImage;
 
 export const ImageError = () => {
-    return (<div className={`aspect-square w-full object-cover
+    return (<div className={`h-full w-full object-cover aspect-square
     flex flex-col items-center justify-center space-y-4 userNotSelectImg bg-muted`}>
         <RotateCcw className='w-10 h-10 cursor-pointer' strokeWidth={1.5} />
         <p className="text-center cursor-pointer">{`Could't load image. Tap to retry`}</p>
