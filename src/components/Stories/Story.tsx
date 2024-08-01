@@ -46,7 +46,7 @@ export const Stories = memo(function Story({
         <>
             <div
                 ref={parentRef}
-                className="w-full md:max-w-[580px] mx-auto px-3 flex border-b md:border-none hideScrollbar mt-4"
+                className="w-full md:max-w-[580px] mx-auto px-3 flex border-b md:border-none hideScrollbar mt-4 gap-5"
                 style={{
                     width: `100%`,
                     height: `100px`,
