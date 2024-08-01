@@ -4,10 +4,13 @@ import {
     DialogClose
 } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
-import { AuthorData } from "@/types"
+import { AuthorData, disPatchResponse } from "@/types"
 import { useState } from "react"
 import { useDispatch } from "react-redux"
 import { TempleAlertDialog } from "@/components/Dialog/Temple.Dialog"
+import { toast } from "sonner"
+import { useSession } from "next-auth/react"
+import { profileUpdateApi } from "@/redux/services/account"
 
 export default function OptionAvatarDialog({
     children,
@@ -16,16 +19,23 @@ export default function OptionAvatarDialog({
 }) {
     const dispatch = useDispatch()
     const [isFile, setIsFile] = useState<File | null>()
+    const session = useSession()
 
     const handleUpload = async () => {
-        // if (profile) {
-        // await dispatch(profileUpdateApi({
-        //     isFile,
-        //     profile: profile
-        // }) as any)
+        if (!session.data?.user?.id || !isFile) return toast("Something's went Wrong")
+
+        const res = await dispatch(profileUpdateApi({
+            file: isFile,
+            profile: session.data.user
+        }) as any) as disPatchResponse<AuthorData>
+
+        if (res.error) return toast("Something's went Wrong")
+
+        if (res.payload.profilePicture) return session.update({
+            profilePicture: res.payload.profilePicture
+        })
         setIsFile(null)
-        alert('Profile Picture Updated')
-        // }
+        toast("Profile Picture Updated")
     }
 
     const onChangeFilePicker = (event: any) => {

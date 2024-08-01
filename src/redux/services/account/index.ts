@@ -4,6 +4,7 @@ import { uploadFirebaseFile } from "@/lib/firebase/upload-file";
 import { graphqlQuery } from "../../../lib/graphqlQuery";
 import { ShowUploadImage } from "@/redux/slice/account";
 import { getRandomPost } from "@/components/sky/random";
+import { AuthorData } from "@/types";
 const _posts = getRandomPost(20)
 
 export const UploadImagesFireBaseApi = createAsyncThunk(
@@ -26,7 +27,7 @@ export const UploadImagesFireBaseApi = createAsyncThunk(
             //         photoUrls.push(url)
             //     }
             // }
-            await Promise.all(isFile.map(async (_,index) => {
+            await Promise.all(isFile.map(async (_, index) => {
                 thunkApi.dispatch(ShowUploadImage(URL.createObjectURL(isFile[index])) as any)
                 const url = await uploadFirebaseFile(isFile[index], profileId)
                 if (url) {
@@ -232,3 +233,61 @@ export const DeleteAllCookie = async () => {
         credentials: "include",
     })
 }
+
+type UpdateProfile = {
+    updateUsersInput?: {
+        username?: string
+        email?: string
+        name?: string
+        profilePicture?: string
+    },
+    file?: File,
+    profile: AuthorData
+}
+
+// profileUpdateApi
+export const profileUpdateApi = createAsyncThunk(
+    'profileUpdateApi/post',
+    async (data: UpdateProfile, thunkApi) => {
+        const { file, profile, updateUsersInput } = data
+
+        let query = `mutation UpdateUserProfile($updateUsersInput: UpdateUsersInput!) {
+            updateUserProfile(UpdateUsersInput: $updateUsersInput) {
+              profilePicture
+              name
+              id
+              email
+              username
+            }
+          }`
+
+        try {
+            if (file) {
+                const url = await uploadFirebaseFile(file, profile.id)
+                if (!url) {
+                    return ""
+                }
+                const res = await graphqlQuery({
+                    query: query,
+                    variables: {
+                        updateUsersInput: { profilePicture: url }
+                    }
+                })
+                return res.updateUserProfile
+            }
+            else {
+                const res = await graphqlQuery({
+                    query: query,
+                    variables: {
+                        updateUsersInput
+                    }
+                })
+                return res.updateUserProfile
+            }
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
+        }
+    }
+);

@@ -1,7 +1,7 @@
 "use client"
 import React, { memo } from 'react'
 import { cn } from '@/lib/utils'
-import { Copy, Heart, MessageCircle, RotateCcw } from 'lucide-react'
+import { Copy, Heart, MessageCircle } from 'lucide-react'
 import { Post } from '@/types'
 import OptimizedImage from '@/components/sky/SkyImage'
 import { useRouter } from 'next/navigation'
@@ -11,7 +11,7 @@ export const ProfilePost = memo(function ImageComponent({
 }: {
     data: Post
 }) {
-    console.info("<ProfilePost>")
+    // console.info("<ProfilePost>")
     const router = useRouter()
     if (!data) {
         return <div className="h-full aspect-square w-full" />
