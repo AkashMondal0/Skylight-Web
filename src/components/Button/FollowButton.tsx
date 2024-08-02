@@ -1,22 +1,22 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import { createFriendshipApi, destroyFriendshipApi } from "@/redux/services/profile"
-import { RootState } from "@/redux/store"
 import { User, disPatchResponse } from "@/types"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { memo, useMemo, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
+import { useMemo, useState } from "react"
+import { useDispatch } from "react-redux"
 import { EllipsisVertical } from "../sky/icons"
 import { followUser, unFollowUser } from "@/redux/slice/profile"
+import { toast } from "sonner"
 
 const FollowButton = ({
     user,
     isFollowing,
 }: {
     user: User
-    isFollowing?: boolean
-})=> {
+    isFollowing?: boolean | null
+}) => {
     const router = useRouter()
     const dispatch = useDispatch()
     const session = useSession().data?.user
@@ -25,20 +25,24 @@ const FollowButton = ({
 
     const handleFollow = async () => {
         setLoading(true)
-        if (!session?.id) return alert('no user id from follow button')
-        if (!user?.id) return alert('no user id from follow button')
-        const res = await dispatch(createFriendshipApi({
-            authorUserId: session?.id,
-            authorUsername: session?.username,
-            followingUserId: user?.id,
-            followingUsername: user?.username,
-        }) as any) as disPatchResponse<any>
-        if (!isProfile && res.payload) {
-            dispatch(followUser())
-        } else {
-            alert("Something's went Wrong")
+        try {
+            if (!session?.id) return toast('User login issue')
+            if (!user?.id) return toast('User login issue')
+            const res = await dispatch(createFriendshipApi({
+                authorUserId: session?.id,
+                authorUsername: session?.username,
+                followingUserId: user?.id,
+                followingUsername: user?.username,
+            }) as any) as disPatchResponse<any>
+            if (!isProfile && res.payload) {
+                dispatch(followUser())
+            } else {
+                toast("Something's went Wrong")
+            }
         }
-        setLoading(false)
+        finally {
+            setLoading(false)
+        }
     }
 
     const handleUnFollow = async () => {

@@ -170,7 +170,7 @@ export const logoutApi = createAsyncThunk(
     'logoutApi/post',
     async (_, thunkApi) => {
         try {
-            const res = await fetch(`${configs.serverApi.baseUrl}/v1/auth/logout`, {
+            await fetch(`${configs.serverApi.baseUrl}/v1/auth/logout`, {
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -180,7 +180,7 @@ export const logoutApi = createAsyncThunk(
                 body: JSON.stringify({}),
             })
             DeleteAllCookie()
-            return res
+            return true
         } catch (error: any) {
             return ErrorFunction(error)
         }
@@ -219,7 +219,7 @@ export const fetchAccountFeedApi = createAsyncThunk(
             return res.feedTimelineConnection.concat(_posts)
         } catch (error: any) {
             return thunkApi.rejectWithValue({
-                ...error?.response?.data,
+                message: error?.message
             })
         }
     }

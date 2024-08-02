@@ -14,6 +14,7 @@ export const config = {
     "/message/:path*",
     "/reels/:path*",
     "/search/:path*",
-    "/accounts/:path*",
+    "/account/:path*",
+    "/notification/:path*",
   ]
 }

@@ -9,11 +9,7 @@ export type TypeActionLike = 'feeds' | 'singleFeed'
 export interface PostState {
     feeds: Post[]
     feedsLoading: boolean
-    feedsError: {
-        message: string
-        name?: string
-        stack?: string
-    } | null
+    feedsError: string | null
     // 
     viewPost: Post | null
     viewPostLoading: boolean
@@ -63,13 +59,9 @@ export const PostsSlice = createSlice({
                 }
                 state.feedsLoading = false
             })
-            .addCase(fetchAccountFeedApi.rejected, (state, action) => {
+            .addCase(fetchAccountFeedApi.rejected, (state, action: PayloadAction<any>) => {
                 state.feedsLoading = false
-                state.feedsError = {
-                    message: action.error.message || 'Failed to fetch posts',
-                    name: action.error.name,
-                    stack: action.error.stack
-                }
+                state.feedsError = action.payload?.message ?? ""
             })
             // view post
             .addCase(fetchOnePostApi.pending, (state) => {
