@@ -2,7 +2,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAccountFeedApi } from '@/redux/services/account';
-import { NavigationSidebar } from '@/components/Navigation/NavigationSidebar';
 import { RootState } from '@/redux/store';
 import NotFound from '@/components/Error/NotFound';
 import PostVirtualList from '@/components/PostFeed/PostVirtualList';
@@ -21,7 +20,9 @@ export default function Page() {
   }, [])
 
   if (!pageLoaded || posts.feedsLoading) {
-    return <PostLoading size={2} />
+    return <div className='w-full'>
+      <PostLoading size={2} />
+    </div>
   }
 
   if (posts.feedsError && pageLoaded) {
@@ -29,13 +30,8 @@ export default function Page() {
   }
 
   return (
-    <>
-      <div className='w-full h-full flex'>
-        <NavigationSidebar />
-        <div className='w-full'>
-          <PostVirtualList posts={posts.feeds} />
-        </div>
-      </div>
-    </>
+    <div className='w-full'>
+      <PostVirtualList posts={posts.feeds} />
+    </div>
   )
 }

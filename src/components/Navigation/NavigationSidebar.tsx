@@ -22,8 +22,9 @@ import SkyAvatar from "@/components/sky/SkyAvatar"
 import { configs } from "@/configs"
 
 // for large screen device 
-export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel }: {
+export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel, isHideNav }: {
     hideLabel?: boolean
+    isHideNav: boolean
 }) {
     const router = useRouter()
     const pageChange = (path: string) => router.push(path)
@@ -40,6 +41,10 @@ export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel }: 
     ]
     // console.info('%c<NavigationSidebar/>', 'color: yellow; font-weight: bold;');
 
+    if(!session?.id){
+        return <></>
+    }
+    if(isHideNav) return <></>
     return (
         <div className={cn(`border-r scroll-smooth overflow-y-auto ease-in-out duration-300
        hidden md:flex md:w-20 lg:w-full max-w-72 min-h-full overflow-x-hidden h-dvh hideScrollbar`,
@@ -89,7 +94,9 @@ export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel }: 
             </div>
         </div>
     )
-}, (() => true))
+}, ((pre: any, next: any) => {
+    return pre.isHideNav === next.isHideNav && pre.hideLabel === next.hideLabel
+}))
 
 const NavigationItem = ({ children, active, label, onClick, hideLabel }: {
     children: React.ReactNode

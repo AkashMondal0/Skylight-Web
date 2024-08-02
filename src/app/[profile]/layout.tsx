@@ -1,4 +1,3 @@
-import { NavigationSidebar } from "@/components/Navigation/NavigationSidebar"
 import { configs } from "@/configs"
 import { User } from "@/types"
 import { DefaultMetadata } from "@/types/Metadata"
@@ -47,11 +46,8 @@ export default async function RootLayout({ children, modal }: {
 
   return (
     <>
-      <div className="flex h-full">
-        <NavigationSidebar />
-        {children}
-        {modal}
-      </div>
+      {children}
+      {modal}
     </>
   )
 }

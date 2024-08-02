@@ -1,4 +1,3 @@
-import { NavigationSidebar } from "@/components/Navigation/NavigationSidebar";
 import { configs } from "@/configs";
 import { AuthorData } from "@/types";
 import { DefaultMetadata } from "@/types/Metadata";
@@ -14,8 +13,8 @@ interface PostData {
 }
 export async function generateMetadata({ params: { post } }: { params: { post: string } }): Promise<Metadata> {
   const res = await fetch(`${configs.serverApi.baseUrl}/v1/post/${post}`)
-  
-  if(!res.ok) return DefaultMetadata
+
+  if (!res.ok) return DefaultMetadata
   const data = await res.json() as PostData
 
   if (!data) return DefaultMetadata
@@ -50,9 +49,8 @@ export default function RootLayout({ children,
   children: React.ReactNode;
 }) {
   return (
-    <div className="w-full min-h-dvh flex">
-      <NavigationSidebar />
-      {children}
-    </div>
+    <>
+    {children}
+    </> 
   )
 }

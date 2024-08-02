@@ -17,9 +17,9 @@ export default function NotFound({
     signOut()
   }
 
-  return <div className='max-w-[520px] 
+  return <div className='max-w-[520px]
       w-full mx-auto text-center flex flex-col gap-4'>
-    <div>
+    <div className='px-5'>
       {displayErrorMessage({ ErrorType: message, Action: login })}
     </div>
     <Link href='/'
@@ -29,7 +29,7 @@ export default function NotFound({
   </div>
 }
 
-function displayErrorMessage({ ErrorType, Action }: { ErrorType: ErrorType|string, Action: () => void }) {
+function displayErrorMessage({ ErrorType, Action }: { ErrorType: ErrorType | string, Action: () => void }) {
   let title, description;
 
 
@@ -87,7 +87,7 @@ function displayErrorMessage({ ErrorType, Action }: { ErrorType: ErrorType|strin
     <>
       <h2 className='text-2xl font-semibold my-8'>{title}</h2>
       <p className='my-4'>{description}</p>
-      <Button onClick={Action} className='rounded-xl'>Login</Button>
+      {ErrorType === "UNAUTHENTICATED" && <Button onClick={Action} className='rounded-xl'>Login</Button>}
     </>
   );
 }

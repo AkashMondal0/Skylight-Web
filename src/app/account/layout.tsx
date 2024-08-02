@@ -1,5 +1,4 @@
 import { NavigationBottom } from '@/components/Navigation/NavigationBottom';
-import { NavigationSidebar } from '@/components/Navigation/NavigationSidebar';
 import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Edit Profile • Sky Media',
@@ -13,10 +12,7 @@ export default async function RootLayout({ children }: {
 
   return (
     <>
-      <div className='flex md:pb-0 pb-14'>
-        <NavigationSidebar />
-        {children}
-      </div>
+      {children}
       <NavigationBottom />
     </>
   )
