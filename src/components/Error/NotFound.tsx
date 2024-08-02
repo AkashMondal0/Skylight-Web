@@ -28,14 +28,14 @@ export default function NotFound({
         className='text-blue-500 hover:underline'>
         Go back to Home
       </Link>
-      <Button
+      {/* <Button
         onClick={() => {
           signOut()
           dispatch(logoutApi() as any)
         }} className='w-96 mx-auto rounded-xl'
         variant={"destructive"}>
         Logout
-      </Button>
+      </Button> */}
     </div>
   )
 }

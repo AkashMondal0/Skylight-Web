@@ -10,9 +10,6 @@ export default withAuth({
 export const config = {
   matcher: [
     "/",
-    "/profile/:path*",
-    "/posts/:path*",
-    "/post/:path*",
     "/explore/:path*",
     "/message/:path*",
     "/reels/:path*",
