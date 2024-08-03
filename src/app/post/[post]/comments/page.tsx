@@ -7,18 +7,21 @@ import { timeAgoFormat } from '@/lib/timeFormat'
 import { fetchOnePostApi } from '@/redux/services/post'
 import { RootState } from '@/redux/store'
 import { Comment } from '@/types'
-import { Heart } from 'lucide-react'
+import { ChevronLeft, Heart } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import React, { memo, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 let loadedRef = false
+let loadedPostId = "noPostId"
+
 const Page = ({ params }: { params: { post: string } }) => {
   const dispatch = useDispatch()
   const post = useSelector((Root: RootState) => Root.posts.viewPost)
   const loading = useSelector((Root: RootState) => Root.posts.viewPostLoading)
-
+  const router = useRouter()
 
   useEffect(() => {
-    if (params.post !== post?.id) {
+    if (params.post !== loadedPostId) {
       dispatch(fetchOnePostApi(params.post) as any)
       loadedRef = true;
     }
@@ -32,23 +35,32 @@ const Page = ({ params }: { params: { post: string } }) => {
     return (
       <>
         {/* header */}
-        <div className='max-w-[600px] w-full min-h-dvh mx-auto'>
-          <div className='sticky top-0 bg-background z-10 py-3 border-b'>
-            <h1 className="font-semibold text-lg text-center">Comments</h1>
-          </div>
-
-          <div className='h-full px-3 space-y-3'>
-            <div className="flex border-b py-4 mb-4">
-              <SkyAvatar url={post?.user?.profilePicture || "/user.jpg"} className='h-12 w-12 border-fuchsia-500 border-[3px] p-[2px]' />
-              <div className="flex flex-col ml-4">
-                <p className="break-all"><span className='font-semibold text-lg'>
-                  {post?.user?.username}</span> {post?.content}
-                </p>
-                <div className="text-sm text-gray-500">{timeAgoFormat(post?.createdAt)}</div>
+        <div className='max-w-[600px] w-full min-h-dvh mx-auto flex flex-col justify-between'>
+          <div>
+            {/* header */}
+            <div className="flex justify-between items-center w-full h-14 border-b">
+              <div className='md:hidden cursor-pointer'>
+                <ChevronLeft size={30} onClick={() => router.back()} />
               </div>
+              <div className='text-xl font-semibold'>
+                Comments
+              </div>
+              <div className='w-10' />
             </div>
-            {/* list */}
-            {post.comments.length <= 0 ? <EmptyComment /> : post?.comments.map((comment, i) => <CommentItem key={i} comment={comment} />)}
+
+            <div className='h-full px-3 space-y-3'>
+              <div className="flex border-b py-4 mb-4">
+                <SkyAvatar url={post?.user?.profilePicture || "/user.jpg"} className='h-12 w-12 border-fuchsia-500 border-[3px] p-[2px]' />
+                <div className="flex flex-col ml-4">
+                  <p className="break-all"><span className='font-semibold text-lg'>
+                    {post?.user?.username}</span> {post?.content}
+                  </p>
+                  <div className="text-sm text-gray-500">{timeAgoFormat(post?.createdAt)}</div>
+                </div>
+              </div>
+              {/* list */}
+              {post.comments.length <= 0 ? <EmptyComment /> : post?.comments.map((comment, i) => <CommentItem key={i} comment={comment} />)}
+            </div>
           </div>
 
           {/* input */}

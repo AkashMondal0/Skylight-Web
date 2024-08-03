@@ -5,7 +5,7 @@ export const SplashScreen = memo(function SplashScreen({ show }: { show: boolean
 
     if (show) {
         return (
-            <div className='absolute top-0 z-50 bg-background w-full overflow-hidden'>
+            <div className='absolute top-0 z-50 bg-background w-full min-h-full'>
                 <div className='items-center flex h-dvh flex-col justify-around'>
                     <div />
                     <div>

@@ -1,3 +1,4 @@
+import { ChevronLeft } from "lucide-react"
 import { ScrollArea } from "../ui/scroll-area"
 import { Skeleton } from "../ui/skeleton"
 
@@ -66,9 +67,15 @@ export const MessagePageSkeleton = () => {
 }
 
 export const CommentPageLoading = () => {
-    return <div className='w-full h-[100dvh] overflow-hidden mx-auto flex flex-col max-w-[600px]'>
-        <div className='sticky top-0 bg-background z-10 py-3 border-b'>
-            <h1 className="font-semibold text-lg text-center">Comments</h1>
+    return <div className='w-full min-h-dvh mx-auto flex flex-col max-w-[600px]'>
+        <div className="flex justify-between items-center w-full h-14 border-b">
+            <div className='md:hidden cursor-pointer'>
+                <ChevronLeft size={30}/>
+            </div>
+            <div className='text-xl font-semibold'>
+                Comments
+            </div>
+            <div className='w-10' />
         </div>
         <div className="flex-col flex gap-2 px-3 my-2 w-full">
             <div className="flex border-b py-4 mb-4">

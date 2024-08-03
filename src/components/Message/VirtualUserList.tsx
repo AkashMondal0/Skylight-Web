@@ -46,7 +46,7 @@ export const VirtualUserList = memo(function VirtualUserList({
     if (!mounted) return <></>
 
     return (
-        <>
+        <div className='h-dvh w-full md:h-full'>
             <div ref={parentRef}
                 id='style-1'
                 style={{
@@ -88,7 +88,7 @@ export const VirtualUserList = memo(function VirtualUserList({
                 </div> */}
                 {Footer}
             </div>
-        </>
+        </div>
     )
 }, ((preProps: any, nestProps: any) => {
     return preProps.conversation.length === nestProps.conversation.length

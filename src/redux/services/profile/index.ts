@@ -217,6 +217,7 @@ export const fetchUserProfileFollowerUserApi = createAsyncThunk(
                    username
                    email
                    name
+                   profilePicture
                    followed_by
                    following
                 }

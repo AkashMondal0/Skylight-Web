@@ -142,7 +142,9 @@ export const ProfileNavbar = memo(function ProfileHeader({ name, isProfile }: { 
             <div className="p-4 w-full flex justify-between">
                 <AtSign size={28} />
                 <span className="text-xl flex gap-1">{name} <ChevronDown className='mt-1' /></span>
+                <Link href={"/account/edit"}>
                 <Settings size={28} />
+                </Link>
             </div>
         </div>
     )
