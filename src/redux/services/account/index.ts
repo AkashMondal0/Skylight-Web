@@ -170,6 +170,7 @@ export const logoutApi = createAsyncThunk(
     'logoutApi/post',
     async (_, thunkApi) => {
         try {
+            DeleteAllCookie()
             await fetch(`${configs.serverApi.baseUrl}/v1/auth/logout`, {
                 headers: {
                     "Content-Type": "application/json",
@@ -179,7 +180,6 @@ export const logoutApi = createAsyncThunk(
                 credentials: "include",
                 body: JSON.stringify({}),
             })
-            DeleteAllCookie()
             return true
         } catch (error: any) {
             return ErrorFunction(error)

@@ -31,9 +31,13 @@ export default function OptionAvatarDialog({
 
         if (res.error) return toast("Something's went Wrong")
 
-        if (res.payload.profilePicture) return session.update({
-            profilePicture: res.payload.profilePicture
-        })
+        if (res.payload.profilePicture) {
+            await session.update({
+                ...session.data.user,
+                image: res.payload.profilePicture,
+                profilePicture:res.payload.profilePicture
+            });
+        }
         setIsFile(null)
         toast("Profile Picture Updated")
     }

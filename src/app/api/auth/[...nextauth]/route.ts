@@ -17,12 +17,11 @@ const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "text" },
         image: { label: "Image", type: "text" },
         id: { label: "ID", type: "text" },
-        token: { label: "Token", type: "text" },
         username: { label: "Username", type: "text" },
       },
       async authorize(credentials, req) {
         try {
-          if (!credentials?.token) return null
+          if (!credentials) return null
           return { ...credentials, profilePicture: credentials.image } as any
         } catch (error) {
           console.log("Error", error)
@@ -36,6 +35,9 @@ const authOptions: NextAuthOptions = {
       return true
     },
     async redirect({ url, baseUrl }) {
+      return url.startsWith(baseUrl)
+      ? Promise.resolve(url)
+      : Promise.resolve(baseUrl)
       return baseUrl
     },
     async session({ session, token, user }) {
@@ -49,7 +51,10 @@ const authOptions: NextAuthOptions = {
       }
       return session
     },
-    async jwt({ token, user, account, profile, isNewUser }) {
+    async jwt({ token, user, account, profile, isNewUser, trigger, session }) {
+      if (trigger === 'update') {
+        token.user = session
+      }
       if (user) {
         return {
           ...token,

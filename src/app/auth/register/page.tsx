@@ -62,6 +62,7 @@ export default function LoginPage() {
             return
         }
         const res = await dispatch(registerApi({ email, password, name, username }) as any) as { payload: ApiPayloadData<User> }
+        const callbackUrlPath = new URL(window.location.href).searchParams.get("callbackUrl")
         if (res.payload?.code === 1) {
             signIn("credentials", {
                 email: res.payload.data.email,
@@ -69,8 +70,8 @@ export default function LoginPage() {
                 name: res.payload.data.name,
                 id: res.payload.data.id,
                 image: res.payload.data.profilePicture ?? "/user.jpg",
-                token: res.payload.data.accessToken,
                 redirect: true,
+                callbackUrl: `${process.env.NEXTAUTH_URL}${callbackUrlPath}`,
             });
             reset();
         }
