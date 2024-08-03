@@ -34,7 +34,8 @@ const PostPage = ({ params }: { params: { post: string } }) => {
   }
 
   if (!Post.viewPostLoading && Post.viewPostError || !Post.viewPost) {
-    return <NotFound />
+    if (!Post.viewPostError) return <NotFound message="PAGE_NOT_FOUND" />
+    return <NotFound message={Post.viewPostError} />
   }
 
   return (

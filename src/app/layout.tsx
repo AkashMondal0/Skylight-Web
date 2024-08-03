@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/sonner"
 import Redux_Provider from "@/provider/Redux_Provider";
 import type { Viewport } from 'next'
 import Socket_Provider from "@/provider/Socket_Provider";
-import StatusbarColorInitial from "@/provider/StatusbarColor";
+import TopContext from "@/provider/TopContext";
 
 export const viewport: Viewport = {
   themeColor: [
@@ -41,10 +41,11 @@ export default function RootLayout({ children,
                 defaultTheme="system"
                 enableSystem>
                 <Socket_Provider>
-                <StatusbarColorInitial/>
-                  <Toaster />
-                  {children}
-                  {modal}
+                  <TopContext>
+                    <Toaster />
+                    {children}
+                    {modal}
+                  </TopContext>
                 </Socket_Provider>
               </ThemeProvider>
             </NextAuth_Provider>

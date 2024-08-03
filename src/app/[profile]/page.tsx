@@ -24,7 +24,7 @@ export default function Page({ params }: { params: { profile: string } }) {
     }, [params.profile])
 
     if (profilePosts.error && loaded) {
-        return <NotFound />
+        return <NotFound message={profilePosts.error}/>
     }
 
     if (!loaded || profilePosts.loading) {

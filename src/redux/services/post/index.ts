@@ -47,7 +47,7 @@ export const fetchOnePostApi = createAsyncThunk(
             return res.findOnePostWithComment
         } catch (error: any) {
             return thunkApi.rejectWithValue({
-                ...error?.response?.data,
+                message: error?.message
             })
         }
     }

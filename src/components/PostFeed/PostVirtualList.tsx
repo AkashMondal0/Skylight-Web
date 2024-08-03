@@ -12,10 +12,8 @@ let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 
 const PostVirtualList = memo(function PostVirtualList({
-    Loading,
     posts
 }: {
-    Loading: boolean
     posts: PostType[]
 }) {
     const parentRef = React.useRef<HTMLDivElement>(null)
@@ -60,7 +58,6 @@ const PostVirtualList = memo(function PostVirtualList({
                 <AppHeader />
                 <Stories />
                 <PostUploadProgress />
-                {Loading ? <PostLoading size={2} /> :
                     <div
                         className='min-h-full'
                         style={{
@@ -88,7 +85,7 @@ const PostVirtualList = memo(function PostVirtualList({
                                 </div>
                             ))}
                         </div>
-                    </div>}
+                    </div>
                 <NavigationBottom />
             </div>
         </>

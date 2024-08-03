@@ -23,9 +23,10 @@ export const StoryItem = memo(function Story({
 
 export const UploadYourStory = memo(function YourStory({ className }: { className?: string }) {
     const session = useSession().data?.user
-    return <div>
-        <div className="flex items-end">
-            <div className={cn(`w-16 h-16 rounded-full cursor-pointer`, className)}>
+   
+   return <div>
+        <div className="flex items-end ">
+            <div className={cn(`w-16 h-16 rounded-full cursor-pointer overflow-hidden`, className)}>
                 <SkyAvatar url={session?.image} className={cn('rounded-full object-cover w-full h-full')} />
             </div>
             <div className="w-0 relative right-5">

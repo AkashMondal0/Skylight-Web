@@ -38,7 +38,7 @@ export const ProfileHeader = memo(function ProfileHeader() {
                         className={'sm:w-36 object-cover sm:h-36 w-28 h-28 rounded-full sm:mr-8'} />
                     <div className='flex flex-col justify-between gap-5'>
                         <FollowButton
-                            isFollowing={profileUser.friendship.following}
+                            isFollowing={profileUser?.friendship?.following}
                             user={profileUser} />
                         <div className='sm:flex hidden justify-between px-3'>
                             <div className='flex gap-1'>

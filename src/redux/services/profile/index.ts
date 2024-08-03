@@ -32,7 +32,7 @@ export const fetchUserProfileDetailApi = createAsyncThunk(
             return res.findUserProfile
         } catch (error: any) {
             return thunkApi.rejectWithValue({
-                ...error?.response?.data,
+                message: error?.message
             })
         }
     }
@@ -66,11 +66,11 @@ export const fetchUserProfilePostsApi = createAsyncThunk(
                 query: query,
                 variables: { findPosts }
             })
-            return [...res.findProfilePosts, ..._post,..._post,..._post,..._post,..._post,..._post,..._post,..._post,..._post]
+            return [...res.findProfilePosts, ..._post, ..._post, ..._post, ..._post, ..._post, ..._post, ..._post, ..._post, ..._post]
 
         } catch (error: any) {
             return thunkApi.rejectWithValue({
-                ...error?.response?.data,
+                message: error?.message
             })
         }
     }

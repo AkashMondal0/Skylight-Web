@@ -150,18 +150,22 @@ export const PostPostLoading = () => {
                     <CommentViewLoading />
                 </div>
             </div>
-            <div className='w-full h-full block md:hidden'>
-                <div className="flex justify-between items-center h-full w-full py-5 border-b">
-                    <div className='md:hidden cursor-pointer'>
-                        <ChevronLeft size={30} />
+
+            <div className="w-full h-dvh flex md:hidden flex-col">
+                <div className={"w-full h-14 border-b"}>
+                    <div className="flex justify-between items-center h-full w-full">
+                        <div className='md:hidden cursor-pointer'>
+                            <ChevronLeft size={30}/>
+                        </div>
+                        <div className='text-xl font-semibold'>
+                            Post
+                        </div>
+                        <div className='w-10' />
                     </div>
-                    <p className='text-xl font-semibold'>
-                        Post
-                    </p>
-                    <div className='w-10' />
                 </div>
                 <PostLoading />
             </div>
+
         </div>
     )
 }

@@ -87,9 +87,9 @@ export const profileSlice = createSlice({
                 state.loading = false
                 state.error = null
             })
-            .addCase(fetchUserProfileDetailApi.rejected, (state, action) => {
+            .addCase(fetchUserProfileDetailApi.rejected, (state, action:PayloadAction<any>) => {
                 state.loading = false
-                state.error = action.error.message || null
+                state.error = action.payload?.message || "Something went wrong!"
                 state.state = null
             })
             // find user profile posts
