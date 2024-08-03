@@ -45,6 +45,7 @@ The client-side application is built using [Next.js](https://nextjs.org/), a Rea
 - `sonner`: Notification library.
 - `tailwind-merge`: Utility for merging Tailwind CSS classes.
 - `zod`: TypeScript-first schema declaration and validation library.
+- `compressorjs`: Image compress library.
 
 ## Tech Stack
 

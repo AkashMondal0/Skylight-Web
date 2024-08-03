@@ -226,7 +226,7 @@ export const fetchAccountFeedApi = createAsyncThunk(
 );
 
 export const DeleteAllCookie = async () => {
-    await fetch(`/api/v1/auth/logout`, {
+    await fetch(`/api/logout`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",

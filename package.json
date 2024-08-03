@@ -66,7 +66,6 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@supabase/supabase-js": "^2.42.0",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/lodash": "^4.17.0",
     "@types/node": "^20",
@@ -74,8 +73,6 @@
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
     "dotenv": "^16.4.5",
-    "drizzle-kit": "^0.20.17",
-    "drizzle-orm": "^0.30.10",
     "eslint": "^8",
     "eslint-config-next": "14.1.3",
     "postcss": "^8",
