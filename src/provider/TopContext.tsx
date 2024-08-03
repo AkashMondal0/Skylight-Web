@@ -9,6 +9,7 @@ let splashShow = true
 const TopContext = memo(function TopContext({ children }: { children: React.ReactNode }) {
     const { theme } = useTheme()
     const path = usePathname()
+    const [isLoading, setIsLoading] = useState(splashShow);
     const [navigation, setNavigation] = useState({
         isHideNav: false,
         hideLabel: false
@@ -31,13 +32,21 @@ const TopContext = memo(function TopContext({ children }: { children: React.Reac
         } else {
             setNavigation((pre) => ({ ...pre, isHideNav: false, hideLabel: false }));
         }
-        if (splashShow) splashShow = false
-
     }, [theme, path])
+
+    useEffect(() => {
+        splashShow = false
+        const timeoutId = setTimeout(() => {
+            setIsLoading(false)
+        }, 1300); // 1.3 seconds delay
+
+        return () => clearTimeout(timeoutId); // Cleanup on unmount
+    }, []);
+
 
     return (
         <>
-            <SplashScreen show={splashShow} />
+            <SplashScreen show={isLoading} />
             <div className='w-full h-full md:flex'>
                 <NavigationSidebar isHideNav={navigation.isHideNav} hideLabel={navigation.hideLabel} />
                 {children}

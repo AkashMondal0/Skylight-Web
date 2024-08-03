@@ -1,7 +1,7 @@
 import useWindowDimensions from "@/lib/useWindowDimensions";
 import { Post } from "@/types";
 import { useVirtualizer, } from "@tanstack/react-virtual";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ProfileHeader } from "@/components/Header/ProfileHeader";
 import { NavigationBottom } from "@/components/Navigation/NavigationBottom";
 import { ProfilePost } from "@/components/PostFeed/ProfilePost";
@@ -9,11 +9,13 @@ let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 
 
-const PostGridListVirtualList = ({
-    profilePosts
+const PostGridListVirtualList = memo(function PostGridListVirtualList({
+    profilePosts,
+    scrollToTop
 }: {
-    profilePosts: Post[]
-}) => {
+    profilePosts: Post[],
+    scrollToTop: boolean
+}) {
     const parentRef = useRef<HTMLDivElement>(null)
     const dimension = useWindowDimensions()
     const [mounted, setMounted] = useState(false)
@@ -37,9 +39,12 @@ const PostGridListVirtualList = ({
     })
 
     useEffect(() => {
+        if (scrollToTop) {
+            _kSavedOffset = 0;
+            _KMeasurementsCache = []
+        }
         setMounted(true)
     }, [])
-
     const items = virtualizer.getVirtualItems()
 
     if (!mounted) return <></>
@@ -53,7 +58,7 @@ const PostGridListVirtualList = ({
                     overflowY: 'auto',
                     contain: 'strict',
                 }}>
-               <ProfileHeader/>
+                <ProfileHeader />
                 <div
                     className='mx-auto max-w-[960px] min-h-full'
                     style={{
@@ -88,10 +93,12 @@ const PostGridListVirtualList = ({
                         ))}
                     </div>
                 </div>
-                <NavigationBottom/>
+                <NavigationBottom />
             </div>
         </>
     )
-}
+}, ((pre: any, next: any) => {
+    return pre.scrollToTop === next.scrollToTop && pre.profilePosts.length === next.profilePosts.length
+}))
 
 export default PostGridListVirtualList

@@ -6,11 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "dev:socket": "cd ./chat-backend && npm run dev",
-    "db:migrate": "npx tsx migration.ts",
-    "db:generate": "npx drizzle-kit generate:pg",
-    "db:push": "npx drizzle-kit push:pg"
+    "lint": "next lint"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",

@@ -24,7 +24,7 @@ export default function Page({ params }: { params: { profile: string } }) {
     }, [params.profile])
 
     if (profilePosts.error && loaded) {
-        return <NotFound message={profilePosts.error}/>
+        return <NotFound message={profilePosts.error} />
     }
 
     if (!loaded || profilePosts.loading) {
@@ -35,6 +35,7 @@ export default function Page({ params }: { params: { profile: string } }) {
     }
 
     return <PostGridListVirtualList
+        scrollToTop={profileUsername !== params.profile}
         profilePosts={profilePosts.posts} />
 
 }
