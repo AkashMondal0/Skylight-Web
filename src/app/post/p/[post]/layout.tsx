@@ -1,6 +1,6 @@
 import { configs } from "@/configs";
 import { AuthorData } from "@/types";
-import { DefaultMetadata } from "@/types/Metadata";
+import { NotFoundMetadata, metaRobots } from "@/types/Metadata";
 import { Metadata } from "next";
 
 interface PostData {
@@ -10,22 +10,41 @@ interface PostData {
   likeCount: number,
   commentCount: number,
   user: AuthorData
+  createdAt: Date
 }
+
 export async function generateMetadata({ params: { post } }: { params: { post: string } }): Promise<Metadata> {
   const res = await fetch(`${configs.serverApi.baseUrl}/v1/post/${post}`)
 
-  if (!res.ok) return DefaultMetadata
+  if (!res.ok) return NotFoundMetadata
   const data = await res.json() as PostData
 
-  if (!data) return DefaultMetadata
-  if (!data?.user?.name) return DefaultMetadata
+  if (!data) return NotFoundMetadata
+  if (!data?.user?.name) return NotFoundMetadata
+
+  const title = `${data.user.name} on Skylight: ${data.content}`;
+  const description = `Posted on: ${new Date(data.createdAt).toDateString()}, Likes: ${data.likeCount}, Comments: ${data.commentCount}, Image: ${data.fileUrl[0]}`;
 
   return {
-    title: `${data.user.name} on Skylight: ${data.content}`,
-    description: `${data.user.name} on Skylight: ${data.content}`,
+    title: title,
+    description: description,
+    // 
+    generator: 'SkyLight',
+    applicationName: `${configs.AppDetails.name} `,
+    referrer: 'origin-when-cross-origin',
+    keywords: [data.user.username, data.user.name, 'SkyLight'],
+    authors: [{ name: data?.user.name, url: `https://skysolo.me/${data.user.username}` }],
+    creator: data.user.name,
+    publisher: data.user.username,
+    metadataBase: new URL(`${configs.AppDetails.appUrl}/p/${data.id}`),
+    //
     openGraph: {
-      title: `${data.user.name} on Skylight: ${data.content}`,
-      description: `${data.user.name} on Skylight: ${data.content}`,
+      title: title,
+      description: description,
+      url: `${configs.AppDetails.appUrl}/p/${data.id}`,
+      siteName: 'SkyLight',
+      locale: "en-US",
+      type: 'website',
       images: [
         {
           type: "image/png",
@@ -40,7 +59,17 @@ export async function generateMetadata({ params: { post } }: { params: { post: s
           url: data.fileUrl[0]
         }
       ]
-    }
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: title,
+      description: description,
+      site: '@SkyLightApp',
+      creator: `@${data.user.username}`,
+      images: [data.fileUrl[0]],
+    },
+    category: `${configs.AppDetails.category}`,
+    robots: metaRobots
   }
 }
 
@@ -50,7 +79,7 @@ export default function RootLayout({ children,
 }) {
   return (
     <>
-    {children}
-    </> 
+      {children}
+    </>
   )
 }

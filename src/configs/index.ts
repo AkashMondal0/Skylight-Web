@@ -1,4 +1,3 @@
-
 const _configs = {
     appUrl: process.env.NEXTAUTH_URL,
     serverApi: {
@@ -13,10 +12,14 @@ const _configs = {
         appId: process.env.FIREBASE_APP_ID
     },
     AppDetails: {
-        name: process.env.APP_NAME || "Skylight",
-        description: process.env.APP_DESCRIPTION || "SkyLight is a social media platform that allows users to share their thoughts and ideas with the world.",
-        version: process.env.APP_VERSION || "1.0.0",
-        logoUrl: process.env.APP_LOGO_URL || "/skylight_logo.png",
+        version: "1.0.0",
+        name: "Skylight",
+        description: "SkyLight is a social media platform that allows users to share their thoughts and ideas with the world.",
+        appUrl: process.env.NEXTAUTH_URL ?? 'https://skysolo.me',
+        logoUrl: "/primary-logo.png",
+        primaryLightLogo: "/primary-light-logo.jpeg",
+        creator: "@AkashMondal",
+        category: "social media",
     }
 }
 

@@ -2,6 +2,7 @@
 import { MessageSideBar } from '@/components/Message/MessageSideBar';
 import OptimizedImage from '@/components/sky/SkyImage';
 import { LinkButton } from '@/components/ui/LinkButton';
+import { configs } from '@/configs';
 import React from 'react'
 
 export default function Page() {
@@ -11,7 +12,7 @@ export default function Page() {
       <div className='w-full h-full md:flex hidden justify-center items-center'>
         <div className='text-center'>
           <OptimizedImage
-            src='/skylight_logo.png'
+            src={configs.AppDetails.logoUrl}
             alt='Empty chat'
             className='w-40 h-40 mx-auto m-20 userNotSelectImg' width={200} height={200} />
           <p className='text-xl font-semibold'>Your messages</p>

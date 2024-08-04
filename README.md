@@ -101,22 +101,22 @@ SERVER_API_URL=http://localhost:5000
 
 ### Firebase storage
 
-- `API_KEY`: Your API key.
-- `AUTH_DOMAIN`: Your Auth domain.
-- `PROJECT_ID`: Your Project ID.
-- `STORAGE_BUCKET`: Your Storage bucket.
-- `MESSAGING_SENDER_ID`: Your Messaging sender ID.
-- `APP_ID`: Your App ID.
+- `FIREBASE_API_KEY`: Your Firebase API key.
+- `FIREBASE_AUTH_DOMAIN`: Your Firebase Auth domain.
+- `FIREBASE_PROJECT_ID`: Your Firebase Project ID.
+- `FIREBASE_STORAGE_BUCKET`: Your Firebase Storage bucket.
+- `FIREBASE_MESSAGING_SENDER_ID`: Your Firebase Messaging sender ID.
+- `FIREBASE_APP_ID`: Your Firebase App ID.
 
 You can set these variables in a `.env.local` file at the root of your project. Here's a template:
 
 ```env
-API_KEY=your_api_key
-AUTH_DOMAIN=your_auth_domain
-PROJECT_ID=your_project_id
-STORAGE_BUCKET=your_storage_bucket
-MESSAGING_SENDER_ID=your_messaging_sender_id
-APP_ID=your_app_id
+FIREBASE_API_KEY=your_firebase_api_key
+FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
+FIREBASE_PROJECT_ID=your_firebase_project_id
+FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
+FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id
+FIREBASE_APP_ID=your_firebase_app_id
 ```
 
 To run this project, you will need to add the following environment variables to your .env file

@@ -7,6 +7,7 @@ import Redux_Provider from "@/provider/Redux_Provider";
 import type { Viewport } from 'next'
 import Socket_Provider from "@/provider/Socket_Provider";
 import TopContext from "@/provider/TopContext";
+import { AppMetadata } from "@/types/Metadata";
 
 export const viewport: Viewport = {
   themeColor: [
@@ -19,11 +20,9 @@ export const viewport: Viewport = {
   userScalable: false,
 }
 
-export const metadata: Metadata = {
-  title: 'SkyLight',
-  description: `Sky Media is a social media platform that 
-  allows users to share their thoughts and ideas with the world.`,
-}
+export const metadata: Metadata = AppMetadata
+
+
 export default function RootLayout({ children,
   modal
 }: {

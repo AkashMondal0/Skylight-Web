@@ -2,29 +2,6 @@
 const nextConfig = {
     reactStrictMode: false,
     output: "standalone",
-    images: {
-        unoptimized: true,
-        formats: ["image/avif", "image/webp"],
-        remotePatterns: [
-            {
-                protocol: 'https',
-                hostname: 'picsum.photos',
-                port: '',
-                pathname: '/seed/**',
-            },
-            {
-                protocol: 'https',
-                hostname: 'source.unsplash.com',
-                port: '',
-                pathname: '/random/**',
-            }, {
-                protocol: 'https',
-                hostname: 'firebasestorage.googleapis.com',
-                port: '',
-                pathname: `/v0/b/${process.env.STORAGE_BUCKET}/o/**`,
-            }
-        ],
-    },
     env: {
         // API
         SERVER_API_URL: process.env.SERVER_API_URL,
