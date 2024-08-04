@@ -75,115 +75,106 @@ export const UploadImagesFireBaseApi = createAsyncThunk(
     }
 );
 
-const ErrorFunction = (error: any) => {
-    if (error?.response?.data?.message) {
-        return {
-            data: null,
-            message: error.response?.data.message,
-            code: 0
-        }
-    } else {
-        return {
-            data: null,
-            message: "An error occurred. Please try again later.",
-            code: 0
-        }
-    }
+export const loginApi = async ({
+    email,
+    password,
+}: {
+    email: string,
+    password: string,
+}) => {
+    return fetch(`${configs.serverApi.baseUrl}/v1/auth/login`, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        method: "POST",
+        redirect: "follow",
+        body: JSON.stringify({
+            email,
+            password
+        }),
+        credentials: "include"
+    })
+        .then(async (res) => {
+            if (!res.ok) {
+                const error = await res.json()
+                throw new Error(`${error.message}`);
+            }
+            return {
+                data: await res.json(),
+                message: "Login Successful",
+                code: 1
+            };
+        })
+        .catch((e) => {
+            return {
+                data: e,
+                message: e.message,
+                code: 0
+            }
+        });
 }
 
-export const loginApi = createAsyncThunk(
-    'login/post',
-    async ({
-        email,
-        password,
-    }: {
-        email: string,
-        password: string,
-    }, thunkApi) => {
-        try {
-            const res = await fetch(`${configs.serverApi.baseUrl}/v1/auth/login`, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                method: "POST",
-                redirect: "follow",
-                body: JSON.stringify({
-                    email,
-                    password
-                }),
-                credentials: "include"
-            })
-                .then((response) => response.json())
+export const registerApi = async ({
+    email,
+    password,
+    name,
+    username
+}: {
+    email: string,
+    password: string,
+    name: string,
+    username: string
+}) => {
 
-            return {
-                data: res,
-                message: "Login successful",
-                code: 1
+    return await fetch(`${configs.serverApi.baseUrl}/v1/auth/register`, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        method: "POST",
+        redirect: "follow",
+        body: JSON.stringify({
+            email,
+            password,
+            name,
+            username
+        }),
+        credentials: "include"
+    })
+        .then(async (res) => {
+            if (!res.ok) {
+                const error = await res.json()
+                throw new Error(`${error.message}`);
             }
-        } catch (error: any) {
-            return ErrorFunction(error)
-        }
-    }
-);
-
-export const registerApi = createAsyncThunk(
-    'register/post',
-    async ({
-        email,
-        password,
-        name,
-        username
-    }: {
-        email: string,
-        password: string,
-        name: string,
-        username: string
-    }, thunkApi) => {
-        try {
-            const res = await fetch(`${configs.serverApi.baseUrl}/v1/auth/register`, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                method: "POST",
-                redirect: "follow",
-                body: JSON.stringify({
-                    email,
-                    password,
-                    name,
-                    username
-                }),
-                credentials: "include"
-            })
-                .then((response) => response.json())
             return {
-                data: res,
-                message: "Register successful",
+                data: await res.json(),
+                message: "Login Successful",
                 code: 1
+            };
+        })
+        .catch((e) => {
+            return {
+                data: e,
+                message: e.message,
+                code: 0
             }
-        } catch (error: any) {
-            return ErrorFunction(error)
-        }
-    }
-);
+        });
+}
 
 export const logoutApi = createAsyncThunk(
     'logoutApi/post',
     async (_, thunkApi) => {
-        try {
-            DeleteAllCookie()
-            await fetch(`${configs.serverApi.baseUrl}/v1/auth/logout`, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                method: "POST",
-                redirect: "follow",
-                credentials: "include",
-                body: JSON.stringify({}),
-            })
-            return true
-        } catch (error: any) {
-            return ErrorFunction(error)
-        }
+
+        DeleteAllCookie()
+        await fetch(`${configs.serverApi.baseUrl}/v1/auth/logout`, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            redirect: "follow",
+            credentials: "include",
+            body: JSON.stringify({}),
+        })
+        return true
     }
 );
 

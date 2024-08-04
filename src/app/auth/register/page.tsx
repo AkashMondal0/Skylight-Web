@@ -61,22 +61,23 @@ export default function LoginPage() {
             toast.error("Username must not contain spaces or @ symbol")
             return
         }
-        const res = await dispatch(registerApi({ email, password, name, username }) as any) as { payload: ApiPayloadData<User> }
+        const res = await registerApi({ email, password, name, username })
         const callbackUrlPath = new URL(window.location.href).searchParams.get("callbackUrl")
-        if (res.payload?.code === 1) {
+        if (res?.code === 1) {
             signIn("credentials", {
-                email: res.payload.data.email,
-                username: res.payload.data.username,
-                name: res.payload.data.name,
-                id: res.payload.data.id,
-                image: res.payload.data.profilePicture ?? "/user.jpg",
+                email: res.data.email,
+                username: res.data.username,
+                name: res.data.name,
+                id: res.data.id,
+                image: res.data.profilePicture ?? "/user.jpg",
                 redirect: true,
-                callbackUrl: `${process.env.NEXTAUTH_URL}${callbackUrlPath}`,
+                callbackUrl: callbackUrlPath ? `${process.env.NEXTAUTH_URL}${callbackUrlPath}` : `${process.env.NEXTAUTH_URL}`,
             });
             reset();
+            toast.success(`${res.message}`)
         }
         else {
-            toast.error(`${res.payload.message}`)
+            toast.error(`${res.message}`)
         }
         setLoading(false);
     };
