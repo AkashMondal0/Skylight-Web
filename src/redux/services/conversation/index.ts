@@ -1,4 +1,4 @@
-import { graphqlQuery } from "@/lib/graphqlQuery";
+import { graphqlQuery } from "@/lib/gql/GraphqlQuery";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchConversationsApi = createAsyncThunk(

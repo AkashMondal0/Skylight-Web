@@ -18,8 +18,8 @@ import { useDispatch } from "react-redux"
 import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 import OptimizedImage from "@/components/sky/SkyImage"
-import { UploadImagesFireBaseApi } from "@/redux/services/account"
 import { TempleDialog } from "./Temple.Dialog"
+import { UploadImagesFireBaseApi } from "@/redux/services/upload"
 
 export default function UploadPostDialog({
     children

@@ -19,7 +19,7 @@ const PostGridListVirtualList = memo(function PostGridListVirtualList({
     const parentRef = useRef<HTMLDivElement>(null)
     const dimension = useWindowDimensions()
     const [mounted, setMounted] = useState(false)
-    const data = useMemo(() => profilePosts, [profilePosts])
+    const data = useMemo(() => profilePosts?.length ? profilePosts : [], [profilePosts])
     const count = useMemo(() => Math.ceil(data.length / 3), [data.length])
 
     const virtualizer = useVirtualizer({
@@ -98,7 +98,7 @@ const PostGridListVirtualList = memo(function PostGridListVirtualList({
         </>
     )
 }, ((pre: any, next: any) => {
-    return pre.scrollToTop === next.scrollToTop && pre.profilePosts.length === next.profilePosts.length
+    return pre?.scrollToTop === next?.scrollToTop && pre?.profilePosts?.length === next?.profilePosts?.length
 }))
 
 export default PostGridListVirtualList

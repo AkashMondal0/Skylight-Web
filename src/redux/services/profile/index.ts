@@ -1,8 +1,6 @@
-import { graphqlQuery } from "@/lib/graphqlQuery";
+import { graphqlQuery } from "@/lib/gql/GraphqlQuery";
 import { findDataInput } from "@/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getRandomProfilePost } from "@/components/sky/random";
-const _post = getRandomProfilePost(20)
 
 export const fetchUserProfileDetailApi = createAsyncThunk(
     'fetchProfileFeedApi/get',
@@ -41,32 +39,22 @@ export const fetchUserProfileDetailApi = createAsyncThunk(
 export const fetchUserProfilePostsApi = createAsyncThunk(
     'fetchUserProfilePostApi/get',
     async (data: findDataInput, thunkApi) => {
-        const { username, ...findPosts } = data
-        findPosts.id = username
+        const { username, ...findAllPosts } = data
+        findAllPosts.id = username
         try {
-            let query = `query FindProfilePosts($findPosts: GraphQLPageQuery!) {
-                findProfilePosts(findPosts: $findPosts) {
+            let query = `query FindUserProfile($findAllPosts: GraphQLPageQuery!) {
+                findAllPosts(findAllPosts: $findAllPosts) {
                   id
-                  content
                   fileUrl
-                  title
-                  createdAt
                   commentCount
                   likeCount
-                  is_Liked
-                  user {
-                    username
-                    email
-                    name
-                    profilePicture
-                  }
                 }
               }`
             const res = await graphqlQuery({
                 query: query,
-                variables: { findPosts }
+                variables: { findAllPosts }
             })
-            return res.findProfilePosts
+            return res.findAllPosts
 
         } catch (error: any) {
             return thunkApi.rejectWithValue({
@@ -178,7 +166,6 @@ export const fetchUserProfileFollowingUserApi = createAsyncThunk(
         const { username, ...viewFollowingInput } = data
         viewFollowingInput.id = username
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000))
             let query = `query FindAllFollowing($viewFollowingInput: GraphQLPageQuery!) {
                 findAllFollowing(viewFollowingInput: $viewFollowingInput) {
                   id
@@ -210,7 +197,6 @@ export const fetchUserProfileFollowerUserApi = createAsyncThunk(
         const { username, ...viewFollowerInput } = data
         viewFollowerInput.id = username
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000))
             let query = `query FindAllFollower($viewFollowerInput: GraphQLPageQuery!) {
                 findAllFollower(viewFollowerInput: $viewFollowerInput) {
                    id

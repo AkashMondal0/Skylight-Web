@@ -1,50 +1,19 @@
-import { graphqlQuery } from "@/lib/graphqlQuery";
+import { graphqlQuery } from "@/lib/gql/GraphqlQuery";
+import { findOnePostQuery } from "@/lib/gql/post.queries";
 import { AuthorData } from "@/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 
 export const fetchOnePostApi = createAsyncThunk(
     'fetchOnePostApi/get',
-    async (findOnePostWithCommentId: string, thunkApi) => {
+    async (findOnePostId: string, thunkApi) => {
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000))
-            let query = `query findOnePostWithComment($findOnePostWithCommentId: String!) {
-                findOnePostWithComment(id: $findOnePostWithCommentId) {
-                  id
-                  content
-                  fileUrl
-                  createdAt
-                  updatedAt
-                  commentCount
-                  likeCount
-                  is_Liked
-                  comments {
-                    content
-                    createdAt
-                    id
-                    user {
-                      id
-                      email
-                      username
-                      name
-                      profilePicture
-                    }
-                  }
-                  user {
-                    id
-                    username
-                    name
-                    profilePicture
-                  }
-                }
-              }
-              `
-            const res = await graphqlQuery({
-                query: query,
-                variables: { findOnePostWithCommentId }
+            const data = await graphqlQuery({
+                query: findOnePostQuery.query,
+                variables: { findOnePostId }
             })
 
-            return res.findOnePostWithComment
+            return data[findOnePostQuery.name]
         } catch (error: any) {
             return thunkApi.rejectWithValue({
                 message: error?.message
@@ -139,7 +108,6 @@ export const fetchPostLikesApi = createAsyncThunk(
         id: string
     }, thunkApi) => {
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000))
             let query = `query FindAllLikes($findAllLikesInput: GraphQLPageQuery!) {
                 findAllLikes(findAllLikesInput: $findAllLikesInput) {
                   following
@@ -158,6 +126,44 @@ export const fetchPostLikesApi = createAsyncThunk(
             })
 
             return res.findAllLikes
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                ...error?.response?.data,
+            })
+        }
+    }
+);
+export const fetchPostCommentsApi = createAsyncThunk(
+    'fetchPostCommentsApi/get',
+    async (createCommentInput: {
+        offset: number,
+        limit: number,
+        id: string
+    }, thunkApi) => {
+        try {
+            let query = `query FindAllComments($createCommentInput: GraphQLPageQuery!) {
+                findAllComments(createCommentInput: $createCommentInput) {
+                  id
+                  content
+                  authorId
+                  postId
+                  createdAt
+                  updatedAt
+                  user {
+                    username
+                    email
+                    name
+                    profilePicture
+                  }
+                }
+              }
+              `
+            const res = await graphqlQuery({
+                query: query,
+                variables: { createCommentInput }
+            })
+
+            return res.findAllComments
         } catch (error: any) {
             return thunkApi.rejectWithValue({
                 ...error?.response?.data,

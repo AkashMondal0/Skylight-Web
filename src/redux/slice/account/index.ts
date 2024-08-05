@@ -1,5 +1,4 @@
-import { UploadImagesFireBaseApi } from '@/redux/services/account'
-import { RootState } from '@/redux/store'
+import { UploadImagesFireBaseApi } from '@/redux/services/upload'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
