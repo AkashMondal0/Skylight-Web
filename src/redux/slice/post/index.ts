@@ -96,7 +96,7 @@ export const PostsSlice = createSlice({
                 state.commentLoading = true
             })
             .addCase(createPostCommentApi.fulfilled, (state, action: PayloadAction<Comment>) => {
-                console.info(action.payload)
+                // console.info(action.payload)
                 state.viewPost?.comments.unshift(action.payload)
                 state.commentLoading = false
             })

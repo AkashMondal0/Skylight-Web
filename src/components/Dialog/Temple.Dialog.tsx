@@ -58,7 +58,9 @@ export const TempleAlertDialog = ({
     return (
         <Dialog onOpenChange={onOpenChange}>
             <DialogTrigger asChild>
-                {TriggerChildren}
+                <div className='w-auto h-auto'>
+                    {TriggerChildren}
+                </div>
             </DialogTrigger>
             <DialogContent className="p-0 overflow-hidden w-[96%] max-w-[450px]" style={{ borderRadius: 30 }}>
                 <div className='flex flex-col overflow-hidden h-full'>

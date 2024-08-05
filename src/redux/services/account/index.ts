@@ -207,7 +207,7 @@ export const fetchAccountFeedApi = createAsyncThunk(
                 query: query,
             })
 
-            return res.feedTimelineConnection.concat(_posts)
+            return res.feedTimelineConnection
         } catch (error: any) {
             return thunkApi.rejectWithValue({
                 message: error?.message

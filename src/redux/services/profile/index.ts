@@ -66,7 +66,7 @@ export const fetchUserProfilePostsApi = createAsyncThunk(
                 query: query,
                 variables: { findPosts }
             })
-            return [...res.findProfilePosts, ..._post, ..._post, ..._post, ..._post, ..._post, ..._post, ..._post, ..._post, ..._post]
+            return res.findProfilePosts
 
         } catch (error: any) {
             return thunkApi.rejectWithValue({

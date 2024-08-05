@@ -1,5 +1,5 @@
 import { AtSign, ChevronDown, Settings } from 'lucide-react'
-import React, { memo, useEffect } from 'react'
+import React, { memo, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { Link2 } from 'lucide-react'
 import SkyAvatar from '@/components/sky/SkyAvatar'
@@ -8,10 +8,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import FollowButton from '@/components/Button/FollowButton'
 import { ProfileStories } from '@/components/Stories/ProfileStories'
 import { fetchUserProfilePostsApi } from '@/redux/services/profile'
+import { useSession } from 'next-auth/react'
+import OptionAvatarDialog from '../Dialog/Options.Dialog'
 
 export const ProfileHeader = memo(function ProfileHeader() {
     const dispatch = useDispatch()
     const profileUser = useSelector((Root: RootState) => Root.profile.state)
+    const session = useSession().data?.user
+    const isProfile = useMemo(() => session?.username === profileUser?.username, [session?.username, profileUser?.username])
 
     useEffect(() => {
         if (profileUser?.username) {
@@ -27,17 +31,27 @@ export const ProfileHeader = memo(function ProfileHeader() {
 
     return (
         <div className='md:max-w-[960px] mx-auto'>
-            <ProfileNavbar name={profileUser?.username} />
+            <ProfileNavbar name={profileUser?.username}
+                isProfile={isProfile} />
             {/* large device */}
             <div className="hidden sm:block mx-auto">
                 {/* profile header */}
                 <div className='flex items-center my-8 m-5'>
-                    <SkyAvatar
-                        sizeImage='20vw'
-                        url={profileUser.profilePicture || "/user.jpg"}
-                        className={'sm:w-36 object-cover sm:h-36 w-28 h-28 rounded-full sm:mr-8'} />
+                    {isProfile ?
+                        <OptionAvatarDialog>
+                            <SkyAvatar
+                                sizeImage='20vw'
+                                url={session?.image || "/user.jpg"}
+                                className={'sm:w-36 object-cover sm:h-36 w-28 h-28 rounded-full sm:mr-8'} />
+                        </OptionAvatarDialog>
+                        :
+                        <SkyAvatar
+                            sizeImage='20vw'
+                            url={profileUser.profilePicture || "/user.jpg"}
+                            className={'sm:w-36 object-cover sm:h-36 w-28 h-28 rounded-full sm:mr-8'} />}
                     <div className='flex flex-col justify-between gap-5'>
                         <FollowButton
+                            isProfile={isProfile}
                             isFollowing={profileUser?.friendship?.following}
                             user={profileUser} />
                         <div className='sm:flex hidden justify-between px-3'>
@@ -72,7 +86,9 @@ export const ProfileHeader = memo(function ProfileHeader() {
                     </div>
                 </div>
                 {/* story */}
-                <ProfileStories user={profileUser} />
+                <ProfileStories user={profileUser}
+                    isProfile={isProfile}
+                />
             </div>
             {/* small device */}
             <div className='sm:hidden block'>
@@ -81,6 +97,7 @@ export const ProfileHeader = memo(function ProfileHeader() {
                     <SkyAvatar url={profileUser.profilePicture || "/user.jpg"}
                         className={'w-24 h-24 rounded-full object-cover bg-slate-400'} />
                     <FollowButton
+                        isProfile={isProfile}
                         isFollowing={profileUser.friendship.following}
                         user={profileUser} />
                 </div>
@@ -98,7 +115,9 @@ export const ProfileHeader = memo(function ProfileHeader() {
                             </a>
                         </div>
                     </div>
-                    <ProfileStories user={profileUser} />
+                    <ProfileStories
+                        isProfile={isProfile}
+                        user={profileUser} />
                     {/* followers and following */}
                     <div className='flex justify-around p-2 border-y sm:hidden'>
                         <div className=' text-center'>
@@ -136,18 +155,17 @@ export const ProfileHeader = memo(function ProfileHeader() {
 
 
 export const ProfileNavbar = memo(function ProfileHeader({ name, isProfile }: { name: string, isProfile?: boolean }) {
-    //  console.info('%c<ProfileNavbar/>', 'color: yellow; font-weight: bold;');
     return (
         <div className="md:hidden flex sticky top-0 z-10 w-full border-b h-14 bg-background text-foreground">
             <div className="p-4 w-full flex justify-between">
                 <AtSign size={28} />
                 <span className="text-xl flex gap-1">{name} <ChevronDown className='mt-1' /></span>
                 <Link href={"/account/edit"}>
-                <Settings size={28} />
+                    <Settings size={28} />
                 </Link>
             </div>
         </div>
     )
 }, ((prevProps: any, nextProps: any) => {
-    return prevProps.name === nextProps.name
+    return prevProps.name === nextProps.name && prevProps.isProfile === nextProps.isProfile
 }))
