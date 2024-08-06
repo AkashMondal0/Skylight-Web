@@ -44,10 +44,10 @@ export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel, is
         return <></>
     }
     if (isHideNav) return <></>
-    
+
     return (
-        <div className={cn(`border-r scroll-smooth overflow-y-auto ease-in-out duration-300 hidden sm:flex sm:w-20 xl:w-72 max-w-72 min-h-full overflow-x-hidden h-dvh hideScrollbar`, hideLabel ? "w-20" : "w-72")}>
-            <div className="w-full h-full flex flex-col space-y-2 justify-between p-1">
+        <div className={cn(`border-r scroll-smooth overflow-y-auto ease-in-out duration-300 hidden sm:flex sm:w-20 xl:w-72 max-w-72 w-72 min-h-full overflow-x-hidden h-dvh hideScrollbar`, hideLabel ? "w-20" : "w-72")}>
+            <div className="w-full h-full flex flex-col space-y-2 justify-between p-2">
                 <div className="space-y-1">
                     <div className="h-3" />
                     <NavigationItem label={configs.AppDetails.name}>
@@ -113,8 +113,8 @@ const NavigationItem = ({ children, active, label, onClick, hideLabel }: {
             <Tooltip>
                 <TooltipTrigger asChild>
                     <div onClick={onClick}
-                        className={cn(`max-w-72 mx-auto justify-center h-14 items-center flex rounded-xl
-                        hover:bg-accent hover:text-accent-foreground cursor-pointer`, hideLabel ? "sm:flex justify-center" : "lg:w-full lg:px-4 lg:gap-2 lg:justify-start")}>
+                        className={cn(`max-w-72 mx-auto justify-center h-12 items-center flex rounded-xl
+                        hover:bg-accent hover:text-accent-foreground cursor-pointer`, hideLabel ? "sm:flex justify-center" : "lg:w-full lg:px-4 lg:gap-3 lg:justify-start")}>
                         {children}
                         {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden xl:block", active ? "font-bold" : "font-normal")}>{label}</p>}
                     </div>

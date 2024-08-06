@@ -1,5 +1,5 @@
 "use client"
-import { CopyPlus, Heart } from 'lucide-react'
+import { ChevronLeft, CopyPlus, Heart } from 'lucide-react'
 import React, { memo } from 'react'
 import { useRouter } from 'next/navigation'
 import { configs } from '@/configs'
@@ -31,3 +31,17 @@ export const AppHeader = memo(function AppHeader() {
     )
 })
 
+export const AppNavbar = memo(function ProfileHeader({ name, isProfile, icon2 }: { name: string, isProfile?: boolean, icon2: React.ReactNode }) {
+    const router = useRouter()
+    return (
+        <div className="md:hidden flex sticky top-0 z-10 w-full border-b h-14 bg-background text-foreground">
+            <div className="p-4 w-full flex justify-between">
+                <ChevronLeft size={30} onClick={() => router.back()} />
+                <span className="text-xl flex gap-1">{name}</span>
+                {icon2}
+            </div>
+        </div>
+    )
+}, ((prevProps: any, nextProps: any) => {
+    return prevProps.name === nextProps.name && prevProps.isProfile === nextProps.isProfile
+}))
