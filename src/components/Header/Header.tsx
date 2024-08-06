@@ -9,7 +9,7 @@ export const AppHeader = memo(function AppHeader() {
     // console.info("<AppHeader/>")
     const router = useRouter()
     return (
-        <div className="md:hidden flex sticky top-0 z-10 w-full
+        <div className="sm:hidden flex sticky top-0 z-10 w-full
          border-b h-14 bg-background text-foreground">
             <div className="p-4 w-full flex justify-between">
                 <div className="flex items-center">

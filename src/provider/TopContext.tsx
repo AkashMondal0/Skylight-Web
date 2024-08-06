@@ -47,7 +47,7 @@ const TopContext = memo(function TopContext({ children }: { children: React.Reac
     return (
         <>
             <SplashScreen show={isLoading} />
-            <div className='w-full h-full md:flex'>
+            <div className='w-full h-full sm:flex'>
                 <NavigationSidebar isHideNav={navigation.isHideNav} hideLabel={navigation.hideLabel} />
                 {children}
             </div>
