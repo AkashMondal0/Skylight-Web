@@ -4,7 +4,7 @@ import { CommentInput } from '@/components/comment/Comment.Input'
 import { CommentPageLoading } from '@/components/loading/Message.page'
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import { timeAgoFormat } from '@/lib/timeFormat'
-import { fetchOnePostApi } from '@/redux/services/post'
+import { fetchOnePostApi, fetchPostCommentsApi } from '@/redux/services/post'
 import { RootState } from '@/redux/store'
 import { Comment } from '@/types'
 import { ChevronLeft, Heart } from 'lucide-react'
@@ -23,6 +23,11 @@ const Page = ({ params }: { params: { post: string } }) => {
   useEffect(() => {
     if (params.post !== loadedPostId) {
       dispatch(fetchOnePostApi(params.post) as any)
+      dispatch(fetchPostCommentsApi({
+        id: params.post,
+        offset: 0,
+        limit: 12
+      }) as any)
       loadedRef = true;
     }
   }, []);

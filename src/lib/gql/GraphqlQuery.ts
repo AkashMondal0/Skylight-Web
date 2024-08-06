@@ -1,8 +1,21 @@
 import { configs } from "@/configs"
-import { DeleteAllCookie } from "@/redux/services/account"
-import { GraphqlError } from "@/types"
+interface GraphqlResponse<T> {
+    data: T;
+    errors: GraphqlError[];
+}
+export type GraphqlQueryType = {
+    name: string
+    operation: string
+    query: string
+  }
+export interface GraphqlError {
+    message: string;
+    locations?: { line: number; column: number }[];
+    path?: string[];
+    extensions?: any;
+}
 
-export const graphqlQuery = async ({
+export const graphqlQuery = async <T>({
     query,
     variables,
     url = `${configs.serverApi.baseUrl}/graphql`,
@@ -10,13 +23,14 @@ export const graphqlQuery = async ({
     withCredentials = false,
     errorCallBack
 }: {
-    query: string
-    variables?: any
-    url?: string
-    BearerToken?: string
-    withCredentials?: boolean
-    errorCallBack?: (error: GraphqlError[]) => void
-}) => {
+    query: string;
+    variables?: any;
+    url?: string;
+    BearerToken?: string;
+    withCredentials?: boolean;
+    errorCallBack?: (error: GraphqlError[]) => void;
+}): Promise<T | any> => {
+
     const response = await fetch(url, {
         method: 'POST',
         credentials: "include",
@@ -30,14 +44,12 @@ export const graphqlQuery = async ({
         }),
     });
 
-    const responseBody = await response.json() as {
-        data: any,
-        errors: GraphqlError[]
-    }
+    const responseBody: GraphqlResponse<any> = await response.json();
 
     if (responseBody.errors) {
         await graphqlErrorTypes(responseBody.errors[0])
     }
+
     return responseBody.data;
 }
 

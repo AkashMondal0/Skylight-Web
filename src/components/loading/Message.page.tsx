@@ -70,7 +70,7 @@ export const CommentPageLoading = () => {
     return <div className='w-full min-h-dvh mx-auto flex flex-col max-w-[600px]'>
         <div className="flex justify-between items-center w-full h-14 border-b">
             <div className='md:hidden cursor-pointer'>
-                <ChevronLeft size={30}/>
+                <ChevronLeft size={30} />
             </div>
             <div className='text-xl font-semibold'>
                 Comments
@@ -103,4 +103,19 @@ export const CommentPageLoading = () => {
             <Skeleton className="h-10 w-10 rounded-2xl" />
         </div>
     </div>
+}
+
+export const CommentListLoading = () => {
+    return (<div className="p-4 space-y-2">
+
+        {Array(20).fill(0).map((_, i) => <div key={i} className="flex gap-1 items-center justify-between">
+            <div className="flex">
+                <Skeleton className='h-12 w-12 rounded-full border-fuchsia-500 border-[3px] p-[2px]' />
+                <div className="flex flex-col ml-2 space-y-1">
+                    <Skeleton className='w-40 h-4' />
+                    <Skeleton className='w-28 h-4' />
+                </div>
+            </div>
+            <Skeleton className='w-5 h-5' />
+        </div>)}</div>)
 }

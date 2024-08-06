@@ -5,12 +5,13 @@ import { UploadYourStory } from './StoryItem'
 import { useSession } from 'next-auth/react'
 
 export const ProfileStories = memo(function ProfileStories({
-  user
+  user,
+  isProfile
 }: {
-  user: User
+  user: User,
+  isProfile:boolean
 }) {
   const session = useSession().data?.user
-  const isProfile = useMemo(() => session?.username === user?.username, [session?.username, user.username])
   return (
     <div className='flex sm:gap-10 m-5 sm:my-10 gap-5 my-5'>
       {isProfile ? <UploadYourStory className='sm:w-20 sm:h-20 w-16 h-16 border-[2px]' /> : <></>}
@@ -20,4 +21,4 @@ export const ProfileStories = memo(function ProfileStories({
         className={'sm:w-20 sm:h-20 rounded-full object-cover cursor-pointer h-16 w-16'} />
     </div>
   )
-}, (() => true))
+}, ((prevProps: any, nextProps: any) => prevProps.isProfile === nextProps.isProfile))

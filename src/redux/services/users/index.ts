@@ -1,10 +1,10 @@
-import { graphqlQuery } from "@/lib/graphqlQuery";
+import { graphqlQuery } from "@/lib/gql/GraphqlQuery";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 
 export const searchUsersProfileApi = createAsyncThunk(
     'searchUsersProfileApi/get',
-    async (keyword:string, thunkApi) => {
+    async (keyword: string, thunkApi) => {
         try {
             let query = `query FindUsersByKeyword($keyword: String!) {
                 findUsersByKeyword(keyword: $keyword) {
@@ -17,7 +17,7 @@ export const searchUsersProfileApi = createAsyncThunk(
               }`
             const res = await graphqlQuery({
                 query: query,
-                variables: {keyword}
+                variables: { keyword }
             })
 
             return res.findUsersByKeyword

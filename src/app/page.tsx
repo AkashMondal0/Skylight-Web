@@ -19,7 +19,7 @@ export default function Page() {
     }
   }, [])
 
-  if (!pageLoaded || posts.feedsLoading) {
+  if (!pageLoaded && posts.feedsLoading || posts.feedsLoading ) {
     return <div className='w-full'>
       <PostLoading size={2} />
     </div>
