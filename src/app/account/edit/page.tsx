@@ -13,15 +13,16 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { useDispatch } from 'react-redux'
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import { signOut, useSession } from 'next-auth/react'
 import { logoutApi } from '@/redux/services/account'
 import OptionAvatarDialog from '@/components/Dialog/Options.Dialog'
+import { useRouter } from 'next/navigation'
 
 const Page = () => {
+    const router = useRouter()
+
     const profile = useSession().data
-    const dispatch = useDispatch()
     if (!profile?.user) return null
     return (
         <>
@@ -90,7 +91,8 @@ const Page = () => {
                     </Card>
                     <div className='flex justify-around gap-4' onClick={() => {
                         signOut()
-                        dispatch(logoutApi() as any)
+                        logoutApi()
+                        router.replace('/auth/login')
                     }}>
                         <Button variant={"secondary"}
                             className="rounded-xl w-full">

@@ -160,7 +160,7 @@ export const profileUpdateApi = createAsyncThunk(
                         updateUsersInput: { profilePicture: url }
                     }
                 })
-                data = res.updateUserProfile
+                data = res[UpdateProfileQuery.name]
             }
             else {
                 const res = await graphqlQuery({
@@ -169,10 +169,10 @@ export const profileUpdateApi = createAsyncThunk(
                         updateUsersInput
                     }
                 })
-                data = res.updateUserProfile
+                data = res[UpdateProfileQuery.name]
             }
 
-            return data[UpdateProfileQuery.name]
+            return data
         } catch (error: any) {
             return thunkApi.rejectWithValue({
                 ...error?.response?.data,

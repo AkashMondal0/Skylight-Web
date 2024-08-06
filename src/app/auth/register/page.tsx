@@ -1,6 +1,5 @@
 'use client'
 import { signIn } from "next-auth/react"
-import { useDispatch } from "react-redux";
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,7 +18,6 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { useState } from "react";
-import { ApiPayloadData, User } from "@/types";
 import { registerApi } from "@/redux/services/account";
 
 const FormSchema = z.object({
@@ -40,7 +38,6 @@ const FormSchema = z.object({
 type FormData = z.infer<typeof FormSchema>;
 
 export default function LoginPage() {
-    const dispatch = useDispatch();
     const router = useRouter();
     const [loading, setLoading] = useState(false);
 

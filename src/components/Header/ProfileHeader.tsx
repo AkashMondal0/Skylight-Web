@@ -20,7 +20,7 @@ export const ProfileHeader = memo(function ProfileHeader() {
     useEffect(() => {
         if (profileUser?.username) {
             dispatch(fetchUserProfilePostsApi({
-                username: profileUser?.username,
+                username: profileUser?.id,
                 limit: 12,
                 offset: 0
             }) as any)
@@ -36,7 +36,7 @@ export const ProfileHeader = memo(function ProfileHeader() {
             {/* large device */}
             <div className="hidden sm:block mx-auto">
                 {/* profile header */}
-                <div className='flex items-center my-8 m-5'>
+                <div className='flex items-center my-8 px-5'>
                     {isProfile ?
                         <OptionAvatarDialog>
                             <SkyAvatar
@@ -86,9 +86,7 @@ export const ProfileHeader = memo(function ProfileHeader() {
                     </div>
                 </div>
                 {/* story */}
-                <ProfileStories user={profileUser}
-                    isProfile={isProfile}
-                />
+                <ProfileStories user={profileUser} isProfile={isProfile} />
             </div>
             {/* small device */}
             <div className='sm:hidden block'>

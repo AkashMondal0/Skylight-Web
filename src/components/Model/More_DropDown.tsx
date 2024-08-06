@@ -38,18 +38,18 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useTheme } from "next-themes"
 import { signOut } from "next-auth/react"
-import { useDispatch } from "react-redux"
 import { logoutApi } from "@/redux/services/account"
+import { useRouter } from "next/navigation"
 
 export default function MoreDropdownMenu({ children }: {
   children: React.ReactNode
 }) {
   const { setTheme, theme } = useTheme()
-  const dispatch = useDispatch()
   const changeTheme = (theme: string) => {
     setTheme(theme)
   }
 
+  const router = useRouter()
   const CurrentTheme = () => {
     if (theme === "dark") {
       return <Moon className="mr-3 h-7 w-7" />
@@ -128,7 +128,8 @@ export default function MoreDropdownMenu({ children }: {
         <DropdownMenuSeparator />
         <DropdownMenuItem className="rounded-xl" onClick={() => {
           signOut()
-          dispatch(logoutApi() as any)
+          logoutApi()
+          router.replace('/auth/login')
         }}>
           <LogOut className="mr-3 h-7 w-7" />
           <span>Log out</span>

@@ -2,19 +2,20 @@
 import Link from 'next/link'
 import { Button } from '../ui/button'
 import { signOut } from 'next-auth/react'
-import { useDispatch } from 'react-redux'
 import { logoutApi } from '@/redux/services/account'
+import { useRouter } from 'next/navigation'
 
 export default function NotFound({
   message = "PAGE_NOT_FOUND"
 }: {
   message?: ErrorType | string,
 }) {
-  const dispatch = useDispatch()
+  const router = useRouter()
 
   const login = async () => {
-    await dispatch(logoutApi() as any)
+    await logoutApi()
     signOut()
+    router.replace('/auth/login')
   }
 
   return <div className='max-w-[520px]

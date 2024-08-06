@@ -46,14 +46,12 @@ export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel, is
     if (isHideNav) return <></>
 
     return (
-        <div className={cn(`border-r scroll-smooth overflow-y-auto ease-in-out duration-300 hidden sm:flex sm:w-20 xl:w-72 max-w-72 w-72 min-h-full overflow-x-hidden h-dvh hideScrollbar`, hideLabel ? "w-20" : "w-72")}>
-            <div className="w-full h-full flex flex-col space-y-2 justify-between p-2">
-                <div className="space-y-1">
-                    <div className="h-3" />
-                    <NavigationItem label={configs.AppDetails.name}>
-                        <img src={configs.AppDetails.logoUrl} alt="upload" className="w-8 h-8" />
-                    </NavigationItem>
-                    <div className="h-6" />
+        <div className={cn(`border-r scroll-smooth overflow-y-auto ease-in-out duration-300 p-1
+        hidden sm:flex sm:w-20 xl:w-72 max-w-72 w-72 min-h-full overflow-x-hidden h-dvh hideScrollbar`,
+            hideLabel ? "w-20" : "w-72")}>
+            <div className="w-full h-full flex flex-col justify-between">
+                <div>
+                    <Logo label={configs.AppDetails.name} onClick={SideIconData[0].onClick} hideLabel={hideLabel} />
                     {SideIconData.map(({ icon, label, onClick }, index) => {
                         if (label === "Notifications") {
                             return <NotificationModel key={index}>
@@ -89,11 +87,13 @@ export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel, is
                         </NavigationItem>
                     })}
                 </div>
-                <NavigationItem label="More">
-                    <MoreDropdownMenu>
-                        <Menu size={28} />
-                    </MoreDropdownMenu>
-                </NavigationItem>
+                <MoreDropdownMenu>
+                    <div>
+                        <NavigationItem label="More">
+                            <Menu size={28} />
+                        </NavigationItem>
+                    </div>
+                </MoreDropdownMenu>
             </div>
         </div>
     )
@@ -101,28 +101,54 @@ export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel, is
     return pre.isHideNav === next.isHideNav && pre.hideLabel === next.hideLabel
 }))
 
-const NavigationItem = ({ children, active, label, onClick, hideLabel }: {
+const Logo = ({ active, label, onClick, hideLabel, className }: {
+    active?: boolean
+    label?: string
+    onClick?: () => void
+    hideLabel?: boolean
+    className?: string
+}) => {
+
+    return (
+        <div className={cn("w-16 h-14 mx-auto xl:w-full xl:mx-0 my-6", className)}>
+            <div onClick={onClick} className={cn(`max-w-72 mx-auto justify-center 
+            h-14 w-16 aspect-square items-center flex rounded-xl cursor-pointer`,
+                hideLabel ? "sm:flex justify-center" : "lg:w-full lg:gap-1 xl:justify-start xl:px-4")}>
+                <img src={configs.AppDetails.logoUrl} alt="upload" className="w-8 h-8" />
+                {hideLabel ? <></> : <p className={cn("text-primary-500 hidden xl:block font-bold text-xl")}>
+                    {label}
+                </p>}
+            </div>
+        </div>
+    )
+}
+
+const NavigationItem = ({ children, active, label, onClick, hideLabel, className }: {
     children: React.ReactNode
     active?: boolean
     label?: string
     onClick?: () => void
     hideLabel?: boolean
+    className?: string
 }) => {
+
     return (
-        <TooltipProvider>
-            <Tooltip>
-                <TooltipTrigger asChild>
-                    <div onClick={onClick}
-                        className={cn(`max-w-72 mx-auto justify-center h-12 items-center flex rounded-xl
-                        hover:bg-accent hover:text-accent-foreground cursor-pointer`, hideLabel ? "sm:flex justify-center" : "lg:w-full lg:px-4 lg:gap-3 lg:justify-start")}>
-                        {children}
-                        {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden xl:block", active ? "font-bold" : "font-normal")}>{label}</p>}
-                    </div>
-                </TooltipTrigger>
-                <TooltipContent side="right" className="rounded-full">
-                    <p>{label}</p>
-                </TooltipContent>
-            </Tooltip>
-        </TooltipProvider>
+        <div className={cn("w-16 h-14 mx-auto xl:w-full xl:mx-0", className)}>
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <div onClick={onClick}
+                            className={cn(`max-w-72 mx-auto justify-center h-14 w-16 aspect-square items-center flex rounded-xl
+                            hover:bg-accent hover:text-accent-foreground cursor-pointer`, hideLabel ? "sm:flex justify-center" : "lg:w-full lg:gap-3 xl:justify-start xl:px-4")}>
+                            {children}
+                            {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden xl:block", active ? "font-bold" : "font-normal")}>{label}</p>}
+                        </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="rounded-full">
+                        <p>{label}</p>
+                    </TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
+        </div>
     )
 }
