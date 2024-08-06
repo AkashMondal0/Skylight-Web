@@ -47,8 +47,7 @@ export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel, is
 
     return (
         <div className={cn(`border-r scroll-smooth overflow-y-auto ease-in-out duration-300 p-1
-        hidden sm:flex sm:w-20 xl:w-72 max-w-72 w-72 min-h-full overflow-x-hidden h-dvh hideScrollbar`,
-            hideLabel ? "w-20" : "w-72")}>
+        hidden sm:flex sm:w-20 xl:w-72 max-w-72 w-72 min-h-full overflow-x-hidden h-dvh hideScrollbar`,hideLabel ? "max-w-20" : "max-w-72")}>
             <div className="w-full h-full flex flex-col justify-between">
                 <div>
                     <Logo label={configs.AppDetails.name} onClick={SideIconData[0].onClick} hideLabel={hideLabel} />

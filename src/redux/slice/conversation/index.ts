@@ -1,4 +1,4 @@
-import { CreateMessageApi, fetchConversationApi, fetchConversationsApi } from '@/redux/services/conversation'
+import { CreateMessageApi, fetchConversationAllMessagesApi, fetchConversationApi, fetchConversationsApi } from '@/redux/services/conversation'
 import { Conversation, Message, Typing } from '@/types'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
@@ -11,6 +11,8 @@ interface ConversationState {
 
     conversation: Conversation | null
     loading: boolean
+    messageLoading: boolean
+    messageError: string | null
     error: string | null
 
     currentTyping: Typing | null
@@ -29,6 +31,8 @@ const ConversationState: ConversationState = {
     listError: null,
 
     conversation: null,
+    messageLoading: false,
+    messageError: null,
     loading: false,
     error: null,
 
@@ -87,6 +91,21 @@ export const ConversationSlice = createSlice({
         builder.addCase(fetchConversationApi.rejected, (state, action) => {
             state.loading = false
             state.error = "error"
+        })
+        //fetchConversationAllMessagesApi
+        builder.addCase(fetchConversationAllMessagesApi.pending, (state) => {
+            state.messageLoading = true
+            state.messageError = null
+        })
+        builder.addCase(fetchConversationAllMessagesApi.fulfilled, (state, action: PayloadAction<Message[]>) => {
+            if (state.conversation) {
+                state.conversation.messages = action.payload
+            }
+            state.messageLoading = false
+        })
+        builder.addCase(fetchConversationAllMessagesApi.rejected, (state, action) => {
+            state.messageLoading = false
+            state.messageError = "error"
         })
         // CreateMessageApi
         builder.addCase(CreateMessageApi.pending, (state) => {

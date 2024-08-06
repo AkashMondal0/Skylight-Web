@@ -22,7 +22,7 @@ export const MessageHeader = memo(function MessageHeader({ data }: { data: Conve
             name: data?.user?.username,
             message: data?.lastMessageContent,
             time: data?.updatedAt,
-            id: data?.user?.id
+            id: data?.id
         }
     }, [data])
 

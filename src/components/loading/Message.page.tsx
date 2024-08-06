@@ -2,6 +2,14 @@ import { ChevronLeft } from "lucide-react"
 import { ScrollArea } from "../ui/scroll-area"
 import { Skeleton } from "../ui/skeleton"
 
+const list = Array(14).fill(0).map((_, i) => {
+    return (
+        <div key={i} className="flex flex-col">
+            <Skeleton className={`h-12 w-40 rounded-2xl my-2 ${Math.floor(Math.random() * 12) > 6 ? "ml-auto" : ""}`} />
+        </div>
+    )
+})
+
 export const UserCardLoading = () => {
 
     return <div className='flex justify-between my-4'>
@@ -52,10 +60,7 @@ export const MessagePageSkeleton = () => {
             </div>
         </div>
         <ScrollArea className="flex-grow px-4 my-2 w-full">
-            {Array(14).fill(0).map((_, i) => <div key={i} className="flex flex-col">
-                <Skeleton className={`h-12 w-40 rounded-2xl my-2 
-            ${Math.floor(Math.random() * 12) > 6 ? "ml-auto" : ""}`} />
-            </div>)}
+            {list}
         </ScrollArea>
 
         <div className='px-2 h-16 sticky bottom-0 z-1 my-2 border-t pt-2 flex gap-1 items-center'>

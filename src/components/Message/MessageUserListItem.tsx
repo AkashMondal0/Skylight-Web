@@ -17,17 +17,13 @@ export const MessageUserListItem = memo(function MessageUserListItem({
     const router = useRouter()
     const Conversation = useMemo(() => {
         return data?.isGroup ? {
+            ...data,
             image: data?.groupImage,
             name: data?.groupName,
-            message: data?.lastMessageContent,
-            time: data?.updatedAt,
-            id: data?.id // most important ==>  when it is a group conversation then it return conversation id,  if is it private conversation then return user id
         } : {
+            ...data,
             image: data?.user?.profilePicture,
             name: data?.user?.username,
-            message: data?.lastMessageContent,
-            time: data?.updatedAt,
-            id: data?.user?.id,
         }
     }, [data])
 
@@ -46,12 +42,12 @@ export const MessageUserListItem = memo(function MessageUserListItem({
                         <div className='font-semibold text-base'>
                             {Conversation.name || "group name"}
                         </div>
-                        <UserStatus lastText={Conversation.message}
+                        <UserStatus lastText={Conversation.lastMessageContent}
                             conversationId={data?.id} />
                     </div>
                 </div>
                 <div className='flex items-center'>
-                    {timeFormat(Conversation.time || "")}
+                    {timeFormat(Conversation.updatedAt || "")}
                 </div>
             </div>
         </>

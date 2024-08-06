@@ -49,10 +49,11 @@ export default function Page({ params }: { params: { id: string } }) {
           margin: 5
         }}>
         {post.viewPostLoading || !loadedRef ? <ModelPostLoading /> :
-          post.viewPostError && loadedRef || !post.viewPost ? <NotFound /> :
+          post.viewPostError && loadedRef || !post.viewPost ? <NotFound />
+            :
             <div className='flex flex-wrap w-full'>
               <div className='flex md:flex-1 h-full w-full min-w-96 items-center'>
-                {imageError ? <ImageError />:
+                {imageError ? <ImageError /> :
                   <PostImage post={post.viewPost} onImageError={onImageError} />}
               </div>
               <div className="flex md:flex-1 h-full w-full min-w-96 flex-col justify-between border-l">

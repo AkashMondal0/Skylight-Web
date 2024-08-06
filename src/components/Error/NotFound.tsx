@@ -80,8 +80,8 @@ function displayErrorMessage({ ErrorType, Action }: { ErrorType: ErrorType | str
       description = "Your request took too long to process. Please try again later.";
       break;
     default:
-      title = "Unknown Error";
-      description = "An unknown error occurred. Please try again later.";
+      title = "Internal Server Error";
+      description = "An unexpected error occurred on our server. Our team has been notified and is working to resolve the issue.";
   }
 
   return (

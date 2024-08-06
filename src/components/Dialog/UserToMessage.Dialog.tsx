@@ -4,16 +4,16 @@ import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { removeAllUserFormSearch } from '@/redux/slice/users';
-import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/ui/dialog'
-import { Separator } from '@/components/ui/separator';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { DialogClose } from '@/components/ui/dialog'
 import SkyAvatar from '@/components/sky/SkyAvatar';
-import { User } from '@/types';
+import { Conversation, User, disPatchResponse } from '@/types';
 import { useRouter } from 'next/navigation';
 import { MessagesSquare } from 'lucide-react';
 import { searchUsersProfileApi } from '@/redux/services/users';
 import { LoadingUserCardWithButton } from '@/components/loading/Card';
 import { TempleDialog } from '@/components/Dialog/Temple.Dialog';
+import { CreateConversationApi } from '@/redux/services/conversation';
+import { toast } from 'sonner';
 
 
 
@@ -53,12 +53,12 @@ const UserToMessage = ({ children }: { children: React.ReactNode }) => {
                     className='bg-transparent focus:outline-none focus:ring-0' />
             </div>}
             TriggerChildren={children}>
-           <div>
-           {Users.searchUsersLoading ?
-                Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)
-                :
-                Users.searchUsers.map((item, i) => <UserCard key={i} item={item} />)}
-           </div>
+            <div>
+                {Users.searchUsersLoading ?
+                    Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)
+                    :
+                    Users.searchUsers.map((item, i) => <UserCard key={i} item={item} />)}
+            </div>
         </TempleDialog>
     )
 }
@@ -71,18 +71,17 @@ const UserCard = ({
 }: {
     item: User
 }) => {
-
     const dispatch = useDispatch();
     const router = useRouter()
+    const navigate = async () => {
+        const res = await dispatch(CreateConversationApi([item.id]) as any) as disPatchResponse<Conversation>
+        if (res.error) return toast("Something went wrong")
+        router.push(`/message/${res.payload.id}`)
+    }
 
     const removeUser = useCallback(() => {
         // dispatch(removeUserFormSearch(item.id) as any)
     }, []);
-
-    const navigate = () => {
-        router.push(`/message/${item.id}`)
-    };
-
     return (
         <DialogClose onClick={navigate} className='w-full h-full'>
             <div className='flex justify-between p-2 hover:bg-secondary hover:text-secondary-foreground rounded-2xl my-1 cursor-pointer'>

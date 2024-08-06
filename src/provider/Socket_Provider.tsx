@@ -53,7 +53,6 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
             // incoming events
             socket?.on(event_name.conversation.message, (data: Message) => {
                 dispatch(setMessage(data))
-                toast("User Disconnected")
             });
             socket?.on(event_name.conversation.seen, (data: any) => {
                 

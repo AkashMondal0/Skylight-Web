@@ -96,6 +96,73 @@ export const fetchConversationApi = createAsyncThunk(
   }
 );
 
+export const fetchConversationAllMessagesApi = createAsyncThunk(
+  'fetchConversationAllMessagesApi/get',
+  async (id: string, thunkAPI) => {
+    try {
+      let query = `query FindAllMessages($graphQlPageQuery: GraphQLPageQuery!) {
+        findAllMessages(graphQLPageQuery: $graphQlPageQuery) {
+          id
+          conversationId
+          authorId
+          content
+          user {
+            username
+            email
+            name
+            profilePicture
+          }
+          fileUrl
+          deleted
+          seenBy
+          createdAt
+          updatedAt
+          members
+        }
+      }
+      `
+      const res = await graphqlQuery({
+        query: query,
+        variables: { graphQlPageQuery: { id } }
+      })
+
+      return res.findAllMessages
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({
+        ...error?.response?.data,
+      })
+    }
+  }
+);
+
+export const CreateConversationApi = createAsyncThunk(
+  'CreateConversationApi/post',
+  async (memberIds: string[], thunkAPI) => {
+    try {
+      let query = `mutation CreateConversation($createConversationInput: CreateConversationInput!) {
+        createConversation(createConversationInput: $createConversationInput) {
+          id
+        }
+      }`
+      const res = await graphqlQuery({
+        query: query,
+        variables: {
+          createConversationInput: {
+            isGroup: false,
+            memberIds,
+          }
+        }
+      })
+
+      return res.createConversation
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({
+        ...error?.response?.data,
+      })
+    }
+  }
+);
+
 export const CreateMessageApi = createAsyncThunk(
   'CreateMessageApi/post',
   async (createMessageInput: {

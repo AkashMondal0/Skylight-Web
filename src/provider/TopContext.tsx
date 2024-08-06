@@ -38,7 +38,7 @@ const TopContext = memo(function TopContext({ children }: { children: React.Reac
         splashShow = false
         const timeoutId = setTimeout(() => {
             setIsLoading(false)
-        }, 1300); // 1.3 seconds delay
+        }, 900); // 0.9 seconds delay
 
         return () => clearTimeout(timeoutId); // Cleanup on unmount
     }, []);
