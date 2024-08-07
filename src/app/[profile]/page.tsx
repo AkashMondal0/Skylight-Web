@@ -1,20 +1,19 @@
 'use client'
-import { RootState } from "@/redux/store";
 import {
-    useEffect,
+    useEffect, useMemo,
 } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { fetchUserProfileDetailApi } from "@/redux/services/profile";
-import NotFound from "@/components/Error/NotFound";
-import { SkeletonProfilePage } from "@/components/loading/Profile.page";
-import { NavigationBottom } from "@/components/Navigation/NavigationBottom";
 import PostGridListVirtualList from "@/components/PostFeed/PostGridListVirtualList";
+import { useSession } from "next-auth/react";
 let profileUsername = "no_username"
 let loaded = false
 
 export default function Page({ params }: { params: { profile: string } }) {
-    const profilePosts = useSelector((Root: RootState) => Root.profile)
     const dispatch = useDispatch()
+    const session = useSession().data?.user
+    const isProfile = useMemo(() => session?.username === params?.profile, [session?.username, params?.profile])
+
     useEffect(() => {
         if (profileUsername !== params.profile) {
             dispatch(fetchUserProfileDetailApi(params.profile) as any)
@@ -23,19 +22,6 @@ export default function Page({ params }: { params: { profile: string } }) {
         loaded = true
     }, [params.profile])
 
-    if (profilePosts.error && loaded) {
-        return <NotFound message={profilePosts.error} />
-    }
-
-    if (!loaded || profilePosts.loading) {
-        return <div className="w-full">
-            <SkeletonProfilePage />
-            <NavigationBottom />
-        </div>
-    }
-
-    return <PostGridListVirtualList
-        scrollToTop={profileUsername !== params.profile}
-        profilePosts={profilePosts.posts} />
+    return <PostGridListVirtualList scrollToTop={profileUsername !== params.profile} isProfile={isProfile}/>
 
 }

@@ -12,6 +12,11 @@ interface Post {
     updatedAt?: Date;
     is_Liked: boolean;
     user: AuthorData;
+    song?: string[];
+    tags: string[]
+    locations: string[];
+    country?: string;
+    city?: string;
 }
 
 interface AuthorData {
@@ -22,6 +27,8 @@ interface AuthorData {
     profilePicture?: string
     followed_by?: boolean
     following?: boolean
+    bio: string | null;
+    website?: string[];
 }
 enum Role {
     User = 'user',
@@ -35,15 +42,12 @@ type User = {
     password?: string; // Password might not be returned
     profilePicture: string | null;
     bio: string | null;
+    website: string[] | any[];
     createdAt?: Date | string | null | unknown;
     updatedAt?: Date | string | null | unknown;
     isVerified?: boolean | false | null;
     isPrivate?: boolean | false | null;
-    accessToken?: string | null | unknown;
-    refreshToken?: string | null | unknown;
-    loggedDevice?: any[] | unknown;
-    roles?: Role[] | string[];
-    salt?: string;
+
     friendship: {
         followed_by: boolean; // if the user is followed by the following
         following: boolean; // if the user is following the following

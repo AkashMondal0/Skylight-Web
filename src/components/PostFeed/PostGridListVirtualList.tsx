@@ -1,25 +1,29 @@
 import useWindowDimensions from "@/lib/useWindowDimensions";
-import { Post } from "@/types";
 import { useVirtualizer, } from "@tanstack/react-virtual";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ProfileHeader } from "@/components/Header/ProfileHeader";
+import { ProfileHeader, ProfileNavbar } from "@/components/Header/ProfileHeader";
 import { NavigationBottom } from "@/components/Navigation/NavigationBottom";
 import { ProfilePost } from "@/components/PostFeed/ProfilePost";
+import { ProfileHeaderLoading, ProfilePostLoading } from "../loading/Profile.page";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import NotFound from "../Error/NotFound";
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 
 
 const PostGridListVirtualList = memo(function PostGridListVirtualList({
-    profilePosts,
-    scrollToTop
+    scrollToTop,
+    isProfile
 }: {
-    profilePosts: Post[],
-    scrollToTop: boolean
+    scrollToTop: boolean,
+    isProfile: boolean
 }) {
+    const profileUser = useSelector((Root: RootState) => Root.profile)
     const parentRef = useRef<HTMLDivElement>(null)
     const dimension = useWindowDimensions()
     const [mounted, setMounted] = useState(false)
-    const data = useMemo(() => profilePosts?.length ? profilePosts : [], [profilePosts])
+    const data = useMemo(() => profileUser?.posts.length ? profileUser.posts : [], [profileUser.posts.length])
     const count = useMemo(() => Math.ceil(data.length / 3), [data.length])
 
     const virtualizer = useVirtualizer({
@@ -48,7 +52,6 @@ const PostGridListVirtualList = memo(function PostGridListVirtualList({
     const items = virtualizer.getVirtualItems()
 
     if (!mounted) return <></>
-
     return (
         <>
             <div ref={parentRef}
@@ -58,47 +61,48 @@ const PostGridListVirtualList = memo(function PostGridListVirtualList({
                     overflowY: 'auto',
                     contain: 'strict',
                 }}>
-                <ProfileHeader />
-                <div
-                    className='mx-auto max-w-[960px] min-h-full'
-                    style={{
-                        height: virtualizer.getTotalSize(),
-                        width: '100%',
-                        position: 'relative'
-                    }}>
+                <>
+                    <ProfileNavbar name={profileUser.loading ? "Loading" : profileUser?.state?.username} isProfile={isProfile} />
+                    {profileUser.loading ? <ProfileHeaderLoading /> : <ProfileHeader profileUser={profileUser.state} isProfile={isProfile} />}
+                </>
+                {profileUser.error ? <NotFound message={profileUser.error ?? "PAGE_NOT_FOUND"} /> :
                     <div
+                        className='mx-auto max-w-[960px] min-h-full'
                         style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
+                            height: virtualizer.getTotalSize(),
                             width: '100%',
-                            transform: `translateY(${items[0]?.start ?? 0}px)`,
+                            position: 'relative'
                         }}>
-                        {items.map((virtualRow) => (
-                            <div
-                                key={virtualRow.key}
-                                data-index={virtualRow.index}
-                                ref={virtualizer.measureElement}>
-                                <div className="p-[1px] w-full flex h-full space-x-[2px]"
-                                    style={{ aspectRatio: "3:1" }}
-                                    key={data[virtualRow.index].id}>
-                                    {/* {virtualRow.index * 3 + 1}
-                                    {virtualRow.index * 3 + 2}
-                                    {virtualRow.index * 3 + 3} */}
-                                    <ProfilePost data={data[virtualRow.index * 3 + 0] ?? null} />
-                                    <ProfilePost data={data[virtualRow.index * 3 + 1] ?? null} />
-                                    <ProfilePost data={data[virtualRow.index * 3 + 2] ?? null} />
-                                </div>
-                            </div>
-                        ))}
+                        <div
+                            style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                transform: `translateY(${items[0]?.start ?? 0}px)`
+                            }}>
+                            {profileUser.postLoading ? <ProfilePostLoading />
+                                : items.map((virtualRow) => (<div
+                                    key={virtualRow.key}
+                                    data-index={virtualRow.index}
+                                    ref={virtualizer.measureElement}>
+                                    <div className="w-full flex h-full space-x-[3px]"
+                                        style={{ aspectRatio: "3:1" }}
+                                        key={data[virtualRow.index].id}>
+                                        <ProfilePost data={data[virtualRow.index * 3 + 0] ?? null} />
+                                        <ProfilePost data={data[virtualRow.index * 3 + 1] ?? null} />
+                                        <ProfilePost data={data[virtualRow.index * 3 + 2] ?? null} />
+                                    </div>
+                                </div>))}
+                        </div>
                     </div>
-                </div>
+                }
                 <NavigationBottom />
             </div>
         </>
     )
 }, ((pre: any, next: any) => {
-    return pre?.scrollToTop === next?.scrollToTop && pre?.profilePosts?.length === next?.profilePosts?.length
+    return pre?.scrollToTop === next?.scrollToTop && pre?.isProfile === next?.isProfile
 }))
 
 export default PostGridListVirtualList

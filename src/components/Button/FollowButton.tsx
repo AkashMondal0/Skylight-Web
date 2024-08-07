@@ -104,5 +104,7 @@ const FollowButton = memo(function FollowButton({
         </Button>
         {EllipsisVertical('w-6 h-6 cursor-pointer hidden sm:block')}
     </div>
-}, ((prevProps: any, nextProps: any) => prevProps.isProfile === nextProps.isProfile && prevProps.isFollowing === nextProps.isFollowing && prevProps.user.id === nextProps.user.id))
+}, ((prevProps: any, nextProps: any) => prevProps.isProfile === nextProps.isProfile
+    && prevProps.isFollowing === nextProps.isFollowing
+    && prevProps.user.id === nextProps.user.id))
 export default FollowButton

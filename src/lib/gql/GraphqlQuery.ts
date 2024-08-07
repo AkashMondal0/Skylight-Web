@@ -7,7 +7,7 @@ export type GraphqlQueryType = {
     name: string
     operation: string
     query: string
-  }
+}
 export interface GraphqlError {
     message: string;
     locations?: { line: number; column: number }[];
@@ -47,21 +47,8 @@ export const graphqlQuery = async <T>({
     const responseBody: GraphqlResponse<any> = await response.json();
 
     if (responseBody.errors) {
-        await graphqlErrorTypes(responseBody.errors[0])
+        throw new Error(responseBody.errors[0].extensions.code)
     }
 
     return responseBody.data;
-}
-
-export const graphqlErrorTypes = async (e: GraphqlError) => {
-    switch (e.extensions.code) {
-        case 'UNAUTHENTICATED':
-            throw new Error("UNAUTHENTICATED")
-        case 'INTERNAL_SERVER_ERROR':
-            throw new Error("INTERNAL_SERVER_ERROR")
-        case 'BAD_USER_INPUT':
-            throw new Error('INTERNAL_SERVER_ERROR')
-        default:
-            throw new Error("INTERNAL_SERVER_ERROR")
-    }
 }
