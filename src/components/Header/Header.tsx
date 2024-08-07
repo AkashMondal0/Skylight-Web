@@ -31,14 +31,16 @@ export const AppHeader = memo(function AppHeader() {
     )
 })
 
-export const AppNavbar = memo(function ProfileHeader({ name, isProfile, icon2 }: { name: string, isProfile?: boolean, icon2: React.ReactNode }) {
+export const AppNavbar = memo(function ProfileHeader({ name, isProfile, icon2 = false, backButton = true }: { name: string, isProfile?: boolean, icon2?: React.ReactNode, backButton?: boolean }) {
     const router = useRouter()
     return (
         <div className="md:hidden flex sticky top-0 z-10 w-full border-b h-14 bg-background text-foreground">
             <div className="p-4 w-full flex justify-between">
-                <ChevronLeft size={30} onClick={() => router.back()} />
+                {backButton ? <ChevronLeft size={30} onClick={() => router.back()} className='cursor-pointer' /> : <div />}
                 <span className="text-xl flex gap-1">{name}</span>
-                {icon2}
+                <div className='w-10 h-auto'>
+                    {icon2 ? icon2 : <></>}
+                </div>
             </div>
         </div>
     )

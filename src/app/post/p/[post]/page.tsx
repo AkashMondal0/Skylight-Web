@@ -1,7 +1,5 @@
 "use client"
-import React, { Fragment, useEffect, useRef } from 'react'
-import { useRouter } from 'next/navigation'
-import { ChevronLeft } from 'lucide-react'
+import React, { Fragment, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { fetchOnePostApi } from '@/redux/services/post'
@@ -12,10 +10,10 @@ import { CommentList } from '@/components/comment/Comment.List'
 import { CommentInput } from '@/components/comment/Comment.Input'
 import PostImage from '@/components/PostFeed/PostImage'
 import { PostPostLoading } from '@/components/loading/Post.Page'
+import { AppNavbar } from '@/components/Header/Header'
 let loadedRef = false
 let previousPostId = "noPost"
 const PostPage = ({ params }: { params: { post: string } }) => {
-  const router = useRouter()
   const dispatch = useDispatch()
   const Post = useSelector((Root: RootState) => Root.posts)
 
@@ -63,17 +61,7 @@ const PostPage = ({ params }: { params: { post: string } }) => {
 
       {/* sm  */}
       <div className="w-full h-full flex md:hidden flex-col">
-        <div className={"w-full h-14 border-b"}>
-          <div className="flex justify-between items-center h-full w-full">
-            <div className='md:hidden cursor-pointer'>
-              <ChevronLeft size={30} onClick={() => router.back()} />
-            </div>
-            <div className='text-xl font-semibold'>
-              Post
-            </div>
-            <div className='w-10' />
-          </div>
-        </div>
+        <AppNavbar name="Post" icon2={<div />} backButton={true} />
         <PostItem post={Post.viewPost} />
       </div>
     </div>
