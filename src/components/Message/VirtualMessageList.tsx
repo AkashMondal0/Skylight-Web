@@ -86,6 +86,8 @@ const VirtualizeMessageList = memo(function VirtualizeMessageList({
                                 data-index={virtualRow.index}
                                 ref={virtualizer.measureElement}>
                                 <MessageItem
+                                    key={data[virtualRow.index].id}
+                                    seen={data[virtualRow.index].seenBy.length === conversation?.members.length}
                                     isProfile={session?.id === data[virtualRow.index].authorId}
                                     data={data[virtualRow.index]} />
                             </div>

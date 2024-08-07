@@ -19,7 +19,9 @@ export const VirtualUserList = memo(function VirtualUserList({
 }) {
     const parentRef = useRef<HTMLDivElement>(null)
     const [mounted, setMounted] = useState(false)
-    const data = useMemo(() => conversation, [conversation])
+    const data = useMemo(() => {
+        return conversation.filter((item) => item.lastMessageCreatedAt !== null)
+    }, [conversation])
     const count = useMemo(() => data.length, [data.length])
 
     const virtualizer = useVirtualizer({
@@ -83,6 +85,7 @@ export const VirtualUserList = memo(function VirtualUserList({
             </div>
         </div>
     )
-}, ((preProps: any, nestProps: any) => {
+}, ((preProps, nestProps) => {
     return preProps.conversation.length === nestProps.conversation.length
+        && preProps.conversation.every((item, index) => item?.messages?.length === nestProps.conversation[index].messages?.length)
 }))

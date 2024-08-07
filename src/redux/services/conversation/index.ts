@@ -19,6 +19,8 @@ export const fetchConversationsApi = createAsyncThunk(
           }
           isGroup
           lastMessageContent
+          totalUnreadMessagesCount
+          lastMessageCreatedAt
           createdAt
           updatedAt
           groupName
@@ -192,6 +194,30 @@ export const CreateMessageApi = createAsyncThunk(
       })
 
       return res.createMessage
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({
+        ...error?.response?.data,
+      })
+    }
+  }
+);
+
+export const conversationSeenAllMessage = createAsyncThunk(
+  'conversationSeenAllMessage/post',
+  async (conversationId: string, thunkAPI) => {
+    try {
+      let query = `mutation SeenMessages($conversationId: String!) {
+        seenMessages(conversationId: $conversationId) {
+          __typename
+        }
+      }
+      `
+      const res = await graphqlQuery({
+        query: query,
+        variables: { conversationId }
+      })
+
+      return res.seenMessages
     } catch (error: any) {
       return thunkAPI.rejectWithValue({
         ...error?.response?.data,

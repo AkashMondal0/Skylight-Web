@@ -10,7 +10,8 @@ interface MessagesCardProps {
 }
 export const MessageItem: FC<MessagesCardProps> = memo(function MessageItem({
     data,
-    isProfile
+    isProfile,
+    seen = false
 }) {
     const message = useMemo(() => {
         return {
@@ -30,7 +31,7 @@ export const MessageItem: FC<MessagesCardProps> = memo(function MessageItem({
                             {new Date(data.createdAt as Date).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}
                         </div>
                         {message.isProfile ? <div className='text-sm text-gray-500'>
-                            <CheckCheck size={20} className={false ? 'text-sky-400' : ""} />
+                            <CheckCheck size={20} className={seen ? 'text-sky-400' : ""} />
                         </div> : null}
                     </div>
                 </div>
@@ -38,6 +39,6 @@ export const MessageItem: FC<MessagesCardProps> = memo(function MessageItem({
 
         </div>
     );
-},((preProps: any, nestProps: any) => {
+}, ((preProps: any, nestProps: any) => {
     return preProps.data.id === nestProps.data.id && preProps.isProfile === nestProps.isProfile
 }))

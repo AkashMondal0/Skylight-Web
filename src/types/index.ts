@@ -13,8 +13,8 @@ interface Post {
     is_Liked: boolean;
     user: AuthorData;
     song?: string[];
-    tags: string[]
-    locations: string[];
+    tags?: string[]
+    locations?: string[];
     country?: string;
     city?: string;
 }
@@ -27,7 +27,7 @@ interface AuthorData {
     profilePicture?: string
     followed_by?: boolean
     following?: boolean
-    bio: string | null;
+    bio?: string | null;
     website?: string[];
 }
 enum Role {
@@ -91,17 +91,20 @@ interface Message {
 
 interface Conversation {
     id: string;
-    members?: string[];
+    members: string[];
     authorId: string;
     messages: Message[]
     user?: AuthorData | null
     isGroup: boolean | null;
     lastMessageContent: string | null;
+    totalUnreadMessagesCount?: number | null;
+    lastMessageCreatedAt?: Date | null;
     createdAt?: Date | null;
     updatedAt?: Date | null;
     groupName?: string | null;
     groupImage?: string | null;
     groupDescription?: string | null;
+
 }
 
 interface Comment {

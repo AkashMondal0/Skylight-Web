@@ -14,14 +14,10 @@ export const MessageHeader = memo(function MessageHeader({ data }: { data: Conve
         return data?.isGroup ? {
             image: data?.groupImage,
             name: data?.groupName,
-            message: data?.lastMessageContent,
-            time: data?.updatedAt,
             id: data?.id
         } : {
             image: data?.user?.profilePicture,
             name: data?.user?.username,
-            message: data?.lastMessageContent,
-            time: data?.updatedAt,
             id: data?.id
         }
     }, [data])
