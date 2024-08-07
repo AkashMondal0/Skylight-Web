@@ -1,6 +1,6 @@
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import { User } from '@/types'
-import React, { memo, useMemo } from 'react'
+import React, { memo } from 'react'
 import { UploadYourStory } from './StoryItem'
 import { useSession } from 'next-auth/react'
 
@@ -9,16 +9,16 @@ export const ProfileStories = memo(function ProfileStories({
   isProfile
 }: {
   user: User,
-  isProfile:boolean
+  isProfile: boolean
 }) {
   const session = useSession().data?.user
   return (
-    <div className='flex sm:gap-10 m-5 sm:my-10 gap-5 my-5'>
-      {isProfile ? <UploadYourStory className='sm:w-20 sm:h-20 w-16 h-16 border-[2px]' /> : <></>}
+    <div className='flex md:gap-10 mx-2 md:my-10 gap-5 my-5'>
+      {isProfile ? <UploadYourStory className='md:w-24 md:h-24 w-16 h-16 border-[2px] rounded-full object-cover cursor-pointer' /> : <></>}
       <SkyAvatar
         sizeImage='10vw'
         url={user.profilePicture}
-        className={'sm:w-20 sm:h-20 rounded-full object-cover cursor-pointer h-16 w-16'} />
+        className={'md:w-24 md:h-24 h-16 w-16 border-[2px] rounded-full object-cover cursor-pointer'} />
     </div>
   )
 }, ((prevProps: any, nextProps: any) => prevProps.isProfile === nextProps.isProfile))

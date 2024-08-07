@@ -68,7 +68,7 @@ const FollowButton = memo(function FollowButton({
 
 
     if (isProfile) {
-        return <div className='sm:flex space-x-2 space-y-2 items-center'>
+        return <div className='md:flex space-x-2 space-y-2 items-center'>
             <div className="flex items-center">
                 <p className='text-xl px-3 truncate w-32'>{user.username}</p>
             </div>
@@ -83,11 +83,11 @@ const FollowButton = memo(function FollowButton({
             }}>
                 View Archive
             </Button>
-            {EllipsisVertical('w-6 h-6 cursor-pointer hidden sm:block')}
+            {EllipsisVertical('w-6 h-6 cursor-pointer hidden md:block')}
         </div>
     }
 
-    return <div className='items-center sm:flex space-x-2 space-y-2'>
+    return <div className='items-center md:flex space-x-2 space-y-2'>
         <p className='text-xl px-3 truncate w-32'>{user.username}</p>
         {isFollowing ?
             <Button className='rounded-xl px-6 w-24' variant={"secondary"} disabled={loading} onClick={handleUnFollow}>
@@ -102,7 +102,7 @@ const FollowButton = memo(function FollowButton({
         }}>
             Message
         </Button>
-        {EllipsisVertical('w-6 h-6 cursor-pointer hidden sm:block')}
+        {EllipsisVertical('w-6 h-6 cursor-pointer hidden md:block')}
     </div>
 }, ((prevProps: any, nextProps: any) => prevProps.isProfile === nextProps.isProfile
     && prevProps.isFollowing === nextProps.isFollowing

@@ -23,6 +23,8 @@ import { registerApi } from "@/redux/services/account";
 const FormSchema = z.object({
     username: z.string().min(2, {
         message: "Username must be at least 2 characters.",
+    }).toLowerCase().regex(/^[a-z0-9]+$/, {
+        message: "Username must contain only letters and numbers."
     }),
     password: z.string().min(6, {
         message: "Password must be at least 6 characters.",
@@ -91,7 +93,7 @@ export default function LoginPage() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="grid gap-4">
-                    <div className="grid grid-cols-2 gap-6">
+                    {/* <div className="grid grid-cols-2 gap-6">
                         <Button variant="outline">
                             <Github className="mr-2 h-4 w-4" />
                             Github
@@ -110,7 +112,7 @@ export default function LoginPage() {
                                 Or continue with
                             </span>
                         </div>
-                    </div>
+                    </div> */}
                     {/* <div className="h-4 w-full text-center">
                         {errors ? <span className="text-red-500">
                             {errors}

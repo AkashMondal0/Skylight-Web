@@ -28,7 +28,7 @@ export const NavigationBottom = memo(function NavigationBottom() {
     }
 
     return (
-        <div className={`sm:hidden w-full sticky flex bottom-0 z-10 border-t
+        <div className={`md:hidden w-full sticky flex bottom-0 z-10 border-t
          py-2 bg-background text-foreground h-14 items-center`}>
             <div className="p-1 w-full flex justify-around">
                 {SideIconData.map(({ icon, label, onClick }, index) => {

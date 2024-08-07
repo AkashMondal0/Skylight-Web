@@ -79,7 +79,7 @@ export default function LoginPage() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="grid gap-4">
-                    <div className="grid grid-cols-2 gap-6">
+                    {/* <div className="grid grid-cols-2 gap-6">
                         <Button variant="outline">
                             <Github className="mr-2 h-4 w-4" />
                             Github
@@ -98,7 +98,7 @@ export default function LoginPage() {
                                 Or continue with
                             </span>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="grid gap-2">
                         <Label htmlFor="email">Email</Label>
                         <Input id="email" type="email" placeholder="m@example.com" {...register("email", { required: true })} />

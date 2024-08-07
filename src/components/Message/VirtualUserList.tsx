@@ -79,13 +79,6 @@ export const VirtualUserList = memo(function VirtualUserList({
                         ))}
                     </div>
                 </div>
-                {/* <div className='w-full text-center h-[80%]'>
-                    <Button onClick={loadMore}
-                        variant={"outline"}
-                        className="rounded-full px-1 w-10 h-10">
-                        <CirclePlus />
-                    </Button>
-                </div> */}
                 {Footer}
             </div>
         </div>

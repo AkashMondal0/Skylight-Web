@@ -23,7 +23,7 @@ export default function Page() {
         </div>
       </div>
       {/* sm */}
-      <div className='w-full h-full flex md:hidden'>
+      <div className='w-full h-full flex md:hidden min-h-dvh'>
         <MessageSideBar />
       </div>
     </>
