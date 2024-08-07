@@ -3,19 +3,17 @@ import React, { memo, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { Link2 } from 'lucide-react'
 import SkyAvatar from '@/components/sky/SkyAvatar'
-import { RootState } from '@/redux/store'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import FollowButton from '@/components/Button/FollowButton'
 import { ProfileStories } from '@/components/Stories/ProfileStories'
 import { fetchUserProfilePostsApi } from '@/redux/services/profile'
 import { useSession } from 'next-auth/react'
 import OptionAvatarDialog from '../Dialog/Options.Dialog'
+import { User } from '@/types'
 
-export const ProfileHeader = memo(function ProfileHeader() {
+export const ProfileHeader = memo(function ProfileHeader({ profileUser, isProfile }: { profileUser: User | null, isProfile: boolean }) {
     const dispatch = useDispatch()
-    const profileUser = useSelector((Root: RootState) => Root.profile.state)
     const session = useSession().data?.user
-    const isProfile = useMemo(() => session?.username === profileUser?.username, [session?.username, profileUser?.username])
 
     useEffect(() => {
         if (profileUser?.username) {
@@ -30,129 +28,133 @@ export const ProfileHeader = memo(function ProfileHeader() {
     if (!profileUser) return <></>
 
     return (
-        <div className='md:max-w-[960px] mx-auto'>
-            <ProfileNavbar name={profileUser?.username}
-                isProfile={isProfile} />
-            {/* large device */}
-            <div className="hidden sm:block mx-auto">
-                {/* profile header */}
-                <div className='flex items-center my-8 px-5'>
-                    {isProfile ?
-                        <OptionAvatarDialog>
+        <>
+            <div className='md:max-w-[960px] mx-auto'>
+                {/* large device */}
+                <div className="hidden sm:block mx-auto">
+                    {/* profile header */}
+                    <div className='flex items-center my-8 px-5'>
+                        {isProfile ?
+                            <OptionAvatarDialog>
+                                <SkyAvatar
+                                    sizeImage='20vw'
+                                    url={session?.image || "/user.jpg"}
+                                    className={'sm:w-36 object-cover sm:h-36 w-28 h-28 rounded-full sm:mr-8'} />
+                            </OptionAvatarDialog>
+                            :
                             <SkyAvatar
                                 sizeImage='20vw'
-                                url={session?.image || "/user.jpg"}
-                                className={'sm:w-36 object-cover sm:h-36 w-28 h-28 rounded-full sm:mr-8'} />
-                        </OptionAvatarDialog>
-                        :
-                        <SkyAvatar
-                            sizeImage='20vw'
-                            url={profileUser.profilePicture || "/user.jpg"}
-                            className={'sm:w-36 object-cover sm:h-36 w-28 h-28 rounded-full sm:mr-8'} />}
-                    <div className='flex flex-col justify-between gap-5'>
+                                url={profileUser.profilePicture || "/user.jpg"}
+                                className={'sm:w-36 object-cover sm:h-36 w-28 h-28 rounded-full sm:mr-8'} />}
+                        <div className='flex flex-col justify-between gap-5'>
+                            <FollowButton
+                                isProfile={isProfile}
+                                isFollowing={profileUser?.friendship?.following}
+                                user={profileUser} />
+                            <div className='sm:flex hidden justify-between px-3'>
+                                <div className='flex gap-1'>
+                                    <p className='text-base font-semibold'>
+                                        {profileUser.postCount}
+                                    </p> posts
+                                </div>
+                                <Link href={`/${profileUser.username.toString() ?? ""}/follower`} className='sm:cursor-pointer flex gap-1'>
+                                    <p className='text-base font-semibold'>
+                                        {profileUser.followerCount}
+                                    </p>
+                                    followers
+                                </Link>
+                                <Link href={`/${profileUser.username.toString() ?? ""}/following`} className='sm:cursor-pointer flex gap-1'>
+                                    <p className='text-base font-semibold'>
+                                        {profileUser.followingCount}
+                                    </p>
+                                    following
+                                </Link>
+                            </div>
+                            <div className='flex justify-between flex-col px-3 my-4'>
+                                <p className='font-semibold'>{profileUser.username}</p>
+                                <p>{profileUser.bio}</p>
+                                {profileUser?.website ? <a className='flex items-center gap-2 hover:underline font-semibold text-sm'
+                                    target='_blank'
+                                    href={profileUser.website[0]}>
+                                    <Link2 className='rotate-45' />
+                                    {profileUser.website[0]}
+                                </a> : <></>}
+                            </div>
+                        </div>
+                    </div>
+                    {/* story */}
+                    <ProfileStories user={profileUser} isProfile={isProfile} />
+                </div>
+                {/* small device */}
+                <div className='sm:hidden block'>
+                    {/* profile header */}
+                    <div className='flex gap-3 my-5 items-center px-2'>
+                        <SkyAvatar url={profileUser.profilePicture || "/user.jpg"}
+                            className={'w-24 h-24 rounded-full object-cover bg-slate-400'} />
                         <FollowButton
                             isProfile={isProfile}
-                            isFollowing={profileUser?.friendship?.following}
+                            isFollowing={profileUser.friendship.following}
                             user={profileUser} />
-                        <div className='sm:flex hidden justify-between px-3'>
-                            <div className='flex gap-1'>
+                    </div>
+                    {/* name or links and users count */}
+                    <>
+                        <div className='flex justify-between flex-col px-3'>
+                            <p className='font-semibold'>{profileUser.username}</p>
+                            <p>{profileUser.bio}</p>
+                            <div className='flex'>
+                                <a className='flex items-center gap-2 hover:underline font-semibold text-sm'
+                                    target='_blank'
+                                    href={profileUser?.website ? profileUser.website[0] : ""}>
+                                    <Link2 className='rotate-45' />
+                                    <p className='truncate w-60'>{profileUser?.website ? profileUser.website[0] : ""}</p>
+                                </a>
+                            </div>
+                        </div>
+                        <ProfileStories
+                            isProfile={isProfile}
+                            user={profileUser} />
+                        {/* followers and following */}
+                        <div className='flex justify-around p-2 border-y sm:hidden'>
+                            <div className=' text-center'>
                                 <p className='text-base font-semibold'>
                                     {profileUser.postCount}
-                                </p> posts
+                                </p>
+                                <div>
+                                    posts
+                                </div>
                             </div>
-                            <Link href={`/${profileUser.username.toString() ?? ""}/follower`} className='sm:cursor-pointer flex gap-1'>
+
+                            <Link className='cursor-pointer text-center' href={`/${profileUser.username.toString() ?? ""}/follower`}>
                                 <p className='text-base font-semibold'>
                                     {profileUser.followerCount}
                                 </p>
-                                followers
+                                <div>
+                                    followers
+                                </div>
                             </Link>
-                            <Link href={`/${profileUser.username.toString() ?? ""}/following`} className='sm:cursor-pointer flex gap-1'>
+
+                            <Link className='cursor-pointer text-center' href={`/${profileUser.username.toString() ?? ""}/following`}>
                                 <p className='text-base font-semibold'>
                                     {profileUser.followingCount}
                                 </p>
-                                following
+                                <div>
+                                    following
+                                </div>
                             </Link>
                         </div>
-                        <div className='flex justify-between flex-col px-3 my-4'>
-                            <p className='font-semibold'>{profileUser.username}</p>
-                            <p>!null</p>
-                            <a className='flex items-center gap-2 hover:underline font-semibold text-sm'
-                                target='_blank'
-                                href='https://www.linkedin.com/in/akash-mondal-b5a712231/'>
-                                <Link2 className='rotate-45' />
-                                https://www.linkedin.com/in/akash-mondal-b5a712231/
-                            </a>
-                        </div>
-                    </div>
+                    </>
                 </div>
-                {/* story */}
-                <ProfileStories user={profileUser} isProfile={isProfile} />
             </div>
-            {/* small device */}
-            <div className='sm:hidden block'>
-                {/* profile header */}
-                <div className='flex gap-3 my-5 items-center px-2'>
-                    <SkyAvatar url={profileUser.profilePicture || "/user.jpg"}
-                        className={'w-24 h-24 rounded-full object-cover bg-slate-400'} />
-                    <FollowButton
-                        isProfile={isProfile}
-                        isFollowing={profileUser.friendship.following}
-                        user={profileUser} />
-                </div>
-                {/* name or links and users count */}
-                <>
-                    <div className='flex justify-between flex-col px-3'>
-                        <p className='font-semibold'>{profileUser.username}</p>
-                        <p>!null</p>
-                        <div className='flex'>
-                            <a className='flex items-center gap-2 hover:underline font-semibold text-sm'
-                                target='_blank'
-                                href='https://www.linkedin.com/in/akash-mondal-b5a712231/'>
-                                <Link2 className='rotate-45' />
-                                <p className='truncate w-60'>{`https://www.linkedin.com/in/akash-mondal-b5a712231/`}</p>
-                            </a>
-                        </div>
-                    </div>
-                    <ProfileStories
-                        isProfile={isProfile}
-                        user={profileUser} />
-                    {/* followers and following */}
-                    <div className='flex justify-around p-2 border-y sm:hidden'>
-                        <div className=' text-center'>
-                            <p className='text-base font-semibold'>
-                                {profileUser.postCount}
-                            </p>
-                            <div>
-                                posts
-                            </div>
-                        </div>
-
-                        <Link className='cursor-pointer text-center' href={`/${profileUser.username.toString() ?? ""}/follower`}>
-                            <p className='text-base font-semibold'>
-                                {profileUser.followerCount}
-                            </p>
-                            <div>
-                                followers
-                            </div>
-                        </Link>
-
-                        <Link className='cursor-pointer text-center' href={`/${profileUser.username.toString() ?? ""}/following`}>
-                            <p className='text-base font-semibold'>
-                                {profileUser.followingCount}
-                            </p>
-                            <div>
-                                following
-                            </div>
-                        </Link>
-                    </div>
-                </>
-            </div>
-        </div>
+        </>
     )
-}, (() => true))
+}, ((prevProps, nextProps) => {
+    return prevProps.profileUser?.id === nextProps.profileUser?.id
+        && prevProps.isProfile === nextProps.isProfile
+        && prevProps.profileUser?.friendship.following === nextProps.profileUser?.friendship.following
+}))
 
 
-export const ProfileNavbar = memo(function ProfileHeader({ name, isProfile }: { name: string, isProfile?: boolean }) {
+export const ProfileNavbar = memo(function ProfileHeader({ name = "loading", isProfile }: { name?: string, isProfile?: boolean }) {
     return (
         <div className="sm:hidden flex sticky top-0 z-10 w-full border-b h-14 bg-background text-foreground">
             <div className="p-4 w-full flex justify-between">

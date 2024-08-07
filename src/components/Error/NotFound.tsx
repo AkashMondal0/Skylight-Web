@@ -48,13 +48,16 @@ function displayErrorMessage({ ErrorType, Action }: { ErrorType: ErrorType | str
       description = "We couldn't verify your credentials. Please check your username and password and try again.";
       break;
     case "PAGE_NOT_FOUND":
-      title = "Page Not Found";
+      title = "Sorry, this page isn't available.";
       description = "The page you're looking for doesn't exist. It might have been removed, renamed, or didn't exist in the first place.";
       break;
     case "UNAUTHORIZED_ACCESS":
       title = "Access Denied";
       description = "You do not have permission to access this resource. Please contact support if you believe this is a mistake.";
       break;
+    case "BAD_USER_INPUT":
+      title = "Invalid Client Credentials";
+      description = "The data you provided is invalid. Please check your input and try again.";
     case "UNAUTHENTICATED":
       title = "Unauthenticated Access";
       description = "You need to be logged in to access this feature. Please log in or sign up to continue";

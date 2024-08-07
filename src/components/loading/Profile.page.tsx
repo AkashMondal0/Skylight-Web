@@ -1,17 +1,15 @@
-import { ProfileNavbar } from "../Header/ProfileHeader"
-import { Skeleton } from "../ui/skeleton"
+import { Skeleton } from "@/components/ui/skeleton"
 
-export const SkeletonProfilePage = () => {
-    return <div className='w-full overflow-hidden'>
-        <ProfileNavbar name="loading..." />
+export const ProfileHeaderLoading = () => {
+    return (
         <div className='mx-auto max-w-[960px]'>
             {/* md ->>> */}
             <div className="hidden sm:block">
                 {/* profile header */}
-                <div className='flex items-center my-8 m-5'>
+                <div className='flex items-center my-8 px-5'>
                     <Skeleton className='sm:w-36 object-cover sm:h-36 w-28 h-28 rounded-full sm:mr-8' />
                     <div className='flex flex-col justify-between gap-5'>
-                        <div className='flex justify-between gap-2 items-center'>
+                        <div className='items-center sm:flex space-x-2 space-y-2'>
                             <Skeleton className='w-32 h-6 rounded-xl' />
                             <Skeleton className='w-32 h-10 rounded-xl' />
                             <Skeleton className='w-32 h-10 rounded-xl' />
@@ -47,13 +45,6 @@ export const SkeletonProfilePage = () => {
                 <div className='flex gap-10 m-5 my-10'>
                     <Skeleton className='w-20 h-20 rounded-full' />
                 </div>
-                {/* post */}
-                <div className="grid grid-cols-3 gap-1 p-1">
-                    {Array(9).fill(0).map((post, index) => (
-                        <Skeleton key={index} className='aspect-square rounded-none w-full h-full object-cover' />
-                    ))}
-                </div>
-                <div className='h-10 w-full'></div>
             </div>
 
             {/* <<<- sm */}
@@ -112,15 +103,15 @@ export const SkeletonProfilePage = () => {
                     <div className='cursor-pointer text-center'>
                         <Skeleton className='w-24 h-12 rounded-xl' />
                     </div>
-
-                </div>
-                {/* posts */}
-                <div className="grid grid-cols-3 gap-1 w-full p-1">
-                    {Array(9).fill(0).map((post, index) => (
-                        <Skeleton key={index} className='aspect-square w-full h-full object-cover' />
-                    ))}
                 </div>
             </div>
-        </div>
-    </div >
+        </div>)
+}
+
+export const ProfilePostLoading = () => {
+    return <div className="grid grid-cols-3 gap-1 w-full">
+        {Array(9).fill(0).map((post, index) => (
+            <Skeleton key={index} className='aspect-square w-full h-full object-cover' />
+        ))}
+    </div>
 }
