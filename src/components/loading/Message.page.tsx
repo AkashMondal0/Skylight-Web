@@ -50,19 +50,19 @@ export const LoadingMessageSidebar = () => {
 }
 
 export const MessagePageSkeleton = () => {
-    return <div className='w-full h-[100dvh] flex flex-col'>
-        <div className='flex my-4 px-2 h-[4.5rem] border-b pb-2'>
+    return <div className='w-full flex flex-col min-h-dvh flex-1 my-2'>
+        <div className="w-full h-14 flex items-center md:h-[4rem] px-2 border-b sticky top-0 z-50 bg-background">
             <Skeleton className="h-12 w-12 rounded-full" />
             <div className='flex flex-col'>
-                <Skeleton className="h-5 w-72 m-1" />
-                <Skeleton className="h-4 w-52 m-1" />
+                <Skeleton className="h-3 w-52 m-1" />
+                <Skeleton className="h-3 w-32 m-1" />
             </div>
         </div>
         <ScrollArea className="flex-grow px-4 my-2 w-full">
             {list}
         </ScrollArea>
 
-        <div className='px-2 h-16 sticky bottom-0 z-1 my-2 border-t pt-2 flex gap-1 items-center'>
+        <div className='px-2 h-16 sticky bottom-0 z-1 my-2 border-t pt-2 flex gap-1 items-center bg-background'>
             <Skeleton className="h-8 w-8 rounded-full" />
             <Skeleton className="h-10 w-full rounded-3xl flex-1" />
             <Skeleton className="h-10 w-10 rounded-2xl" />

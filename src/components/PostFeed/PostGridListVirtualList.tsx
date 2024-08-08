@@ -86,7 +86,8 @@ const PostGridListVirtualList = memo(function PostGridListVirtualList({
                                     key={virtualRow.key}
                                     data-index={virtualRow.index}
                                     ref={virtualizer.measureElement}>
-                                    <div className="w-full flex h-full space-x-[4px] my-[4px]" style={{ aspectRatio: "3:1" }} key={data[virtualRow.index].id}>
+                                    <div className="w-full flex h-full space-x-[2px] my-[2px] sm:space-x-[3px] sm:my-[3px]"
+                                        style={{ aspectRatio: "3:1" }} key={data[virtualRow.index].id}>
                                         <ProfilePost data={data[virtualRow.index * 3 + 0] ?? null} />
                                         <ProfilePost data={data[virtualRow.index * 3 + 1] ?? null} />
                                         <ProfilePost data={data[virtualRow.index * 3 + 2] ?? null} />

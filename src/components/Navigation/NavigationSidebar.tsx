@@ -86,11 +86,13 @@ export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel, is
                         </NavigationItem>
                     })}
                 </div>
-                <NavigationItem label="More" hideLabel={hideLabel}>
-                    <MoreDropdownMenu>
-                        <Menu size={28} />
-                    </MoreDropdownMenu>
-                </NavigationItem>
+                <MoreDropdownMenu>
+                    <div>
+                        <NavigationItem label="More" hideLabel={hideLabel}>
+                            <Menu size={28} />
+                        </NavigationItem>
+                    </div>
+                </MoreDropdownMenu>
             </div>
         </div>
     )

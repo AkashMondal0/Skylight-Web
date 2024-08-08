@@ -30,7 +30,7 @@ export const MessageSideBar = memo(function MessageSideBar() {
 
     if (rootConversation.listError && pageLoaded) {
         return <div className='md:border-r scroll-smooth flex justify-center items-center text-center
-        duration-300 bg-background text-foreground h-dvh md:max-w-[22rem] ease-in-out w-full mx-auto'>
+        duration-300 bg-background text-foreground h-dvh md:max-w-80 ease-in-out w-full mx-auto'>
             <ServerCrash className='w-16 h-16' />
         </div>
     }
@@ -38,7 +38,7 @@ export const MessageSideBar = memo(function MessageSideBar() {
     return (
         <div className={`flex flex-col md:border-r scroll-smooth 
             duration-300 bg-background text-foreground 
-            h-full md:max-w-[22rem] ease-in-out w-full`}>
+            h-full md:max-w-80 ease-in-out w-full`}>
             <VirtualUserList
                 conversation={rootConversation.conversationList}
                 Header={<Header />} />

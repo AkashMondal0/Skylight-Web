@@ -48,7 +48,7 @@ export const VirtualUserList = memo(function VirtualUserList({
     if (!mounted) return <></>
 
     return (
-        <div className='h-dvh w-full md:h-full'>
+        <div className='h-dvh w-full'>
             <div ref={parentRef}
                 id='style-1'
                 style={{

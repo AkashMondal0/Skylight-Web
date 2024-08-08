@@ -1,6 +1,6 @@
 "use client"
 import { RootState } from "@/redux/store"
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import NotFound from "@/components/Error/NotFound";
 import { fetchConversationAllMessagesApi, fetchConversationApi } from "@/redux/services/conversation";
@@ -8,20 +8,22 @@ import { MessageHeader } from "@/components/Message/MessageHeader";
 import { MessageInput } from "@/components/Message/MessageInput";
 import { MessagePageSkeleton } from "@/components/loading/Message.page";
 import VirtualizeMessageList from "@/components/Message/VirtualMessageList";
-let pageLoaded = false
+let pageId = 'no id'
 
 export default function Page({ params }: { params: { id: string } }) {
   const rootConversation = useSelector((Root: RootState) => Root.conversation)
   const dispatch = useDispatch()
+  const [pageLoaded, setPageLoaded] = useState(false)
 
   const fetch = useCallback(async () => {
     await dispatch(fetchConversationApi(params.id) as any)
     await dispatch(fetchConversationAllMessagesApi(params.id) as any)
-    pageLoaded = true
+    pageId = params.id
+    setPageLoaded(true)
   }, [])
 
   useEffect(() => {
-    if (!pageLoaded || params.id !== rootConversation.conversation?.id) {
+    if (!pageLoaded || pageId !== params.id) {
       fetch()
     }
   }, [params.id])
@@ -35,7 +37,7 @@ export default function Page({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className='w-full flex flex-col'>
+    <div className='w-full flex flex-col min-h-dvh flex-1'>
       <MessageHeader data={rootConversation.conversation} />
       <VirtualizeMessageList conversation={rootConversation.conversation} />
       <MessageInput data={rootConversation.conversation} />

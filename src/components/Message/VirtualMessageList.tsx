@@ -60,7 +60,7 @@ const VirtualizeMessageList = memo(function VirtualizeMessageList({
     return (
         <>
             <div ref={parentRef}
-                className='h-full w-full flex-1' id='style-1'
+                className='h-full w-full flex-1 hideScrollbar' id='style-1'
                 style={{
                     height: "100%",
                     width: '100%', overflowY: 'auto', contain: 'strict'

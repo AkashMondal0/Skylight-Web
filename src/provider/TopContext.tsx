@@ -4,6 +4,7 @@ import { useTheme } from "next-themes"
 import { usePathname } from 'next/navigation'
 import { NavigationSidebar } from '@/components/Navigation/NavigationSidebar'
 import SplashScreen from '@/components/sky/SplashScreen'
+import { MessageSideBar } from '@/components/Message/MessageSideBar'
 let splashShow = true
 
 const TopContext = memo(function TopContext({ children }: { children: React.ReactNode }) {
@@ -12,7 +13,7 @@ const TopContext = memo(function TopContext({ children }: { children: React.Reac
     const [isLoading, setIsLoading] = useState(splashShow);
     const [navigation, setNavigation] = useState({
         isHideNav: false,
-        hideLabel: false
+        hideLabel: false,
     })
 
     useEffect(() => {
@@ -43,12 +44,37 @@ const TopContext = memo(function TopContext({ children }: { children: React.Reac
         return () => clearTimeout(timeoutId); // Cleanup on unmount
     }, []);
 
+    <>
+        {/* md */}
+        <div className='w-full min-h-full hidden md:flex'>
+            <MessageSideBar />
+            {children}
+        </div>
+        {/* sm */}
+        <div className='w-full min-h-dvh md:hidden flex'>
+            {children}
+        </div>
+    </>
 
+    const RenderChatList = () => {
+        if (path === "/message") {
+            return <div className='w-full md:max-w-80 h-dvh'>
+                <MessageSideBar />
+            </div>
+        }
+        if (path.includes("/message/")) {
+            return <div className='w-full md:max-w-80 h-dvh hidden md:flex'>
+                <MessageSideBar />
+            </div>
+        }
+        return <></>
+    }
     return (
         <>
             <SplashScreen show={isLoading} />
             <div className='w-full h-full sm:flex'>
                 <NavigationSidebar isHideNav={navigation.isHideNav} hideLabel={navigation.hideLabel} />
+                <RenderChatList />
                 {children}
             </div>
         </>

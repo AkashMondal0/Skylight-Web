@@ -84,6 +84,7 @@ export const fetchConversationApi = createAsyncThunk(
           lastMessageContent
         }
       }`
+      await new Promise((resolve) => setTimeout(resolve, 1200))
       const res = await graphqlQuery({
         query: query,
         variables: { graphQlPageQuery: { id } }
