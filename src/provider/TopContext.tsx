@@ -44,18 +44,6 @@ const TopContext = memo(function TopContext({ children }: { children: React.Reac
         return () => clearTimeout(timeoutId); // Cleanup on unmount
     }, []);
 
-    <>
-        {/* md */}
-        <div className='w-full min-h-full hidden md:flex'>
-            <MessageSideBar />
-            {children}
-        </div>
-        {/* sm */}
-        <div className='w-full min-h-dvh md:hidden flex'>
-            {children}
-        </div>
-    </>
-
     const RenderChatList = () => {
         if (path === "/message") {
             return <div className='w-full md:max-w-80 h-dvh'>

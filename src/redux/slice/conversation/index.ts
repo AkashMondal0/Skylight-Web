@@ -140,8 +140,14 @@ export const ConversationSlice = createSlice({
                 state.createMessageError = null
         })
         builder.addCase(CreateMessageApi.fulfilled, (state, action: PayloadAction<Message>) => {
+            const index = state.conversationList.findIndex((i) => i.id === action.payload.conversationId)
             if (state.conversation) {
                 state.conversation.messages.push(action.payload)
+            }
+            if (index !== -1) {
+                state.conversationList[index].messages?.push(action.payload)
+                state.conversationList[index].lastMessageContent = action.payload.content
+                state.conversationList[index].lastMessageCreatedAt = action.payload.createdAt
             }
             state.createMessageLoading = false
         })

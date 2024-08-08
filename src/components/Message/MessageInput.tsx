@@ -6,19 +6,21 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form'
 import { debounce } from 'lodash';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Assets, Conversation } from '@/types';
 import { useSession } from 'next-auth/react';
-import { CreateMessageApi } from '@/redux/services/conversation';
+import { CreateMessageApi, fetchConversationsApi } from '@/redux/services/conversation';
 import { SocketContext } from '@/provider/Socket_Provider';
 import { event_name } from '@/configs/socket.event';
 import { toast } from 'sonner';
+import { RootState } from '@/redux/store';
 
 const schema = z.object({
     message: z.string().min(1)
 })
 export const MessageInput = memo(function MessageInput({ data }: { data: Conversation }) {
     const dispatch = useDispatch()
+    const ConversationList = useSelector((state: RootState) => state.conversation.conversationList)
     const session = useSession().data?.user
     const [assets, setAssets] = useState<Assets[]>([])
     const [loading, setLoading] = useState(false)
@@ -74,6 +76,10 @@ export const MessageInput = memo(function MessageInput({ data }: { data: Convers
             socketState.socket?.emit(event_name.conversation.message, {
                 ...newMessage.payload, members: members
             })
+        }
+        if (ConversationList.findIndex((i) => i.id === data.id) === -1) {
+            toast.success("New conversation created")
+            dispatch(fetchConversationsApi() as any)
         }
         reset()
         setAssets([])

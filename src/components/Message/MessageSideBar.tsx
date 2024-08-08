@@ -24,7 +24,7 @@ export const MessageSideBar = memo(function MessageSideBar() {
     }, [])
 
 
-    if (rootConversation.listLoading || !pageLoaded) {
+    if (rootConversation.listLoading && !pageLoaded || !pageLoaded) {
         return <LoadingMessageSidebar />
     }
 
@@ -45,10 +45,10 @@ export const MessageSideBar = memo(function MessageSideBar() {
             <NavigationBottom />
         </div>
     )
-},(()=>true))
+}, (() => true))
 
-const Header = memo(function Header(){
-    
+const Header = memo(function Header() {
+
     return <div className='w-full p-4 pb-0 sticky top-0 bg-background z-50'>
         <div className="flex justify-between w-full items-center">
             <CardTitle>SkyLight</CardTitle>
@@ -66,4 +66,4 @@ const Header = memo(function Header(){
             <div className='text-gray-500 text-sm'>Requests</div>
         </div>
     </div>
-},(()=>true))
+}, (() => true))
