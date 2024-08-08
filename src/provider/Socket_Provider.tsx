@@ -1,7 +1,7 @@
 'use client'
 import { configs } from "@/configs";
 import { event_name } from "@/configs/socket.event";
-import { setMessage, setTyping } from "@/redux/slice/conversation";
+import { setMessage, setMessageSeen, setTyping } from "@/redux/slice/conversation";
 import { Message, Typing } from "@/types";
 import { useSession } from "next-auth/react";
 import { createContext, useEffect, useState } from "react";
@@ -52,10 +52,11 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
             });
             // incoming events
             socket?.on(event_name.conversation.message, (data: Message) => {
+                // 
                 dispatch(setMessage(data))
             });
-            socket?.on(event_name.conversation.seen, (data: any) => {
-                
+            socket?.on(event_name.conversation.seen, (data: { conversationId: string, authorId: string }) => {
+                dispatch(setMessageSeen(data))
             });
             socket?.on(event_name.conversation.typing, (data: Typing) => {
                 dispatch(setTyping(data))
@@ -70,7 +71,6 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
                 socket.off(event_name.conversation.message)
                 socket.off(event_name.conversation.seen)
                 socket.off(event_name.conversation.typing)
-
             }
         }
     }, [session, socket])

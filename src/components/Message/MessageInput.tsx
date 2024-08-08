@@ -12,6 +12,7 @@ import { useSession } from 'next-auth/react';
 import { CreateMessageApi } from '@/redux/services/conversation';
 import { SocketContext } from '@/provider/Socket_Provider';
 import { event_name } from '@/configs/socket.event';
+import { toast } from 'sonner';
 
 const schema = z.object({
     message: z.string().min(1)
@@ -36,7 +37,6 @@ export const MessageInput = memo(function MessageInput({ data }: { data: Convers
 
     const typingSetter = (typing: boolean) => {
         if (session?.id && data.id) {
-            // console.log("typing")
             socketState.socket?.emit(event_name.conversation.typing, {
                 typing: typing,
                 authorId: session?.id,
@@ -62,8 +62,7 @@ export const MessageInput = memo(function MessageInput({ data }: { data: Convers
 
     const sendMessageHandle = async (_data: { message: string }) => {
         setLoading(true)
-        if (!session?.id) return
-        if (!data.id) return
+        if (!session?.id || !data.id) return toast.error("Something went wrong")
         const newMessage = await dispatch(CreateMessageApi({
             conversationId: data.id,
             authorId: session?.id,
@@ -73,7 +72,7 @@ export const MessageInput = memo(function MessageInput({ data }: { data: Convers
         }) as any)
         if (newMessage?.payload?.id) {
             socketState.socket?.emit(event_name.conversation.message, {
-                ...newMessage.payload, members: members ?? []
+                ...newMessage.payload, members: members
             })
         }
         reset()

@@ -1,10 +1,13 @@
 "use client"
 import SkyAvatar from "@/components/sky/SkyAvatar"
+import { event_name } from "@/configs/socket.event"
+import { SocketContext } from "@/provider/Socket_Provider"
 import { conversationSeenAllMessage } from "@/redux/services/conversation"
 import { RootState } from "@/redux/store"
 import { Conversation } from "@/types"
-import { useRouter } from "next/navigation"
-import { memo, useMemo } from "react"
+import { useSession } from "next-auth/react"
+import { useParams, useRouter } from "next/navigation"
+import { memo, useContext, useMemo } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { toast } from "sonner"
 const timeFormat = (time: string | Date | undefined) => {
@@ -16,8 +19,11 @@ export const MessageUserListItem = memo(function MessageUserListItem({
 }: {
     data: Conversation
 }) {
+    const params = useParams()
     const router = useRouter()
     const dispatch = useDispatch()
+    const session = useSession().data?.user
+    const socketState = useContext(SocketContext)
     const Conversation = useMemo(() => {
         return data?.isGroup ? {
             ...data,
@@ -31,8 +37,17 @@ export const MessageUserListItem = memo(function MessageUserListItem({
     }, [data])
 
     const seenAllMessage = async () => {
-        if (!data?.id) return toast.error("Something went wrong")
-        dispatch(conversationSeenAllMessage(data.id) as any)
+        if (params.id === data.id) return
+        if (!data?.id || !session?.id) return toast.error("Something went wrong")
+        dispatch(conversationSeenAllMessage({
+            conversationId: data.id,
+            authorId: session?.id,
+        }) as any)
+        socketState.socket?.emit(event_name.conversation.seen, {
+            conversationId: data.id,
+            authorId: session?.id,
+            members: data.members?.filter((member) => member !== session?.id),
+        })
         router.push(`/message/${data?.id || ""}`)
     }
 
@@ -41,39 +56,40 @@ export const MessageUserListItem = memo(function MessageUserListItem({
     return (
         <>
             <div className='flex cursor-pointer
-            rounded-2xl justify-between p-3 py-2 
+            rounded-2xl justify-between p-1 py-2 
             transition-colors duration-300 ease-in-out
-            hover:bg-accent hover:text-accent-foreground'
-                onClick={seenAllMessage}>
-                <div className='flex space-x-2 items-center cursor-pointer'>
-                    <SkyAvatar url={Conversation.image || "/user.jpg"} className='h-[3.3rem] w-[3.3rem] mx-auto' />
-                    <div>
-                        <div className='font-semibold text-base'>
-                            {Conversation.name || "group name"}
-                        </div>
-                        <UserStatus lastText={Conversation.lastMessageContent}
-                            conversationId={data?.id} />
+            hover:bg-accent hover:text-accent-foreground'onClick={seenAllMessage}>
+                <div className='flex space-x-2 items-center cursor-pointer justify-between w-full'>
+                    <div className="flex-none">
+                        <SkyAvatar url={Conversation.image || "/user.jpg"} className='h-[3.3rem] w-[3.3rem] mx-auto' />
                     </div>
-                </div>
-                <div className='flex items-center flex-col'>
-                    {timeFormat(Conversation.lastMessageCreatedAt || "")}
-                    <TotalUnreadMessagesCount count={Conversation.totalUnreadMessagesCount} />
+                    <div className="grow">
+                        <p className='font-semibold text-base line-clamp-1'>
+                            {Conversation.name || "group name"}
+                        </p>
+                        <UserStatus lastText={Conversation.lastMessageContent} conversationId={data?.id} />
+                    </div>
+                    <div className='flex items-center flex-col flex-none'>
+                        {timeFormat(Conversation.lastMessageCreatedAt || "")}
+                        <TotalUnreadMessagesCount count={Conversation.totalUnreadMessagesCount} />
+                    </div>
                 </div>
             </div>
         </>
     )
 }, ((preProps, nextProps) => {
-    return preProps.data.id === nextProps.data.id 
-    && preProps.data?.messages?.length === nextProps.data?.messages?.length
-    && preProps.data?.lastMessageContent === nextProps.data?.lastMessageContent
+    return preProps.data.id === nextProps.data.id
+        && preProps.data?.messages?.length === nextProps.data?.messages?.length
+        && preProps.data?.lastMessageContent === nextProps.data?.lastMessageContent
 }))
 
 const UserStatus = ({ lastText, conversationId }: { lastText: string | any, conversationId: string | any }) => {
     const currentTyping = useSelector((Root: RootState) => Root.conversation.currentTyping)
     return (
-        <div className='text-sm'>
-            {currentTyping?.conversationId === conversationId && currentTyping?.typing ? "typing..." : lastText ?? "new conversation"}
-        </div>
+        <p className='text-sm line-clamp-1'>
+            {currentTyping?.conversationId === conversationId
+                && currentTyping?.typing ? "typing..." : lastText ?? "new conversation"}
+        </p>
     )
 }
 
