@@ -1,4 +1,4 @@
-import { CreateMessageApi, fetchConversationAllMessagesApi, fetchConversationApi, fetchConversationsApi } from '@/redux/services/conversation'
+import { CreateMessageApi, conversationSeenAllMessage, fetchConversationAllMessagesApi, fetchConversationApi, fetchConversationsApi } from '@/redux/services/conversation'
 import { Conversation, Message, Typing } from '@/types'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
@@ -60,9 +60,27 @@ export const ConversationSlice = createSlice({
                 state.conversationList[index].messages?.push(action.payload)
                 state.conversationList[index].lastMessageContent = action.payload.content
                 state.conversationList[index].lastMessageCreatedAt = action.payload.createdAt
+                state.conversationList[index].totalUnreadMessagesCount += 1
             }
             if (state?.conversation && action.payload.conversationId === state?.conversation.id) {
                 state.conversation?.messages.push(action.payload)
+            }
+        },
+        setMessageSeen: (state, action: PayloadAction<{ conversationId: string, authorId: string }>) => {
+            const index = state.conversationList.findIndex((i) => i.id === action.payload.conversationId)
+            if (index !== -1) {
+                state.conversationList[index].messages.forEach((message) => {
+                    if (message.seenBy.findIndex((i) => i === action.payload.authorId) === -1) {
+                        message.seenBy.push(action.payload.authorId)
+                    }
+                })
+            }
+            if (state?.conversation && action.payload.conversationId === state?.conversation.id) {
+                state.conversation.messages.forEach((message) => {
+                    if (message.seenBy.findIndex((i) => i === action.payload.authorId) === -1) {
+                        message.seenBy.push(action.payload.authorId)
+                    }
+                })
             }
         },
         // fetch members data
@@ -104,6 +122,11 @@ export const ConversationSlice = createSlice({
         builder.addCase(fetchConversationAllMessagesApi.fulfilled, (state, action: PayloadAction<Message[]>) => {
             if (state.conversation) {
                 state.conversation.messages = action.payload
+                state.conversationList.find((i) => {
+                    if (i.id === state.conversation?.id) {
+                        i.messages = action.payload
+                    }
+                })
             }
             state.messageLoading = false
         })
@@ -117,8 +140,14 @@ export const ConversationSlice = createSlice({
                 state.createMessageError = null
         })
         builder.addCase(CreateMessageApi.fulfilled, (state, action: PayloadAction<Message>) => {
+            const index = state.conversationList.findIndex((i) => i.id === action.payload.conversationId)
             if (state.conversation) {
                 state.conversation.messages.push(action.payload)
+            }
+            if (index !== -1) {
+                state.conversationList[index].messages?.push(action.payload)
+                state.conversationList[index].lastMessageContent = action.payload.content
+                state.conversationList[index].lastMessageCreatedAt = action.payload.createdAt
             }
             state.createMessageLoading = false
         })
@@ -126,11 +155,37 @@ export const ConversationSlice = createSlice({
             state.createMessageLoading = false,
                 state.createMessageError = "error"
         })
+        // conversationSeenAllMessage
+        builder.addCase(conversationSeenAllMessage.pending, (state) => {
+
+        })
+        builder.addCase(conversationSeenAllMessage.fulfilled, (state, action: PayloadAction<{ conversationId: string, authorId: string, memberLength?: number }>) => {
+            const index = state.conversationList.findIndex((i) => i.id === action.payload.conversationId)
+            if (index !== -1) {
+                state.conversationList[index].totalUnreadMessagesCount = 0
+                state.conversationList[index].messages?.forEach((message) => {
+                    if (message.seenBy.findIndex((i) => i === action.payload.authorId) === -1) {
+                        message.seenBy.push(action.payload.authorId)
+                    }
+                })
+            }
+            if (state?.conversation && action.payload.conversationId === state?.conversation.id) {
+                state.conversation?.messages?.forEach((message) => {
+                    if (message.seenBy.findIndex((i) => i === action.payload.authorId) === -1) {
+                        message.seenBy.push(action.payload.authorId)
+                    }
+                })
+            }
+        })
+        builder.addCase(conversationSeenAllMessage.rejected, (state, action) => {
+
+        })
     },
 })
 
 export const {
     setMessage,
+    setMessageSeen,
     setMembersData,
     loadMoreMembersData,
     setTyping

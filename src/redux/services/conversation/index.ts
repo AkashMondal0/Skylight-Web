@@ -84,6 +84,7 @@ export const fetchConversationApi = createAsyncThunk(
           lastMessageContent
         }
       }`
+      // await new Promise((resolve) => setTimeout(resolve, 1200))
       const res = await graphqlQuery({
         query: query,
         variables: { graphQlPageQuery: { id } }
@@ -204,7 +205,13 @@ export const CreateMessageApi = createAsyncThunk(
 
 export const conversationSeenAllMessage = createAsyncThunk(
   'conversationSeenAllMessage/post',
-  async (conversationId: string, thunkAPI) => {
+  async ({
+    conversationId,
+    authorId
+  }: {
+    conversationId: string
+    authorId: string
+  }, thunkAPI) => {
     try {
       let query = `mutation SeenMessages($conversationId: String!) {
         seenMessages(conversationId: $conversationId) {
@@ -212,12 +219,12 @@ export const conversationSeenAllMessage = createAsyncThunk(
         }
       }
       `
-      const res = await graphqlQuery({
+      await graphqlQuery({
         query: query,
         variables: { conversationId }
       })
 
-      return res.seenMessages
+      return { conversationId, authorId }
     } catch (error: any) {
       return thunkAPI.rejectWithValue({
         ...error?.response?.data,

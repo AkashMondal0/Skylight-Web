@@ -97,8 +97,9 @@ interface Conversation {
     user?: AuthorData | null
     isGroup: boolean | null;
     lastMessageContent: string | null;
-    totalUnreadMessagesCount?: number | null;
-    lastMessageCreatedAt?: Date | null;
+    totalUnreadMessagesCount: number ;
+    lastMessageCreatedAt: Date;
+    messagesAllRead: boolean;
     createdAt?: Date | null;
     updatedAt?: Date | null;
     groupName?: string | null;

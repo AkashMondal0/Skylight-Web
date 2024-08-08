@@ -60,7 +60,7 @@ const VirtualizeMessageList = memo(function VirtualizeMessageList({
     return (
         <>
             <div ref={parentRef}
-                className='h-full w-full flex-1' id='style-1'
+                className='h-full w-full flex-1 hideScrollbar' id='style-1'
                 style={{
                     height: "100%",
                     width: '100%', overflowY: 'auto', contain: 'strict'
@@ -87,7 +87,7 @@ const VirtualizeMessageList = memo(function VirtualizeMessageList({
                                 ref={virtualizer.measureElement}>
                                 <MessageItem
                                     key={data[virtualRow.index].id}
-                                    seen={data[virtualRow.index].seenBy.length === conversation?.members.length}
+                                    seen={conversation?.messagesAllRead ? true : data[virtualRow.index].seenBy.length === conversation?.members.length}
                                     isProfile={session?.id === data[virtualRow.index].authorId}
                                     data={data[virtualRow.index]} />
                             </div>
@@ -99,8 +99,6 @@ const VirtualizeMessageList = memo(function VirtualizeMessageList({
             </div>
         </>
     )
-}, ((preProps: any, nestProps: any) => {
-    return preProps.conversation.messages.length === nestProps.conversation.messages.length
-}))
+})
 
 export default VirtualizeMessageList

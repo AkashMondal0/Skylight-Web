@@ -24,13 +24,13 @@ export const MessageSideBar = memo(function MessageSideBar() {
     }, [])
 
 
-    if (rootConversation.listLoading || !pageLoaded) {
+    if (rootConversation.listLoading && !pageLoaded || !pageLoaded) {
         return <LoadingMessageSidebar />
     }
 
     if (rootConversation.listError && pageLoaded) {
         return <div className='md:border-r scroll-smooth flex justify-center items-center text-center
-        duration-300 bg-background text-foreground h-dvh md:max-w-[22rem] ease-in-out w-full mx-auto'>
+        duration-300 bg-background text-foreground h-dvh md:max-w-80 ease-in-out w-full mx-auto'>
             <ServerCrash className='w-16 h-16' />
         </div>
     }
@@ -38,17 +38,17 @@ export const MessageSideBar = memo(function MessageSideBar() {
     return (
         <div className={`flex flex-col md:border-r scroll-smooth 
             duration-300 bg-background text-foreground 
-            h-full md:max-w-[22rem] ease-in-out w-full`}>
+            h-full md:max-w-80 ease-in-out w-full`}>
             <VirtualUserList
                 conversation={rootConversation.conversationList}
                 Header={<Header />} />
             <NavigationBottom />
         </div>
     )
-},(()=>true))
+}, (() => true))
 
-const Header = memo(function Header(){
-    
+const Header = memo(function Header() {
+
     return <div className='w-full p-4 pb-0 sticky top-0 bg-background z-50'>
         <div className="flex justify-between w-full items-center">
             <CardTitle>SkyLight</CardTitle>
@@ -66,4 +66,4 @@ const Header = memo(function Header(){
             <div className='text-gray-500 text-sm'>Requests</div>
         </div>
     </div>
-},(()=>true))
+}, (() => true))
