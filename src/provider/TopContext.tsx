@@ -50,12 +50,12 @@ const TopContext = memo(function TopContext({ children }: { children: React.Reac
     const RenderChatList = () => {
         if (path === "/message") {
             dispatch(resetConversation())
-            return <div className='w-full md:max-w-80 h-dvh'>
+            return <div className='w-full md:max-w-96 h-dvh'>
                 <MessageSideBar />
             </div>
         }
         if (path.includes("/message/")) {
-            return <div className='w-full md:max-w-80 h-dvh hidden md:flex'>
+            return <div className='w-full md:max-w-96 h-dvh hidden md:flex'>
                 <MessageSideBar />
             </div>
         }

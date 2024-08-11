@@ -64,7 +64,7 @@ export const MessageUserListItem = memo(function MessageUserListItem({
                         <SkyAvatar url={Conversation.image || "/user.jpg"} className='h-[3.3rem] w-[3.3rem] mx-auto' />
                     </div>
                     <div className="grow">
-                        <p className='font-semibold text-base line-clamp-1'>
+                        <p className='font-semibold text-base w-52 text-ellipsis truncate'>
                             {Conversation.name || "group name"}
                         </p>
                         <UserStatus lastText={Conversation.lastMessageContent} conversationId={data?.id} />
@@ -87,9 +87,8 @@ export const MessageUserListItem = memo(function MessageUserListItem({
 const UserStatus = ({ lastText, conversationId }: { lastText: string | any, conversationId: string | any }) => {
     const currentTyping = useSelector((Root: RootState) => Root.conversation.currentTyping)
     return (
-        <p className='text-sm line-clamp-1'>
-            {currentTyping?.conversationId === conversationId
-                && currentTyping?.typing ? "typing..." : lastText ?? "new conversation"}
+        <p className='text-sm w-52 text-ellipsis truncate'>
+            {currentTyping?.conversationId === conversationId && currentTyping?.typing ? "typing..." : lastText ?? "new conversation"}conversationconversationconversationconversation
         </p>
     )
 }

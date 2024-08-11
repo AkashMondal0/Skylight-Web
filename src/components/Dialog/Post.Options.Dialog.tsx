@@ -81,7 +81,7 @@ export default function PostOptionsDialog({
                 </div>
                 <Separator />
                 <div className="text-center cursor-pointer w-full my-3" onClick={editPost}>
-                    Add to favorite's
+                {`Add to favorite's`}
                 </div>
                 <Separator />
                 <div className="text-center cursor-pointer w-full my-3" onClick={hideLikeCount}>
