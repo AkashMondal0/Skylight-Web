@@ -5,13 +5,16 @@ import OptimizedImage from './SkyImage'
 const SkyAvatar = memo(function ProfileHeader({
     url = "/user.jpg",
     className,
+    border = false,
 }:
     {
         url?: string | null,
         className: string
+        border?: boolean
         sizeImage?: string
     }) {
-    return <div>
+    return <div className={cn('sky-gradient w-auto h-auto rounded-full',
+        border ? "gradient p-[4px]" : "p-[2px] border")}>
         <OptimizedImage
             src={url || "/user.jpg"}
             width={50}
@@ -20,8 +23,9 @@ const SkyAvatar = memo(function ProfileHeader({
             alt="Picture of the author"
             sizes={"(min-width: 808px) 20vw, 30vw"}
             fetchPriority="high"
-            className={cn('w-12 h-12 cursor-pointer rounded-full userNotSelectImg bg-muted object-cover', className)}
-        />
+            className={cn(`w-full h-full cursor-pointer 
+            rounded-full userNotSelectImg bg-muted 
+            object-cover p-0`, className)} />
     </div>
 }, ((prevProps: any, nextProps: any) => {
     return prevProps.url === nextProps.url

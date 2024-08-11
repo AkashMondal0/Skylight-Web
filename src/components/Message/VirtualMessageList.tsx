@@ -6,7 +6,7 @@ import { MessageItem } from './MessageItem';
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 
-const VirtualizeMessageList = memo(function VirtualizeMessageList({
+const VirtualizeMessageList = ({
     conversation,
     loadMore,
     Header,
@@ -16,11 +16,9 @@ const VirtualizeMessageList = memo(function VirtualizeMessageList({
     loadMore?: () => void
     Header?: React.ReactNode
     Footer?: React.ReactNode
-}) {
+}) => {
     const session = useSession().data?.user
     const parentRef = useRef<HTMLDivElement>(null)
-    const bottomRef = useRef<HTMLDivElement>(null)
-    // const dimension = useWindowDimensions()
     const [mounted, setMounted] = useState(false)
     const data = useMemo(() => conversation.messages, [conversation.messages])
     const count = useMemo(() => data.length, [data.length])
@@ -47,13 +45,10 @@ const VirtualizeMessageList = memo(function VirtualizeMessageList({
 
     const items = virtualizer.getVirtualItems()
 
-    const toBottom = useCallback(() => {
-        bottomRef.current?.scrollIntoView()
-    }, [data.length])
-
     useEffect(() => {
-        toBottom()
-    }, [data.length]);
+        const totalHeight = virtualizer.getTotalSize();
+        virtualizer.scrollToOffset(totalHeight);
+      }, [items.length, virtualizer]);
 
     if (!mounted) return <></>
 
@@ -86,19 +81,19 @@ const VirtualizeMessageList = memo(function VirtualizeMessageList({
                                 data-index={virtualRow.index}
                                 ref={virtualizer.measureElement}>
                                 <MessageItem
-                                    key={data[virtualRow.index].id}
+                                    key={virtualRow.index}
+                                    data-index={virtualRow.index}
                                     seen={conversation?.messagesAllRead ? true : data[virtualRow.index].seenBy.length === conversation?.members.length}
                                     isProfile={session?.id === data[virtualRow.index].authorId}
                                     data={data[virtualRow.index]} />
                             </div>
                         ))}
-                        <div id="bottom" ref={bottomRef} />
                     </div>
                 </div>
                 {Footer}
             </div>
         </>
     )
-})
+}
 
 export default VirtualizeMessageList

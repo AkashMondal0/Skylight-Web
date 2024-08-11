@@ -135,6 +135,10 @@ input[type='number']::-webkit-outer-spin-button {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 
 .loader {
@@ -173,23 +177,25 @@ input[type='number']::-webkit-outer-spin-button {
   }
 }
 
-.scrollbarStyle::-webkit-scrollbar-track
-{
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-	border-radius: 10px;
-	background-color: #272424;
+.scrollbarStyle::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  background-color: #272424;
 }
 
-.scrollbarStyle::-webkit-scrollbar
-{
-	width: 6px;
-	border-radius: 10px;
-	background-color: #555;
+.scrollbarStyle::-webkit-scrollbar {
+  width: 6px;
+  border-radius: 10px;
+  background-color: #555;
 }
 
-.scrollbarStyle::-webkit-scrollbar-thumb
-{
-	border-radius: 10px;
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-	background-color: #555;
+.scrollbarStyle::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+  background-color: #555;
+}
+
+.gradient {
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%);
 }

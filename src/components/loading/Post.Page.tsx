@@ -9,7 +9,7 @@ export const CommentViewLoading = () => {
             {/* header comment input  */}
             <div className="flex justify-between bg-background items-center p-4 border-b h-20 z-10 sticky top-0 rounded-lg">
                 <div className="flex gap-2 items-center">
-                    <Skeleton className='h-12 w-12 rounded-full border-fuchsia-500 border-[3px] p-[2px]' />
+                    <Skeleton className='h-12 w-12 rounded-full ' />
                     <div className="flex flex-col ml-4 space-y-2">
                         <Skeleton className='w-40 h-4' />
                         <Skeleton className='w-28 h-4' />

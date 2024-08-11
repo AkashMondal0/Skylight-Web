@@ -74,7 +74,7 @@ export const CommentListLoading = () => {
     return (<div className="p-1 space-y-2">
         {Array(20).fill(0).map((_, i) => <div key={i} className="flex gap-1 items-center justify-between">
             <div className="flex">
-                <Skeleton className='h-12 w-12 rounded-full border-fuchsia-500 border-[3px] p-[2px]' />
+                <Skeleton className='h-12 w-12 rounded-full ' />
                 <div className="flex flex-col ml-2 space-y-1">
                     <Skeleton className='w-40 h-4' />
                     <Skeleton className='w-28 h-4' />

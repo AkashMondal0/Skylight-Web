@@ -3,6 +3,9 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StoryItem, UploadYourStory } from '@/components/Stories/StoryItem';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { generateRandomUsername } from '../sky/random';
+import { Button } from '../ui/button';
+import { cn } from '@/lib/utils';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 const story = Array.from({ length: 20 }, (_, i) => {
     return {
         url: `https://picsum.photos/id/${100 + i}/${50}/${50}`,
@@ -31,29 +34,55 @@ export const Stories = memo(function Story({
         horizontal: true,
         count: count,
         getScrollElement: () => parentRef.current,
-        estimateSize: useCallback(() => 80,[]),
+        estimateSize: useCallback(() => 80, []),
         overscan: 5,
     })
+    // const items = columnVirtualizer.getVirtualItems()
 
     useEffect(() => {
         setMounted(true)
     }, [])
 
-    // const items = columnVirtualizer.getVirtualItems()
+    const handleScrollPrevious = () => {
+        const parent = parentRef.current
+        if (parent) {
+            parent.scrollTo({
+                left: parent.scrollLeft - 390,
+                behavior: 'smooth',
+            })
+        }
+    }
+
+    const handleScrollNext = () => {
+        const parent = parentRef.current
+        if (parent) {
+            parent.scrollTo({
+                left: parent.scrollLeft + 390,
+                behavior: 'smooth',
+            })
+        }
+    }
+
+
     if (!mounted) return <></>
 
     return (
-        <>
+        <div className='flex md:w-max w-full items-center mx-auto'>
+            <Button variant={"default"} className={cn("rounded-full p-0 w-7 h-7 hidden md:flex")}
+                onClick={handleScrollPrevious}>
+                <ChevronLeft className="text-black w-6 h-6" />
+            </Button>
             <div
                 ref={parentRef}
-                className="w-full sm:max-w-[580px] mx-auto px-3 flex border-b sm:border-none hideScrollbar mt-4 gap-5"
+                className="w-full md:max-w-[580px] mx-auto px-3 flex border-b 
+                md:border-none hideScrollbar mt-4 gap-5"
                 style={{
                     width: `100%`,
                     height: `100px`,
                     overflow: 'auto',
-                }}
-            >
-              <UploadYourStory/>
+                }}>
+
+                <UploadYourStory />
                 <div
                     style={{
                         width: `${columnVirtualizer.getTotalSize()}px`,
@@ -73,13 +102,15 @@ export const Stories = memo(function Story({
                                 transform: `translateX(${virtualColumn.start}px)`,
                             }}
                         >
-                            <StoryItem key={virtualColumn.index}
-                                story={data[virtualColumn.index]}
-                            />
+                            <StoryItem key={virtualColumn.index} story={data[virtualColumn.index]} />
                         </div>
                     ))}
                 </div>
             </div>
-        </>
+            <Button variant={"default"} className={cn("rounded-full p-0 w-7 h-7 hidden md:flex")}
+                onClick={handleScrollNext}>
+                <ChevronRight className="text-black w-6 h-6" />
+            </Button>
+        </div>
     )
 })

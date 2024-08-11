@@ -1,13 +1,10 @@
 'use client'
-import {
-    useEffect, useMemo,
-} from "react";
+import {useEffect, useMemo} from "react";
 import { useDispatch } from "react-redux";
 import { fetchUserProfileDetailApi } from "@/redux/services/profile";
 import PostGridListVirtualList from "@/components/PostFeed/PostGridListVirtualList";
 import { useSession } from "next-auth/react";
 let profileUsername = "no_username"
-let loaded = false
 
 export default function Page({ params }: { params: { profile: string } }) {
     const dispatch = useDispatch()
@@ -19,7 +16,6 @@ export default function Page({ params }: { params: { profile: string } }) {
             dispatch(fetchUserProfileDetailApi(params.profile) as any)
         }
         profileUsername = params.profile
-        loaded = true
     }, [params.profile])
 
     return <PostGridListVirtualList scrollToTop={profileUsername !== params.profile} isProfile={isProfile}/>

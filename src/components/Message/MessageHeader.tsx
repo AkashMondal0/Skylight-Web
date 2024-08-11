@@ -32,13 +32,12 @@ export const MessageHeader = memo(function MessageHeader({ data }: { data: Conve
                 {/* logo */}
                 <div className='flex items-center'>
                     <div className='md:hidden cursor-pointer'>
-                        {/* <SheetSide trigger={<Menu size={30} className='cursor-pointer'/>}>
-                                <Sidebar />
-                            </SheetSide> */}
                         <ChevronLeft size={30} onClick={() => router.back()} />
                     </div>
                     <div className="flex items-center gap-2">
-                        <SkyAvatar className='md:h-12 md:w-12 w-10 h-10 my-2' url={Conversation.image || '/user.jpg'} />
+                        <div>
+                            <SkyAvatar className='md:h-12 md:w-12 w-10 h-10' url={Conversation.image || '/user.jpg'} />
+                        </div>
                         <div className='w-40'>
                             <div className="text-xl font-bold text-gray-900 dark:text-gray-100 truncate">
                                 {Conversation?.name || "...."}
@@ -55,7 +54,7 @@ export const MessageHeader = memo(function MessageHeader({ data }: { data: Conve
     return preProps.id === nestProps.id
 }))
 
-const UserStatus = ({conversationId}:any) => {
+const UserStatus = ({ conversationId }: any) => {
     const currentTyping = useSelector((Root: RootState) => Root.conversation.currentTyping)
     return (
         <div className="text-sm text-gray-500 dark:text-gray-400">

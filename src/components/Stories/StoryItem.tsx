@@ -5,26 +5,25 @@ import { Plus } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { memo } from "react"
 
-export const StoryItem = memo(function Story({
-    story
-}: {
-    story: {
-        url: string
-        label: string
-    }
-}) {
+export const StoryItem = memo(function Story({ story, className }: { story: { url: string, label: string }, className?: string }) {
     // console.info('%c<StoryItem/>', 'color: yellow; font-weight: bold;');
 
-    return <div className="w-16 h-16">
-        <SkyAvatar url={story.url} className={'rounded-full object-cover h-16 w-16 border-fuchsia-500 border-[3px] p-[2px]'} />
-        <p className="text-xs font-normal text-center w-16 truncate">{story.label}</p>
+    return <div className="flex justify-center flex-col px-2">
+        <div className="flex items-end flex-none w-auto h-auto mx-auto">
+            <div className={cn(`w-16 h-16 rounded-full cursor-pointer overflow-hidden`, className)}>
+                <SkyAvatar url={story?.url} className={cn('rounded-full object-cover w-full h-full')} />
+            </div>
+        </div>
+        <div className="shrink">
+            <p className="text-xs font-normal text-center text-ellipsis truncate">{story.label}</p>
+        </div>
     </div>
 })
 
 export const UploadYourStory = memo(function YourStory({ className }: { className?: string }) {
     const session = useSession().data?.user
-   
-   return <div>
+
+    return <div>
         <div className="flex items-end ">
             <div className={cn(`w-16 h-16 rounded-full cursor-pointer overflow-hidden`, className)}>
                 <SkyAvatar url={session?.image} className={cn('rounded-full object-cover w-full h-full')} />

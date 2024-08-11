@@ -64,14 +64,14 @@ export const MessageUserListItem = memo(function MessageUserListItem({
                         <SkyAvatar url={Conversation.image || "/user.jpg"} className='h-[3.3rem] w-[3.3rem] mx-auto' />
                     </div>
                     <div className="grow">
-                        <p className='font-semibold text-base line-clamp-1'>
+                        <p className='font-semibold text-base w-52 text-ellipsis truncate'>
                             {Conversation.name || "group name"}
                         </p>
                         <UserStatus lastText={Conversation.lastMessageContent} conversationId={data?.id} />
                     </div>
                     <div className='flex items-center flex-col flex-none'>
                         {timeFormat(Conversation.lastMessageCreatedAt || "")}
-                        <TotalUnreadMessagesCount count={Conversation.totalUnreadMessagesCount} />
+                        <TotalUnreadMessagesCount count={Conversation.totalUnreadMessagesCount} show={params.id !== data.id} />
                     </div>
                 </div>
             </div>
@@ -81,20 +81,21 @@ export const MessageUserListItem = memo(function MessageUserListItem({
     return preProps.data.id === nextProps.data.id
         && preProps.data?.messages?.length === nextProps.data?.messages?.length
         && preProps.data?.lastMessageContent === nextProps.data?.lastMessageContent
+        && preProps.data?.totalUnreadMessagesCount === nextProps.data?.totalUnreadMessagesCount
 }))
 
 const UserStatus = ({ lastText, conversationId }: { lastText: string | any, conversationId: string | any }) => {
     const currentTyping = useSelector((Root: RootState) => Root.conversation.currentTyping)
     return (
-        <p className='text-sm line-clamp-1'>
-            {currentTyping?.conversationId === conversationId
-                && currentTyping?.typing ? "typing..." : lastText ?? "new conversation"}
+        <p className='text-sm w-52 text-ellipsis truncate'>
+            {currentTyping?.conversationId === conversationId && currentTyping?.typing ? "typing..." : lastText ?? "new conversation"}
         </p>
     )
 }
 
-const TotalUnreadMessagesCount = ({ count }: { count: number | any }) => {
-    if (!count || count <= 0) return <></>
+const TotalUnreadMessagesCount = ({ count, show }: { count: number | any, show: boolean }) => {
+    if(!show) return <p className="w-6 h-6"></p>
+    if (!count || count <= 0) return <p className="w-6 h-6"></p>
     return (
         <p className="bg-primary text-primary-foreground flex justify-center items-center hover:bg-primary/90 w-6 h-6 rounded-full">
             {count}

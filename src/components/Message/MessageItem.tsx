@@ -40,6 +40,9 @@ export const MessageItem: FC<MessagesCardProps> = memo(function MessageItem({
         </div>
     );
 }, ((preProps, nestProps) => {
-    return preProps.data.id === nestProps.data.id && preProps.isProfile === nestProps.isProfile &&
-    preProps.seen === nestProps.seen
+    return preProps.data.id === nestProps.data.id 
+    && preProps.isProfile === nestProps.isProfile 
+    && preProps.seen === nestProps.seen
+    && preProps.profile?.id === nestProps.profile?.id
+    
 }))

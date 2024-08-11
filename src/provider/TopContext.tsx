@@ -5,11 +5,14 @@ import { usePathname } from 'next/navigation'
 import { NavigationSidebar } from '@/components/Navigation/NavigationSidebar'
 import SplashScreen from '@/components/sky/SplashScreen'
 import { MessageSideBar } from '@/components/Message/MessageSideBar'
+import { useDispatch } from 'react-redux'
+import { resetConversation } from '@/redux/slice/conversation'
 let splashShow = true
 
 const TopContext = memo(function TopContext({ children }: { children: React.ReactNode }) {
     const { theme } = useTheme()
     const path = usePathname()
+    const dispatch = useDispatch()
     const [isLoading, setIsLoading] = useState(splashShow);
     const [navigation, setNavigation] = useState({
         isHideNav: false,
@@ -46,12 +49,13 @@ const TopContext = memo(function TopContext({ children }: { children: React.Reac
 
     const RenderChatList = () => {
         if (path === "/message") {
-            return <div className='w-full md:max-w-80 h-dvh'>
+            dispatch(resetConversation())
+            return <div className='w-full md:max-w-96 h-dvh'>
                 <MessageSideBar />
             </div>
         }
         if (path.includes("/message/")) {
-            return <div className='w-full md:max-w-80 h-dvh hidden md:flex'>
+            return <div className='w-full md:max-w-96 h-dvh hidden md:flex'>
                 <MessageSideBar />
             </div>
         }
