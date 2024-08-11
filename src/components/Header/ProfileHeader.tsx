@@ -40,13 +40,13 @@ export const ProfileHeader = memo(function ProfileHeader({ profileUser, isProfil
                                     <SkyAvatar
                                         sizeImage='20vw'
                                         url={session?.image || "/user.jpg"}
-                                        className={'w-36 h-36 object-cover rounded-full aspect-square'} />
+                                        className={'sm:w-36 sm:h-36 w-16 h-16 rounded-full aspect-square'} />
                                 </OptionAvatarDialog>
                                 :
                                 <SkyAvatar
                                     sizeImage='20vw'
                                     url={profileUser.profilePicture || "/user.jpg"}
-                                    className={'w-36 h-36 object-cover rounded-full aspect-square'} />}
+                                    className={'sm:w-36 sm:h-36 w-16 h-16 rounded-full aspect-square'} />}
                         </div>
                         <div className='flex flex-col justify-between gap-5'>
                             <FollowButton
@@ -73,14 +73,17 @@ export const ProfileHeader = memo(function ProfileHeader({ profileUser, isProfil
                                 </Link>
                             </div>
                             <div className='flex justify-between flex-col px-3 my-4'>
-                                <p className='font-semibold'>{profileUser.username}</p>
-                                <p>{profileUser.bio}</p>
-                                {profileUser?.website ? <a className='flex items-center gap-2 hover:underline font-semibold text-sm'
-                                    target='_blank'
-                                    href={profileUser.website[0]}>
-                                    <Link2 className='rotate-45' />
-                                    {profileUser.website[0]}
-                                </a> : <></>}
+                                <p className='font-semibold w-80 truncate'>{profileUser.username}</p>
+                                <p className='w-80 line-clamp-1'>{profileUser.bio}</p>
+                                {profileUser?.website ?
+                                    <div className='flex gap-1'>
+                                        <Link2 className='rotate-45' />
+                                        <a className='flex items-center gap-2 hover:underline font-semibold text-sm w-80 line-clamp-1'
+                                            target='_blank' href={profileUser.website[0]}>
+                                            {profileUser.website[0]}
+                                        </a>
+                                    </div>
+                                    : <></>}
                             </div>
                         </div>
                     </div>
@@ -93,7 +96,7 @@ export const ProfileHeader = memo(function ProfileHeader({ profileUser, isProfil
                     {/* profile header */}
                     <div className='flex gap-3 my-5 items-center px-2'>
                         <SkyAvatar url={profileUser.profilePicture || "/user.jpg"}
-                            className={'w-24 h-24 rounded-full object-cover bg-slate-400'} />
+                            className={'w-24 h-24 rounded-full object-cover'} />
                         <FollowButton
                             isProfile={isProfile}
                             isFollowing={profileUser.friendship.following}
@@ -102,14 +105,17 @@ export const ProfileHeader = memo(function ProfileHeader({ profileUser, isProfil
                     {/* name or links and users count */}
                     <>
                         <div className='flex justify-between flex-col px-3 my-4'>
-                            <p className='font-semibold'>{profileUser.username}</p>
-                            <p>{profileUser.bio}</p>
-                            {profileUser?.website ? <a className='flex items-center gap-2 hover:underline font-semibold text-sm'
-                                target='_blank'
-                                href={profileUser.website[0]}>
-                                <Link2 className='rotate-45' />
-                                {profileUser.website[0]}
-                            </a> : <></>}
+                            <p className='font-semibold w-80 truncate'>{profileUser.username}</p>
+                            <p className='w-80 line-clamp-1'>{profileUser.bio}</p>
+                            {profileUser?.website ?
+                                <div className='flex gap-1'>
+                                    <Link2 className='rotate-45' />
+                                    <a className='flex items-center gap-2 hover:underline font-semibold text-sm w-80 line-clamp-1'
+                                        target='_blank' href={profileUser.website[0]}>
+                                        {profileUser.website[0]}
+                                    </a>
+                                </div>
+                                : <></>}
                         </div>
                         <ProfileStories
                             isProfile={isProfile}

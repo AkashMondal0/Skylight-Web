@@ -71,13 +71,14 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
     return (
         <>
-            <picture className='h-auto w-full cursor-pointer'>
+            <picture className='h-auto w-full cursor-pointer userNotSelectImg'>
                 <source srcSet={src} type="image/avif" />
                 <source srcSet={src} type="image/webp" />
                 <source srcSet={src} type="image/jpeg" />
                 <source srcSet={src} type="image/png" />
                 <source srcSet={src} type="image/jpg" />
                 <img
+                    draggable={false}
                     onContextMenu={event => event.preventDefault()}
                     data-src={src}
                     src={src}
@@ -93,7 +94,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
                     decoding="async"
                     fetchPriority={fetchPriority}
                     sizes={sizes}
-                    className={cn('h-auto w-full', className)}
+                    className={cn('h-auto w-full userNotSelectImg', className)}
                     onError={() => {
                         if (error) return;
                         setError(true)

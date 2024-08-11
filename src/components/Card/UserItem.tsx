@@ -90,7 +90,7 @@ export const UserItemFollow = ({
     const HandleRejected = () => { }
     return (
         <>
-            <div className='flex justify-between px-2 my-4 flex-wrap space-y-4'>
+            <div className='flex justify-between my-4 flex-wrap'>
                 <div className='flex space-x-2 items-center cursor-pointer mr-2' onClick={() => { router.push(`/${user?.username}`) }}>
                     <SkyAvatar url={user?.profilePicture || "/user.jpg"}
                         className='h-12 w-12 mx-auto' />
@@ -128,7 +128,7 @@ export const UserItemFollow = ({
                             user={userData}
                             HandleRejected={HandleRejected}
                             HandleConfirm={handleRemoveFollow}>
-                            <Button variant={"destructive"} className="rounded-xl">
+                            <Button variant={"destructive"} className="rounded-xl text-white">
                                 Remove
                             </Button>
                         </FollowerRemoveDialog>}

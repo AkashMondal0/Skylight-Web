@@ -71,16 +71,16 @@ export default function OptionAvatarDialog({
                     uploadFiles={handleUpload}
                 />
             ) : <div className="my-2">
-                <div className="text-center cursor-pointer w-full text-blue-400 hover:text-blue-600 font-bold p-2 text-lg" onClick={onClick}>
+                <div className="text-center cursor-pointer w-full text-blue-400 hover:text-blue-600 font-semibold p-2" onClick={onClick}>
                     Upload Photo
                 </div>
                 <Separator className="my-1" />
-                <div className="text-center cursor-pointer w-full text-red-400 hover:text-red-600  font-bold p-2 text-lg">
+                <div className="text-center cursor-pointer w-full text-red-400 hover:text-red-600  font-semibold p-2">
                     Remove Current Photo
                 </div>
                 <Separator className="my-1" />
                 <DialogClose asChild>
-                    <div className="text-center cursor-pointer w-full  font-bold p-2 text-lg">
+                    <div className="text-center cursor-pointer w-full  font-semibold p-2">
                         Cancel
                     </div>
                 </DialogClose>
