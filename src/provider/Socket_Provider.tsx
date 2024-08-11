@@ -48,7 +48,7 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
     const seenAllMessage = debounce(async (conversationId: string) => {
         if (!conversationId || !session?.id) return
         if (params?.id === conversationId && conversation) {
-            toast("New Message")
+            // toast("New Message")
             dispatch(conversationSeenAllMessage({
                 conversationId: conversation.id,
                 authorId: session?.id,
@@ -66,17 +66,17 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
         if (socket) {
             // connection
             socket?.on('connect', () => {
-                toast("User Connected")
+                toast("User Connected",{position:"top-center"})
             });
             socket?.on('disconnect', () => {
-                toast("User Disconnected")
+                toast("User Disconnected",{position:"top-center"})
             });
             // incoming events
             socket?.on(event_name.conversation.message, (data: Message) => {
                 if (list.find(conversation => conversation.id === data.conversationId)) {
                     dispatch(setMessage(data))
                 } else {
-                    toast("New Message")
+                    toast("New Message",{position:"top-center"})
                     dispatch(fetchConversationsApi() as any)
                 }
                 seenAllMessage(data.conversationId)
@@ -88,7 +88,7 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
                 dispatch(setTyping(data))
             });
             socket?.on("test", (data: Typing) => {
-                toast("From Server Test Event Message")
+                toast("From Server Test Event Message",{position:"top-center"})
             });
             return () => {
                 socket?.off('connect')

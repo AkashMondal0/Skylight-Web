@@ -88,7 +88,7 @@ const UserStatus = ({ lastText, conversationId }: { lastText: string | any, conv
     const currentTyping = useSelector((Root: RootState) => Root.conversation.currentTyping)
     return (
         <p className='text-sm w-52 text-ellipsis truncate'>
-            {currentTyping?.conversationId === conversationId && currentTyping?.typing ? "typing..." : lastText ?? "new conversation"}conversationconversationconversationconversation
+            {currentTyping?.conversationId === conversationId && currentTyping?.typing ? "typing..." : lastText ?? "new conversation"}
         </p>
     )
 }

@@ -111,7 +111,7 @@ export default OptimizedImage;
 
 export const ImageError = () => {
     return (<div className={`h-full w-full object-cover aspect-square p-4
-    flex flex-col items-center justify-center space-y-4 userNotSelectImg bg-muted`}>
+    flex flex-col items-center justify-center md:space-y-2 userNotSelectImg bg-muted`}>
         <RotateCcw className='md:w-10 md:h-10 w-8 h-8 cursor-pointer' strokeWidth={1.5} />
         <p className="text-center cursor-pointer text-xs md:text-base">{`Could't load image. Tap to retry`}</p>
     </div>)
