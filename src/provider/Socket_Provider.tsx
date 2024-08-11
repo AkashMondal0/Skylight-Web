@@ -1,11 +1,13 @@
 'use client'
 import { configs } from "@/configs";
 import { event_name } from "@/configs/socket.event";
-import { fetchConversationsApi } from "@/redux/services/conversation";
+import { conversationSeenAllMessage, fetchConversationsApi } from "@/redux/services/conversation";
 import { setMessage, setMessageSeen, setTyping } from "@/redux/slice/conversation";
 import { RootState } from "@/redux/store";
 import { Message, Typing } from "@/types";
+import { debounce } from "lodash";
 import { useSession } from "next-auth/react";
+import { useParams } from "next/navigation";
 import { createContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Socket, io } from "socket.io-client";
@@ -26,7 +28,8 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
     const [socket, setSocket] = useState<Socket | null>(null)
     const session = useSession().data?.user
     const list = useSelector((state: RootState) => state.conversation.conversationList)
-
+    const conversation = useSelector((state: RootState) => state.conversation.conversation)
+    const params = useParams()
 
     async function SocketConnection() {
         if (loadedRef && session?.id) {
@@ -42,6 +45,21 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
             loadedRef = false
         }
     }
+    const seenAllMessage = debounce(async (conversationId: string) => {
+        if (!conversationId || !session?.id) return
+        if (params?.id === conversationId && conversation) {
+            toast("New Message")
+            dispatch(conversationSeenAllMessage({
+                conversationId: conversation.id,
+                authorId: session?.id,
+            }) as any)
+            socket?.emit(event_name.conversation.seen, {
+                conversationId: conversation.id,
+                authorId: session?.id,
+                members: conversation.members?.filter((member) => member !== session?.id),
+            })
+        }
+    }, 1500)
 
     useEffect(() => {
         SocketConnection()
@@ -61,6 +79,7 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
                     toast("New Message")
                     dispatch(fetchConversationsApi() as any)
                 }
+                seenAllMessage(data.conversationId)
             });
             socket?.on(event_name.conversation.seen, (data: { conversationId: string, authorId: string }) => {
                 dispatch(setMessageSeen(data))
@@ -80,7 +99,7 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
                 socket?.off(event_name.conversation.typing)
             }
         }
-    }, [session, list, socket])
+    }, [session, list, socket,conversation])
 
 
     return (

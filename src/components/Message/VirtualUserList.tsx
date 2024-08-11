@@ -86,6 +86,5 @@ export const VirtualUserList = memo(function VirtualUserList({
         </div>
     )
 }, ((preProps, nestProps) => {
-    return preProps.conversation.length === nestProps.conversation.length
-        && preProps.conversation.every((item, index) => item?.messages?.length === nestProps.conversation[index].messages?.length)
+    return false
 }))

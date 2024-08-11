@@ -83,6 +83,9 @@ export const ConversationSlice = createSlice({
                 })
             }
         },
+        resetConversation: (state) => {
+            state.conversation = null
+        },
         // fetch members data
         setMembersData: (state, action: PayloadAction<Conversation>) => { },
         loadMoreMembersData: (state, action: PayloadAction<Conversation>) => { },
@@ -188,7 +191,8 @@ export const {
     setMessageSeen,
     setMembersData,
     loadMoreMembersData,
-    setTyping
+    setTyping,
+    resetConversation
 } = ConversationSlice.actions
 
 export default ConversationSlice.reducer

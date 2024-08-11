@@ -71,7 +71,7 @@ export const MessageUserListItem = memo(function MessageUserListItem({
                     </div>
                     <div className='flex items-center flex-col flex-none'>
                         {timeFormat(Conversation.lastMessageCreatedAt || "")}
-                        <TotalUnreadMessagesCount count={Conversation.totalUnreadMessagesCount} />
+                        <TotalUnreadMessagesCount count={Conversation.totalUnreadMessagesCount} show={params.id !== data.id} />
                     </div>
                 </div>
             </div>
@@ -81,6 +81,7 @@ export const MessageUserListItem = memo(function MessageUserListItem({
     return preProps.data.id === nextProps.data.id
         && preProps.data?.messages?.length === nextProps.data?.messages?.length
         && preProps.data?.lastMessageContent === nextProps.data?.lastMessageContent
+        && preProps.data?.totalUnreadMessagesCount === nextProps.data?.totalUnreadMessagesCount
 }))
 
 const UserStatus = ({ lastText, conversationId }: { lastText: string | any, conversationId: string | any }) => {
@@ -93,8 +94,9 @@ const UserStatus = ({ lastText, conversationId }: { lastText: string | any, conv
     )
 }
 
-const TotalUnreadMessagesCount = ({ count }: { count: number | any }) => {
-    if (!count || count <= 0) return <></>
+const TotalUnreadMessagesCount = ({ count, show }: { count: number | any, show: boolean }) => {
+    if(!show) return <p className="w-6 h-6"></p>
+    if (!count || count <= 0) return <p className="w-6 h-6"></p>
     return (
         <p className="bg-primary text-primary-foreground flex justify-center items-center hover:bg-primary/90 w-6 h-6 rounded-full">
             {count}
