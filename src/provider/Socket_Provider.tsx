@@ -3,6 +3,7 @@ import { configs } from "@/configs";
 import { event_name } from "@/configs/socket.event";
 import { conversationSeenAllMessage, fetchConversationsApi } from "@/redux/services/conversation";
 import { setMessage, setMessageSeen, setTyping } from "@/redux/slice/conversation";
+import { setPostNotification } from "@/redux/slice/notification";
 import { RootState } from "@/redux/store";
 import { Message, Notification, PostActionsProps, Typing } from "@/types";
 import { debounce } from "lodash";
@@ -88,9 +89,7 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
                 dispatch(setTyping(data))
             });
             socket?.on(event_name.notification.post.like, (data: Notification) => {
-                // dispatch(setPostLikeNotification(data))
-                // console.log("New Like Notification",data)
-                // toast("New Like Notification",{position:"top-center"})
+                dispatch(setPostNotification(data))
             });
             socket?.on("test", (data: Typing) => {
                 toast("From Server Test Event Message",{position:"top-center"})
