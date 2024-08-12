@@ -67,3 +67,43 @@ export const destroyNotificationApi = createAsyncThunk(
     }
   }
 );
+
+
+export const fetchAccountNotificationApi = createAsyncThunk(
+  'fetchAccountNotificationApi/post',
+  async (_, thunkAPI) => {
+    try {
+      let query = `query FindAllNotifications {
+        findAllNotifications {
+          id
+          type
+          authorId
+          recipientId
+          postId
+          author {
+            username
+            profilePicture
+          }
+          post {
+            id
+            fileUrl
+          }
+          commentId
+          storyId
+          reelId
+          createdAt
+          seen
+        }
+      }`
+      const res = await graphqlQuery({
+        query: query,
+      })
+
+      return res.findAllNotifications
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({
+        ...error?.response?.data,
+      })
+    }
+  }
+);

@@ -197,8 +197,8 @@ type Notification = {
     reelId?: string;
     createdAt: Date;
     seen: boolean;
-    user?: AuthorData
-    post_owner?: AuthorData
+    author?: AuthorData
+    post?: Post
 }
 
 export type {

@@ -2,6 +2,7 @@ import { RootState } from '@/redux/store'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { Notification } from '@/types'
+import { fetchAccountNotificationApi } from '@/redux/services/notification'
 
 // Define a type for the slice state
 type NotificationType = {
@@ -12,14 +13,20 @@ type NotificationType = {
 // Define a type for the slice state
 type NotificationStateType = {
     notificationPopup: boolean,
+    loading: boolean,
+    error: string | null,
     postNotification: NotificationType,
     chatNotification: NotificationType,
     commentNotification: NotificationType
+    notifications: Notification[]
 }
 
 // Define the initial state using that type
 const NotificationState: NotificationStateType = {
     notificationPopup: false,
+    loading: false,
+    error: null,
+    notifications: [],
     postNotification: {
         isNotification: false,
         notificationCount: 0
@@ -48,9 +55,13 @@ export const NotificationSlice = createSlice({
             state.notificationPopup = false
         },
         setPostNotification: (state, action: PayloadAction<Notification>) => {
+            const find = state.notifications.find((notification) => notification.postId === action.payload.postId)
+           if(!find) {
             state.postNotification.notificationCount += 1
             state.postNotification.isNotification = true
             state.notificationPopup = true
+            state.notifications.unshift(action.payload)
+           }
         },
         setChatNotification: (state, action: PayloadAction<NotificationType>) => {
             state.chatNotification = action.payload
@@ -60,7 +71,20 @@ export const NotificationSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-
+        builder
+            .addCase(fetchAccountNotificationApi.pending, (state) => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(fetchAccountNotificationApi.fulfilled, (state, action: PayloadAction<Notification[]>) => {
+                state.loading = false
+                state.error = null
+                state.notifications = action.payload
+            })
+            .addCase(fetchAccountNotificationApi.rejected, (state, action: PayloadAction<any>) => {
+                state.loading = false
+                state.error = action.payload || 'Failed to fetch notification'
+            })
     },
 })
 
