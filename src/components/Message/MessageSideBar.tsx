@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import React, { memo, useEffect, useMemo } from 'react'
 import { CardTitle } from '../ui/card';
@@ -13,6 +14,7 @@ import { VirtualUserList } from './VirtualUserList';
 let pageLoaded = false
 
 export const MessageSideBar = memo(function MessageSideBar() {
+    const dispatch = useDispatch()
     const rootConversation = useSelector((Root: RootState) => Root.conversation)
     const conversationList = useMemo(() => {
         return [...rootConversation.conversationList].sort((a, b) => {
@@ -22,7 +24,6 @@ export const MessageSideBar = memo(function MessageSideBar() {
             return 0
         })
     }, [rootConversation.conversationList])
-    const dispatch = useDispatch()
 
     useEffect(() => {
         if (!pageLoaded) {
@@ -32,7 +33,7 @@ export const MessageSideBar = memo(function MessageSideBar() {
     }, [])
 
 
-    if (rootConversation.listLoading && !pageLoaded || !pageLoaded) {
+    if (rootConversation.listLoading || !pageLoaded) {
         return <LoadingMessageSidebar />
     }
 

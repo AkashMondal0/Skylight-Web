@@ -77,7 +77,7 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
                 if (list.find(conversation => conversation.id === data.conversationId)) {
                     dispatch(setMessage(data))
                 } else {
-                    toast("New Message",{position:"top-center"})
+                    // toast("New Message",{position:"top-center"})
                     dispatch(fetchConversationsApi() as any)
                 }
                 seenAllMessage(data.conversationId)
