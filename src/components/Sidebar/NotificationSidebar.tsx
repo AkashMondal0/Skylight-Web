@@ -29,11 +29,11 @@ const NotificationSidebar = ({
 
     return (
         <div>
-            <div className={cn(`flex absolute z-50 w-auto`)}>
+            <div className={cn(`flex absolute z-50 w-auto h-dvh`)}>
                 <div className={cn(`flex flex-col md:border-r flex-none bg-background text-foreground
                  duration-300 ease-in-out transition-all z-50`,
                     open ? 'w-96' : 'w-0')}>
-                    <div className={cn('overflow-y-auto scroll-smooth',
+                    <div className={cn('overflow-y-auto scroll-smooth hideScrollbar',
                         open ? 'block' : 'hidden')}>
                         <div className='w-full mb-4 border-b p-4 flex justify-between'>
                             <h2 className='text-2xl font-semibold'>Notification</h2>

@@ -44,6 +44,8 @@ export const CommentInput = memo(function CommentInput({
                 content: inputRef.current?.value,
                 authorId: session.id
             }) as any) as disPatchResponse<Comment>
+
+            if(data.user.id === session.id) return
             if (commentRes.payload.id) {
                 // notification
                 const notificationRes = await dispatch(createNotificationApi({

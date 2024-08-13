@@ -41,6 +41,7 @@ const PostActions = ({
             return
         }
         setLike((pre) => ({ ...pre, isLike: true, likeCount: pre.likeCount + 1 }))
+        if(post.user.id === session.data.user.id) return loading.current = false
         const notificationRes = await dispatch(createNotificationApi({
             postId: post.id,
             authorId: session.data?.user.id,
@@ -71,6 +72,7 @@ const PostActions = ({
             toast("Something went wrong!")
             return
         }
+        if(post.user.id === session.data.user.id) return loading.current = false
         setLike((pre) => ({ ...pre, isLike: false, likeCount: pre.likeCount - 1 }))
         await dispatch(destroyNotificationApi({
             postId: post.id,
