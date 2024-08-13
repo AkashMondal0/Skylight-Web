@@ -17,6 +17,7 @@ type NotificationStateType = {
     error: string | null,
     unreadCommentCount: number,
     unreadPostLikeCount: number
+    unreadChatCount: number
     postNotification: NotificationType,
     chatNotification: NotificationType,
     commentNotification: NotificationType
@@ -32,6 +33,7 @@ const NotificationState: NotificationStateType = {
     notifications: [],
     unreadCommentCount: 0,
     unreadPostLikeCount: 0,
+    unreadChatCount: 0,
     receivedNotification: [],
 
     //
@@ -105,12 +107,12 @@ export const NotificationSlice = createSlice({
             })
             .addCase(fetchUnreadNotificationCountApi.fulfilled, (state, action: PayloadAction<{
                 unreadCommentCount: number,
-                unreadPostCount: number
+                unreadPostCount: number,
+                unreadChatCount: number
             }>) => {
-                if (action.payload.unreadPostCount > 0 || action.payload.unreadCommentCount > 0) {
-                    state.unreadCommentCount = action.payload.unreadCommentCount
-                    state.unreadPostLikeCount = action.payload.unreadPostCount
-                }
+                state.unreadCommentCount = action.payload.unreadCommentCount ?? 0
+                state.unreadPostLikeCount = action.payload.unreadPostCount ?? 0
+                state.unreadChatCount = action.payload.unreadChatCount ?? 0
             })
             .addCase(fetchUnreadNotificationCountApi.rejected, (state, action: PayloadAction<any>) => {
 

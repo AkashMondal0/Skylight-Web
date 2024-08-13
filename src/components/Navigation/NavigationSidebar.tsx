@@ -22,6 +22,7 @@ import { useSession } from "next-auth/react"
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import { configs } from "@/configs"
 import NotificationPopup from "../Alert/NotificationPopup"
+import NotificationPing from "../Alert/NotificationPing"
 
 // for large screen device 
 export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel, isHideNav }: {
@@ -80,6 +81,10 @@ export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel, is
                                 onClick={onClick}>
                                 <SkyAvatar url={session?.image || null} className="h-8 w-8" />
                             </NavigationItem>
+                        }
+                        if (label === "Messages") {
+                            return <NavigationItemMessage icon={icon} key={index}
+                                label={label} onClick={onClick} hideLabel={hideLabel} />
                         }
                         return <NavigationItem key={index} label={label} hideLabel={hideLabel}
                             onClick={onClick}>
@@ -176,6 +181,42 @@ const NavigationItemNotification = ({ active, label, onClick, hideLabel, classNa
                                 {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden xl:block", active ? "font-bold" : "font-normal")}>{label}</p>}
                             </div>
                             <NotificationPopup />
+                        </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="rounded-full">
+                        <p>{label}</p>
+                    </TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
+        </div>
+    )
+}
+
+const NavigationItemMessage = ({ active, label, onClick, hideLabel, className, icon }: {
+    active?: boolean
+    label?: string
+    onClick?: () => void
+    hideLabel?: boolean
+    className?: string
+    icon?: React.ReactNode
+}) => {
+
+    return (
+        <div className={cn("w-16 h-14 mx-auto xl:w-full xl:mx-0", className)}>
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <div onClick={onClick}
+                            className={cn(`max-w-72 mx-auto justify-center h-14 w-16 aspect-square flex rounded-xl
+                            hover:bg-accent hover:text-accent-foreground cursor-pointer`,
+                                hideLabel ? "sm:flex justify-center" : "lg:w-full xl:justify-start xl:px-4")}>
+                            <div className="flex items-center justify-center gap-3">
+                                <div className="flex justify-end w-auto h-auto">
+                                    <NotificationPing />
+                                    {icon}
+                                </div>
+                                {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden xl:block", active ? "font-bold" : "font-normal")}>{label}</p>}
+                            </div>
                         </div>
                     </TooltipTrigger>
                     <TooltipContent side="right" className="rounded-full">

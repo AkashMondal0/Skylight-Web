@@ -127,9 +127,9 @@ export const fetchUnreadNotificationCountApi = createAsyncThunk(
         unseenNotifications {
           unreadCommentCount
           unreadPostCount
+          unreadChatCount
         }
-      }
-      `
+      }`
       const res = await graphqlQuery({
         query: query,
       })

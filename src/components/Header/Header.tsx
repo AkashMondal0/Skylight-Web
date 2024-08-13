@@ -25,7 +25,7 @@ export const AppHeader = memo(function AppHeader() {
                             onClick={() => {
                                 router.push('/notification')
                             }} />
-                        <NotificationPopup align='top'/>
+                        <NotificationPopup/>
                     </div>
                     <UploadPostDialog>
                         <div>
