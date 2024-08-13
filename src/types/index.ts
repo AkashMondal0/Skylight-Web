@@ -172,6 +172,11 @@ type PostActionsProps = {
     postId: string,
     type: NotificationType,
     recipientId: string,
+
+    // 
+    commentId?: string
+    storyId?: string
+    reelId?: string
 }
 
 export enum NotificationType {
@@ -199,6 +204,7 @@ type Notification = {
     seen: boolean;
     author?: AuthorData
     post?: Post
+    comment?: Comment
 }
 
 export type {

@@ -16,7 +16,7 @@ const NotificationPopup = ({
     useEffect(() => {
         const time = setTimeout(() => {
             if (!initial) {
-                if (notifications.unreadPostCount > 0 || notifications.unreadCommentCount > 0) {
+                if (notifications.unreadPostLikeCount > 0 || notifications.unreadCommentCount > 0) {
                     dispatch(setOnNotificationPopup())
                 }
                 initial = true
@@ -25,7 +25,7 @@ const NotificationPopup = ({
         return () => {
             clearTimeout(time)
         }
-    }, [notifications.unreadPostCount, notifications.unreadCommentCount])
+    }, [notifications.unreadPostLikeCount, notifications.unreadCommentCount])
 
     useEffect(() => {
         if (notifications.notificationPopup) {
@@ -49,10 +49,10 @@ const NotificationPopup = ({
                         <div className={cn("flex items-center px-2 gap-1 transition-all duration-700 ease-in-out relative bottom-2",
                             notifications.notificationPopup ? "opacity-100" : "opacity-0")}>
 
-                            {notifications.unreadPostCount > 0 ? <div className="flex gap-1 items-center">
+                            {notifications.unreadPostLikeCount > 0 ? <div className="flex gap-1 items-center">
                                 <Heart className="w-5 h-5 fill-current text-white" />
                                 <p className="font-semibold text-white">
-                                    {notifications.unreadPostCount}
+                                    {notifications.unreadPostLikeCount}
                                 </p>
                             </div> : <></>}
 
@@ -82,10 +82,10 @@ const NotificationPopup = ({
                     <div className={cn("flex items-center pr-2 gap-1 transition-all duration-700 ease-in-out",
                         notifications.notificationPopup ? "opacity-100" : "opacity-0")}>
 
-                        {notifications.unreadPostCount > 0 ? <div className="flex gap-1 items-center">
+                        {notifications.unreadPostLikeCount > 0 ? <div className="flex gap-1 items-center">
                             <Heart className="w-5 h-5 fill-current text-white" />
                             <p className="font-semibold text-white">
-                                {notifications.unreadPostCount}
+                                {notifications.unreadPostLikeCount}
                             </p>
                         </div> : <></>}
 

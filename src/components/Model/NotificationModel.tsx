@@ -8,7 +8,7 @@ import {
 import SkyAvatar from '../sky/SkyAvatar'
 import OptimizedImage from '../sky/SkyImage'
 import { cn } from '@/lib/utils'
-import { Notification } from '@/types'
+import { Notification, NotificationType } from '@/types'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { fetchAccountNotificationApi } from '@/redux/services/notification'
@@ -55,6 +55,19 @@ export const NotificationItem = ({
         router.push(`/post/p/${data?.post?.id}`)
     }
 
+    const Description = (type?: NotificationType) => {
+        switch (type) {
+            case NotificationType.Like:
+                return 'liked your post'
+            case NotificationType.Comment:
+                return `commented on your post: ${data?.comment?.content}`
+            case NotificationType.Follow:
+                return 'followed you'
+            default:
+                return ''
+        }
+    }
+
     return (
         <div className='flex cursor-pointer p-3 justify-between transition-colors duration-300 ease-in-out
             hover:bg-accent hover:text-accent-foreground'>
@@ -71,7 +84,7 @@ export const NotificationItem = ({
                         <span className='font-semibold text-sm mr-1 break-words'>
                             {data?.author?.username}
                         </span>
-                        <span className='break-words'>{`like your post.`}</span>
+                        <span className='break-words'>{Description(data?.type)}</span>
                     </p>
                     <span className='text-sm leading-none'>
                         {timeAgoFormat(data?.createdAt)}

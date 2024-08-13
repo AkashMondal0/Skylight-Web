@@ -16,11 +16,12 @@ type NotificationStateType = {
     loading: boolean,
     error: string | null,
     unreadCommentCount: number,
-    unreadPostCount: number
+    unreadPostLikeCount: number
     postNotification: NotificationType,
     chatNotification: NotificationType,
     commentNotification: NotificationType
     notifications: Notification[]
+    receivedNotification: string[]
 }
 
 // Define the initial state using that type
@@ -30,7 +31,8 @@ const NotificationState: NotificationStateType = {
     error: null,
     notifications: [],
     unreadCommentCount: 0,
-    unreadPostCount: 0,
+    unreadPostLikeCount: 0,
+    receivedNotification: [],
 
     //
     postNotification: {
@@ -60,12 +62,19 @@ export const NotificationSlice = createSlice({
         setResetNotificationPopup: (state) => {
             state.notificationPopup = false
         },
-        setPostNotification: (state, action: PayloadAction<Notification>) => {
-            const find = state.notifications.find((notification) => notification.postId === action.payload.postId)
-            if (!find) {
-                state.notificationPopup = true
-                state.notifications.unshift(action.payload)
-                state.unreadPostCount += 1
+        setNotification: (state, action: PayloadAction<Notification>) => {
+            const find = state.receivedNotification.find((id) => id === action.payload.postId || id === action.payload.commentId)
+            if(!find) {
+                if (action.payload.type === "like" && action.payload.postId) {
+                    state.unreadPostLikeCount += 1
+                    state.notificationPopup = true
+                    state.receivedNotification.unshift(action.payload.postId)
+                }
+                if (action.payload.type === "comment" && action.payload.commentId) {
+                    state.unreadCommentCount += 1
+                    state.notificationPopup = true
+                    state.receivedNotification.unshift(action.payload.commentId)
+                }
             }
         },
         setChatNotification: (state, action: PayloadAction<NotificationType>) => {
@@ -100,7 +109,7 @@ export const NotificationSlice = createSlice({
             }>) => {
                 if (action.payload.unreadPostCount > 0 || action.payload.unreadCommentCount > 0) {
                     state.unreadCommentCount = action.payload.unreadCommentCount
-                    state.unreadPostCount = action.payload.unreadPostCount
+                    state.unreadPostLikeCount = action.payload.unreadPostCount
                 }
             })
             .addCase(fetchUnreadNotificationCountApi.rejected, (state, action: PayloadAction<any>) => {
@@ -113,7 +122,7 @@ export const {
     setOnNotificationPopup,
     setOffNotificationPopup,
     setResetNotificationPopup,
-    setPostNotification,
+    setNotification,
     setChatNotification,
     setCommentNotification
 } = NotificationSlice.actions

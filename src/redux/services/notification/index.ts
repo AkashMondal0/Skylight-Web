@@ -13,6 +13,7 @@ export const createNotificationApi = createAsyncThunk(
           authorId
           recipientId
           postId
+          commentId
           createdAt
           seen
         }
@@ -24,7 +25,10 @@ export const createNotificationApi = createAsyncThunk(
             type: postActionsProps.type,
             recipientId: postActionsProps.recipientId,
             authorId: postActionsProps.authorId,
-            postId: postActionsProps.postId
+            postId: postActionsProps.postId,
+            commentId: postActionsProps.commentId,
+            storyId: postActionsProps.storyId,
+            reelId: postActionsProps.reelId
           }
         }
       })
@@ -54,7 +58,10 @@ export const destroyNotificationApi = createAsyncThunk(
             type: postActionsProps.type,
             recipientId: postActionsProps.recipientId,
             authorId: postActionsProps.authorId,
-            postId: postActionsProps.postId
+            postId: postActionsProps.postId,
+            commentId: postActionsProps.commentId,
+            storyId: postActionsProps.storyId,
+            reelId: postActionsProps.reelId
           }
         }
       })
@@ -87,6 +94,10 @@ export const fetchAccountNotificationApi = createAsyncThunk(
           post {
             id
             fileUrl
+          }
+          comment {
+            id
+            content
           }
           commentId
           storyId

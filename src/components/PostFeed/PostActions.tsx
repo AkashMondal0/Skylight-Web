@@ -47,7 +47,7 @@ const PostActions = ({
             type: NotificationType.Like,
             recipientId: post.user.id
         }) as any) as disPatchResponse<Notification>
-        SocketState.socket?.emit(event_name.notification.post.like, {
+        SocketState.socket?.emit(event_name.notification.post, {
             ...notificationRes.payload,
             author: {
                 username: session.data?.user.username,
