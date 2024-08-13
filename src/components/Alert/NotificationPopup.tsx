@@ -9,6 +9,8 @@ let initial = false
 const NotificationPopup = memo(function NotificationPopup() {
     const notifications = useSelector((state: RootState) => state.notification)
     const dispatch = useDispatch()
+    const Sidebar = useSelector((state: RootState) => state.sidebarSlice)
+
     useEffect(() => {
         const time = setTimeout(() => {
             if (!initial) {
@@ -34,6 +36,10 @@ const NotificationPopup = memo(function NotificationPopup() {
         }
     }, [notifications.notificationPopup])
 
+    if (Sidebar.notification) {
+        return <></>
+    }
+    
     return (
         <>
         {/* sm */}

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
-import { NotificationItem } from "@/components/Model/NotificationModel";
+import { NotificationItem } from "@/components/Card/NotificationItem";
 import { fetchAccountNotificationApi } from "@/redux/services/notification";
 import { RootState } from "@/redux/store";
 import { useEffect } from "react";

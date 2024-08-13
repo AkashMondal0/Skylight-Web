@@ -7,6 +7,7 @@ import conversationReducer from '@/redux/slice/conversation'
 import accountReducer from '@/redux/slice/account'
 import postsReducer from "@/redux/slice/post"
 import notificationReducer from "@/redux/slice/notification"
+import sidebarReducer from '@/redux/slice/sidebar'
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     conversation: conversationReducer,
     account: accountReducer,
     notification: notificationReducer,
+    sidebarSlice: sidebarReducer
   },
 })
 

@@ -1,50 +1,10 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useMemo } from 'react'
-import {
-    Drawer,
-    DrawerContent,
-    DrawerTrigger,
-} from "@/components/ui/drawer"
+import React from 'react'
 import SkyAvatar from '../sky/SkyAvatar'
 import OptimizedImage from '../sky/SkyImage'
 import { cn } from '@/lib/utils'
 import { Notification, NotificationType } from '@/types'
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '@/redux/store'
-import { fetchAccountNotificationApi } from '@/redux/services/notification'
 import { timeAgoFormat } from '@/lib/timeFormat'
 import { useRouter } from 'next/navigation'
-
-const NotificationModel = ({ children }: { children: React.ReactNode }) => {
-    const allNotifications = useSelector((state: RootState) => state.notification)
-    const dispatch = useDispatch()
-
-    useEffect(() => {
-        dispatch(fetchAccountNotificationApi() as any)
-    }, [])
-
-    return (
-        <Drawer direction="left">
-            <DrawerTrigger asChild>
-                {children}
-            </DrawerTrigger>
-            <DrawerContent className='w-96 h-[100dvh] overflow-y-auto hideScrollbar scroll-smooth'>
-                <div className='w-full mb-4 border-b p-4'>
-                    <h2 className='text-2xl font-semibold'>Notification</h2>
-                </div>
-                <h2 className='w-full text-xl font-semibold px-4'>Today</h2>
-                <div className='w-full pt-4 h-full min-h-dvh'>
-                    {allNotifications.notifications.map((data, i) => (
-                        <NotificationItem key={i} data={data} />
-                    ))}
-                </div>
-            </DrawerContent>
-        </Drawer>
-    )
-}
-
-export default NotificationModel
-
 export const NotificationItem = ({
     data
 }: {
