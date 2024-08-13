@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Heart, MessageCircle } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { setOffNotificationPopup } from "@/redux/slice/notification";
+import { setOffNotificationPopup, setOnNotificationPopup } from "@/redux/slice/notification";
 
 const NotificationPopup = ({
     align = "side"
@@ -13,12 +13,25 @@ const NotificationPopup = ({
 }) => {
     const notifications = useSelector((state: RootState) => state.notification)
     const dispatch = useDispatch()
+    useEffect(() => {
+        const time =  setTimeout(() => {
+            if (notifications.unreadPostCount > 0 || notifications.unreadCommentCount > 0) {
+                dispatch(setOnNotificationPopup())
+            }
+        }, 1600)
+        return () => {
+            clearTimeout(time)
+        }
+    }, [notifications.unreadPostCount, notifications.unreadCommentCount])
 
     useEffect(() => {
         if (notifications.notificationPopup) {
-            setTimeout(() => {
-                dispatch(setOffNotificationPopup() as any)
-            }, 14000)
+            const time = setTimeout(() => {
+                dispatch(setOffNotificationPopup())
+            }, 7000)
+            return () => {
+                clearTimeout(time)
+            }
         }
     }, [notifications.notificationPopup])
 
@@ -35,17 +48,17 @@ const NotificationPopup = ({
                         <div className={cn("flex items-center px-2 gap-1 transition-all duration-700 ease-in-out relative bottom-2",
                             notifications.notificationPopup ? "opacity-100" : "opacity-0")}>
 
-                            {notifications.postNotification ? <div className="flex gap-1 items-center">
+                            {notifications.unreadPostCount > 0 ? <div className="flex gap-1 items-center">
                                 <Heart className="w-5 h-5 fill-current" />
                                 <p className="font-semibold">
-                                    {notifications.postNotification.notificationCount}
+                                    {notifications.unreadPostCount}
                                 </p>
                             </div> : <></>}
 
-                            {notifications.commentNotification.isNotification ? <div className="flex gap-1 items-center">
+                            {notifications.unreadCommentCount > 0 ? <div className="flex gap-1 items-center">
                                 <MessageCircle className="w-5 h-5 fill-current" />
                                 <p className="font-semibold">
-                                    {notifications.commentNotification.notificationCount}
+                                    {notifications.unreadCommentCount}
                                 </p>
                             </div> : <></>}
 
@@ -68,17 +81,17 @@ const NotificationPopup = ({
                     <div className={cn("flex items-center pr-2 gap-1 transition-all duration-700 ease-in-out",
                         notifications.notificationPopup ? "opacity-100" : "opacity-0")}>
 
-                        {notifications.postNotification ? <div className="flex gap-1 items-center">
+                        {notifications.unreadPostCount > 0  ? <div className="flex gap-1 items-center">
                             <Heart className="w-5 h-5 fill-current" />
                             <p className="font-semibold">
-                                {notifications.postNotification.notificationCount}
+                            {notifications.unreadPostCount}
                             </p>
                         </div> : <></>}
 
-                        {notifications.commentNotification.isNotification ? <div className="flex gap-1 items-center">
+                        {notifications.unreadCommentCount > 0 ? <div className="flex gap-1 items-center">
                             <MessageCircle className="w-5 h-5 fill-current" />
                             <p className="font-semibold">
-                                {notifications.commentNotification.notificationCount}
+                                {notifications.unreadCommentCount}
                             </p>
                         </div> : <></>}
 

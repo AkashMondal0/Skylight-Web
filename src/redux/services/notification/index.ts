@@ -107,3 +107,27 @@ export const fetchAccountNotificationApi = createAsyncThunk(
     }
   }
 );
+
+export const fetchUnreadNotificationCountApi = createAsyncThunk(
+  'fetchUnreadNotificationCountApi/post',
+  async (_, thunkAPI) => {
+    try {
+      let query = `query Query {
+        unseenNotifications {
+          unreadCommentCount
+          unreadPostCount
+        }
+      }
+      `
+      const res = await graphqlQuery({
+        query: query,
+      })
+
+      return res.unseenNotifications
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({
+        ...error?.response?.data,
+      })
+    }
+  }
+);
