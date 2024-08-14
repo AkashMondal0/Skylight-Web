@@ -5,7 +5,7 @@ import { RotateCcw } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface OptimizedImageProps {
-    src: string;
+    src?: string;
     alt?: string;
     width: number;
     height: number;
@@ -14,6 +14,7 @@ interface OptimizedImageProps {
     sizes?: string;
     showErrorIcon?: boolean;
     showErrorIconSm?: boolean;
+    hideErrorLabel?: boolean;
     onError?: () => void;
     onLoad?: () => void;
 }
@@ -28,6 +29,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
     sizes = '(min-width: 808px) 50vw, 100vw',
     onError,
     onLoad,
+    hideErrorLabel = false,
     showErrorIconSm = false,
     showErrorIcon = false
 }) => {
@@ -60,14 +62,14 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
     // }, []);
 
     if (error && showErrorIcon) {
-        return <ImageError />
+        return <ImageError  hideErrorLabel={hideErrorLabel} className={className}/>
     }
 
     if (error && showErrorIconSm) {
-        return <ImageErrorSm className={className} />
+        return <ImageErrorSm className={className} hideErrorLabel={hideErrorLabel}/>
     }
 
-    if (!src) return <ImageError />
+    if (!src) return <ImageError hideErrorLabel={hideErrorLabel} className={className}/>
 
     return (
         <>
@@ -109,15 +111,23 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
 export default OptimizedImage;
 
-export const ImageError = () => {
-    return (<div className={`h-full w-full object-cover aspect-square p-4
-    flex flex-col items-center justify-center md:space-y-2 userNotSelectImg bg-muted`}>
+export const ImageError = ({
+    hideErrorLabel,
+    className
+}: {
+    hideErrorLabel?: boolean
+    className?: string
+}) => {
+    return (<div className={cn(`h-full w-full object-cover aspect-square p-4
+    flex flex-col items-center justify-center md:space-y-2 userNotSelectImg bg-muted`,className)}>
         <RotateCcw className='md:w-10 md:h-10 w-8 h-8 cursor-pointer' strokeWidth={1.5} />
-        <p className="text-center cursor-pointer text-xs md:text-base">{`Could't load image. Tap to retry`}</p>
+        <p className="text-center cursor-pointer text-xs md:text-base">
+            {hideErrorLabel ? "":`Could't load image. Tap to retry`}
+        </p>
     </div>)
 }
 
-export const ImageErrorSm = ({ className }: { className?: string }) => {
+export const ImageErrorSm = ({ className }: { className?: string,hideErrorLabel?: boolean }) => {
     return (<div className={cn(`w-full bg-muted rounded-full flex justify-center items-center p-1`, className)}>
         <img src='/user.jpg' alt='' className='w-full h-full rounded-full' />
     </div>)

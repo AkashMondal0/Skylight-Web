@@ -1,10 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import { configs } from "@/configs";
 import { event_name } from "@/configs/socket.event";
 import { conversationSeenAllMessage, fetchConversationsApi } from "@/redux/services/conversation";
 import { setMessage, setMessageSeen, setTyping } from "@/redux/slice/conversation";
+import { setNotification } from "@/redux/slice/notification";
 import { RootState } from "@/redux/store";
-import { Message, Typing } from "@/types";
+import { Message, Notification, Typing } from "@/types";
 import { debounce } from "lodash";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
@@ -66,17 +68,17 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
         if (socket) {
             // connection
             socket?.on('connect', () => {
-                toast("User Connected",{position:"top-center"})
+                // toast("User Connected",{position:"top-center"})
             });
             socket?.on('disconnect', () => {
-                toast("User Disconnected",{position:"top-center"})
+                // toast("User Disconnected",{position:"top-center"})
             });
             // incoming events
             socket?.on(event_name.conversation.message, (data: Message) => {
                 if (list.find(conversation => conversation.id === data.conversationId)) {
                     dispatch(setMessage(data))
                 } else {
-                    toast("New Message",{position:"top-center"})
+                    // toast("New Message",{position:"top-center"})
                     dispatch(fetchConversationsApi() as any)
                 }
                 seenAllMessage(data.conversationId)
@@ -87,8 +89,12 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
             socket?.on(event_name.conversation.typing, (data: Typing) => {
                 dispatch(setTyping(data))
             });
+            socket?.on(event_name.notification.post, (data: Notification) => {
+                dispatch(setNotification(data))
+                // console.log(data)
+            });
             socket?.on("test", (data: Typing) => {
-                toast("From Server Test Event Message",{position:"top-center"})
+                toast("From Server Test Event Message", { position: "top-center" })
             });
             return () => {
                 socket?.off('connect')
@@ -97,9 +103,10 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
                 socket?.off(event_name.conversation.message)
                 socket?.off(event_name.conversation.seen)
                 socket?.off(event_name.conversation.typing)
+                socket?.off(event_name.notification.post)
             }
         }
-    }, [session, list, socket,conversation])
+    }, [session, list, socket, conversation])
 
 
     return (

@@ -70,7 +70,7 @@ export default Page
 const CommentItem = memo(function CommentItem({
   comment
 }: {
-  comment?: Comment
+  comment: Comment
 }) {
   return (
     <>
@@ -97,7 +97,10 @@ const CommentItem = memo(function CommentItem({
       </div>
     </>
   )
-},(()=>true))
+},((pre,next)=>{
+  return pre.comment.id === next.comment.id 
+  && pre.comment.content === next.comment.content
+}))
 
 const EmptyComment = () => {
   return <div className='flex justify-center items-center h-96'>

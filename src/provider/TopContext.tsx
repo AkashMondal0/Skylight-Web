@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import React, { memo, useEffect, useState } from 'react'
 import { useTheme } from "next-themes"
@@ -5,19 +6,20 @@ import { usePathname } from 'next/navigation'
 import { NavigationSidebar } from '@/components/Navigation/NavigationSidebar'
 import SplashScreen from '@/components/sky/SplashScreen'
 import { MessageSideBar } from '@/components/Message/MessageSideBar'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { resetConversation } from '@/redux/slice/conversation'
+import { fetchUnreadNotificationCountApi } from '@/redux/services/notification'
+import NotificationSidebar from '@/components/Sidebar/NotificationSidebar'
+import { RootState } from '@/redux/store'
+import { toggleNotification, hideNavigationBar, hideNavigationBarLabel, resetNavigationBar } from '@/redux/slice/sidebar'
 let splashShow = true
 
 const TopContext = memo(function TopContext({ children }: { children: React.ReactNode }) {
+    const Sidebar = useSelector((state: RootState) => state.sidebarSlice)
     const { theme } = useTheme()
     const path = usePathname()
     const dispatch = useDispatch()
     const [isLoading, setIsLoading] = useState(splashShow);
-    const [navigation, setNavigation] = useState({
-        isHideNav: false,
-        hideLabel: false,
-    })
 
     useEffect(() => {
         const metaThemeColor = document.querySelector('meta[name=theme-color]');
@@ -28,17 +30,18 @@ const TopContext = memo(function TopContext({ children }: { children: React.Reac
             );
         }
         if (path === "/") {
-            setNavigation((pre) => ({ ...pre, isHideNav: false, hideLabel: false }));
+            dispatch(resetNavigationBar())
         } else if (path.includes("/message")) {
-            setNavigation((pre) => ({ ...pre, isHideNav: false, hideLabel: true }));
+            dispatch(hideNavigationBarLabel())
         } else if (path.includes("/auth/")) {
-            setNavigation((pre) => ({ ...pre, isHideNav: false }));
+            dispatch(hideNavigationBar())
         } else {
-            setNavigation((pre) => ({ ...pre, isHideNav: false, hideLabel: false }));
+            dispatch(resetNavigationBar())
         }
     }, [theme, path])
 
     useEffect(() => {
+        dispatch(fetchUnreadNotificationCountApi() as any)
         splashShow = false
         const timeoutId = setTimeout(() => {
             setIsLoading(false)
@@ -65,7 +68,12 @@ const TopContext = memo(function TopContext({ children }: { children: React.Reac
         <>
             <SplashScreen show={isLoading} />
             <div className='w-full h-full sm:flex'>
-                <NavigationSidebar isHideNav={navigation.isHideNav} hideLabel={navigation.hideLabel} />
+                <NavigationSidebar
+                    isHideNav={Sidebar.hideNavigationBar}
+                    hideLabel={Sidebar.hideNavigationBarLabel} />
+                <NotificationSidebar
+                close={() => dispatch(toggleNotification())}
+                open={Sidebar.notification} />
                 <RenderChatList />
                 {children}
             </div>

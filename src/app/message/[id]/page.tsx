@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 import { RootState } from "@/redux/store"
 import { useCallback, useEffect, useState } from "react"
@@ -20,7 +21,7 @@ export default function Page({ params }: { params: { id: string } }) {
     await dispatch(fetchConversationAllMessagesApi(params.id) as any)
     pageId = params.id
     setPageLoaded(true)
-  }, [])
+  }, [params.id])
 
   useEffect(() => {
     if (!pageLoaded || pageId !== params.id) {

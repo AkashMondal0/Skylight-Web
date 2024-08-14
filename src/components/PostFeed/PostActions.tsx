@@ -1,10 +1,16 @@
-import React, { useCallback, useState } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useCallback, useContext, useRef, useState } from 'react'
 import { Heart, Send, MessageCircle, BookMarked } from 'lucide-react';
-import { Post, disPatchResponse } from '@/types';
+import { Notification, NotificationType, Post, PostActionsProps, disPatchResponse } from '@/types';
 import { createPostLikeApi, destroyPostLikeApi, fetchPostLikesApi } from '@/redux/services/post';
 import { useDispatch } from 'react-redux';
 import { toast } from 'sonner';
 import LikeViewModal from '@/components/Dialog/View.Like.Dialog';
+import { SocketContext } from '@/provider/Socket_Provider';
+import { event_name } from '@/configs/socket.event';
+import { useSession } from 'next-auth/react';
+import { createNotificationApi, destroyNotificationApi } from '@/redux/services/notification';
+
 const PostActions = ({
     post,
     onNavigate
@@ -13,30 +19,69 @@ const PostActions = ({
     onNavigate: (path: string) => void,
 }) => {
     const dispatch = useDispatch()
+    const SocketState = useContext(SocketContext)
+    const session = useSession()
     const [like, setLike] = useState({
         isLike: post.is_Liked,
         likeCount: post.likeCount
     })
+    const loading = useRef(false)
+
     const likeHandle = useCallback(async () => {
+        if (loading.current) return
+        loading.current = true
+
         if (post.isDummy) return toast("this dummy post")
+        if (!session.data?.user) return toast("Please login first")
+
         const res = await dispatch(createPostLikeApi(post.id) as any) as disPatchResponse<any>
-        if (!res.error) {
-            setLike((pre) => ({ ...pre, isLike: true, likeCount: pre.likeCount + 1 }))
+
+        if (res.error) {
+            toast("Something went wrong!")
             return
         }
-        toast("Something went wrong!")
-    }, [])
-
+        setLike((pre) => ({ ...pre, isLike: true, likeCount: pre.likeCount + 1 }))
+        if(post.user.id === session.data.user.id) return loading.current = false
+        const notificationRes = await dispatch(createNotificationApi({
+            postId: post.id,
+            authorId: session.data?.user.id,
+            type: NotificationType.Like,
+            recipientId: post.user.id
+        }) as any) as disPatchResponse<Notification>
+        SocketState.socket?.emit(event_name.notification.post, {
+            ...notificationRes.payload,
+            author: {
+                username: session.data?.user.username,
+                profilePicture: session.data?.user.image
+            },
+            post: {
+                id: post.id,
+                fileUrl: post.fileUrl,
+            }
+        })
+        loading.current = false
+    }, [SocketState.socket, post.id, post.isDummy, post.user, session.data?.user])
 
     const disLikeHandle = useCallback(async () => {
+        if (loading.current) return
+        loading.current = true
+        if (!session.data?.user) return toast("Please login first")
         if (post.isDummy) return toast("this dummy post")
         const res = await dispatch(destroyPostLikeApi(post.id) as any) as disPatchResponse<any>
-        if (!res.error) {
-            setLike((pre) => ({ ...pre, isLike: false, likeCount: pre.likeCount - 1 }))
+        if (res.error) {
+            toast("Something went wrong!")
             return
         }
-        toast("Something went wrong!")
-    }, [])
+        if(post.user.id === session.data.user.id) return loading.current = false
+        setLike((pre) => ({ ...pre, isLike: false, likeCount: pre.likeCount - 1 }))
+        await dispatch(destroyNotificationApi({
+            postId: post.id,
+            authorId: session.data?.user.id,
+            type: NotificationType.Like,
+            recipientId: post.user.id
+        }) as any)
+        loading.current = false
+    }, [SocketState.socket, post.id, post.isDummy, post.user, session.data?.user])
 
     const fetchLikes = async () => {
         if (post.isDummy) return toast("this dummy post")

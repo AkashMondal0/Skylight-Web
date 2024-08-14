@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { RemoveFriendshipApi, createFriendshipApi, destroyFriendshipApi } from '@/redux/services/profile'
 import { AuthorData, disPatchResponse } from '@/types'
 import { useSession } from 'next-auth/react'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { FollowerRemoveDialog, UnFollowDialog } from '@/components/Dialog/Follow.Dialog'
 import { useParams, useRouter } from 'next/navigation'
@@ -19,15 +19,17 @@ export const UserItemFollow = ({
     const dispatch = useDispatch()
     const params = useParams()
     const router = useRouter()
-    const [loading, setLoading] = useState(false)
     const [userData, setUserData] = useState(user)
     const [removed, setRemoved] = useState(false)
+    const loadingRef = useRef(false)
+
     const isProfile = useMemo(() => {
         return session?.id === user?.id
-    }, [user?.id])
+    }, [session?.id, user?.id])
 
     const handleUnFollow = async () => {
-        setLoading(true)
+        if (loadingRef.current) return
+        loadingRef.current = true
         if (!session?.id) return alert('no user id from unfollow button')
         if (!user?.id) return alert('no user id from unfollow button')
         const res = await dispatch(destroyFriendshipApi({
@@ -44,11 +46,12 @@ export const UserItemFollow = ({
         } else {
             alert('Something went Wrong')
         }
-        setLoading(false)
+        loadingRef.current = false
     }
 
     const handleFollow = async () => {
-        setLoading(true)
+        if (loadingRef.current) return
+        loadingRef.current = true
         if (!session?.id) return alert('no user id from follow button')
         if (!user?.id) return alert('no user id from follow button')
         const res = await dispatch(createFriendshipApi({
@@ -66,11 +69,12 @@ export const UserItemFollow = ({
         } else {
             alert('Something went Wrong')
         }
-        setLoading(false)
+        loadingRef.current = false
     }
 
     const handleRemoveFollow = async () => {
-        setLoading(true)
+        if (loadingRef.current) return
+        loadingRef.current = true
         if (!session?.id) return alert('no user id from follow button')
         if (!user?.id) return alert('no user id from follow button')
         const res = await dispatch(RemoveFriendshipApi({
@@ -84,7 +88,7 @@ export const UserItemFollow = ({
         } else {
             alert('Something went Wrong')
         }
-        setLoading(false)
+        loadingRef.current = false
     }
 
     const HandleRejected = () => { }
@@ -111,14 +115,14 @@ export const UserItemFollow = ({
                                     HandleRejected={HandleRejected}
                                     user={userData}>
                                     <Button
-                                        disabled={loading}
+                                        disabled={loadingRef.current}
                                         variant={"secondary"} className=" rounded-xl">
                                         following
                                     </Button>
                                 </UnFollowDialog>
                                 :
                                 <Button
-                                    disabled={loading}
+                                    disabled={loadingRef.current}
                                     onClick={handleFollow}
                                     variant={"default"} className=" rounded-xl">
                                     follow

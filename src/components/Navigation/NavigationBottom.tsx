@@ -9,6 +9,7 @@ import React, { memo } from "react"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 import SkyAvatar from "@/components/sky/SkyAvatar"
+import NotificationPing from "../Alert/NotificationPing"
 // for small screen device 
 export const NavigationBottom = memo(function NavigationBottom() {
     // console.info("<NavigationBottom/>")
@@ -23,7 +24,7 @@ export const NavigationBottom = memo(function NavigationBottom() {
         { icon: CircleUserRound, label: "Profile", onClick: () => pageChange(`/${session?.username || ""}`) },
     ]
 
-    if(!session?.id){
+    if (!session?.id) {
         return <></>
     }
 
@@ -35,6 +36,14 @@ export const NavigationBottom = memo(function NavigationBottom() {
                     if (label === "Profile") {
                         return <div key={index} onClick={onClick}>
                             <SkyAvatar url={session?.image ?? null} className="h-7 w-7" />
+                        </div>
+                    }
+                    if (label === "Messages") {
+                        return <div key={index} onClick={onClick}>
+                            <div className="relative">
+                                <NotificationPing/>
+                                {React.createElement(icon, { size: 28 })}
+                            </div>
                         </div>
                     }
                     return <div key={index} onClick={onClick}>

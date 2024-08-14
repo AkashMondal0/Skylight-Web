@@ -1,4 +1,3 @@
-import SkyAvatar from '@/components/sky/SkyAvatar'
 import { User } from '@/types'
 import React, { memo } from 'react'
 import { StoryItem, UploadYourStory } from './StoryItem'

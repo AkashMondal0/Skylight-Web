@@ -97,7 +97,7 @@ interface Conversation {
     user?: AuthorData | null
     isGroup: boolean | null;
     lastMessageContent: string | null;
-    totalUnreadMessagesCount: number ;
+    totalUnreadMessagesCount: number;
     lastMessageCreatedAt: Date;
     messagesAllRead: boolean;
     createdAt?: Date | null;
@@ -167,16 +167,58 @@ type disPatchResponse<T> = {
     error: any
 }
 
+type PostActionsProps = {
+    authorId: string,
+    postId: string,
+    type: NotificationType,
+    recipientId: string,
+
+    // 
+    commentId?: string
+    storyId?: string
+    reelId?: string
+}
+
+export enum NotificationType {
+    Like = 'like',
+    Comment = 'comment',
+    Follow = 'follow',
+    Mention = 'mention',
+    Reply = 'reply',
+    Tag = 'tag',
+    Reel = 'reel',
+    Story = 'story',
+    Post = 'post',
+}
+
+type Notification = {
+    id: string;
+    type: NotificationType;
+    authorId: string;
+    recipientId: string;
+    postId?: string;
+    commentId?: string;
+    storyId?: string;
+    reelId?: string;
+    createdAt: Date;
+    seen: boolean;
+    author?: AuthorData
+    post?: Post
+    comment?: Comment
+}
+
 export type {
     User,
     Message,
     Conversation,
     Post,
     Comment,
+    PostActionsProps,
     AuthorData,
     Assets,
     Friendship,
     Role,
+    Notification,
     FriendshipStatus,
     findDataInput,
     GraphqlError,

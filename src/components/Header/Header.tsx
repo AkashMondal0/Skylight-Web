@@ -1,9 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 import { ChevronLeft, CopyPlus, Heart } from 'lucide-react'
 import React, { memo } from 'react'
 import { useRouter } from 'next/navigation'
 import { configs } from '@/configs'
 import UploadPostDialog from '@/components/Dialog/UploadPost.Dialog'
+import NotificationPopup from '../Alert/NotificationPopup'
 
 export const AppHeader = memo(function AppHeader() {
     // console.info("<AppHeader/>")
@@ -17,14 +19,19 @@ export const AppHeader = memo(function AppHeader() {
                     <span className="text-xl font-bold">SkyLight</span>
                 </div>
                 <div className="flex items-center gap-4">
+                    <div>
+                        <Heart size={28}
+                            className='cursor-pointer'
+                            onClick={() => {
+                                router.push('/notification')
+                            }} />
+                        <NotificationPopup/>
+                    </div>
                     <UploadPostDialog>
                         <div>
                             <CopyPlus size={28} className='cursor-pointer' />
                         </div>
                     </UploadPostDialog>
-                    <Heart size={28} onClick={() => {
-                        router.push('/search')
-                    }} />
                 </div>
             </div>
         </div>

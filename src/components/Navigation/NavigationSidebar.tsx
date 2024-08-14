@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 import { cn } from "@/lib/utils"
 import {
@@ -13,18 +14,22 @@ import {
 } from "@/components/ui/tooltip"
 import React, { memo } from "react"
 import { useRouter } from "next/navigation"
-import NotificationModel from "@/components/Model/NotificationModel"
 import SearchModel from "@/components/Model/SearchModel"
 import MoreDropdownMenu from "@/components/Model/More_DropDown"
 import UploadPostDialog from "@/components/Dialog/UploadPost.Dialog"
 import { useSession } from "next-auth/react"
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import { configs } from "@/configs"
+import NotificationPopup from "../Alert/NotificationPopup"
+import NotificationPing from "../Alert/NotificationPing"
+import { useDispatch } from "react-redux"
+import { toggleNotification } from "@/redux/slice/sidebar"
 
 // for large screen device 
-export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel, isHideNav }: {
+export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel, isHideNav, sidebarModal }: {
     hideLabel?: boolean
-    isHideNav: boolean
+    isHideNav: boolean,
+    sidebarModal?: React.ReactNode
 }) {
     const router = useRouter()
     const pageChange = (path: string) => router.push(path)
@@ -47,17 +52,14 @@ export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel, is
 
     return (
         <div className={cn(`border-r scroll-smooth overflow-y-auto ease-in-out duration-300 p-1
-        hidden md:flex md:w-20 xl:w-72 max-w-72 w-72 min-h-full overflow-x-hidden h-dvh hideScrollbar`, hideLabel ? "max-w-20" : "max-w-72")}>
+        hidden md:flex md:w-20 xl:w-96 max-w-96 w-96 min-h-full overflow-x-hidden h-dvh hideScrollbar`,
+            hideLabel ? "max-w-20" : "max-w-96")}>
             <div className="w-full h-full flex flex-col justify-between">
                 <div>
                     <Logo label={configs.AppDetails.name} onClick={SideIconData[0].onClick} hideLabel={hideLabel} />
                     {SideIconData.map(({ icon, label, onClick }, index) => {
                         if (label === "Notifications") {
-                            return <NotificationModel key={index}>
-                                <NavigationItem label={label} onClick={onClick} hideLabel={hideLabel}>
-                                    {icon}
-                                </NavigationItem>
-                            </NotificationModel>
+                            return (<NavigationItemNotification icon={icon} label={label} hideLabel={hideLabel} key={index} />)
                         }
                         if (label === "Search") {
                             return <SearchModel key={index}>
@@ -80,6 +82,10 @@ export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel, is
                                 <SkyAvatar url={session?.image || null} className="h-8 w-8" />
                             </NavigationItem>
                         }
+                        if (label === "Messages") {
+                            return <NavigationItemMessage icon={icon} key={index}
+                                label={label} onClick={onClick} hideLabel={hideLabel} />
+                        }
                         return <NavigationItem key={index} label={label} hideLabel={hideLabel}
                             onClick={onClick}>
                             {icon}
@@ -96,8 +102,8 @@ export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel, is
             </div>
         </div>
     )
-}, ((pre: any, next: any) => {
-    return pre.isHideNav === next.isHideNav && pre.hideLabel === next.hideLabel
+}, ((pre, next) => {
+    return false
 }))
 
 const Logo = ({ active, label, onClick, hideLabel, className }: {
@@ -110,7 +116,7 @@ const Logo = ({ active, label, onClick, hideLabel, className }: {
 
     return (
         <div className={cn("w-16 h-14 mx-auto xl:w-full xl:mx-0 my-6", className)}>
-            <div onClick={onClick} className={cn(`max-w-72 mx-auto justify-center 
+            <div onClick={onClick} className={cn(`max-w-96 mx-auto justify-center 
             h-14 w-16 aspect-square items-center flex rounded-xl cursor-pointer`,
                 hideLabel ? "sm:flex justify-center" : "lg:w-full lg:gap-1 xl:justify-start xl:px-4")}>
                 <img src={configs.AppDetails.logoUrl} alt="upload" className="w-8 h-8" />
@@ -137,10 +143,82 @@ const NavigationItem = ({ children, active, label, onClick, hideLabel, className
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <div onClick={onClick}
-                            className={cn(`max-w-72 mx-auto justify-center h-14 w-16 aspect-square items-center flex rounded-xl
+                            className={cn(`max-w-96 mx-auto justify-center h-14 w-16 aspect-square items-center flex rounded-xl
                             hover:bg-accent hover:text-accent-foreground cursor-pointer`, hideLabel ? "sm:flex justify-center" : "lg:w-full lg:gap-3 xl:justify-start xl:px-4")}>
                             {children}
                             {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden xl:block", active ? "font-bold" : "font-normal")}>{label}</p>}
+                        </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="rounded-full">
+                        <p>{label}</p>
+                    </TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
+        </div>
+    )
+}
+
+const NavigationItemNotification = ({ active, label, hideLabel, className, icon }: {
+    active?: boolean
+    label?: string
+    hideLabel?: boolean
+    className?: string
+    icon?: React.ReactNode
+}) => {
+    const dispatch = useDispatch()
+    const onClickHandler = () => {
+        dispatch(toggleNotification())
+    }
+    return (
+        <div className={cn("w-16 h-14 mx-auto xl:w-full xl:mx-0", className)} onClick={onClickHandler}>
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <div
+                            className={cn(`max-w-96 mx-auto justify-center h-14 w-16 aspect-square flex rounded-xl
+                            hover:bg-accent hover:text-accent-foreground cursor-pointer`,
+                                hideLabel ? "sm:flex justify-center" : "lg:w-full xl:justify-start xl:px-4")}>
+                            <div className="flex items-center justify-center gap-3">
+                                {icon}
+                                {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden xl:block", active ? "font-bold" : "font-normal")}>{label}</p>}
+                            </div>
+                            <NotificationPopup />
+                        </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="rounded-full">
+                        <p>{label}</p>
+                    </TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
+        </div>
+    )
+}
+
+const NavigationItemMessage = ({ active, label, onClick, hideLabel, className, icon }: {
+    active?: boolean
+    label?: string
+    onClick?: () => void
+    hideLabel?: boolean
+    className?: string
+    icon?: React.ReactNode
+}) => {
+
+    return (
+        <div className={cn("w-16 h-14 mx-auto xl:w-full xl:mx-0", className)}>
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <div onClick={onClick}
+                            className={cn(`max-w-96 mx-auto justify-center h-14 w-16 aspect-square flex rounded-xl
+                            hover:bg-accent hover:text-accent-foreground cursor-pointer`,
+                                hideLabel ? "sm:flex justify-center" : "lg:w-full xl:justify-start xl:px-4")}>
+                            <div className="flex items-center justify-center gap-3">
+                                <div className="flex justify-end w-auto h-auto">
+                                    {icon}
+                                    <NotificationPing />
+                                </div>
+                                {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden xl:block", active ? "font-bold" : "font-normal")}>{label}</p>}
+                            </div>
                         </div>
                     </TooltipTrigger>
                     <TooltipContent side="right" className="rounded-full">

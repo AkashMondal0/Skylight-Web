@@ -95,7 +95,7 @@ export const ProfileHeader = memo(function ProfileHeader({ profileUser, isProfil
                 <div className='md:hidden block px-2'>
                     {/* profile header */}
                     <div className='flex gap-3 my-5 items-center px-2'>
-                        <SkyAvatar url={profileUser.profilePicture || "/user.jpg"}
+                        <SkyAvatar url={session?.image || "/user.jpg"}
                             className={'w-24 h-24 rounded-full object-cover'} />
                         <FollowButton
                             isProfile={isProfile}
