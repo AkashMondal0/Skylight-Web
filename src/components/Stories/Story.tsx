@@ -68,9 +68,9 @@ export const Stories = memo(function Story({
 
     return (
         <div className='flex md:w-max w-full items-center mx-auto'>
-            <Button variant={"default"} className={cn("rounded-full p-0 w-7 h-7 hidden md:flex")}
+            <Button variant={"outline"} className={cn("rounded-full p-0 w-7 h-7 hidden md:flex")}
                 onClick={handleScrollPrevious}>
-                <ChevronLeft className="text-black w-6 h-6" />
+                <ChevronLeft className="w-6 h-6" />
             </Button>
             <div
                 ref={parentRef}
@@ -107,9 +107,9 @@ export const Stories = memo(function Story({
                     ))}
                 </div>
             </div>
-            <Button variant={"default"} className={cn("rounded-full p-0 w-7 h-7 hidden md:flex")}
+            <Button variant={"outline"} className={cn("rounded-full p-0 w-7 h-7 hidden md:flex")}
                 onClick={handleScrollNext}>
-                <ChevronRight className="text-black w-6 h-6" />
+                <ChevronRight className="w-6 h-6" />
             </Button>
         </div>
     )

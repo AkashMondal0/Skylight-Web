@@ -15,7 +15,7 @@ const NotificationPing = memo(function NotificationPing() {
                     <div className="relative bottom-2 left-3">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75">
                         </span>
-                        {notifications.unreadChatCount > 0 ? <span className="rounded-full h-5 w-5 bg-red-500 text-sm flex justify-center items-center">
+                        {notifications.unreadChatCount > 0 ? <span className="rounded-full h-5 w-5 bg-red-500 text-sm flex justify-center items-center text-white">
                             {notifications.unreadChatCount}
                         </span> : <></>}
                     </div>
@@ -27,7 +27,7 @@ const NotificationPing = memo(function NotificationPing() {
                     <div className="relative">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75">
                         </span>
-                        {notifications.unreadChatCount > 0 ? <span className="rounded-full h-5 w-5 bg-red-500 text-sm flex justify-center items-center">
+                        {notifications.unreadChatCount > 0 ? <span className="rounded-full h-5 w-5 bg-red-500 text-sm flex justify-center items-center text-white">
                             {notifications.unreadChatCount}
                         </span> : <></>}
                     </div>
