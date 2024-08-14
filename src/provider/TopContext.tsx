@@ -8,10 +8,12 @@ import SplashScreen from '@/components/sky/SplashScreen'
 import { MessageSideBar } from '@/components/Message/MessageSideBar'
 import { useDispatch, useSelector } from 'react-redux'
 import { resetConversation } from '@/redux/slice/conversation'
-import { fetchUnreadNotificationCountApi } from '@/redux/services/notification'
 import NotificationSidebar from '@/components/Sidebar/NotificationSidebar'
 import { RootState } from '@/redux/store'
-import { toggleNotification, hideNavigationBar, hideNavigationBarLabel, resetNavigationBar } from '@/redux/slice/sidebar'
+import {
+    toggleNotification, hideNavigationBar,
+    hideNavigationBarLabel, resetNavigationBar
+} from '@/redux/slice/sidebar'
 let splashShow = true
 
 const TopContext = memo(function TopContext({ children }: { children: React.ReactNode }) {
@@ -41,7 +43,6 @@ const TopContext = memo(function TopContext({ children }: { children: React.Reac
     }, [theme, path])
 
     useEffect(() => {
-        dispatch(fetchUnreadNotificationCountApi() as any)
         splashShow = false
         const timeoutId = setTimeout(() => {
             setIsLoading(false)
@@ -72,8 +73,8 @@ const TopContext = memo(function TopContext({ children }: { children: React.Reac
                     isHideNav={Sidebar.hideNavigationBar}
                     hideLabel={Sidebar.hideNavigationBarLabel} />
                 <NotificationSidebar
-                close={() => dispatch(toggleNotification())}
-                open={Sidebar.notification} />
+                    close={() => dispatch(toggleNotification())}
+                    open={Sidebar.notification} />
                 <RenderChatList />
                 {children}
             </div>

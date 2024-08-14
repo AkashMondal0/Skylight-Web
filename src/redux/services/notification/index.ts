@@ -142,3 +142,26 @@ export const fetchUnreadNotificationCountApi = createAsyncThunk(
     }
   }
 );
+
+// fetchUnreadMessageNotificationCountApi
+
+export const fetchUnreadMessageNotificationCountApi = createAsyncThunk(
+  'fetchUnreadMessageNotificationCountApi/post',
+  async (_, thunkAPI) => {
+    try {
+      let query = `query UnseenMessageNotifications {
+        unseenMessageNotifications
+      }
+      `
+      const res = await graphqlQuery({
+        query: query,
+      })
+
+      return res.unseenMessageNotifications
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({
+        ...error?.response?.data,
+      })
+    }
+  }
+);

@@ -2,7 +2,7 @@ import { RootState } from '@/redux/store'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { Notification } from '@/types'
-import { fetchAccountNotificationApi, fetchUnreadNotificationCountApi } from '@/redux/services/notification'
+import { fetchAccountNotificationApi, fetchUnreadMessageNotificationCountApi, fetchUnreadNotificationCountApi } from '@/redux/services/notification'
 
 // Define a type for the slice state
 type NotificationType = {
@@ -115,6 +115,16 @@ export const NotificationSlice = createSlice({
                 state.unreadChatCount = action.payload.unreadChatCount ?? 0
             })
             .addCase(fetchUnreadNotificationCountApi.rejected, (state, action: PayloadAction<any>) => {
+
+            })
+            //fetchUnreadMessageNotificationCountApi
+            .addCase(fetchUnreadMessageNotificationCountApi.pending, (state) => {
+
+            })
+            .addCase(fetchUnreadMessageNotificationCountApi.fulfilled, (state, action: PayloadAction<number>) => {
+                state.unreadChatCount = action.payload ?? 0
+            })
+            .addCase(fetchUnreadMessageNotificationCountApi.rejected, (state, action: PayloadAction<any>) => {
 
             })
     },
