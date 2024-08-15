@@ -14,8 +14,7 @@ import {
 } from "@/components/ui/tooltip"
 import React, { memo } from "react"
 import { useRouter } from "next/navigation"
-import SearchModel from "@/components/Model/SearchModel"
-import MoreDropdownMenu from "@/components/Model/More_DropDown"
+import MoreDropdownMenu from "@/components/Option/HomePageMenu"
 import UploadPostDialog from "@/components/Dialog/UploadPost.Dialog"
 import { useSession } from "next-auth/react"
 import SkyAvatar from "@/components/sky/SkyAvatar"
@@ -23,7 +22,7 @@ import { configs } from "@/configs"
 import NotificationPopup from "../Alert/NotificationPopup"
 import NotificationPing from "../Alert/NotificationPing"
 import { useDispatch } from "react-redux"
-import { toggleNotification } from "@/redux/slice/sidebar"
+import {toggleNotificationSidebar, toggleSearchSidebar } from "@/redux/slice/sidebar"
 
 // for large screen device 
 export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel, isHideNav, sidebarModal }: {
@@ -32,15 +31,16 @@ export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel, is
     sidebarModal?: React.ReactNode
 }) {
     const router = useRouter()
+    const dispatch = useDispatch()
     const pageChange = (path: string) => router.push(path)
     const session = useSession().data?.user
     const SideIconData = [
         { icon: <Home size={28} />, label: "Home", onClick: () => pageChange('/') },
-        { icon: <Search size={28} />, label: "Search", onClick: () => { } },
+        { icon: <Search size={28} />, label: "Search", onClick: () => { dispatch(toggleSearchSidebar()) } },
         { icon: <Compass size={28} />, label: "Explore", onClick: () => pageChange('/explore') },
         { icon: <Film size={28} />, label: "Reels", onClick: () => pageChange('/reels/5') },
         { icon: <MessageCircleCode size={28} />, label: "Messages", onClick: () => pageChange('/message') },
-        { icon: <Heart size={28} />, label: "Notifications", onClick: () => { } },
+        { icon: <Heart size={28} />, label: "Notifications", onClick: () => { dispatch(toggleNotificationSidebar()) } },
         { icon: <CopyPlus size={28} />, label: "Create", onClick: () => { } },
         { icon: <CircleUserRound size={28} />, label: "Profile", onClick: () => pageChange(`/${session?.username || ""}`) },
     ]
@@ -59,14 +59,12 @@ export const NavigationSidebar = memo(function NavigationSidebar({ hideLabel, is
                     <Logo label={configs.AppDetails.name} onClick={SideIconData[0].onClick} hideLabel={hideLabel} />
                     {SideIconData.map(({ icon, label, onClick }, index) => {
                         if (label === "Notifications") {
-                            return (<NavigationItemNotification icon={icon} label={label} hideLabel={hideLabel} key={index} />)
+                            return (<NavigationItemNotification icon={icon} label={label} hideLabel={hideLabel} key={index} onClick={onClick} />)
                         }
                         if (label === "Search") {
-                            return <SearchModel key={index}>
-                                <NavigationItem label={label} onClick={onClick} hideLabel={hideLabel}>
-                                    {icon}
-                                </NavigationItem>
-                            </SearchModel>
+                            return <NavigationItem label={label} onClick={onClick} hideLabel={hideLabel}>
+                                {icon}
+                            </NavigationItem>
                         }
                         if (label === "Create") {
                             return <UploadPostDialog key={index}>
@@ -158,19 +156,16 @@ const NavigationItem = ({ children, active, label, onClick, hideLabel, className
     )
 }
 
-const NavigationItemNotification = ({ active, label, hideLabel, className, icon }: {
+const NavigationItemNotification = ({ active, label, hideLabel, className, icon, onClick }: {
     active?: boolean
     label?: string
     hideLabel?: boolean
     className?: string
     icon?: React.ReactNode
+    onClick?: () => void
 }) => {
-    const dispatch = useDispatch()
-    const onClickHandler = () => {
-        dispatch(toggleNotification())
-    }
     return (
-        <div className={cn("w-16 h-14 mx-auto xl:w-full xl:mx-0", className)} onClick={onClickHandler}>
+        <div className={cn("w-16 h-14 mx-auto xl:w-full xl:mx-0", className)} onClick={onClick}>
             <TooltipProvider>
                 <Tooltip>
                     <TooltipTrigger asChild>

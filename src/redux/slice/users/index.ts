@@ -1,12 +1,12 @@
 import { searchUsersProfileApi } from '@/redux/services/users'
-import { User } from '@/types'
+import { AuthorData } from '@/types'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 // Define a type for the slice state
 export interface UsersState {
-    UserDB: User[]
-    searchUsers: User[]
+    UserDB: AuthorData[]
+    searchUsers: AuthorData[]
     searchUsersLoading: boolean
     searchUsersError: unknown
 }
@@ -22,7 +22,7 @@ export const UsersSlice = createSlice({
     name: 'Users',
     initialState: UsersState,
     reducers: {
-        removeUserByIdFormSearch: (state, action: PayloadAction<User["id"]>) => {
+        removeUserByIdFormSearch: (state, action: PayloadAction<AuthorData["id"]>) => {
             state.searchUsers = state.searchUsers.filter(item => item.id !== action.payload)
         },
         removeAllUserFormSearch: (state) => {
@@ -35,7 +35,7 @@ export const UsersSlice = createSlice({
                 state.searchUsersLoading = true
                 state.searchUsersError = null
             })
-            .addCase(searchUsersProfileApi.fulfilled, (state, action: PayloadAction<User[]>) => {
+            .addCase(searchUsersProfileApi.fulfilled, (state, action: PayloadAction<AuthorData[]>) => {
                 state.searchUsers = action.payload
                 state.UserDB.concat(action.payload)
                 state.searchUsersLoading = false

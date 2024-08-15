@@ -10,10 +10,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { resetConversation } from '@/redux/slice/conversation'
 import NotificationSidebar from '@/components/Sidebar/NotificationSidebar'
 import { RootState } from '@/redux/store'
-import {
-    toggleNotification, hideNavigationBar,
-    hideNavigationBarLabel, resetNavigationBar
+import {hideNavigationBar,
+    hideNavigationBarLabel, resetNavigationBar, toggleNotificationSidebar, toggleSearchSidebar
 } from '@/redux/slice/sidebar'
+import SearchSidebar from '@/components/Sidebar/SearchSidebar'
 let splashShow = true
 
 const TopContext = memo(function TopContext({ children }: { children: React.ReactNode }) {
@@ -37,8 +37,6 @@ const TopContext = memo(function TopContext({ children }: { children: React.Reac
             dispatch(hideNavigationBarLabel())
         } else if (path.includes("/auth/")) {
             dispatch(hideNavigationBar())
-        } else {
-            dispatch(resetNavigationBar())
         }
     }, [theme, path])
 
@@ -73,8 +71,10 @@ const TopContext = memo(function TopContext({ children }: { children: React.Reac
                     isHideNav={Sidebar.hideNavigationBar}
                     hideLabel={Sidebar.hideNavigationBarLabel} />
                 <NotificationSidebar
-                    close={() => dispatch(toggleNotification())}
-                    open={Sidebar.notification} />
+                    close={() => dispatch(toggleNotificationSidebar())}
+                    open={Sidebar.notificationSidebar} />
+                <SearchSidebar close={() => dispatch(toggleSearchSidebar())}
+                    open={Sidebar.searchSidebar} />
                 <RenderChatList />
                 {children}
             </div>

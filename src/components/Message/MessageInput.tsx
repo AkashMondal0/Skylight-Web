@@ -14,7 +14,16 @@ import { SocketContext } from '@/provider/Socket_Provider';
 import { event_name } from '@/configs/socket.event';
 import { toast } from 'sonner';
 import { RootState } from '@/redux/store';
-
+import { FileUploadMenu } from '../Option/FileUploadMenu';
+import { UploadFileList } from './MessageUploadFile';
+const dropdownData = [{
+    label: "Photo",
+    onClick: () => document?.getElementById('files')?.click()
+},
+{
+    label: "Document",
+    onClick: () => { }
+}]
 const schema = z.object({
     message: z.string().min(1)
 })
@@ -78,7 +87,7 @@ export const MessageInput = memo(function MessageInput({ data }: { data: Convers
             })
         }
         if (ConversationList.findIndex((i) => i.id === data.id) === -1) {
-            toast.success("New conversation created")
+            // toast.success("New conversation created")
             dispatch(fetchConversationsApi() as any)
         }
         reset()
@@ -100,19 +109,21 @@ export const MessageInput = memo(function MessageInput({ data }: { data: Convers
         }
     }, [])
 
+
+
     return (
         <>
-            {/* <UploadFileComponent assets={assets} /> */}
+            <UploadFileList assets={assets} />
             <div className={`w-full border-t items-center
              h-auto my-auto max-h-20 flex gap-1 sticky py-2 px-1
              bottom-0 z-50 bg-background`}>
-                {/* <DropDownMenu data={dropdownData}> */}
-                <Button type="submit"
-                    variant={"outline"}
-                    className='rounded-3xl p-0 w-12'>
-                    <Paperclip />
-                </Button>
-                {/* </DropDownMenu> */}
+                <FileUploadMenu data={dropdownData}>
+                    <Button type="submit"
+                        variant={"outline"}
+                        className='rounded-3xl p-0 w-12'>
+                        <Paperclip />
+                    </Button>
+                </FileUploadMenu>
                 <input
                     type="file"
                     accept="image/*, video/*, audio/*"
