@@ -24,10 +24,6 @@ export const NavigationBottom = memo(function NavigationBottom() {
         { icon: CircleUserRound, label: "Profile", onClick: () => pageChange(`/${session?.username || ""}`) },
     ]
 
-    if (!session?.id) {
-        return <></>
-    }
-
     return (
         <div className={`md:hidden w-full sticky flex bottom-0 z-10 border-t
          py-2 bg-background text-foreground h-14 items-center`}>

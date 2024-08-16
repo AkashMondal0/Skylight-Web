@@ -6,6 +6,7 @@ import { RootState } from '@/redux/store';
 import NotFound from '@/components/Error/NotFound';
 import PostVirtualList from '@/components/PostFeed/PostVirtualList';
 import { PostLoading } from '@/components/loading/Home.page';
+import { NavigationSidebar } from '@/components/Navigation/NavigationSidebar';
 let pageLoaded = false
 
 export default function Page() {
@@ -19,7 +20,7 @@ export default function Page() {
     }
   }, [])
 
-  if (!pageLoaded && posts.feedsLoading || posts.feedsLoading ) {
+  if (!pageLoaded && posts.feedsLoading || posts.feedsLoading) {
     return <div className='w-full'>
       <PostLoading size={2} />
     </div>
@@ -30,8 +31,12 @@ export default function Page() {
   }
 
   return (
-    <div className='w-full'>
-      <PostVirtualList posts={posts.feeds} />
+    <div className='flex'>
+      <NavigationSidebar />
+      <div className='w-full'>
+        <PostVirtualList posts={posts.feeds} />
+      </div>
     </div>
+
   )
 }

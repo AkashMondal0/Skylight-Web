@@ -1,3 +1,4 @@
+import { NavigationSidebar } from "@/components/Navigation/NavigationSidebar"
 import { configs } from "@/configs"
 import { NotFoundMetadata, metaRobots } from "@/types/Metadata"
 import { Metadata } from "next"
@@ -91,9 +92,10 @@ export default async function RootLayout({ children, modal }: {
 }) {
 
   return (
-    <>
+    <div className="flex">
+      <NavigationSidebar />
       {children}
       {modal}
-    </>
+    </div>
   )
 }
