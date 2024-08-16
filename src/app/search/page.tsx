@@ -4,7 +4,7 @@ import { X } from 'lucide-react'
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { User } from '@/types';
+import { AuthorData } from '@/types';
 import { useRouter } from 'next/navigation';
 import SkyAvatar from '@/components/sky/SkyAvatar';
 import { searchUsersProfileApi } from '@/redux/services/users';
@@ -59,7 +59,7 @@ const SearchModel = () => {
 const UserItem = memo(function UserItem({
   item
 }: {
-  item: User
+  item: AuthorData
 }) {
 
   const dispatch = useDispatch();

@@ -65,7 +65,7 @@ export const NavigationSidebar = memo(function NavigationSidebar({
     return (
         <div className="flex">
             <div className={cn(`border-r scroll-smooth hidden md:flex overflow-x-hidden overflow-y-auto 
-            md:w-[4.5rem] xl:w-[18rem] h-dvh hideScrollbar ease-in-out duration-300 px-1`,
+            md:w-[4.5rem] xl:w-[18rem] h-dvh hideScrollbar ease-in-out duration-300 px-1 sticky top-0 z-50`,
                 hideLabelClass ? "max-w-[4.5rem]" : "max-w-[18rem]")}>
                 <div className="w-full h-full flex flex-col justify-between">
                     <div>

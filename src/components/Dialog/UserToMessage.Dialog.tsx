@@ -6,7 +6,7 @@ import { RootState } from '@/redux/store';
 import { removeAllUserFormSearch } from '@/redux/slice/users';
 import { DialogClose } from '@/components/ui/dialog'
 import SkyAvatar from '@/components/sky/SkyAvatar';
-import { Conversation, User, disPatchResponse } from '@/types';
+import { AuthorData, Conversation, disPatchResponse } from '@/types';
 import { useRouter } from 'next/navigation';
 import { MessagesSquare } from 'lucide-react';
 import { searchUsersProfileApi } from '@/redux/services/users';
@@ -69,7 +69,7 @@ export default UserToMessage
 const UserCard = ({
     item
 }: {
-    item: User
+    item: AuthorData
 }) => {
     const dispatch = useDispatch();
     const router = useRouter()
