@@ -63,12 +63,14 @@ export const NavigationSidebar = memo(function NavigationSidebar({
     if (isHideNav) return <></>
 
     return (
-        <div className="flex">
-            <div className={cn(`border-r scroll-smooth hidden md:flex overflow-x-hidden overflow-y-auto 
-            md:w-[4.5rem] xl:w-[18rem] h-dvh hideScrollbar ease-in-out duration-300 px-1 sticky top-0 z-50`,
+        <div className={cn(
+            "md:w-[4.5rem] xl:w-[18rem] border-r hidden md:flex h-dvh scroll-smooth overflow-x-hidden overflow-y-auto hideScrollbar",
+            hideLabel ? "max-w-[4.5rem]" : "max-w-[18rem]"
+        )}>
+            <div className={cn(`md:w-[4.5rem] xl:w-[18rem] px-1 sticky top-0 z-50 h-dvh scroll-smooth overflow-y-auto hideScrollbar`,
                 hideLabelClass ? "max-w-[4.5rem]" : "max-w-[18rem]")}>
                 <div className="w-full h-full flex flex-col justify-between">
-                    <div>
+                    <div className="">
                         <Logo label={configs.AppDetails.name} onClick={SideIconData[0].onClick} hideLabel={hideLabelClass} />
                         {SideIconData.map(({ icon, label, onClick }, index) => {
                             if (label === "Notifications") {
@@ -101,7 +103,7 @@ export const NavigationSidebar = memo(function NavigationSidebar({
                     </div>
                     <MoreDropdownMenu>
                         <div>
-                            <NavigationItem label="More" hideLabel={hideLabel}>
+                            <NavigationItem label="More" hideLabel={hideLabelClass}>
                                 <Menu size={28} />
                             </NavigationItem>
                         </div>
