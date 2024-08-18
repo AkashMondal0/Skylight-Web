@@ -10,20 +10,22 @@ import { fetchUserProfilePostsApi } from '@/redux/services/profile'
 import { useSession } from 'next-auth/react'
 import OptionAvatarDialog from '../Dialog/Avatar.Options.Dialog'
 import { User } from '@/types'
+let profileUsername = "no_username"
 
 export const ProfileHeader = memo(function ProfileHeader({ profileUser, isProfile }: { profileUser: User | null, isProfile: boolean }) {
     const dispatch = useDispatch()
     const session = useSession().data?.user
 
     useEffect(() => {
-        if (profileUser?.username) {
+        if (profileUser?.username && profileUser?.username !== profileUsername) {
+            profileUsername = profileUser.username
             dispatch(fetchUserProfilePostsApi({
                 username: profileUser?.id,
                 limit: 12,
                 offset: 0
             }) as any)
         }
-    }, [profileUser?.username])
+    }, [profileUser?.username, profileUser?.id])
 
     if (!profileUser) return <></>
 
