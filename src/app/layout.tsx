@@ -40,11 +40,10 @@ export default function RootLayout({ children,
                 defaultTheme="system"
                 enableSystem>
                 <Socket_Provider>
-                  <TopContext>
-                    <Toaster />
-                    {children}
-                    {modal}
-                  </TopContext>
+                  <TopContext/>
+                  <Toaster />
+                  {children}
+                  {modal}
                 </Socket_Provider>
               </ThemeProvider>
             </NextAuth_Provider>

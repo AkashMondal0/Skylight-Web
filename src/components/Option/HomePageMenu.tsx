@@ -1,19 +1,10 @@
 "use client"
 import {
   Cloud,
-  CreditCard,
   Github,
-  Keyboard,
   LifeBuoy,
   LogOut,
-  Mail,
-  MessageSquare,
-  Plus,
-  PlusCircle,
   Settings,
-  User,
-  UserPlus,
-  Users,
   BookMarked,
   Activity,
   Moon,
@@ -41,7 +32,7 @@ import { signOut } from "next-auth/react"
 import { logoutApi } from "@/redux/services/account"
 import { useRouter } from "next/navigation"
 
-export default function MoreDropdownMenu({ children }: {
+export default function HomePageDropdownMenu({ children }: {
   children: React.ReactNode
 }) {
   const { setTheme, theme } = useTheme()

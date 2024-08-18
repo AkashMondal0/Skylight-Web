@@ -16,7 +16,7 @@ import {
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import { signOut, useSession } from 'next-auth/react'
 import { logoutApi } from '@/redux/services/account'
-import OptionAvatarDialog from '@/components/Dialog/Options.Dialog'
+import OptionAvatarDialog from '@/components/Dialog/Avatar.Options.Dialog'
 import { useRouter } from 'next/navigation'
 
 const Page = () => {

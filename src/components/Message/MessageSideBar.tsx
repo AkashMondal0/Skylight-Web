@@ -46,8 +46,7 @@ export const MessageSideBar = memo(function MessageSideBar() {
 
     return (
         <div className={`flex flex-col md:border-r scroll-smooth 
-            duration-300 bg-background text-foreground 
-            h-full md:max-w-96 ease-in-out w-full`}>
+            duration-300 bg-background text-foreground h-dvh md:w-96 ease-in-out w-full`}>
             <VirtualUserList
                 conversation={conversationList}
                 Header={<Header />} />

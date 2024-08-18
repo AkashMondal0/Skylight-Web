@@ -15,12 +15,12 @@ export default function Page() {
     dispatch(fetchAccountNotificationApi() as any)
   }, [])
 
-  return <div className="mx-auto max-w-[600px] w-full p-4">
+  return <div className="mx-auto max-w-[600px] w-full">
     <div className='w-full mb-4 border-b p-4'>
       <h2 className='text-2xl font-semibold'>Notification</h2>
     </div>
     <h2 className='w-full text-xl font-semibold px-4'>Today</h2>
-    <div className='w-full pt-4 h-full min-h-dvh'>
+    <div className='w-full pt-4 h-full min-h-dvh px-2 space-y-2'>
       {
         allNotifications.loading ? Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)
           :

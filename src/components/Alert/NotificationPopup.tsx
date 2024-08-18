@@ -36,18 +36,17 @@ const NotificationPopup = memo(function NotificationPopup() {
         }
     }, [notifications.notificationPopup])
 
-    if (Sidebar.notification) {
+    if (Sidebar.notificationSidebar) {
         return <></>
     }
-    
+
     return (
         <>
-        {/* sm */}
+            {/* sm */}
             <div className="h-auto flex md:hidden items-center flex-none flex-col">
                 <div className={cn(`absolute py-2`)}>
-                    <div className={cn(`
-            w-max bg-red-500 justify-center flex flex-col items-center
-            rounded-xl transition duration-500 ease-in-out`, notifications.notificationPopup ? "" : "scale-0")}>
+                    <div className={cn(`w-max bg-red-500 justify-center flex flex-col items-center rounded-xl transition duration-500 ease-in-out`,
+                        notifications.notificationPopup ? "" : "scale-0")}>
                         <div className={cn("h-4 w-4 bg-red-500 relative bottom-[0.3rem] rotate-45 rounded-sm")} />
                         <div className={cn("flex items-center px-2 gap-1 transition-all duration-700 ease-in-out relative bottom-2",
                             notifications.notificationPopup ? "opacity-100" : "opacity-0")}>

@@ -9,6 +9,8 @@ import { MessageHeader } from "@/components/Message/MessageHeader";
 import { MessageInput } from "@/components/Message/MessageInput";
 import { MessagePageSkeleton } from "@/components/loading/Message.page";
 import VirtualizeMessageList from "@/components/Message/VirtualMessageList";
+import { MessageSideBar } from "@/components/Message/MessageSideBar";
+import { NavigationSidebar } from "@/components/Navigation/NavigationSidebar";
 let pageId = 'no id'
 
 export default function Page({ params }: { params: { id: string } }) {
@@ -29,19 +31,21 @@ export default function Page({ params }: { params: { id: string } }) {
     }
   }, [params.id])
 
-  if (rootConversation.messageLoading || !pageLoaded) {
-    return <MessagePageSkeleton />
-  }
-
-  if (pageLoaded && rootConversation.messageError || !rootConversation.conversation) {
-    return <NotFound />
-  }
-
   return (
-    <div className='w-full flex flex-col min-h-dvh flex-1'>
-      <MessageHeader data={rootConversation.conversation} />
-      <VirtualizeMessageList conversation={rootConversation.conversation} />
-      <MessageInput data={rootConversation.conversation} />
+    <div className='flex'>
+      <div className='h-dvh hidden md:flex'>
+        <NavigationSidebar hideLabel />
+        <MessageSideBar />
+      </div>
+      {/*  */}
+      {rootConversation.messageLoading || !pageLoaded ? <MessagePageSkeleton /> :
+          pageLoaded && rootConversation.messageError || !rootConversation.conversation ? <NotFound /> :
+            <div className='w-full flex flex-col min-h-dvh flex-1'>
+              <MessageHeader data={rootConversation.conversation} />
+              <VirtualizeMessageList conversation={rootConversation.conversation} />
+              <MessageInput data={rootConversation.conversation} />
+            </div>}
     </div>
+
   )
 }

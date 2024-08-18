@@ -4,14 +4,19 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 
 // Define a type for the slice state
 interface SidebarState {
-    notification: boolean
+    notificationSidebar: boolean
+    searchSidebar: boolean,
+    // 
     hideNavigationBar: boolean,
     hideNavigationBarLabel: boolean,
+    // 
 }
 
 // Define the initial state using that type
 const SidebarState: SidebarState = {
-    notification: false,
+    notificationSidebar: false,
+    searchSidebar: false,
+    //
     hideNavigationBar: false,
     hideNavigationBarLabel: false,
 }
@@ -20,10 +25,22 @@ export const SidebarSlice = createSlice({
     name: 'Sidebar',
     initialState: SidebarState,
     reducers: {
-        toggleNotification: (state) => {
-            state.notification = !state.notification
-            state.hideNavigationBarLabel = state.notification
+        toggleNotificationSidebar: (state) => {
+            if (state.searchSidebar) {
+                state.searchSidebar = false
+            }
+            state.notificationSidebar = !state.notificationSidebar
+            state.hideNavigationBarLabel = state.notificationSidebar
         },
+        toggleSearchSidebar: (state) => {
+            if (state.notificationSidebar) {
+                state.notificationSidebar = false
+            }
+            state.searchSidebar = !state.searchSidebar
+            state.hideNavigationBarLabel = state.searchSidebar
+        },
+
+        //
         hideNavigationBar: (state) => {
             state.hideNavigationBar = true
         },
@@ -47,7 +64,8 @@ export const SidebarSlice = createSlice({
 })
 
 export const {
-    toggleNotification,
+    toggleNotificationSidebar,
+    toggleSearchSidebar,
     hideNavigationBar,
     showNavigationBar,
     hideNavigationBarLabel,

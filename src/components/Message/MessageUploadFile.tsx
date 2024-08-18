@@ -1,24 +1,8 @@
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Assets, Conversation } from '@/types';
+import { Assets } from '@/types';
 import OptimizedImage from '@/components/sky/SkyImage';
 import { useCallback } from "react";
 
-const dropdownData = [{
-    label: "Photo",
-    onClick: () => { }
-},
-{
-    label: "Document",
-    onClick: () => { }
-}]
-export const MessageUploadFile = ({
+export const UploadFileList = ({
     assets
 }: {
     assets: Assets[]
@@ -50,30 +34,4 @@ export const MessageUploadFile = ({
             })
         }
     </div>
-}
-
-const DropDownMenu = ({
-    children,
-    data
-}: {
-    children: React.ReactNode,
-    data: {
-        label: string
-        onClick: () => void
-    }[]
-}) => {
-    return <DropdownMenu>
-        <DropdownMenuTrigger>
-            {children}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className='mx-1'>
-            <DropdownMenuLabel>Options</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {
-                data.map((item, index) => {
-                    return <DropdownMenuItem key={index} onClick={item.onClick}>{item.label}</DropdownMenuItem>
-                })
-            }
-        </DropdownMenuContent>
-    </DropdownMenu>
 }

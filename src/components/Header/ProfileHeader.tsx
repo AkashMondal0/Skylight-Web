@@ -8,7 +8,7 @@ import FollowButton from '@/components/Button/FollowButton'
 import { ProfileStories } from '@/components/Stories/ProfileStories'
 import { fetchUserProfilePostsApi } from '@/redux/services/profile'
 import { useSession } from 'next-auth/react'
-import OptionAvatarDialog from '../Dialog/Options.Dialog'
+import OptionAvatarDialog from '../Dialog/Avatar.Options.Dialog'
 import { User } from '@/types'
 
 export const ProfileHeader = memo(function ProfileHeader({ profileUser, isProfile }: { profileUser: User | null, isProfile: boolean }) {

@@ -29,7 +29,8 @@ export const NotificationItem = ({
     }
 
     return (
-        <div className='flex cursor-pointer p-3 justify-between transition-colors duration-300 ease-in-out
+        <div className='flex cursor-pointer py-3 px-2 justify-between 
+        duration-300 ease-in-out transition-all delay-75
             hover:bg-accent hover:text-accent-foreground'>
             <div className='flex space-x-2 items-center cursor-pointer justify-between w-full'>
                 <div className="flex-none" onClick={() => {
