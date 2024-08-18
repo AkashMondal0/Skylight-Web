@@ -161,7 +161,7 @@ export const ProfileHeader = memo(function ProfileHeader({ profileUser, isProfil
 }))
 
 
-export const ProfileNavbar = memo(function ProfileHeader({ name = "loading", isProfile }: { name?: string, isProfile?: boolean }) {
+export const ProfileNavbar = memo(function ProfileHeader({ name = "Not Found", isProfile }: { name?: string, isProfile?: boolean }) {
     return (
         <div className="md:hidden flex sticky top-0 z-10 w-full border-b h-14 bg-background text-foreground">
             <div className="p-4 w-full flex justify-between">

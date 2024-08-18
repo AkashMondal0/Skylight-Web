@@ -50,73 +50,59 @@ export const NavigationSidebar = memo(function NavigationSidebar({
     }, [hideLabel, Sidebar.notificationSidebar, Sidebar.searchSidebar])
     const session = useSession().data?.user
     const SideIconData = [
-        { icon: <Home size={28} />, label: "Home", onClick: () => pageChange('/') },
-        { icon: <Search size={28} />, label: "Search", onClick: () => { dispatch(toggleSearchSidebar()) } },
-        { icon: <Compass size={28} />, label: "Explore", onClick: () => pageChange('/explore') },
-        { icon: <Film size={28} />, label: "Reels", onClick: () => pageChange('/reels/5') },
-        { icon: <MessageCircleCode size={28} />, label: "Messages", onClick: () => pageChange('/message') },
-        { icon: <Heart size={28} />, label: "Notifications", onClick: () => { dispatch(toggleNotificationSidebar()) } },
-        { icon: <CopyPlus size={28} />, label: "Create", onClick: () => { } },
-        { icon: <CircleUserRound size={28} />, label: "Profile", onClick: () => pageChange(`/${session?.username || ""}`) },
+        { icon: <Home className="w-full h-full p-[2px]" />, label: "Home", onClick: () => pageChange('/') },
+        { icon: <Search className="w-full h-full p-[2px]" />, label: "Search", onClick: () => { dispatch(toggleSearchSidebar()) } },
+        { icon: <Compass className="w-full h-full p-[2px]" />, label: "Explore", onClick: () => pageChange('/explore') },
+        { icon: <Film className="w-full h-full p-[2px]" />, label: "Reels", onClick: () => pageChange('/reels/5') },
+        { icon: <MessageCircleCode className="w-full h-full p-[2px]" />, label: "Messages", onClick: () => pageChange('/message') },
+        { icon: <Heart className="w-full h-full p-[2px]" />, label: "Notifications", onClick: () => { dispatch(toggleNotificationSidebar()) } },
+        { icon: <UploadPostDialog><CopyPlus className="w-full h-full p-[2px]" /></UploadPostDialog>, label: "Create", onClick: () => { } },
+        { icon: <SkyAvatar url={session?.image || null} className="h-8 w-8" />, label: "Profile", onClick: () => pageChange(`/${session?.username || ""}`) },
     ]
 
     if (isHideNav) return <></>
 
     return (
-        <div className={cn(
-            "md:w-[4.5rem] xl:w-[18rem] border-r hidden md:flex h-dvh scroll-smooth overflow-x-hidden overflow-y-auto hideScrollbar",
-            hideLabel ? "max-w-[4.5rem]" : "max-w-[18rem]"
-        )}>
-            <div className={cn(`md:w-[4.5rem] xl:w-[18rem] px-1 sticky top-0 z-50 h-dvh scroll-smooth overflow-y-auto hideScrollbar`,
-                hideLabelClass ? "max-w-[4.5rem]" : "max-w-[18rem]")}>
-                <div className="w-full h-full flex flex-col justify-between">
-                    <div className="">
+        <div>
+            <div className={cn(
+                "md:w-[4.5rem] xl:w-[18rem] border-r hidden md:flex h-dvh scroll-smooth overflow-x-hidden overflow-y-auto hideScrollbar",
+                hideLabel ? "max-w-[4.5rem]" : "max-w-[18rem]"
+            )}>
+                <div className={cn(`md:w-[4.5rem] xl:w-[18rem] px-1 sticky top-0 z-50 h-full scroll-smooth overflow-y-auto hideScrollbar`,
+                    hideLabelClass ? "max-w-[4.5rem]" : "max-w-[18rem]")}>
+                    <div className="w-full h-full flex flex-col space-y-1">
+                        {/* header type */}
                         <Logo label={configs.AppDetails.name} onClick={SideIconData[0].onClick} hideLabel={hideLabelClass} />
+                        {/* main type */}
                         {SideIconData.map(({ icon, label, onClick }, index) => {
-                            if (label === "Notifications") {
-                                return (<NavigationItemNotification icon={icon} label={label} hideLabel={hideLabelClass} key={index} onClick={onClick} />)
-                            }
-                            if (label === "Search") {
-                                return <NavigationItem label={label} onClick={onClick} hideLabel={hideLabelClass} key={index} >
-                                    {icon}
-                                </NavigationItem>
-                            }
-                            if (label === "Create") {
-                                return <UploadPostDialog key={index}>
-                                    <NavigationItem key={index} label={label} hideLabel={hideLabelClass} onClick={onClick}>
-                                        {icon}
-                                    </NavigationItem>
-                                </UploadPostDialog>
-                            }
-                            if (label === "Profile") {
-                                return <NavigationItem key={index} label={label} hideLabel={hideLabelClass} onClick={onClick}>
-                                    <SkyAvatar url={session?.image || null} className="h-8 w-8" />
-                                </NavigationItem>
-                            }
                             if (label === "Messages") {
-                                return <NavigationItemMessage icon={icon} key={index} label={label} onClick={onClick} hideLabel={hideLabelClass} />
+                                return <NavigationItemMessage
+                                    icon={icon} key={index}
+                                    label={label} onClick={onClick}
+                                    hideLabel={hideLabelClass} />
                             }
-                            return <NavigationItem key={index} label={label} hideLabel={hideLabelClass} onClick={onClick}>
+                            return <NavigationItem
+                                key={index}
+                                label={label}
+                                hideLabel={hideLabelClass}
+                                onClick={onClick}>
                                 {icon}
                             </NavigationItem>
                         })}
+                        {/* footer type */}
+                        <MoreDropdownMenu>
+                            <div>
+                                <NavigationItem label="More" hideLabel={hideLabelClass}>
+                                    <Menu size={28} />
+                                </NavigationItem>
+                            </div>
+                        </MoreDropdownMenu>
                     </div>
-                    <MoreDropdownMenu>
-                        <div>
-                            <NavigationItem label="More" hideLabel={hideLabelClass}>
-                                <Menu size={28} />
-                            </NavigationItem>
-                        </div>
-                    </MoreDropdownMenu>
                 </div>
+                {/* sidebar */}
+                <NotificationSidebar close={() => dispatch(toggleNotificationSidebar())} open={Sidebar.notificationSidebar} />
+                <SearchSidebar close={() => dispatch(toggleSearchSidebar())} open={Sidebar.searchSidebar} />
             </div>
-            {/* sidebar */}
-            <NotificationSidebar
-                close={() => dispatch(toggleNotificationSidebar())}
-                open={Sidebar.notificationSidebar} />
-            <SearchSidebar
-                close={() => dispatch(toggleSearchSidebar())}
-                open={Sidebar.searchSidebar} />
         </div>
     )
 }, ((pre, next) => {
@@ -161,8 +147,11 @@ const NavigationItem = ({ children, active, label, onClick, hideLabel, className
                     <TooltipTrigger asChild>
                         <div onClick={onClick}
                             className={cn(`mx-auto justify-center h-14 w-14 aspect-square items-center flex rounded-xl
-                            hover:bg-accent hover:text-accent-foreground cursor-pointer`, hideLabel ? "sm:flex justify-center" : "lg:w-full lg:gap-3 xl:justify-start xl:px-4")}>
-                            {children}
+                            hover:bg-accent hover:text-accent-foreground cursor-pointer`,
+                                hideLabel ? "sm:flex justify-center" : "lg:w-full lg:gap-3 xl:justify-start xl:px-4")}>
+                            <div className="w-8 h-8 flex items-start justify-center">
+                                {children}
+                            </div>
                             {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden xl:block", active ? "font-bold" : "font-normal")}>{label}</p>}
                         </div>
                     </TooltipTrigger>
@@ -228,10 +217,13 @@ const NavigationItemMessage = ({ active, label, onClick, hideLabel, className, i
                                 hideLabel ? "sm:flex justify-center" : "lg:w-full xl:justify-start xl:px-4")}>
                             <div className="flex items-center justify-center gap-3">
                                 <div className="flex justify-end w-auto h-auto">
-                                    {icon}
+                                    <div className="w-8 h-8 flex items-start justify-center">
+                                        {icon}
+                                    </div>
                                     <NotificationPing />
                                 </div>
-                                {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden xl:block", active ? "font-bold" : "font-normal")}>{label}</p>}
+                                {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden xl:block",
+                                    active ? "font-bold" : "font-normal")}>{label}</p>}
                             </div>
                         </div>
                     </TooltipTrigger>

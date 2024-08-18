@@ -102,7 +102,7 @@ export const registerApi = async ({
 
 export const logoutApi = async () => {
     DeleteAllCookie()
-    await fetch(`${configs.serverApi.baseUrl}/v1/auth/logout`, {
+    await fetch(`${configs.serverApi.baseUrl}/api/logout`, {
         headers: {
             "Content-Type": "application/json",
         },

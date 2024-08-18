@@ -18,7 +18,7 @@ export default function NotFound({
     router.replace('/auth/login')
   }
 
-  return <div className='max-w-[520px]
+  return <div className='max-w-[520px] h-dvh
       w-full mx-auto text-center flex flex-col gap-4'>
     <div className='px-5'>
       {displayErrorMessage({ ErrorType: message, Action: login })}
