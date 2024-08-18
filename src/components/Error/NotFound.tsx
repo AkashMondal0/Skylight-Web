@@ -11,8 +11,7 @@ export default function NotFound({
   message?: ErrorType | string,
 }) {
   const router = useRouter()
-
-  const login = async () => {
+  const login: () => Promise<void> = async () => {
     await logoutApi()
     signOut()
     router.replace('/auth/login')

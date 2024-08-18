@@ -11,6 +11,7 @@ import { MessagePageSkeleton } from "@/components/loading/Message.page";
 import VirtualizeMessageList from "@/components/Message/VirtualMessageList";
 import { MessageSideBar } from "@/components/Message/MessageSideBar";
 import { NavigationSidebar } from "@/components/Navigation/NavigationSidebar";
+import { Conversation, disPatchResponse } from "@/types";
 let pageId = 'no id'
 
 export default function Page({ params }: { params: { id: string } }) {
@@ -19,8 +20,10 @@ export default function Page({ params }: { params: { id: string } }) {
   const [pageLoaded, setPageLoaded] = useState(false)
 
   const fetch = useCallback(async () => {
-    await dispatch(fetchConversationApi(params.id) as any)
-    await dispatch(fetchConversationAllMessagesApi(params.id) as any)
+    const res = await dispatch(fetchConversationApi(params.id) as any) as disPatchResponse<Conversation>
+    if (!res.error && res.payload.id) {
+      await dispatch(fetchConversationAllMessagesApi(res.payload.id) as any)
+    }
     pageId = params.id
     setPageLoaded(true)
   }, [params.id])
@@ -39,12 +42,12 @@ export default function Page({ params }: { params: { id: string } }) {
       </div>
       {/*  */}
       {rootConversation.messageLoading || !pageLoaded ? <MessagePageSkeleton /> :
-          pageLoaded && rootConversation.messageError || !rootConversation.conversation ? <NotFound /> :
-            <div className='w-full flex flex-col min-h-dvh flex-1'>
-              <MessageHeader data={rootConversation.conversation} />
-              <VirtualizeMessageList conversation={rootConversation.conversation} />
-              <MessageInput data={rootConversation.conversation} />
-            </div>}
+        pageLoaded && rootConversation.error || !rootConversation.conversation ? <NotFound /> :
+          <div className='w-full flex flex-col min-h-dvh flex-1'>
+            <MessageHeader data={rootConversation.conversation} />
+            <VirtualizeMessageList conversation={rootConversation.conversation} />
+            <MessageInput data={rootConversation.conversation} />
+          </div>}
     </div>
 
   )
