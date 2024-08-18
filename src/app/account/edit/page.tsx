@@ -18,15 +18,17 @@ import { signOut, useSession } from 'next-auth/react'
 import { logoutApi } from '@/redux/services/account'
 import OptionAvatarDialog from '@/components/Dialog/Avatar.Options.Dialog'
 import { useRouter } from 'next/navigation'
+import { useTheme } from 'next-themes'
+import { Moon, Sun } from 'lucide-react'
 
 const Page = () => {
     const router = useRouter()
-
+    const { setTheme, themes, theme } = useTheme()
     const profile = useSession().data
     if (!profile?.user) return null
     return (
         <>
-            <div className='w-full flex justify-center min-h-[100dvh] h-full'>
+            <div className='w-full flex justify-center h-dvh overflow-y-auto'>
                 <div className='max-w-[600px] w-full p-4 space-y-6'>
                     <h1 className="font-bold text-xl">
                         Edit Account
@@ -69,13 +71,32 @@ const Page = () => {
                     <Textarea placeholder="Bio"
                         className='w-full p-4 rounded-2xl' />
 
-                    <h1 className="font-bold text-xl">
+                    {/* <h1 className="font-bold text-xl">
                         Gender
-                    </h1>
-                    <div>
+                    </h1> */}
+                    {/* <div>
                         <SelectGender />
                         <p className='text-xs px-2 py-1'>This won’t be part of your public profile.</p>
-                    </div>
+                    </div> */}
+                    <h1 className="font-bold text-xl">
+                        Switch appearance
+                    </h1>
+                    <Card className='p-4 rounded-2xl flex justify-between items-center'>
+                        <div className='pr-4'>
+                            <div className='text-lg flex gap-2 items-center'>
+                                {theme === "dark" ? 
+                                    <Sun /> :
+                                    <Moon />}
+                                {theme === "dark" ? "Light" : "Dark"} Mode</div>
+                        </div>
+                        <Switch onCheckedChange={() => {
+                            if (theme !== "dark") {
+                                setTheme("dark")
+                            } else {
+                                setTheme("light")
+                            }
+                        }} defaultChecked={theme === "dark"} />
+                    </Card>
 
                     <h1 className="font-bold text-xl">
                         Show account suggestions on profiles
@@ -89,15 +110,17 @@ const Page = () => {
                         </div>
                         <Switch />
                     </Card>
-                    <div className='flex justify-around gap-4' onClick={() => {
-                        signOut()
-                        logoutApi()
-                        router.replace('/auth/login')
-                    }}>
-                        <Button variant={"secondary"}
+                    <div className='flex justify-around gap-4' >
+                        <Button variant={"destructive"}
+                            onClick={() => {
+                                signOut()
+                                logoutApi()
+                                router.replace('/auth/login')
+                            }}
                             className="rounded-xl w-full">
                             logout
                         </Button>
+                        <div className='h-20'></div>
                     </div>
                 </div>
             </div>
