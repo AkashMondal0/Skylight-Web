@@ -37,10 +37,9 @@ export default function RootLayout({ children,
             <NextAuth_Provider>
               <ThemeProvider
                 attribute="class"
-                defaultTheme="system"
-                enableSystem>
+                defaultTheme="light">
                 <Socket_Provider>
-                  <TopContext/>
+                  <TopContext />
                   <Toaster />
                   {children}
                   {modal}

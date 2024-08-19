@@ -6,14 +6,14 @@ export const ProfileHeaderLoading = () => {
             {/* md ->>> */}
             <div className="hidden sm:block">
                 {/* profile header */}
-                <div className='flex items-center my-8 px-5'>
-                    <Skeleton className='sm:w-36 object-cover sm:h-36 w-28 h-28 rounded-full sm:mr-8' />
+                <div className='flex items-center my-8 px-2'>
+                    <Skeleton className='sm:w-36 object-cover sm:h-36 w-28 h-28 rounded-full' />
                     <div className='flex flex-col justify-between gap-5'>
                         <div className='items-center sm:flex space-x-2 space-y-2'>
                             <Skeleton className='w-32 h-6 rounded-xl' />
                             <Skeleton className='w-32 h-10 rounded-xl' />
                             <Skeleton className='w-32 h-10 rounded-xl' />
-                            <Skeleton className='w-8 h-8 rounded-xl' />
+                            <Skeleton className='w-8 h-4 rounded-xl' />
                         </div>
 
                         <div className='flex justify-between px-3'>
@@ -29,15 +29,14 @@ export const ProfileHeaderLoading = () => {
                             <>
                                 <div className='sm:cursor-pointer flex gap-1'>
                                     <Skeleton className='w-20 h-6 rounded-xl' />
-
                                 </div>
                             </>
                         </div>
 
                         <div className='flex justify-between flex-col px-3 my-4 space-y-2'>
-                            <Skeleton className='w-40 h-6 rounded-xl' />
-                            <Skeleton className='w-72 h-5 rounded-xl' />
-                            <Skeleton className='w-80 h-6 rounded-xl' />
+                            <Skeleton className='w-72 h-4 rounded-xl' />
+                            <Skeleton className='w-80 h-4 rounded-xl' />
+                            <Skeleton className='w-40 h-4 rounded-xl' />
                         </div>
                     </div>
                 </div>

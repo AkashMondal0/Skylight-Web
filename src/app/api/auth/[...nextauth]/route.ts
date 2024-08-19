@@ -1,6 +1,7 @@
 import NextAuth from "next-auth"
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from "next-auth/providers/credentials"
+import { cookies } from 'next/headers'
 const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
@@ -18,10 +19,13 @@ const authOptions: NextAuthOptions = {
         image: { label: "Image", type: "text" },
         id: { label: "ID", type: "text" },
         username: { label: "Username", type: "text" },
+        accessToken: { label: "Access Token", type: "text" },
       },
       async authorize(credentials, req) {
         try {
           if (!credentials) return null
+          const cookieStore = cookies();
+          cookieStore.set("skylight-token", credentials.accessToken)
           return { ...credentials, profilePicture: credentials.image } as any
         } catch (error) {
           console.log("Error", error)

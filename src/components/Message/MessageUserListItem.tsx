@@ -69,7 +69,7 @@ export const MessageUserListItem = memo(function MessageUserListItem({
                         </p>
                         <UserStatus lastText={Conversation.lastMessageContent} conversationId={data?.id} />
                     </div>
-                    <div className='flex items-center flex-col flex-none'>
+                    <div className='flex items-center flex-col flex-none pr-2'>
                         {timeFormat(Conversation.lastMessageCreatedAt || "")}
                         <TotalUnreadMessagesCount count={Conversation.totalUnreadMessagesCount} show={params.id !== data.id} />
                     </div>

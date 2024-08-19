@@ -52,8 +52,8 @@ export const PostsSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchAccountFeedApi.pending, (state) => {
-                state.feedsLoading = false
-                state.feedsError = null
+                state.feedsLoading = true
+                if(state.feedsError) state.feedsError = null
             })
             .addCase(fetchAccountFeedApi.fulfilled, (state, action: PayloadAction<Post[]>) => {
                 if (action.payload?.length > 0) {

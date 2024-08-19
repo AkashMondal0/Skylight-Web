@@ -30,6 +30,9 @@ export const graphqlQuery = async <T>({
     withCredentials?: boolean;
     errorCallBack?: (error: GraphqlError[]) => void;
 }): Promise<T | any> => {
+    BearerToken = await fetch(`/api/cookies`).then(res => res.json()).then(res => res).catch(err => {
+        throw new Error("Unauthorized")
+    })
 
     const response = await fetch(url, {
         method: 'POST',
