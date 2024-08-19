@@ -63,35 +63,37 @@ export const NavigationSidebar = memo(function NavigationSidebar({
     if (isHideNav) return <></>
 
     return (
-        <div>
+        <div className='sticky top-0 h-full z-10'>
             <div className={cn(
                 "md:w-[4.5rem] xl:w-[18rem] border-r hidden md:flex h-dvh scroll-smooth overflow-x-hidden overflow-y-auto hideScrollbar",
                 hideLabel ? "max-w-[4.5rem]" : "max-w-[18rem]"
             )}>
                 <div className={cn(`md:w-[4.5rem] xl:w-[18rem] px-1 sticky top-0 z-50 h-full scroll-smooth overflow-y-auto hideScrollbar`,
                     hideLabelClass ? "max-w-[4.5rem]" : "max-w-[18rem]")}>
-                    <div className="w-full h-full flex flex-col space-y-1">
-                        {/* header type */}
-                        <Logo label={configs.AppDetails.name} onClick={SideIconData[0].onClick} hideLabel={hideLabelClass} />
-                        {/* main type */}
-                        {SideIconData.map(({ icon, label, onClick }, index) => {
-                            if (label === "Messages") {
-                                return <NavigationItemMessage
-                                    icon={icon} key={index}
-                                    label={label} onClick={onClick}
-                                    hideLabel={hideLabelClass} />
-                            }
-                            return <NavigationItem
-                                key={index}
-                                label={label}
-                                hideLabel={hideLabelClass}
-                                onClick={onClick}>
-                                {icon}
-                            </NavigationItem>
-                        })}
-                        {/* footer type */}
+                    <div className="w-full h-full flex flex-col space-y-1 justify-between">
+                        <div className="w-full h-full flex flex-col space-y-1">
+                            {/* header type */}
+                            <Logo label={configs.AppDetails.name} onClick={SideIconData[0].onClick} hideLabel={hideLabelClass} />
+                            {/* main type */}
+                            {SideIconData.map(({ icon, label, onClick }, index) => {
+                                if (label === "Messages") {
+                                    return <NavigationItemMessage
+                                        icon={icon} key={index}
+                                        label={label} onClick={onClick}
+                                        hideLabel={hideLabelClass} />
+                                }
+                                return <NavigationItem
+                                    key={index}
+                                    label={label}
+                                    hideLabel={hideLabelClass}
+                                    onClick={onClick}>
+                                    {icon}
+                                </NavigationItem>
+                            })}
+                            {/* footer type */}
+                        </div>
                         <MoreDropdownMenu>
-                            <div>
+                            <div className="py-1">
                                 <NavigationItem label="More" hideLabel={hideLabelClass}>
                                     <Menu size={28} />
                                 </NavigationItem>

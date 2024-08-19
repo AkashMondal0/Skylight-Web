@@ -73,6 +73,10 @@ const PostVirtualList = memo(function PostVirtualList({
   const items = virtualizer.getVirtualItems()
   if (!mounted) return <></>
 
+  if (pageLoaded && posts.feedsError) {
+    return <NotFound message={posts.feedsError} />
+  }
+
   return (
     <>
       <div ref={parentRef}
@@ -86,36 +90,35 @@ const PostVirtualList = memo(function PostVirtualList({
         <AppHeader />
         <Stories />
         <PostUploadProgress />
-        <div
-          className='min-h-full'
-          style={{
-            height: virtualizer.getTotalSize(),
-            width: '100%',
-            position: 'relative',
-          }}>
+        {!pageLoaded || posts.feedsLoading ? <PostLoading size={2} /> :
           <div
+            className='min-h-full'
             style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
+              height: virtualizer.getTotalSize(),
               width: '100%',
-              transform: `translateY(${items[0]?.start ?? 0}px)`,
+              position: 'relative',
             }}>
-            {!pageLoaded || posts.feedsLoading ? <PostLoading size={2} /> :
-              pageLoaded && posts.feedsError ? <NotFound message={posts.feedsError} /> :
-                items.map((virtualRow) => (
-                  <div
-                    key={virtualRow.key}
-                    data-index={virtualRow.index}
-                    ref={virtualizer.measureElement}>
-                    <div style={{ padding: '10px 0' }}>
-                      <Post post={data[virtualRow.index]}
-                        key={data[virtualRow.index].id} />
-                    </div>
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                transform: `translateY(${items[0]?.start ?? 0}px)`,
+              }}>
+              {items.map((virtualRow) => (
+                <div
+                  key={virtualRow.key}
+                  data-index={virtualRow.index}
+                  ref={virtualizer.measureElement}>
+                  <div style={{ padding: '10px 0' }}>
+                    <Post post={data[virtualRow.index]}
+                      key={data[virtualRow.index].id} />
                   </div>
-                ))}
-          </div>
-        </div>
+                </div>
+              ))}
+            </div>
+          </div>}
         <NavigationBottom />
       </div>
     </>

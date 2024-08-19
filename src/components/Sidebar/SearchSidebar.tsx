@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { cn } from '@/lib/utils';
 import React, { memo, useCallback } from 'react';
 import { Button } from '../ui/button';
@@ -42,7 +43,7 @@ const SearchSidebar = ({
             <div className={cn(`flex absolute z-50 w-auto h-dvh`)}>
                 <div className={cn(`flex flex-col flex-none bg-background text-foreground
                  duration-300 ease-in-out transition-all z-50`,
-                    open ? 'w-96 border-r' : 'w-0')}>
+                    open ? 'w-96 border-x' : 'w-0')}>
                     <div className={cn('overflow-y-auto scroll-smooth hideScrollbar',
                         open ? 'block' : 'hidden')}>
                         <div className='w-full mb-4 p-2 pt-4 flex justify-between'>

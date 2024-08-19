@@ -28,7 +28,7 @@ const Page = () => {
     if (!profile?.user) return null
     return (
         <>
-            <div className='w-full flex justify-center h-dvh overflow-y-auto'>
+            <div className='w-full flex justify-center'>
                 <div className='max-w-[600px] w-full p-4 space-y-6'>
                     <h1 className="font-bold text-xl">
                         Edit Account
