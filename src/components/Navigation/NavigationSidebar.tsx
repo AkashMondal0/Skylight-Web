@@ -2,7 +2,7 @@
 "use client"
 import { cn } from "@/lib/utils"
 import {
-    CircleUserRound, Compass,
+    Compass,
     CopyPlus, Film, Heart, Home, Menu,
     MessageCircleCode, Search
 } from "lucide-react"
@@ -12,35 +12,34 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
-import React, { memo, useMemo } from "react"
+import React, { memo, useCallback, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import MoreDropdownMenu from "@/components/Option/HomePageMenu"
-import UploadPostDialog from "@/components/Dialog/UploadPost.Dialog"
 import { useSession } from "next-auth/react"
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import { configs } from "@/configs"
 import NotificationPopup from "../Alert/NotificationPopup"
 import NotificationPing from "../Alert/NotificationPing"
 import { useDispatch, useSelector } from "react-redux"
-import { toggleNotificationSidebar, toggleSearchSidebar } from "@/redux/slice/sidebar"
+import { toggleCreatePostModal, toggleNotificationSidebar, toggleSearchSidebar } from "@/redux/slice/sidebar"
 import NotificationSidebar from "../Sidebar/NotificationSidebar"
 import SearchSidebar from "../Sidebar/SearchSidebar"
 import { RootState } from "@/redux/store"
+import UploadPostDialog from "../Dialog/UploadPost.Dialog"
 
 // for large screen device 
 export const NavigationSidebar = memo(function NavigationSidebar({
     hideLabel = false,
     isHideNav = false,
-    sidebarModal = false
 }: {
     hideLabel?: boolean
     isHideNav?: boolean,
-    sidebarModal?: React.ReactNode
 }) {
     const Sidebar = useSelector((state: RootState) => state.sidebarSlice)
+    const session = useSession().data?.user
     const router = useRouter()
     const dispatch = useDispatch()
-    const pageChange = (path: string) => router.push(path)
+    const pageChange = useCallback((path: string) => router.push(path), [router])
     const hideLabelClass = useMemo(() => {
         if (
             hideLabel ||
@@ -48,16 +47,15 @@ export const NavigationSidebar = memo(function NavigationSidebar({
             Sidebar.searchSidebar
         ) return true
     }, [hideLabel, Sidebar.notificationSidebar, Sidebar.searchSidebar])
-    const session = useSession().data?.user
     const SideIconData = [
         { icon: <Home className="w-full h-full p-[2px]" />, label: "Home", onClick: () => pageChange('/') },
         { icon: <Search className="w-full h-full p-[2px]" />, label: "Search", onClick: () => { dispatch(toggleSearchSidebar()) } },
         { icon: <Compass className="w-full h-full p-[2px]" />, label: "Explore", onClick: () => pageChange('/explore') },
         { icon: <Film className="w-full h-full p-[2px]" />, label: "Reels", onClick: () => pageChange('/reels/5') },
-        { icon: <MessageCircleCode className="w-full h-full p-[2px]" />, label: "Messages", onClick: () => pageChange('/message') },
+        { icon: <MessageCircleCode className="w-full h-full p-[2px]" />, label: "Messages", onClick: () => pageChange('/message'), indicatorComponent: <NotificationPing /> },
         { icon: <Heart className="w-full h-full p-[2px]" />, label: "Notifications", onClick: () => { dispatch(toggleNotificationSidebar()) } },
-        { icon: <UploadPostDialog><CopyPlus className="w-full h-full p-[2px]" /></UploadPostDialog>, label: "Create", onClick: () => { } },
-        { icon: <SkyAvatar url={session?.image || null} className="h-8 w-8" />, label: "Profile", onClick: () => pageChange(`/${session?.username || ""}`) },
+        { icon: <UploadPostDialog><CopyPlus className="w-full h-full p-[2px]" /></UploadPostDialog>, label: "Create", onClick: () => { dispatch(toggleCreatePostModal()) } },
+        { icon: <SkyAvatar url={session?.image ?? null} className="h-8 w-8" />, label: "Profile", onClick: () => pageChange(`/${session?.username ?? ""}`) },
     ]
 
     if (isHideNav) return <></>
@@ -73,30 +71,28 @@ export const NavigationSidebar = memo(function NavigationSidebar({
                     <div className="w-full h-full flex flex-col space-y-1 justify-between">
                         <div className="w-full h-full flex flex-col space-y-1">
                             {/* header type */}
-                            <Logo label={configs.AppDetails.name} onClick={SideIconData[0].onClick} hideLabel={hideLabelClass} />
+                            <Logo
+                                label={configs.AppDetails.name}
+                                onClick={SideIconData[0].onClick}
+                                hideLabel={hideLabelClass} />
                             {/* main type */}
-                            {SideIconData.map(({ icon, label, onClick }, index) => {
-                                if (label === "Messages") {
-                                    return <NavigationItemMessage
-                                        icon={icon} key={index}
-                                        label={label} onClick={onClick}
-                                        hideLabel={hideLabelClass} />
-                                }
+                            {SideIconData.map(({ icon, label, onClick, indicatorComponent }, index) => {
                                 return <NavigationItem
                                     key={index}
+                                    icon={icon}
                                     label={label}
+                                    indicatorComponent={indicatorComponent}
                                     hideLabel={hideLabelClass}
-                                    onClick={onClick}>
-                                    {icon}
-                                </NavigationItem>
+                                    onClick={onClick} />
                             })}
                             {/* footer type */}
                         </div>
                         <MoreDropdownMenu>
                             <div className="py-1">
-                                <NavigationItem label="More" hideLabel={hideLabelClass}>
-                                    <Menu size={28} />
-                                </NavigationItem>
+                                <NavigationItem
+                                    label="More"
+                                    hideLabel={hideLabelClass}
+                                    icon={<Menu size={28} />} />
                             </div>
                         </MoreDropdownMenu>
                     </div>
@@ -108,7 +104,8 @@ export const NavigationSidebar = memo(function NavigationSidebar({
         </div>
     )
 }, ((pre, next) => {
-    return false
+    return pre.hideLabel === next.hideLabel
+        && pre.isHideNav === next.isHideNav
 }))
 
 const Logo = ({ active, label, onClick, hideLabel, className }: {
@@ -129,39 +126,6 @@ const Logo = ({ active, label, onClick, hideLabel, className }: {
                     {label}
                 </p>}
             </div>
-        </div>
-    )
-}
-
-const NavigationItem = ({ children, active, label, onClick, hideLabel, className }: {
-    children: React.ReactNode
-    active?: boolean
-    label?: string
-    onClick?: () => void
-    hideLabel?: boolean
-    className?: string
-}) => {
-
-    return (
-        <div className={cn("w-14 h-14 mx-auto xl:w-full xl:mx-0", className)}>
-            <TooltipProvider>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <div onClick={onClick}
-                            className={cn(`mx-auto justify-center h-14 w-14 aspect-square items-center flex rounded-xl
-                            hover:bg-accent hover:text-accent-foreground cursor-pointer`,
-                                hideLabel ? "sm:flex justify-center" : "lg:w-full lg:gap-3 xl:justify-start xl:px-4")}>
-                            <div className="w-8 h-8 flex items-start justify-center">
-                                {children}
-                            </div>
-                            {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden xl:block", active ? "font-bold" : "font-normal")}>{label}</p>}
-                        </div>
-                    </TooltipTrigger>
-                    <TooltipContent side="right" className="rounded-full">
-                        <p>{label}</p>
-                    </TooltipContent>
-                </Tooltip>
-            </TooltipProvider>
         </div>
     )
 }
@@ -199,13 +163,14 @@ const NavigationItemNotification = ({ active, label, hideLabel, className, icon,
     )
 }
 
-const NavigationItemMessage = ({ active, label, onClick, hideLabel, className, icon }: {
+const NavigationItem = ({ active, label, onClick, hideLabel, className, icon, indicatorComponent }: {
     active?: boolean
     label?: string
     onClick?: () => void
     hideLabel?: boolean
     className?: string
-    icon?: React.ReactNode
+    icon?: React.ReactNode,
+    indicatorComponent?: React.ReactNode
 }) => {
 
     return (
@@ -222,7 +187,8 @@ const NavigationItemMessage = ({ active, label, onClick, hideLabel, className, i
                                     <div className="w-8 h-8 flex items-start justify-center">
                                         {icon}
                                     </div>
-                                    <NotificationPing />
+                                    {indicatorComponent ?? <></>}
+                                    {/* <NotificationPing /> */}
                                 </div>
                                 {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden xl:block",
                                     active ? "font-bold" : "font-normal")}>{label}</p>}

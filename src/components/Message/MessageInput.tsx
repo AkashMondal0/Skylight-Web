@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 import { memo, useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -37,11 +38,10 @@ export const MessageInput = memo(function MessageInput({ data }: { data: Convers
     const [isFile, setIsFile] = useState<File[]>([])
     const [loading, setLoading] = useState(false)
     const socketState = useContext(SocketContext)
-
+    const stopTypingRef = useRef(true)
     const members = useMemo(() => {
         return data.members?.filter((i) => i !== session?.id) ?? []
     }, [data.members, session?.id])
-    const stopTypingRef = useRef(true)
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: zodResolver(schema),
@@ -50,7 +50,7 @@ export const MessageInput = memo(function MessageInput({ data }: { data: Convers
         }
     });
 
-    const typingSetter = (typing: boolean) => {
+    const typingSetter = useCallback((typing: boolean) => {
         if (session?.id && data.id) {
             socketState.socket?.emit(event_name.conversation.typing, {
                 typing: typing,
@@ -60,12 +60,12 @@ export const MessageInput = memo(function MessageInput({ data }: { data: Convers
                 isGroup: data.isGroup ?? false
             })
         }
-    }
+    }, [data.id, data.isGroup, members, session?.id, socketState.socket]);
 
-    const onBlurTyping = useCallback(debounce(() => {
+    const onBlurTyping = debounce(() => {
         stopTypingRef.current = true
         typingSetter(false)
-    }, 2500), []);
+    }, 2500);
 
     const onTyping = useCallback(() => {
         if (stopTypingRef.current) {
@@ -75,7 +75,7 @@ export const MessageInput = memo(function MessageInput({ data }: { data: Convers
         onBlurTyping()
     }, []);
 
-    const sendMessageHandle = async (_data: { message: string }) => {
+    const sendMessageHandle = useCallback(async (_data: { message: string }) => {
         setLoading(true)
         if (!session?.id || !data.id) return toast.error("Something went wrong")
         const newMessage = await dispatch(CreateMessageApi({
@@ -97,26 +97,23 @@ export const MessageInput = memo(function MessageInput({ data }: { data: Convers
         reset()
         setIsFile([])
         setLoading(false)
-    }
+    }, [ConversationList, data.id, members, session?.id, socketState.socket])
 
-    const onChangeFilePicker = (event: any) => {
+    const onChangeFilePicker = useCallback((event: any) => {
         let files = [...event.target.files]
         isFile.map((file) => {
             files = files.filter((f) => f.name !== file.name)
         })
-        const stateImages = [...isFile, ...files]
-        setIsFile(stateImages)
-    }
+        setIsFile((prev) => [...prev, ...files])
+    }, [isFile])
 
-    const onRemoveItem = (id: string) => { 
+    const onRemoveItem = useCallback((id: string) => {
         setIsFile((prev) => prev.filter((i) => i.name !== id))
-    }
+    }, [])
 
     const onAddItem = useCallback(() => {
         document?.getElementById('files')?.click()
     }, [])
-
-
 
     return (
         <>
@@ -142,11 +139,9 @@ export const MessageInput = memo(function MessageInput({ data }: { data: Convers
                         className='hidden'
                         onChange={(e) => { onChangeFilePicker(e) }} />
                     <form onSubmit={handleSubmit(sendMessageHandle)}
-                        className="flex w-full items-center dark:bg-neutral-900
-                bg-neutral-200 dark:text-neutral-100 text-neutral-800 rounded-3xl">
-                        <input id='message-input' className='outline-none focus:none 
-                    bg-transparent w-full p-2 dark:placeholder-neutral-100
-                     placeholder-neutral-800' type="text" placeholder="Send a message"
+                        className="flex w-full items-center dark:bg-neutral-900 bg-neutral-200 dark:text-neutral-100 text-neutral-800 rounded-3xl">
+                        <input id='message-input' className='outline-none focus:none bg-transparent w-full p-2 dark:placeholder-neutral-100 placeholder-neutral-800'
+                            type="text" placeholder="Send a message"
                             {...register("message", {
                                 required: true,
                                 onChange: onTyping,

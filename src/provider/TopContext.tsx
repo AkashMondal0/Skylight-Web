@@ -2,13 +2,12 @@
 'use client'
 import React, { memo, useEffect, useState } from 'react'
 import { useTheme } from "next-themes"
-import { usePathname } from 'next/navigation'
 import SplashScreen from '@/components/sky/SplashScreen'
+// import UploadPostDialog from '@/components/Dialog/UploadPost.Dialog'
 let splashShow = true
 
 const TopContext = memo(function TopContext() {
     const { theme } = useTheme()
-    const path = usePathname()
     const [isLoading, setIsLoading] = useState(splashShow);
 
     useEffect(() => {
@@ -19,7 +18,7 @@ const TopContext = memo(function TopContext() {
                 "rgb(10, 10, 10)" : "rgb(255, 255, 255)"
             );
         }
-    }, [theme, path])
+    }, [theme])
 
     useEffect(() => {
         splashShow = false
@@ -29,7 +28,10 @@ const TopContext = memo(function TopContext() {
 
         return () => clearTimeout(timeoutId); // Cleanup on unmount
     }, []);
-    return (<> <SplashScreen show={isLoading} /> </>)
+    return (<>
+        <SplashScreen show={isLoading} />
+        {/* <UploadPostDialog /> */}
+    </>)
 }, (() => true))
 
 export default TopContext
