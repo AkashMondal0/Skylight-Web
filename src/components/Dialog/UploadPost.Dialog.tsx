@@ -41,13 +41,13 @@ export default function UploadPostDialog({
         })
     }
 
-    const onChangeFilePicker = (event: any) => {
+    const onChangeFilePicker = useCallback((event: any) => {
         let files = [...event.target.files]
         isFile.map((file) => {
             files = files.filter((f) => f.name !== file.name)
         })
         setIsFile((prev) => [...prev, ...files])
-    }
+    },[isFile])
 
     const onRemoveItem = useCallback((id: string) => {
         setIsFile((prev) => prev.filter((i) => i.name !== id))
@@ -57,7 +57,7 @@ export default function UploadPostDialog({
         document?.getElementById('files-upload')?.click()
     }, [])
 
-    const handleUpload = async (caption: string) => {
+    const handleUpload = useCallback(async (caption: string) => {
         if (!session?.id) {
             return ToastAlert('Please login to upload post')
         }
@@ -74,14 +74,14 @@ export default function UploadPostDialog({
         }) as any)
         setIsFile([])
         document.getElementById('closeDialog')?.click()
-    }
+    }, [isFile, session?.id])
 
-    const onOpenChange = (isOpen: boolean) => {
+    const onOpenChange = useCallback((isOpen: boolean) => {
         if (!isOpen) {
             // dispatch(toggleCreatePostModal())
             setIsFile([])
         }
-    }
+    }, [])
 
     return (
 
@@ -243,7 +243,7 @@ const ImageItem = memo(function ImageItem({ image }: { image: File }) {
             <p>{image.name.slice(0, 11)}...</p>
         </div>
     )
-}, (() => true))
+}, ((pre,next)=>pre.image.name === next.image.name))
 
 const CarouselImageItem = memo(function CarouselImageItem({ image }: { image: File }) {
     return (<CarouselItem className="m-auto">

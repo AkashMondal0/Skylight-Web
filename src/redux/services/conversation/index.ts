@@ -194,20 +194,20 @@ export const CreateMessageApi = createAsyncThunk(
       }`
 
       let photoUrls: string[] = []
-      let tempM: Message | null = null;
+      // let tempM: Message | null = null;
       if (createMessageInput.fileUrl.length > 0) {
-        tempM = {
-          id: new Date().getTime().toString(),
-          content: createMessageInput.content,
-          fileUrl: createMessageInput.fileUrl.map((item) => URL.createObjectURL(item)),
-          authorId: createMessageInput.authorId,
-          deleted: false,
-          seenBy: [createMessageInput.authorId],
-          conversationId: createMessageInput.conversationId,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        }
-        thunkAPI.dispatch(setUploadImageInMessage(tempM) as any)
+        // tempM = {
+        //   id: new Date().getTime().toString(),
+        //   content: createMessageInput.content,
+        //   fileUrl: createMessageInput.fileUrl.map((item) => URL.createObjectURL(item)),
+        //   authorId: createMessageInput.authorId,
+        //   deleted: false,
+        //   seenBy: [createMessageInput.authorId],
+        //   conversationId: createMessageInput.conversationId,
+        //   createdAt: new Date(),
+        //   updatedAt: new Date(),
+        // }
+        // thunkAPI.dispatch(setUploadImageInMessage(tempM) as any)
         await Promise.all(createMessageInput.fileUrl.map(async (item, index) => {
           thunkAPI.dispatch(showUploadImageInMessage({
             currentUploadImgLength: index,
@@ -225,10 +225,7 @@ export const CreateMessageApi = createAsyncThunk(
         variables: { createMessageInput }
       })
 
-      return {
-        ...res.createMessage,
-        tempMessageId: tempM?.id
-      }
+      return res.createMessage
     } catch (error: any) {
       return thunkAPI.rejectWithValue({
         ...error?.response?.data,
