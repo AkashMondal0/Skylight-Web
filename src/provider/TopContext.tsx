@@ -2,8 +2,8 @@
 'use client'
 import React, { memo, useEffect, useState } from 'react'
 import { useTheme } from "next-themes"
-import { usePathname } from 'next/navigation'
 import SplashScreen from '@/components/sky/SplashScreen'
+import { usePathname } from 'next/navigation'
 let splashShow = true
 
 const TopContext = memo(function TopContext() {
@@ -19,7 +19,7 @@ const TopContext = memo(function TopContext() {
                 "rgb(10, 10, 10)" : "rgb(255, 255, 255)"
             );
         }
-    }, [theme, path])
+    }, [theme, path]);
 
     useEffect(() => {
         splashShow = false
@@ -29,7 +29,7 @@ const TopContext = memo(function TopContext() {
 
         return () => clearTimeout(timeoutId); // Cleanup on unmount
     }, []);
-    return (<> <SplashScreen show={isLoading} /> </>)
+    return (<><SplashScreen show={isLoading} /></>)
 }, (() => true))
 
 export default TopContext

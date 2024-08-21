@@ -14,18 +14,21 @@ import {
     CarouselPrevious,
     type CarouselApi,
 } from "@/components/ui/carousel"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 import OptimizedImage from "@/components/sky/SkyImage"
 import { TempleDialog } from "./Temple.Dialog"
 import { UploadImagesFireBaseApi } from "@/redux/services/upload"
+// import { RootState } from "@/redux/store"
+// import { toggleCreatePostModal } from "@/redux/slice/sidebar"
 
 export default function UploadPostDialog({
     children
 }: {
     children: React.ReactNode
 }) {
+    // const modalOpen = useSelector((state: RootState) => state.sidebarSlice.uploadPostModal)
     const dispatch = useDispatch()
     const [isFile, setIsFile] = useState<File[]>([])
     const session = useSession().data?.user
@@ -38,25 +41,23 @@ export default function UploadPostDialog({
         })
     }
 
+    const onChangeFilePicker = useCallback((event: any) => {
+        let files = [...event.target.files]
+        isFile.map((file) => {
+            files = files.filter((f) => f.name !== file.name)
+        })
+        setIsFile((prev) => [...prev, ...files])
+    },[isFile])
 
-    const onChangeFilePicker = (event: any) => {
-        var fileArray = []
-        const files = event.target.files.length
-        for (let i = 0; i < files; i++) {
-            const img = event.target.files[i]
-            img['id'] = Math.random().toString(36).substr(2, 9)
-            fileArray.push(event.target.files[i])
-        }
-        const stateImages = [...isFile, ...fileArray]
-        setIsFile(stateImages)
-    }
+    const onRemoveItem = useCallback((id: string) => {
+        setIsFile((prev) => prev.filter((i) => i.name !== id))
+    }, [])
 
-    const handleDeleteImage = (index: number) => {
-        const filteredImages = isFile.filter((_, i) => i !== index)
-        setIsFile(filteredImages)
-    }
+    const onAddItem = useCallback(() => {
+        document?.getElementById('files-upload')?.click()
+    }, [])
 
-    const handleUpload = async (caption: string) => {
+    const handleUpload = useCallback(async (caption: string) => {
         if (!session?.id) {
             return ToastAlert('Please login to upload post')
         }
@@ -73,23 +74,18 @@ export default function UploadPostDialog({
         }) as any)
         setIsFile([])
         document.getElementById('closeDialog')?.click()
-    }
+    }, [isFile, session?.id])
 
-    const selectFile = useCallback(() => {
-        const fileInput = document.getElementById('file')
-        fileInput?.click()
-    }, [])
-
-    const onOpenChange = (isOpen: boolean) => {
+    const onOpenChange = useCallback((isOpen: boolean) => {
         if (!isOpen) {
+            // dispatch(toggleCreatePostModal())
             setIsFile([])
         }
-    }
+    }, [])
 
     return (
 
-        <TempleDialog
-            onOpenChange={onOpenChange}
+        <TempleDialog onOpenChange={onOpenChange}
             header={<>
                 <div className="flex justify-between items-center border-b py-4 px-4 flex-none mx-4">
                     <div> {step > 0 ? <ChevronLeft onClick={() => setStep(0)} className="cursor-pointer" /> : <div />}</div>
@@ -105,13 +101,13 @@ export default function UploadPostDialog({
                             setStep={setStep}
                             step={step}
                             handleUpload={handleUpload}
-                            selectFile={selectFile}
-                            handleDeleteImage={handleDeleteImage}
+                            selectFile={onAddItem}
+                            handleDeleteImage={onRemoveItem}
                             images={isFile} />
                         : <div className="flex flex-col items-center justify-center h-full">
-                            <ImageUp className="w-32 h-32 mx-auto cursor-pointer" onClick={selectFile} />
+                            <ImageUp className="w-32 h-32 mx-auto cursor-pointer" onClick={onAddItem} />
                             <div className="flex justify-center my-4 px-5">
-                                <Button onClick={selectFile} variant={"default"} className="rounded-xl p-2 w-52">
+                                <Button onClick={onAddItem} variant={"default"} className="rounded-xl p-2 w-52">
                                     Upload
                                 </Button>
                             </div>
@@ -121,7 +117,7 @@ export default function UploadPostDialog({
             <input
                 // video and photo upload
                 type="file" accept="image/*"
-                id="file" multiple onChange={onChangeFilePicker}
+                id="files-upload" multiple onChange={onChangeFilePicker}
                 className="hidden" />
         </TempleDialog>
     )
@@ -137,7 +133,7 @@ const ShowSelectedImages = ({
     selectFile
 }: {
     images: File[]
-    handleDeleteImage: (index: number) => void
+    handleDeleteImage: (id: string) => void
     NextStep?: () => void
     handleUpload: (caption: string) => void
     step: number
@@ -171,17 +167,8 @@ const ShowSelectedImages = ({
         <div className="mx-auto">
             <Carousel setApi={setApi} className="w-full max-h-80">
                 <CarouselContent>
-                    {images.map((_, index) => (
-                        <CarouselItem key={index} className="m-auto">
-                            <OptimizedImage
-                                width={320}
-                                height={320}
-                                sizes="(min-width: 808px) 30vw, 50vw"
-                                src={URL.createObjectURL(images[index])}
-                                alt={`Image ${index + 1}`}
-                                className="w-auto h-auto max-h-80 object-cover rounded-xl mx-auto"
-                            />
-                        </CarouselItem>
+                    {images.map((image, index) => (
+                        <CarouselImageItem key={index} image={image} />
                     ))}
                 </CarouselContent>
                 <CarouselPrevious variant={"default"} className='left-2' />
@@ -207,7 +194,7 @@ const AllFileList = ({
     handleUpload
 }: {
     images: File[],
-    handleDeleteImage: (id: number) => void
+    handleDeleteImage: (id: string) => void
     handleUpload: (caption: string) => void
 }) => {
     const captionRef = useRef<HTMLTextAreaElement | any>()
@@ -217,18 +204,8 @@ const AllFileList = ({
             <div>
                 {images.map((image: File, i) => (
                     <div key={i} className="flex my-2 justify-between items-center border p-2 rounded-xl">
-                        <div className="flex items-center space-x-2">
-                            <OptimizedImage
-                                width={320}
-                                height={320}
-                                sizes="(min-width: 808px) 10vw, 15vw"
-                                src={URL.createObjectURL(image)}
-                                alt={image.name}
-                                className="w-16 h-16 object-cover rounded-xl"
-                            />
-                            <p>{image.name.slice(0, 11)}...</p>
-                        </div>
-                        <Button onClick={() => handleDeleteImage(i)} variant={"outline"} className="rounded-xl p-2">
+                        <ImageItem image={image} />
+                        <Button onClick={() => handleDeleteImage(image.name)} variant={"outline"} className="rounded-xl p-2">
                             <Trash2 className="text-red-500" />
                         </Button>
                     </div>))}
@@ -251,3 +228,32 @@ const AllFileList = ({
         </div>
     </>)
 }
+
+const ImageItem = memo(function ImageItem({ image }: { image: File }) {
+    return (
+        <div className="flex items-center space-x-2">
+            <OptimizedImage
+                width={320}
+                height={320}
+                sizes="(min-width: 808px) 10vw, 15vw"
+                src={URL.createObjectURL(image)}
+                alt={image.name}
+                className="w-16 h-16 object-cover rounded-xl"
+            />
+            <p>{image.name.slice(0, 11)}...</p>
+        </div>
+    )
+}, ((pre,next)=>pre.image.name === next.image.name))
+
+const CarouselImageItem = memo(function CarouselImageItem({ image }: { image: File }) {
+    return (<CarouselItem className="m-auto">
+        <OptimizedImage
+            width={320}
+            height={320}
+            sizes="(min-width: 808px) 30vw, 50vw"
+            src={URL.createObjectURL(image)}
+            alt={`Image`}
+            className="w-auto h-auto max-h-80 object-cover rounded-xl mx-auto"
+        />
+    </CarouselItem>)
+}, (() => true))

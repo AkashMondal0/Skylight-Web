@@ -4,21 +4,24 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 
 // Define a type for the slice state
 interface SidebarState {
+    // sidebar
     notificationSidebar: boolean
     searchSidebar: boolean,
-    // 
     hideNavigationBar: boolean,
     hideNavigationBarLabel: boolean,
-    // 
+    // modal
+    uploadPostModal: boolean
 }
 
 // Define the initial state using that type
 const SidebarState: SidebarState = {
+    // sidebar
     notificationSidebar: false,
     searchSidebar: false,
-    //
     hideNavigationBar: false,
     hideNavigationBarLabel: false,
+    // modal
+    uploadPostModal: false
 }
 
 export const SidebarSlice = createSlice({
@@ -56,6 +59,9 @@ export const SidebarSlice = createSlice({
         resetNavigationBar: (state) => {
             state.hideNavigationBar = false
             state.hideNavigationBarLabel = false
+        },
+        toggleCreatePostModal: (state) => {
+            state.uploadPostModal = !state.uploadPostModal
         }
     },
     extraReducers: (builder) => {
@@ -70,7 +76,8 @@ export const {
     showNavigationBar,
     hideNavigationBarLabel,
     showNavigationBarLabel,
-    resetNavigationBar
+    resetNavigationBar,
+    toggleCreatePostModal
 } = SidebarSlice.actions
 
 export default SidebarSlice.reducer

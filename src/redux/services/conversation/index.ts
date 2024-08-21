@@ -1,4 +1,7 @@
+import { uploadFirebaseFile } from "@/lib/firebase/upload-file";
 import { graphqlQuery } from "@/lib/gql/GraphqlQuery";
+import { setUploadImageInMessage, showUploadImageInMessage } from "@/redux/slice/conversation";
+import { Message } from "@/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchConversationsApi = createAsyncThunk(
@@ -173,7 +176,7 @@ export const CreateMessageApi = createAsyncThunk(
     authorId: string,
     conversationId: string,
     members: string[]
-    fileUrl: string[]
+    fileUrl: File[]
   }, thunkAPI) => {
     try {
       let query = `mutation CreateMessage($createMessageInput: CreateMessageInput!) {
@@ -189,6 +192,34 @@ export const CreateMessageApi = createAsyncThunk(
           updatedAt
         }
       }`
+
+      let photoUrls: string[] = []
+      // let tempM: Message | null = null;
+      if (createMessageInput.fileUrl.length > 0) {
+        // tempM = {
+        //   id: new Date().getTime().toString(),
+        //   content: createMessageInput.content,
+        //   fileUrl: createMessageInput.fileUrl.map((item) => URL.createObjectURL(item)),
+        //   authorId: createMessageInput.authorId,
+        //   deleted: false,
+        //   seenBy: [createMessageInput.authorId],
+        //   conversationId: createMessageInput.conversationId,
+        //   createdAt: new Date(),
+        //   updatedAt: new Date(),
+        // }
+        // thunkAPI.dispatch(setUploadImageInMessage(tempM) as any)
+        await Promise.all(createMessageInput.fileUrl.map(async (item, index) => {
+          thunkAPI.dispatch(showUploadImageInMessage({
+            currentUploadImgLength: index,
+          }) as any)
+          const url = await uploadFirebaseFile(item, createMessageInput.authorId)
+          if (url) {
+            photoUrls.push(url)
+          }
+        }))
+      }
+
+      createMessageInput.fileUrl = photoUrls as any
       const res = await graphqlQuery({
         query: query,
         variables: { createMessageInput }

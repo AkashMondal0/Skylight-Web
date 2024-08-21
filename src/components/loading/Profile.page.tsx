@@ -110,7 +110,7 @@ export const ProfileHeaderLoading = () => {
 export const ProfilePostLoading = () => {
     return <div className="grid grid-cols-3 gap-1 w-full">
         {Array(9).fill(0).map((post, index) => (
-            <Skeleton key={index} className='aspect-square w-full h-full object-cover' />
+            <Skeleton key={index} className='aspect-square w-full h-full object-cover rounded-none' />
         ))}
     </div>
 }

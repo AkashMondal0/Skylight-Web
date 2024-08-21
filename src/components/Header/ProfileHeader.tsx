@@ -94,7 +94,7 @@ export const ProfileHeader = memo(function ProfileHeader({ profileUser, isProfil
                     <div className='border-t my-5 mx-2'></div>
                 </div>
                 {/* small device */}
-                <div className='md:hidden block px-2'>
+                <div className='md:hidden block'>
                     {/* profile header */}
                     <div className='flex gap-3 my-5 items-center px-2'>
                         <SkyAvatar url={isProfile ? session?.image : profileUser.profilePicture}

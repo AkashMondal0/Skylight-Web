@@ -83,7 +83,7 @@ const Page = () => {
                     </h1>
                     <Card className='p-4 rounded-2xl flex justify-between items-center'>
                         <div className='pr-4'>
-                            <div className='text-lg flex gap-2 items-center'>
+                            <div className='flex gap-2 items-center text-sm font-semibold'>
                                 {theme === "dark" ? 
                                     <Sun /> :
                                     <Moon />}

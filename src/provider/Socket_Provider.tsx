@@ -77,22 +77,30 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
             // });
             // incoming events
             socketRef.current?.on(event_name.conversation.message, (data: Message) => {
-                if (list.find(conversation => conversation.id === data.conversationId)) {
-                    dispatch(setMessage(data))
-                } else {
-                    dispatch(fetchConversationsApi() as any)
+                if (data.authorId !== session?.id) {
+                    if (list.find(conversation => conversation.id === data.conversationId)) {
+                        dispatch(setMessage(data))
+                    } else {
+                        dispatch(fetchConversationsApi() as any)
+                    }
+                    dispatch(fetchUnreadMessageNotificationCountApi() as any)
+                    seenAllMessage(data.conversationId)
                 }
-                dispatch(fetchUnreadMessageNotificationCountApi() as any)
-                seenAllMessage(data.conversationId)
             });
             socketRef.current?.on(event_name.conversation.seen, (data: { conversationId: string, authorId: string }) => {
-                dispatch(setMessageSeen(data))
+                if (data.authorId !== session?.id) {
+                    dispatch(setMessageSeen(data))
+                }
             });
             socketRef.current?.on(event_name.conversation.typing, (data: Typing) => {
-                dispatch(setTyping(data))
+                if (data.authorId !== session?.id) {
+                    dispatch(setTyping(data))
+                }
             });
             socketRef.current?.on(event_name.notification.post, (data: Notification) => {
-                dispatch(setNotification(data))
+                if (data.authorId !== session?.id) {
+                    dispatch(setNotification(data))
+                }
             });
             socketRef.current?.on("test", (data: Typing) => {
                 toast("From Server Test Event Message", { position: "top-center" })

@@ -62,8 +62,8 @@ const Header = memo(function Header() {
             <CardTitle>SkyLight</CardTitle>
             <div>
                 <UserToMessage>
-                    <Button variant={"ghost"} className='rounded-2xl'>
-                        <SquarePen className='w-6 h-6 cursor-pointer' />
+                    <Button variant={"ghost"} className='rounded-2xl w-8 h-8 p-1'>
+                        <SquarePen className='cursor-pointer' />
                     </Button>
                 </UserToMessage>
 

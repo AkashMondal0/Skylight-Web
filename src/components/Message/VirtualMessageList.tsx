@@ -26,8 +26,8 @@ const VirtualizeMessageList = ({
     const virtualizer = useVirtualizer({
         count,
         getScrollElement: () => parentRef.current,
-        estimateSize: useCallback(() => 50, []),
-        overscan: 12,
+        estimateSize: useCallback(() => 200, []),
+        overscan: 30,
         enabled: true,
         initialOffset: _kSavedOffset,
         initialMeasurementsCache: _KMeasurementsCache,
