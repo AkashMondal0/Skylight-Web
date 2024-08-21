@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 import { memo, useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -82,7 +81,7 @@ export const MessageInput = memo(function MessageInput({ data }: { data: Convers
             conversationId: data.id,
             authorId: session?.id,
             content: _data.message,
-            fileUrl: [],
+            fileUrl: isFile,
             members: members,
         }) as any)
         if (newMessage?.payload?.id) {
@@ -97,7 +96,7 @@ export const MessageInput = memo(function MessageInput({ data }: { data: Convers
         reset()
         setIsFile([])
         setLoading(false)
-    }, [ConversationList, data.id, members, session?.id, socketState.socket])
+    }, [ConversationList, data.id, isFile, members, session?.id, socketState.socket])
 
     const onChangeFilePicker = useCallback((event: any) => {
         let files = [...event.target.files]

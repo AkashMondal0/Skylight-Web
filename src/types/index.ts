@@ -84,9 +84,10 @@ interface Message {
     deleted: boolean;
     seenBy: string[];
     conversationId: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: Date | string;
+    updatedAt: Date | string;
     user?: AuthorData | null;
+    tempMessageId?: string;
 }
 
 interface Conversation {
@@ -98,7 +99,7 @@ interface Conversation {
     isGroup: boolean | null;
     lastMessageContent: string | null;
     totalUnreadMessagesCount: number;
-    lastMessageCreatedAt: Date;
+    lastMessageCreatedAt: Date | string;
     messagesAllRead: boolean;
     createdAt?: Date | null;
     updatedAt?: Date | null;

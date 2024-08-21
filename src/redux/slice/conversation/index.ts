@@ -22,6 +22,12 @@ interface ConversationState {
 
     createMessageLoading: boolean
     createMessageError: string | null
+
+    // sending image in message
+    UploadFiles: {
+        error?: string | any,
+        currentUploadImgLength?: number | null,
+    }
 }
 
 // Define the initial state using that type
@@ -42,7 +48,13 @@ const ConversationState: ConversationState = {
     createError: null,
 
     createMessageLoading: false,
-    createMessageError: null
+    createMessageError: null,
+
+    // sending image in message
+    UploadFiles: {
+        error: null,
+        currentUploadImgLength: null,
+    }
 }
 
 export const ConversationSlice = createSlice({
@@ -89,6 +101,27 @@ export const ConversationSlice = createSlice({
         // fetch members data
         setMembersData: (state, action: PayloadAction<Conversation>) => { },
         loadMoreMembersData: (state, action: PayloadAction<Conversation>) => { },
+        setUploadImageInMessage: (state, action: PayloadAction<Message>) => {
+            const index = state.conversationList.findIndex((i) => i.id === action.payload.conversationId)
+            if (state.conversation) {
+                state.conversation.messages.push(action.payload)
+            }
+            if (index !== -1) {
+                state.conversationList[index].messages?.push(action.payload)
+                state.conversationList[index].lastMessageContent = action.payload.content
+                state.conversationList[index].lastMessageCreatedAt = action.payload.createdAt
+            }
+        },
+        showUploadImageInMessage: (state, action: PayloadAction<{
+            currentUploadImgLength?: number | null,
+            error?: string
+        }>) => {
+            if (action.payload.error) {
+                state.UploadFiles.error = action.payload.error
+                return
+            }
+            state.UploadFiles.currentUploadImgLength = action.payload.currentUploadImgLength
+        },
     },
     extraReducers: (builder) => {
         // fetchConversationsApi
@@ -144,15 +177,24 @@ export const ConversationSlice = createSlice({
         })
         builder.addCase(CreateMessageApi.fulfilled, (state, action: PayloadAction<Message>) => {
             const index = state.conversationList.findIndex((i) => i.id === action.payload.conversationId)
-            if (state.conversation) {
-                state.conversation.messages.push(action.payload)
+            if (state.conversation && action.payload.tempMessageId) {
+                const mIndex = state.conversation.messages.findIndex((i) => i.id === action.payload.tempMessageId)
+                state.conversation.messages[mIndex] = action.payload
+                if (index !== -1) {
+                    state.conversationList[index].messages[mIndex] = action.payload
+                    state.conversationList[index].lastMessageContent = action.payload.content
+                    state.conversationList[index].lastMessageCreatedAt = action.payload.createdAt
+                }
+            } else {
+                if (index !== -1) {
+                    state.conversationList[index].messages?.push(action.payload)
+                    state.conversationList[index].lastMessageContent = action.payload.content
+                    state.conversationList[index].lastMessageCreatedAt = action.payload.createdAt
+                }
+                if (state.conversation) {
+                    state.conversation.messages.push(action.payload)
+                }
             }
-            if (index !== -1) {
-                state.conversationList[index].messages?.push(action.payload)
-                state.conversationList[index].lastMessageContent = action.payload.content
-                state.conversationList[index].lastMessageCreatedAt = action.payload.createdAt
-            }
-            state.createMessageLoading = false
         })
         builder.addCase(CreateMessageApi.rejected, (state, action) => {
             state.createMessageLoading = false,
@@ -192,7 +234,9 @@ export const {
     setMembersData,
     loadMoreMembersData,
     setTyping,
-    resetConversation
+    resetConversation,
+    showUploadImageInMessage,
+    setUploadImageInMessage
 } = ConversationSlice.actions
 
 export default ConversationSlice.reducer
