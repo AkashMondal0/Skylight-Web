@@ -22,10 +22,10 @@ const dropdownData = [
         label: "Photo",
         onClick: () => document?.getElementById('files')?.click()
     },
-    {
-        label: "Document",
-        onClick: () => { }
-    }
+    // {
+    //     label: "Document",
+    //     onClick: () => { }
+    // }
 ]
 const schema = z.object({
     message: z.string().min(1)
@@ -76,26 +76,32 @@ export const MessageInput = memo(function MessageInput({ data }: { data: Convers
 
     const sendMessageHandle = useCallback(async (_data: { message: string }) => {
         setLoading(true)
-        if (!session?.id || !data.id) return toast.error("Something went wrong")
-        const newMessage = await dispatch(CreateMessageApi({
-            conversationId: data.id,
-            authorId: session?.id,
-            content: _data.message,
-            fileUrl: isFile,
-            members: members,
-        }) as any)
-        if (newMessage?.payload?.id) {
-            socketState.socket?.emit(event_name.conversation.message, {
-                ...newMessage.payload, members: members
-            })
+        try {
+            if (!session?.id || !data.id) return toast.error("Something went wrong")
+            if (isFile.length > 6) return toast.error("You can only send 6 files at a time")
+            const newMessage = await dispatch(CreateMessageApi({
+                conversationId: data.id,
+                authorId: session?.id,
+                content: _data.message,
+                fileUrl: isFile,
+                members: members,
+            }) as any)
+            if (newMessage?.payload?.id) {
+                socketState.socket?.emit(event_name.conversation.message, {
+                    ...newMessage.payload, members: members
+                })
+            }
+            if (ConversationList.findIndex((i) => i.id === data.id) === -1) {
+                // toast.success("New conversation created")
+                dispatch(fetchConversationsApi() as any)
+            }
+            reset()
+            setIsFile([])
+        } catch (error) {
+            toast.error("Something went wrong")
+        } finally {
+            setLoading(false)
         }
-        if (ConversationList.findIndex((i) => i.id === data.id) === -1) {
-            // toast.success("New conversation created")
-            dispatch(fetchConversationsApi() as any)
-        }
-        reset()
-        setIsFile([])
-        setLoading(false)
     }, [ConversationList, data.id, isFile, members, session?.id, socketState.socket])
 
     const onChangeFilePicker = useCallback((event: any) => {
@@ -131,7 +137,8 @@ export const MessageInput = memo(function MessageInput({ data }: { data: Convers
                     </FileUploadMenu>
                     <input
                         type="file"
-                        accept="image/*, video/*, audio/*"
+                        accept="image/*"
+                        // accept="image/*, video/*, audio/*"
                         multiple
                         name="file"
                         id="files"
