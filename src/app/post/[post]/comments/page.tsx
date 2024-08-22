@@ -1,9 +1,8 @@
 "use client"
+import { CommentInput, CommentListSkeleton } from '@/components/Comment'
 import NotFound from '@/components/Error/NotFound'
 import { AppNavbar } from '@/components/Header/Header'
-import { CommentInput } from '@/components/comment/Comment.Input'
-import { CommentListLoading } from '@/components/loading/Message.page'
-import SkyAvatar from '@/components/sky/SkyAvatar'
+import { SkyAvatar } from '@/components/sky'
 import { timeAgoFormat } from '@/lib/timeFormat'
 import { fetchOnePostApi, fetchPostCommentsApi } from '@/redux/services/post'
 import { RootState } from '@/redux/store'
@@ -52,7 +51,7 @@ const Page = ({ params }: { params: { post: string } }) => {
                 </div>
               </div>
               {/* list */}
-              {loading || !loadedRef ? <CommentListLoading /> :
+              {loading || !loadedRef ? <CommentListSkeleton /> :
                 post.comments.length <= 0 ? <EmptyComment /> :
                   post?.comments.map((comment, i) => <CommentItem key={i} comment={comment} />)}
             </div>

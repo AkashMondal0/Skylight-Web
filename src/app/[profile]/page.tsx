@@ -2,20 +2,19 @@
 import useWindowDimensions from "@/lib/useWindowDimensions";
 import { useVirtualizer, } from "@tanstack/react-virtual";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ProfileHeader, ProfileNavbar } from "@/components/Header/ProfileHeader";
 import { NavigationBottom } from "@/components/Navigation/NavigationBottom";
-import { ProfilePost } from "@/components/PostFeed/ProfilePost";
+import { ProfilePost } from "@/components/Profile/ProfilePost";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { fetchUserProfileDetailApi } from "@/redux/services/profile";
 import { useSession } from "next-auth/react";
-import { ProfileHeaderLoading, ProfilePostLoading } from "@/components/loading/Profile.page";
 import NotFound from "@/components/Error/NotFound";
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 let profileUsername = "no_username"
 let pageLoaded = false
+import { ProfileHero, ProfileHeroSkeleton,ProfileNavbar,ProfilePostSkeleton } from "@/components/Profile";
 
 export default function Page({ params }: { params: { profile: string } }) {
     const dispatch = useDispatch()
@@ -90,8 +89,8 @@ const PostGridListVirtualList = memo(function PostGridListVirtualList({
                             : profileUser?.state?.username}
                         isProfile={isProfile} />
                     {!pageLoaded || profileUser.loading ?
-                        <ProfileHeaderLoading /> :
-                        <ProfileHeader profileUser={profileUser.state} isProfile={isProfile} />}
+                        <ProfileHeroSkeleton /> :
+                        <ProfileHero profileUser={profileUser.state} isProfile={isProfile} />}
                 </>
                 {pageLoaded && profileUser.error ?
                     <NotFound message={profileUser?.error ?? "PAGE_NOT_FOUND"} /> :
@@ -110,7 +109,7 @@ const PostGridListVirtualList = memo(function PostGridListVirtualList({
                                 width: '100%',
                                 transform: `translateY(${items[0]?.start ?? 0}px)`
                             }}>
-                            {!pageLoaded || profileUser.postLoading || profileUser.loading ? <ProfilePostLoading />
+                            {!pageLoaded || profileUser.postLoading || profileUser.loading ? <ProfilePostSkeleton />
                                 : items.map((virtualRow) => (<div
                                     key={virtualRow.key}
                                     data-index={virtualRow.index}

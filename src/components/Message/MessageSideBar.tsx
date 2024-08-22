@@ -9,8 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { fetchConversationsApi } from '@/redux/services/conversation';
 import { NavigationBottom } from '../Navigation/NavigationBottom';
-import { LoadingMessageSidebar } from '../loading/Message.page';
 import { VirtualUserList } from './VirtualUserList';
+import { MessagePageSidebarSkeleton } from './MessageSkeleton';
 let pageLoaded = false
 
 export const MessageSideBar = memo(function MessageSideBar() {
@@ -34,7 +34,7 @@ export const MessageSideBar = memo(function MessageSideBar() {
 
 
     if (rootConversation.listLoading || !pageLoaded) {
-        return <LoadingMessageSidebar />
+        return <MessagePageSidebarSkeleton />
     }
 
     if (rootConversation.listError && pageLoaded) {

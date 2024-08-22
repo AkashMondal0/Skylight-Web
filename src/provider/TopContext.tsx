@@ -29,7 +29,9 @@ const TopContext = memo(function TopContext() {
 
         return () => clearTimeout(timeoutId); // Cleanup on unmount
     }, []);
-    return (<><SplashScreen show={isLoading} /></>)
+    return (<>
+    {/* <SplashScreen show={isLoading} /> */}
+    </>)
 }, (() => true))
 
 export default TopContext

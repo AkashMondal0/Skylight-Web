@@ -10,7 +10,7 @@ import { EllipsisVertical } from "../sky/icons"
 import { followUser, unFollowUser } from "@/redux/slice/profile"
 import { toast } from "sonner"
 
-const FollowButton = memo(function FollowButton({
+const ProfileFollowButton = memo(function FollowButton({
     user,
     isFollowing,
     isProfile
@@ -75,7 +75,7 @@ const FollowButton = memo(function FollowButton({
     if (isProfile) {
         return <div className='md:flex space-x-2 space-y-2 items-center'>
             <div className="flex items-center">
-                <p className='text-xl px-3 truncate w-32'>{user.username}</p>
+                <p className='text-xl px-3 line-clamp-1'>{user.username}</p>
             </div>
 
             <Button variant={"secondary"} disabled={loadingRef.current} className='rounded-xl' onClick={() => {
@@ -88,12 +88,16 @@ const FollowButton = memo(function FollowButton({
             }}>
                 View Archive
             </Button>
-            {EllipsisVertical('w-6 h-6 cursor-pointer hidden md:block')}
+            <div className="w-7 h-7 cursor-pointer hidden md:block">
+                {EllipsisVertical('w-full h-full')}
+            </div>
         </div>
     }
 
     return <div className='items-center md:flex space-x-2 space-y-2'>
-        <p className='text-xl px-3 truncate w-32'>{user.username}</p>
+        <div className="flex items-center">
+            <p className='text-xl px-3 line-clamp-1'>{user.username}</p>
+        </div>
         {isFollowing ?
             <Button className='rounded-xl px-6 w-24' variant={"secondary"} disabled={loadingRef.current} onClick={handleUnFollow}>
                 Following
@@ -107,9 +111,11 @@ const FollowButton = memo(function FollowButton({
         }}>
             Message
         </Button>
-        {EllipsisVertical('w-6 h-6 cursor-pointer hidden md:block')}
+        <div className="w-7 h-7 cursor-pointer hidden md:block">
+            {EllipsisVertical('w-full h-full')}
+        </div>
     </div>
 }, ((prevProps: any, nextProps: any) => prevProps.isProfile === nextProps.isProfile
     && prevProps.isFollowing === nextProps.isFollowing
     && prevProps.user.id === nextProps.user.id))
-export default FollowButton
+export default ProfileFollowButton

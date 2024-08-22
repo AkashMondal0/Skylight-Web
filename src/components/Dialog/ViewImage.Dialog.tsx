@@ -11,7 +11,7 @@ const ViewImageDialog = ({
     children: React.ReactNode
     photos: string[]
 }) => {
-    return (<TempleDialog TriggerChildren={children} headerTitle={'Photo'}>
+    return (<TempleDialog TriggerChildren={children} headerTitle={'Photos'}>
         {photos?.map((asset, index) => {
             if (asset.includes("jpeg")) {
                 return <div key={index}>

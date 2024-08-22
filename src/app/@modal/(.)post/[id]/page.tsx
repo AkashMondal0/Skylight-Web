@@ -5,13 +5,14 @@ import { useRouter } from 'next/navigation'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { fetchOnePostApi } from '@/redux/services/post'
-import PostImage from '@/components/PostFeed/PostImage'
-import { CommentHeader } from '@/components/Header/CommentHeader'
-import { CommentList } from '@/components/comment/Comment.List'
-import { CommentInput } from '@/components/comment/Comment.Input'
-import { ModelPostLoading } from '@/components/loading/Post.Page'
 import NotFound from '@/components/Error/NotFound'
-import { ImageError } from '@/components/sky/SkyImage'
+import {
+  CommentHeader,
+  CommentInput, 
+  CommentList,
+} from '@/components/Comment'
+import { ModelPostSkeleton, PostImage } from '@/components/PostFeed'
+import { ImageError } from '@/components/sky'
 
 
 export default function Page({ params }: { params: { id: string } }) {
@@ -48,7 +49,7 @@ export default function Page({ params }: { params: { id: string } }) {
           borderRadius: 20,
           margin: 5
         }}>
-        {post.viewPostLoading || !loadedRef ? <ModelPostLoading /> :
+        {post.viewPostLoading || !loadedRef ? <ModelPostSkeleton/> :
           post.viewPostError && loadedRef || !post.viewPost ? <NotFound />
             :
             <div className='flex flex-wrap w-full'>

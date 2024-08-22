@@ -2,7 +2,6 @@
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual';
 import useWindowDimensions from '@/lib/useWindowDimensions';
-import { Post } from '@/components/PostFeed/Post';
 import { NavigationBottom } from '@/components/Navigation/NavigationBottom';
 import { AppHeader } from '@/components/Header/Header';
 import { Stories } from '@/components/Stories/Story';
@@ -11,9 +10,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAccountFeedApi } from '@/redux/services/account';
 import { RootState } from '@/redux/store';
 import NotFound from '@/components/Error/NotFound';
-import { PostLoading } from '@/components/loading/Home.page';
 import { NavigationSidebar } from '@/components/Navigation/NavigationSidebar';
 import { PostState } from '@/redux/slice/post';
+import { PostFeed, PostFeedSkeleton } from '@/components/PostFeed';
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 let pageLoaded = false
@@ -90,7 +89,7 @@ const PostVirtualList = memo(function PostVirtualList({
         <AppHeader />
         <Stories />
         <PostUploadProgress />
-        {!pageLoaded || posts.feedsLoading ? <PostLoading size={2} /> :
+        {!pageLoaded || posts.feedsLoading ? <PostFeedSkeleton size={2} /> :
           <div
             className='min-h-full'
             style={{
@@ -112,7 +111,7 @@ const PostVirtualList = memo(function PostVirtualList({
                   data-index={virtualRow.index}
                   ref={virtualizer.measureElement}>
                   <div style={{ padding: '10px 0' }}>
-                    <Post post={data[virtualRow.index]}
+                    <PostFeed post={data[virtualRow.index]}
                       key={data[virtualRow.index].id} />
                   </div>
                 </div>

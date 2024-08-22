@@ -5,13 +5,9 @@ import { useCallback, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import NotFound from "@/components/Error/NotFound";
 import { fetchConversationAllMessagesApi, fetchConversationApi } from "@/redux/services/conversation";
-import { MessageHeader } from "@/components/Message/MessageHeader";
-import { MessageInput } from "@/components/Message/MessageInput";
-import { MessagePageSkeleton } from "@/components/loading/Message.page";
-import VirtualizeMessageList from "@/components/Message/VirtualMessageList";
-import { MessageSideBar } from "@/components/Message/MessageSideBar";
-import { NavigationSidebar } from "@/components/Navigation/NavigationSidebar";
 import { Conversation, disPatchResponse } from "@/types";
+import { MessageHeader, MessageInput, MessagePageSkeleton, MessageSideBar, NavigationSidebar, VirtualizeMessageList } from "@/components/Message";
+
 let pageId = 'no id'
 
 export default function Page({ params }: { params: { id: string } }) {

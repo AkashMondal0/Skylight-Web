@@ -6,7 +6,7 @@ import { timeAgoFormat } from "@/lib/timeFormat"
 import { fetchPostCommentsApi } from "@/redux/services/post"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/redux/store"
-import { CommentListLoading } from "../loading/Message.page"
+import { CommentListSkeleton } from "./CommentSkeleton"
 let previousPostId = "noPost"
 export const CommentList = memo(function CommentList({ data }: { data: Post }) {
     const dispatch = useDispatch()
@@ -37,7 +37,7 @@ export const CommentList = memo(function CommentList({ data }: { data: Post }) {
                     <div className="text-sm text-gray-500">{timeAgoFormat(data.createdAt)}</div>
                 </div>
             </div>
-            {loading ? <CommentListLoading /> :
+            {loading ? <CommentListSkeleton /> :
                 comments?.length === 0 ?
                     <div className='flex justify-center items-center h-96'>
                         <div>
