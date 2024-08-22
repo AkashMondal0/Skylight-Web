@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { fetchOnePostApi } from '@/redux/services/post'
 import NotFound from '@/components/Error/NotFound'
-import { PostFeed, PostFeedSkeleton, PostImage } from '@/components/PostFeed'
+import { ModelPostSkeleton, PostFeed, PostImage } from '@/components/PostFeed'
 import { CommentHeader, CommentInput, CommentList } from '@/components/Comment'
 import { AppNavbar } from '@/components/Header/Header'
 
@@ -22,7 +22,7 @@ const PostPage = ({ params }: { params: { post: string } }) => {
   }, []);
 
   if (Post.viewPostLoading || !loadedRef.current) {
-    return <Fragment><PostFeedSkeleton /></Fragment>
+    return <Fragment><ModelPostSkeleton /></Fragment>
   }
 
   if (!Post.viewPostLoading && Post.viewPostError || !Post.viewPost) {

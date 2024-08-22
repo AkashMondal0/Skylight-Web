@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Switch } from "@/components/ui/switch"
 import {
     Select,
@@ -15,17 +15,103 @@ import {
 } from "@/components/ui/select"
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import { signOut, useSession } from 'next-auth/react'
-import { logoutApi } from '@/redux/services/account'
+import { logoutApi, profileUpdateApi } from '@/redux/services/account'
 import OptionAvatarDialog from '@/components/Dialog/Avatar.Options.Dialog'
 import { useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { Moon, Sun } from 'lucide-react'
-
+import { Input } from '@/components/ui/input'
+import { toast } from 'sonner'
+import { useDispatch } from 'react-redux'
+import { AuthorData, disPatchResponse } from '@/types'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Label } from '@/components/ui/label'
+const FormSchema = z.object({
+    name: z.string().min(3, {
+        message: "Name must be at least 3 characters.",
+    }).optional(),
+    username: z.string().min(3, {
+        message: "Username must be at least 3 characters.",
+    }).optional(),
+    bio: z.string().min(3, {
+        message: "Bio must be at least 3 characters.",
+    }).optional(),
+    website: z.array(z.string()).optional(),
+});
+type FormData = z.infer<typeof FormSchema>;
 const Page = () => {
     const router = useRouter()
     const { setTheme, themes, theme } = useTheme()
-    const profile = useSession().data
-    if (!profile?.user) return null
+    const session = useSession()
+    const dispatch = useDispatch()
+    const [loading, setLoading] = useState(false);
+
+    const { handleSubmit, register, reset, formState: { errors } } = useForm({
+        resolver: zodResolver(FormSchema),
+        defaultValues: {
+            name: session.data?.user?.name || '',
+            username: session.data?.user?.username || '',
+            bio: 'coming soon...',
+            website: [],
+        },
+    });
+
+    const onSubmit = async (inputData: FormData) => {
+        try {
+            if (!session.data?.user?.id) return toast("Something's went Wrong")
+
+            const res = await dispatch(profileUpdateApi({
+                profile: session.data.user,
+                updateUsersInput: {
+                    name: inputData.name,
+                    username: inputData.username,
+                    bio: inputData.bio,
+                    website: inputData.website,
+                }
+            }) as any) as disPatchResponse<AuthorData>
+
+            if (res.error) return toast("Something's went Wrong")
+
+            if (res.payload) {
+                await session.update({
+                    ...session.data.user,
+                    name: res.payload.name,
+                    username: res.payload.username,
+                    bio: res.payload.bio,
+                    website: res.payload.website,
+                });
+                reset({
+                    name: res.payload.name,
+                    username: res.payload.username,
+                    bio: res.payload.bio,
+                    website: res.payload.website ?? [],
+                });
+                toast("Profile Picture Updated")
+            }
+        } catch (error) {
+            toast("Something's went Wrong")
+        } finally {
+            setLoading(false)
+        }
+    }
+
+
+    useEffect(() => {
+        if (session.data?.user) {
+            reset({
+                name: session.data.user.name,
+                username: session.data.user.username,
+                // website: session.data.user.website || [],
+                // bio: session.data.user.bio,
+            })
+        }
+    }, [session.data?.user])
+
+
+
+    if (!session.data?.user) return null
     return (
         <>
             <div className='w-full flex justify-center'>
@@ -35,11 +121,11 @@ const Page = () => {
                     </h1>
                     <div className='flex justify-between p-4 my-4 bg-secondary text-secondary-foreground rounded-2xl'>
                         <div className='flex space-x-3'>
-                            <SkyAvatar className='h-12 w-12 mx-auto' url={profile.user?.image || null} />
+                            <SkyAvatar className='h-12 w-12 mx-auto' url={session.data.user?.image || null} />
                             <div>
-                                <div className='font-semibold text-base'>{profile.user.username}</div>
+                                <div className='font-semibold text-base'>{session.data.user?.username}</div>
                                 <div className='text-sm'>
-                                    {profile.user.name}
+                                    {session.data.user?.name}
                                 </div>
                             </div>
                         </div>
@@ -52,6 +138,42 @@ const Page = () => {
 
                         </div>
                     </div>
+                    <div className="grid gap-2 mt-4">
+                        <Label htmlFor="Username">Username</Label>
+                        <Input className='p-4 rounded-2xl' id="Username" type="Username" placeholder="m@example.com" {...register("username", { required: true })} />
+                        <div className="h-4 w-full text-center">
+                            {errors.username ? <span className="text-red-500">{errors.username?.message}</span> : <></>}
+                        </div>
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="Name">Name</Label>
+                        <Input className='p-4 rounded-2xl' id="Name" type="Name" placeholder="Name" {...register("name", { required: true })} />
+                        <div className="h-4 w-full text-center mb-2">
+                            {errors.name ? <span className="text-red-500">{errors.name?.message}</span> : <></>}
+                        </div>
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="Bio">Bio</Label>
+                        <Textarea className='p-4 rounded-2xl' id="Bio" placeholder="Bio" {...register("bio", { required: true })} />
+                        <div className="h-4 w-full text-center mb-2">
+                            {errors.bio ? <span className="text-red-500">{errors.bio?.message}</span> : <></>}
+                        </div>
+                    </div>
+                    {/* <div className="grid gap-2">
+                        <Label htmlFor="Website">Website</Label>
+                        <Input id="Website" type="Website" placeholder="Website" {...register("website", { required: true })} />
+                        <div className="h-4 w-full text-center mb-2">
+                            {errors.website ? <span className="text-red-500">{errors.website?.message}</span> : <></>}
+                        </div>
+                    </div> */}
+
+                    {/*  */}
+                    <h1 className="font-bold text-xl">
+                        Figure
+                    </h1>
+                    <Input placeholder="Public"
+                        disabled
+                        className='w-full p-4 rounded-xl' />
                     <h1 className="font-bold text-xl">
                         Website
                     </h1>
@@ -66,25 +188,12 @@ const Page = () => {
                     </div>
 
                     <h1 className="font-bold text-xl">
-                        Bio
-                    </h1>
-                    <Textarea placeholder="Bio"
-                        className='w-full p-4 rounded-2xl' />
-
-                    {/* <h1 className="font-bold text-xl">
-                        Gender
-                    </h1> */}
-                    {/* <div>
-                        <SelectGender />
-                        <p className='text-xs px-2 py-1'>This won’t be part of your public profile.</p>
-                    </div> */}
-                    <h1 className="font-bold text-xl">
                         Switch appearance
                     </h1>
                     <Card className='p-4 rounded-2xl flex justify-between items-center'>
                         <div className='pr-4'>
                             <div className='flex gap-2 items-center text-sm font-semibold'>
-                                {theme === "dark" ? 
+                                {theme === "dark" ?
                                     <Sun /> :
                                     <Moon />}
                                 {theme === "dark" ? "Light" : "Dark"} Mode</div>
@@ -112,6 +221,7 @@ const Page = () => {
                     </Card>
                     <div className='flex justify-around gap-4' >
                         <Button variant={"destructive"}
+                            disabled={loading}
                             onClick={() => {
                                 signOut()
                                 logoutApi()
@@ -119,6 +229,13 @@ const Page = () => {
                             }}
                             className="rounded-xl w-full">
                             logout
+                        </Button>
+                        <Button
+                            disabled={loading}
+                            type='submit'
+                            onClick={handleSubmit(onSubmit)}
+                            className="rounded-xl w-full">
+                            Submit
                         </Button>
                         <div className='h-20'></div>
                     </div>

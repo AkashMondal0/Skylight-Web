@@ -63,10 +63,12 @@ export const NavigationSidebar = memo(function NavigationSidebar({
     return (
         <div className='sticky top-0 h-full z-10'>
             <div className={cn(
+                "duration-300 ease-in-out transition-all",
                 "md:w-[4.5rem] xl:w-[18rem] border-r hidden md:flex h-dvh scroll-smooth overflow-x-hidden overflow-y-auto hideScrollbar",
                 hideLabel ? "max-w-[4.5rem]" : "max-w-[18rem]"
             )}>
                 <div className={cn(`md:w-[4.5rem] xl:w-[18rem] px-1 sticky top-0 z-50 h-full scroll-smooth overflow-y-auto hideScrollbar`,
+                    "duration-300 ease-in-out transition-all",
                     hideLabelClass ? "max-w-[4.5rem]" : "max-w-[18rem]")}>
                     <div className="w-full h-full flex flex-col space-y-1 justify-between">
                         <div className="w-full h-full flex flex-col space-y-1">
@@ -119,6 +121,7 @@ const Logo = ({ active, label, onClick, hideLabel, className }: {
     return (
         <div className={cn("w-14 h-14 mx-auto xl:w-full xl:mx-0 my-6", className)}>
             <div onClick={onClick} className={cn(`mx-auto justify-center 
+            duration-300 ease-in-out transition-all delay-75
             h-14 w-14 aspect-square items-center flex rounded-xl cursor-pointer`,
                 hideLabel ? "sm:flex justify-center" : "lg:w-full lg:gap-1 xl:justify-start xl:px-4")}>
                 <img src={configs.AppDetails.logoUrl} alt="upload" className="w-8 h-8" />
@@ -180,6 +183,7 @@ const NavigationItem = ({ active, label, onClick, hideLabel, className, icon, in
                     <TooltipTrigger asChild>
                         <div onClick={onClick}
                             className={cn(`mx-auto justify-center h-14 w-14 aspect-square flex rounded-xl
+                            duration-300 ease-in-out transition-all delay-75
                             hover:bg-accent hover:text-accent-foreground cursor-pointer`,
                                 hideLabel ? "sm:flex justify-center" : "lg:w-full xl:justify-start xl:px-4")}>
                             <div className="flex items-center justify-center gap-3">

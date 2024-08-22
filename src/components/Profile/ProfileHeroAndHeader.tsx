@@ -86,16 +86,19 @@ export const ProfileHero = memo(function ProfileHero({ profileUser, isProfile }:
                                     {/* profile descriptions */}
                                     <div className='flex justify-between flex-col px-3 my-4'>
                                         <p className='font-semibold w-80 truncate'>{profileUser.username}</p>
-                                        <p className='w-80 line-clamp-1'>{"Actor"}</p>
-                                        <p className='w-80 line-clamp-1'>{profileUser.bio ?? `Actor. Singer. Dreamer.`}</p>
+                                        <p className='w-80 line-clamp-1'>{"pubic"}</p>
+                                        <p className='w-80 line-clamp-1'>{profileUser.bio}</p>
                                         {/* website */}
-                                        <div className='flex gap-1'>
-                                            <Link2 className='rotate-45' />
-                                            <a className='flex items-center gap-2 hover:underline font-semibold text-sm w-80 line-clamp-1'
-                                                target='_blank' href={"#"}>
-                                                {"https://www.instagram.com/oliviasanabia"}
-                                            </a>
-                                        </div>
+                                        {
+                                            profileUser.website.length > 0 &&
+                                            <div className='flex gap-1'>
+                                                <Link2 className='rotate-45' />
+                                                <a className='flex items-center gap-2 hover:underline font-semibold text-sm w-80 line-clamp-1'
+                                                    target='_blank' href={profileUser.website[0]}>
+                                                    {profileUser.website[0]} + {`${profileUser.website.length - 1} more`}
+                                                </a>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -123,16 +126,19 @@ export const ProfileHero = memo(function ProfileHero({ profileUser, isProfile }:
                         {/* profile descriptions */}
                         <div className='flex justify-between flex-col px-3 my-4'>
                             <p className='font-semibold w-80 truncate'>{profileUser.username}</p>
-                            <p className='w-80 line-clamp-1'>{"Actor"}</p>
-                            <p className='w-80 line-clamp-1'>{profileUser.bio ?? `Actor. Singer. Dreamer.`}</p>
+                            <p className='w-80 line-clamp-1'>{"pubic"}</p>
+                            <p className='w-80 line-clamp-1'>{profileUser.bio}</p>
                             {/* website */}
-                            <div className='flex gap-1'>
-                                <Link2 className='rotate-45' />
-                                <a className='flex items-center gap-2 hover:underline font-semibold text-sm w-80 line-clamp-1'
-                                    target='_blank' href={"#"}>
-                                    {"https://www.instagram.com/oliviasanabia"}
-                                </a>
-                            </div>
+                            {
+                                profileUser.website.length > 0 &&
+                                <div className='flex gap-1'>
+                                    <Link2 className='rotate-45' />
+                                    <a className='flex items-center gap-2 hover:underline font-semibold text-sm w-80 line-clamp-1'
+                                        target='_blank' href={profileUser.website[0]}>
+                                        {profileUser.website[0]} + {`${profileUser.website.length - 1} more`}
+                                    </a>
+                                </div>
+                            }
                         </div>
                         <ProfileStories
                             isProfile={isProfile}

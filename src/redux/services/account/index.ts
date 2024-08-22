@@ -9,6 +9,8 @@ type UpdateProfile = {
         username?: string
         email?: string
         name?: string
+        bio?: string
+        website?: string[]
         profilePicture?: string
     },
     file?: File,

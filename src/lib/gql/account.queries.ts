@@ -37,6 +37,8 @@ export const UpdateProfileQuery: GraphqlQueryType = {
       id
       email
       username
+      bio
+      website
     }
   }`,
 }

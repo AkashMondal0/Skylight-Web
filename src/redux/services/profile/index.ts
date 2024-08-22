@@ -12,6 +12,8 @@ export const fetchUserProfileDetailApi = createAsyncThunk(
                   username
                   email
                   name
+                  bio
+                  website
                   profilePicture
                   postCount
                   followerCount
