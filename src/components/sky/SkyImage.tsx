@@ -34,42 +34,17 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
     showErrorIcon = false
 }) => {
     const [error, setError] = useState(false)
-
-    // useEffect(() => {
-    //     const img = imgRef.current;
-
-    //     if (!img) return;
-
-    //     const onIntersection = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
-    //         entries.forEach(entry => {
-    //             if (entry.isIntersecting) {
-    //                 const imgElement = entry.target as HTMLImageElement;
-    //                 imgElement.src = imgElement.dataset.src!;
-    //                 imgElement.onload = () => imgElement.removeAttribute('data-src');
-    //                 observer.unobserve(imgElement);
-    //             }
-    //         });
-    //     };
-
-    //     const observer = new IntersectionObserver(onIntersection);
-
-    //     observer.observe(img);
-
-    //     // Cleanup on component unmount
-    //     return () => {
-    //         observer.disconnect();
-    //     };
-    // }, []);
+    const [loading, setLoading] = useState(true)
 
     if (error && showErrorIcon) {
-        return <ImageError  hideErrorLabel={hideErrorLabel} className={className}/>
+        return <ImageError hideErrorLabel={hideErrorLabel} className={className} />
     }
 
     if (error && showErrorIconSm) {
-        return <ImageErrorSm className={className} hideErrorLabel={hideErrorLabel}/>
+        return <ImageErrorSm className={className} hideErrorLabel={hideErrorLabel} />
     }
 
-    if (!src) return <ImageError hideErrorLabel={hideErrorLabel} className={className}/>
+    if (!src) return <ImageError hideErrorLabel={hideErrorLabel} className={className} />
 
     return (
         <>
@@ -96,13 +71,19 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
                     decoding="async"
                     fetchPriority={fetchPriority}
                     sizes={sizes}
-                    className={cn('h-auto w-full userNotSelectImg', className)}
+                    className={cn('h-auto w-full userNotSelectImg',
+                        loading ? 'bg-muted animate-pulse' : '',
+                        className)}
                     onError={() => {
                         if (error) return;
                         setError(true)
                         onError && onError()
                     }}
-                    onLoad={onLoad}
+                    onLoad={()=>{
+                        if (!loading) return;
+                        setLoading(false)
+                        onLoad && onLoad()
+                    }}
                 />
             </picture>
         </>
@@ -119,15 +100,15 @@ export const ImageError = ({
     className?: string
 }) => {
     return (<div className={cn(`h-full w-full object-cover aspect-square p-4
-    flex flex-col items-center justify-center md:space-y-2 userNotSelectImg bg-muted`,className)}>
+    flex flex-col items-center justify-center md:space-y-2 userNotSelectImg bg-muted`, className)}>
         <RotateCcw className='md:w-10 md:h-10 w-8 h-8 cursor-pointer' strokeWidth={1.5} />
         <p className="text-center cursor-pointer text-xs md:text-base">
-            {hideErrorLabel ? "":`Could't load image. Tap to retry`}
+            {hideErrorLabel ? "" : `Could't load image. Tap to retry`}
         </p>
     </div>)
 }
 
-export const ImageErrorSm = ({ className }: { className?: string,hideErrorLabel?: boolean }) => {
+export const ImageErrorSm = ({ className }: { className?: string, hideErrorLabel?: boolean }) => {
     return (<div className={cn(`w-full bg-muted rounded-full flex justify-center items-center p-1`, className)}>
         <img src='/user.jpg' alt='' className='w-full h-full rounded-full' />
     </div>)

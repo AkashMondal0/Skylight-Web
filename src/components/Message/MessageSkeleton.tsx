@@ -22,7 +22,7 @@ export const UserCardLoading = () => {
 
 export const MessagePageSidebarSkeleton = () => {
     return <div className={`md:border-r scroll-smooth duration-300 px-4 overflow-hidden
-    hideScrollbar md:max-w-[22rem] ease-in-out w-full`}>
+    hideScrollbar md:w-96 ease-in-out w-full`}>
         <div className='w-full my-4'>
             <div className="flex justify-between w-full items-center my-5">
                 <Skeleton className="h-8 w-24" />
@@ -51,7 +51,7 @@ export const MessagePageSkeleton = () => {
                 <Skeleton className="h-3 w-32 m-1" />
             </div>
         </div>
-        <div className="flex-grow px-4 my-2 w-full overflow-hidden flex justify-center items-center">
+        <div className="flex-grow px-4 my-2 w-full overflow-hidden flex justify-center items-center h-dvh sm:h-full">
             <Loader2 className="animate-spin w-12 h-12" />
         </div>
 
