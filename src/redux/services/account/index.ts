@@ -2,7 +2,7 @@ import { configs } from "@/configs";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { uploadFirebaseFile } from "@/lib/firebase/upload-file";
 import { graphqlQuery } from "@/lib/gql/GraphqlQuery";
-import { AuthorData } from "@/types";
+import { AuthorData, findDataInput } from "@/types";
 import { FeedQuery, UpdateProfileQuery } from "@/lib/gql/account.queries";
 type UpdateProfile = {
     updateUsersInput?: {
@@ -130,10 +130,11 @@ export const DeleteAllCookie = async () => {
 // profile
 export const fetchAccountFeedApi = createAsyncThunk(
     'fetchAccountFeedApi/get',
-    async (_, thunkApi) => {
+    async (limitAndOffset: findDataInput, thunkApi) => {
         try {
             const res = await graphqlQuery({
                 query: FeedQuery.query,
+                variables: { limitAndOffset }
             })
 
             return res[FeedQuery.name]

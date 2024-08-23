@@ -43,7 +43,7 @@ export const PostsSlice = createSlice({
     name: 'PostFeed',
     initialState: PostState,
     reducers: {
-        setMoreData: (state, action: PayloadAction<Post[]>) => {
+        setMorePosts: (state, action: PayloadAction<Post[]>) => {
             if (action.payload?.length > 0) {
                 state.feeds.push(...action.payload)
             }
@@ -53,7 +53,7 @@ export const PostsSlice = createSlice({
         builder
             .addCase(fetchAccountFeedApi.pending, (state) => {
                 state.feedsLoading = true
-                if(state.feedsError) state.feedsError = null
+                if (state.feedsError) state.feedsError = null
             })
             .addCase(fetchAccountFeedApi.fulfilled, (state, action: PayloadAction<Post[]>) => {
                 if (action.payload?.length > 0) {
@@ -110,7 +110,7 @@ export const PostsSlice = createSlice({
                 state.fetchPostCommentsLoading = true
             })
             .addCase(fetchPostCommentsApi.fulfilled, (state, action: PayloadAction<Comment[]>) => {
-                if(state?.viewPost){
+                if (state?.viewPost) {
                     state.viewPost.comments = [...action.payload]
                 }
                 state.fetchPostCommentsLoading = false
@@ -122,7 +122,7 @@ export const PostsSlice = createSlice({
 })
 
 export const {
-    setMoreData
+    setMorePosts
 } = PostsSlice.actions
 
 export default PostsSlice.reducer

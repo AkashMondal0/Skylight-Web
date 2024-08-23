@@ -71,7 +71,7 @@ export const NavigationSidebar = memo(function NavigationSidebar({
                     "duration-300 ease-in-out transition-all",
                     hideLabelClass ? "max-w-[4.5rem]" : "max-w-[18rem]")}>
                     <div className="w-full h-full flex flex-col space-y-1 justify-between">
-                        <div className="w-full h-full flex flex-col space-y-1">
+                        <div className="w-full h-max flex flex-col space-y-1">
                             {/* header type */}
                             <Logo
                                 label={configs.AppDetails.name}
@@ -87,8 +87,8 @@ export const NavigationSidebar = memo(function NavigationSidebar({
                                     hideLabel={hideLabelClass}
                                     onClick={onClick} />
                             })}
-                            {/* footer type */}
                         </div>
+                        {/* footer type */}
                         <MoreDropdownMenu>
                             <div className="py-1">
                                 <NavigationItem
