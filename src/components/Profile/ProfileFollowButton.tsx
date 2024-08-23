@@ -1,14 +1,15 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import { createFriendshipApi, destroyFriendshipApi } from "@/redux/services/profile"
-import { User, disPatchResponse } from "@/types"
+import { Conversation, User, disPatchResponse } from "@/types"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { memo, useRef } from "react"
+import { memo, useCallback, useRef } from "react"
 import { useDispatch } from "react-redux"
 import { EllipsisVertical } from "../sky/icons"
 import { followUser, unFollowUser } from "@/redux/slice/profile"
 import { toast } from "sonner"
+import { CreateConversationApi } from "@/redux/services/conversation"
 
 const ProfileFollowButton = memo(function FollowButton({
     user,
@@ -24,7 +25,7 @@ const ProfileFollowButton = memo(function FollowButton({
     const session = useSession().data?.user
     const loadingRef = useRef(false)
 
-    const handleFollow = async () => {
+    const handleFollow = useCallback(async () => {
         if (loadingRef.current) return
         loadingRef.current = true
         try {
@@ -45,9 +46,9 @@ const ProfileFollowButton = memo(function FollowButton({
         finally {
             loadingRef.current = false
         }
-    }
+    }, [isProfile, session?.id, user?.id])
 
-    const handleUnFollow = async () => {
+    const handleUnFollow = useCallback(async () => {
         if (loadingRef.current) return
         loadingRef.current = true
         try {
@@ -67,7 +68,23 @@ const ProfileFollowButton = memo(function FollowButton({
         } finally {
             loadingRef.current = false
         }
-    }
+    }, [isProfile, session?.id, user?.id])
+
+    const messagePageNavigate = useCallback(async () => {
+        if (loadingRef.current) return
+        loadingRef.current = true
+        try {
+            if (!session?.id) return alert('You are not logged in')
+            if (!user?.id || user?.id === session?.id) return toast("Something went wrong")
+            const res = await dispatch(CreateConversationApi([user.id]) as any) as disPatchResponse<Conversation>
+            if (res.error) return toast("Something went wrong")
+            router.push(`/message/${res.payload.id}`)
+        } catch (error) {
+            toast("Something went wrong")
+        } finally {
+            loadingRef.current = false
+        }
+    }, [isProfile, session?.id, user])
 
     if (!user) return <div></div>
 
@@ -106,9 +123,8 @@ const ProfileFollowButton = memo(function FollowButton({
                 Follow
             </Button>
         }
-        <Button variant={"secondary"} className='rounded-xl' disabled={loadingRef.current} onClick={() => {
-            router.push('/account/archive')
-        }}>
+        <Button variant={"secondary"} className='rounded-xl' disabled={loadingRef.current}
+            onClick={messagePageNavigate}>
             Message
         </Button>
         <div className="w-7 h-7 cursor-pointer hidden md:block">

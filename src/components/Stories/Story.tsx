@@ -27,7 +27,7 @@ export const Stories = memo(function Story({
     // const posts = useSelector((Root: RootState) => Root.posts)
     const parentRef = useRef<HTMLDivElement>(null)
     const [mounted, setMounted] = useState(false)
-    const data = useMemo(() => story, [story])
+    const data = useMemo(() => story, [])
     const count = useMemo(() => data.length, [data.length])
 
     const columnVirtualizer = useVirtualizer({
@@ -43,7 +43,7 @@ export const Stories = memo(function Story({
         setMounted(true)
     }, [])
 
-    const handleScrollPrevious = () => {
+    const handleScrollPrevious = useCallback(() => {
         const parent = parentRef.current
         if (parent) {
             parent.scrollTo({
@@ -51,9 +51,9 @@ export const Stories = memo(function Story({
                 behavior: 'smooth',
             })
         }
-    }
+    }, [])
 
-    const handleScrollNext = () => {
+    const handleScrollNext = useCallback(() => {
         const parent = parentRef.current
         if (parent) {
             parent.scrollTo({
@@ -61,7 +61,7 @@ export const Stories = memo(function Story({
                 behavior: 'smooth',
             })
         }
-    }
+    }, [])
 
 
     if (!mounted) return <></>

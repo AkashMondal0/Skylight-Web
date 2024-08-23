@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Link2 } from 'lucide-react'
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import { useDispatch } from 'react-redux'
-import { ProfileStories } from '@/components/Stories/ProfileStories'
+import { ProfileStories } from '@/components/Profile/ProfileStories'
 import { fetchUserProfilePostsApi } from '@/redux/services/profile'
 import { useSession } from 'next-auth/react'
 import OptionAvatarDialog from '../Dialog/Avatar.Options.Dialog'
@@ -44,13 +44,13 @@ export const ProfileHero = memo(function ProfileHero({ profileUser, isProfile }:
                                         <SkyAvatar
                                             sizeImage='20vw'
                                             url={profileUser.profilePicture === session?.image ? profileUser.profilePicture : session?.image}
-                                            className={`sm:w-36 sm:h-36 lg:w-48 lg:h-48 
+                                            className={`sm:w-36 sm:h-36 lg:w-44 lg:h-44 
                                     w-16 h-16 rounded-full aspect-square`} />
                                     </OptionAvatarDialog> :
                                     <SkyAvatar
                                         sizeImage='20vw'
-                                        url={profileUser.profilePicture || "/user.jpg"}
-                                        className={`sm:w-36 sm:h-36 lg:w-48 lg:h-48 
+                                        url={profileUser.profilePicture}
+                                        className={`sm:w-36 sm:h-36 lg:w-44 lg:h-44 
                                     w-16 h-16 rounded-full aspect-square`} />}
                             </div>
                             {/* right */}
@@ -140,9 +140,7 @@ export const ProfileHero = memo(function ProfileHero({ profileUser, isProfile }:
                                 </div>
                             }
                         </div>
-                        <ProfileStories
-                            isProfile={isProfile}
-                            user={profileUser} />
+                        <ProfileStories user={profileUser} isProfile={isProfile} />
                         {/* name or links and users count */}
                         <div className='flex justify-around p-2 border-y md:hidden'>
                             <div className=' text-center'>
