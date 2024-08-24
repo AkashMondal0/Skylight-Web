@@ -39,8 +39,9 @@ export const MessageSideBar = memo(function MessageSideBar() {
 
     if (rootConversation.listError && pageLoaded) {
         return <div className='md:border-r scroll-smooth flex justify-center items-center text-center
-        duration-300 bg-background text-foreground h-dvh md:max-w-96 ease-in-out w-full mx-auto'>
+        duration-300 bg-background text-foreground h-dvh md:w-96 ease-in-out w-full mx-auto flex-col'>
             <ServerCrash className='w-16 h-16' />
+            <CardTitle>Server Error</CardTitle>
         </div>
     }
 

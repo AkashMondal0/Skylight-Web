@@ -52,7 +52,7 @@ export const MessagePageSkeleton = () => {
             </div>
         </div>
         <div className="flex-grow px-4 my-2 w-full overflow-hidden flex justify-center items-center h-dvh sm:h-full">
-            <Loader2 className="animate-spin w-12 h-12" />
+            <Loader2 className="animate-spin w-12 h-12 text-accent" />
         </div>
 
         <div className='px-2 h-16 sticky bottom-0 z-1 my-2 border-t pt-2 flex gap-1 items-center bg-background'>
