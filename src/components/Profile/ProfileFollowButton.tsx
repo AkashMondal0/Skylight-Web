@@ -1,16 +1,17 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import { createFriendshipApi, destroyFriendshipApi } from "@/redux/services/profile"
-import { User, disPatchResponse } from "@/types"
+import { Conversation, User, disPatchResponse } from "@/types"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { memo, useRef } from "react"
+import { memo, useCallback, useRef } from "react"
 import { useDispatch } from "react-redux"
 import { EllipsisVertical } from "../sky/icons"
 import { followUser, unFollowUser } from "@/redux/slice/profile"
 import { toast } from "sonner"
+import { CreateConversationApi } from "@/redux/services/conversation"
 
-const FollowButton = memo(function FollowButton({
+const ProfileFollowButton = memo(function FollowButton({
     user,
     isFollowing,
     isProfile
@@ -24,7 +25,7 @@ const FollowButton = memo(function FollowButton({
     const session = useSession().data?.user
     const loadingRef = useRef(false)
 
-    const handleFollow = async () => {
+    const handleFollow = useCallback(async () => {
         if (loadingRef.current) return
         loadingRef.current = true
         try {
@@ -45,9 +46,9 @@ const FollowButton = memo(function FollowButton({
         finally {
             loadingRef.current = false
         }
-    }
+    }, [isProfile, session?.id, user?.id])
 
-    const handleUnFollow = async () => {
+    const handleUnFollow = useCallback(async () => {
         if (loadingRef.current) return
         loadingRef.current = true
         try {
@@ -67,7 +68,23 @@ const FollowButton = memo(function FollowButton({
         } finally {
             loadingRef.current = false
         }
-    }
+    }, [isProfile, session?.id, user?.id])
+
+    const messagePageNavigate = useCallback(async () => {
+        if (loadingRef.current) return
+        loadingRef.current = true
+        try {
+            if (!session?.id) return alert('You are not logged in')
+            if (!user?.id || user?.id === session?.id) return toast("Something went wrong")
+            const res = await dispatch(CreateConversationApi([user.id]) as any) as disPatchResponse<Conversation>
+            if (res.error) return toast("Something went wrong")
+            router.push(`/message/${res.payload.id}`)
+        } catch (error) {
+            toast("Something went wrong")
+        } finally {
+            loadingRef.current = false
+        }
+    }, [isProfile, session?.id, user])
 
     if (!user) return <div></div>
 
@@ -75,7 +92,7 @@ const FollowButton = memo(function FollowButton({
     if (isProfile) {
         return <div className='md:flex space-x-2 space-y-2 items-center'>
             <div className="flex items-center">
-                <p className='text-xl px-3 truncate w-32'>{user.username}</p>
+                <p className='text-xl px-3 line-clamp-1'>{user.username}</p>
             </div>
 
             <Button variant={"secondary"} disabled={loadingRef.current} className='rounded-xl' onClick={() => {
@@ -88,12 +105,16 @@ const FollowButton = memo(function FollowButton({
             }}>
                 View Archive
             </Button>
-            {EllipsisVertical('w-6 h-6 cursor-pointer hidden md:block')}
+            <div className="w-7 h-7 cursor-pointer hidden md:block">
+                {EllipsisVertical('w-full h-full')}
+            </div>
         </div>
     }
 
     return <div className='items-center md:flex space-x-2 space-y-2'>
-        <p className='text-xl px-3 truncate w-32'>{user.username}</p>
+        <div className="flex items-center">
+            <p className='text-xl px-3 line-clamp-1'>{user.username}</p>
+        </div>
         {isFollowing ?
             <Button className='rounded-xl px-6 w-24' variant={"secondary"} disabled={loadingRef.current} onClick={handleUnFollow}>
                 Following
@@ -102,14 +123,15 @@ const FollowButton = memo(function FollowButton({
                 Follow
             </Button>
         }
-        <Button variant={"secondary"} className='rounded-xl' disabled={loadingRef.current} onClick={() => {
-            router.push('/account/archive')
-        }}>
+        <Button variant={"secondary"} className='rounded-xl' disabled={loadingRef.current}
+            onClick={messagePageNavigate}>
             Message
         </Button>
-        {EllipsisVertical('w-6 h-6 cursor-pointer hidden md:block')}
+        <div className="w-7 h-7 cursor-pointer hidden md:block">
+            {EllipsisVertical('w-full h-full')}
+        </div>
     </div>
 }, ((prevProps: any, nextProps: any) => prevProps.isProfile === nextProps.isProfile
     && prevProps.isFollowing === nextProps.isFollowing
     && prevProps.user.id === nextProps.user.id))
-export default FollowButton
+export default ProfileFollowButton

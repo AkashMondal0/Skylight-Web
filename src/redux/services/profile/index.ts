@@ -12,6 +12,8 @@ export const fetchUserProfileDetailApi = createAsyncThunk(
                   username
                   email
                   name
+                  bio
+                  website
                   profilePicture
                   postCount
                   followerCount
@@ -63,6 +65,36 @@ export const fetchUserProfilePostsApi = createAsyncThunk(
         }
     }
 );
+
+export const fetchMoreUserProfilePostsApi = createAsyncThunk(
+    'fetchMoreUserProfilePostsApi/get',
+    async (data: findDataInput, thunkApi) => {
+        const { username, ...findAllPosts } = data
+        findAllPosts.id = username
+        try {
+            let query = `query FindUserProfile($findAllPosts: GraphQLPageQuery!) {
+                findAllPosts(findAllPosts: $findAllPosts) {
+                  id
+                  fileUrl
+                  commentCount
+                  likeCount
+                }
+              }`
+            // await new Promise((resolve) => setTimeout(resolve, 7000))
+            const res = await graphqlQuery({
+                query: query,
+                variables: { findAllPosts }
+            })
+            return res.findAllPosts
+
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                message: error?.message
+            })
+        }
+    }
+);
+
 
 export const createFriendshipApi = createAsyncThunk(
     'createFriendshipApi/post',

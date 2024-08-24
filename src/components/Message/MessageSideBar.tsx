@@ -9,8 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { fetchConversationsApi } from '@/redux/services/conversation';
 import { NavigationBottom } from '../Navigation/NavigationBottom';
-import { LoadingMessageSidebar } from '../loading/Message.page';
 import { VirtualUserList } from './VirtualUserList';
+import { MessagePageSidebarSkeleton } from './MessageSkeleton';
 let pageLoaded = false
 
 export const MessageSideBar = memo(function MessageSideBar() {
@@ -34,13 +34,14 @@ export const MessageSideBar = memo(function MessageSideBar() {
 
 
     if (rootConversation.listLoading || !pageLoaded) {
-        return <LoadingMessageSidebar />
+        return <MessagePageSidebarSkeleton />
     }
 
     if (rootConversation.listError && pageLoaded) {
         return <div className='md:border-r scroll-smooth flex justify-center items-center text-center
-        duration-300 bg-background text-foreground h-dvh md:max-w-96 ease-in-out w-full mx-auto'>
+        duration-300 bg-background text-foreground h-dvh md:w-96 ease-in-out w-full mx-auto flex-col'>
             <ServerCrash className='w-16 h-16' />
+            <CardTitle>Server Error</CardTitle>
         </div>
     }
 

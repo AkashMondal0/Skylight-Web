@@ -27,7 +27,7 @@ export const Stories = memo(function Story({
     // const posts = useSelector((Root: RootState) => Root.posts)
     const parentRef = useRef<HTMLDivElement>(null)
     const [mounted, setMounted] = useState(false)
-    const data = useMemo(() => story, [story])
+    const data = useMemo(() => story, [])
     const count = useMemo(() => data.length, [data.length])
 
     const columnVirtualizer = useVirtualizer({
@@ -43,7 +43,7 @@ export const Stories = memo(function Story({
         setMounted(true)
     }, [])
 
-    const handleScrollPrevious = () => {
+    const handleScrollPrevious = useCallback(() => {
         const parent = parentRef.current
         if (parent) {
             parent.scrollTo({
@@ -51,9 +51,9 @@ export const Stories = memo(function Story({
                 behavior: 'smooth',
             })
         }
-    }
+    }, [])
 
-    const handleScrollNext = () => {
+    const handleScrollNext = useCallback(() => {
         const parent = parentRef.current
         if (parent) {
             parent.scrollTo({
@@ -61,7 +61,7 @@ export const Stories = memo(function Story({
                 behavior: 'smooth',
             })
         }
-    }
+    }, [])
 
 
     if (!mounted) return <></>
@@ -75,14 +75,13 @@ export const Stories = memo(function Story({
             <div
                 ref={parentRef}
                 className="w-full md:max-w-[580px] mx-auto px-3 flex border-b 
-                md:border-none hideScrollbar mt-4 gap-5"
+                md:border-none hideScrollbar mt-4"
                 style={{
                     width: `100%`,
                     height: `100px`,
                     overflow: 'auto',
                 }}>
-
-                <UploadYourStory />
+                <UploadYourStory className='w-16 h-16'/>
                 <div
                     style={{
                         width: `${columnVirtualizer.getTotalSize()}px`,

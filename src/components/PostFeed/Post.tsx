@@ -1,17 +1,19 @@
 "use client";
 import React, { memo, useMemo } from 'react'
 import { useRouter } from 'next/navigation';
-import { Post as PostType } from '@/types';
-import PostImage from '@/components/PostFeed/PostImage';
-import { PostComments } from './PostComments';
-import PostActions from './PostActions';
-import PostHeader from './PostHeader';
 import { toast } from 'sonner';
+import { Post as PostFeedType } from '@/types';
+import { 
+    PostHeader,
+    PostImage,
+    PostActions,
+    PostComments
+ } from './';
 
-export const Post = memo(function Post({
+export const PostFeed = memo(function Post({
     post,
 }: {
-    post: PostType
+    post: PostFeedType
 }) {
     // console.log("<Post/>")
     const router = useRouter()

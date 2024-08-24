@@ -4,8 +4,8 @@ import { GraphqlQueryType } from "./GraphqlQuery"
 export const FeedQuery: GraphqlQueryType = {
   name: "feedTimelineConnection",
   operation: "query",
-  query: `query FeedTimelineConnection {
-    feedTimelineConnection {
+  query: `query FeedTimelineConnection($limitAndOffset: GraphQLPageQuery!) {
+    feedTimelineConnection(limitAndOffset: $limitAndOffset) {
       id
       content
       title
@@ -24,7 +24,8 @@ export const FeedQuery: GraphqlQueryType = {
         profilePicture
       }
     }
-  }`,
+  }
+  `,
 }
 
 export const UpdateProfileQuery: GraphqlQueryType = {
@@ -37,6 +38,8 @@ export const UpdateProfileQuery: GraphqlQueryType = {
       id
       email
       username
+      bio
+      website
     }
   }`,
 }

@@ -34,7 +34,9 @@ export const MessageHeader = memo(function MessageHeader({ data }: { data: Conve
                     <div className='md:hidden cursor-pointer'>
                         <ChevronLeft size={30} onClick={() => router.back()} />
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
+                        !data.isGroup && router.push(`/${Conversation.name}`)
+                    }}>
                         <div>
                             <SkyAvatar className='md:h-12 md:w-12 w-10 h-10' url={Conversation.image || '/user.jpg'} />
                         </div>

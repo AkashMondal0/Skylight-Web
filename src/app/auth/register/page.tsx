@@ -70,6 +70,8 @@ export default function LoginPage() {
                 id: res.data.id,
                 image: res.data.profilePicture ?? "/user.jpg",
                 accessToken: res.data.accessToken,
+                bio: res.data.bio,
+                website: res.data.website ?? [],
                 redirect: true,
                 callbackUrl: callbackUrlPath ? `${process.env.NEXTAUTH_URL}${callbackUrlPath}` : `${process.env.NEXTAUTH_URL}`,
             });

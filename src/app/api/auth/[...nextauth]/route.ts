@@ -20,6 +20,8 @@ const authOptions: NextAuthOptions = {
         id: { label: "ID", type: "text" },
         username: { label: "Username", type: "text" },
         accessToken: { label: "Access Token", type: "text" },
+        bio: { label: "Bio", type: "text" },
+        website: { label: "Website", type: "text" },
       },
       async authorize(credentials, req) {
         try {
@@ -39,9 +41,6 @@ const authOptions: NextAuthOptions = {
       return true
     },
     async redirect({ url, baseUrl }) {
-      return url.startsWith(baseUrl)
-      ? Promise.resolve(url)
-      : Promise.resolve(baseUrl)
       return baseUrl
     },
     async session({ session, token, user }) {

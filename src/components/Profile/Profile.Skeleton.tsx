@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton"
 
-export const ProfileHeaderLoading = () => {
+export const ProfileHeroSkeleton = () => {
     return (
         <div className='mx-auto max-w-[960px]'>
             {/* md ->>> */}
@@ -107,10 +107,13 @@ export const ProfileHeaderLoading = () => {
         </div>)
 }
 
-export const ProfilePostLoading = () => {
-    return <div className="grid grid-cols-3 gap-1 w-full">
-        {Array(9).fill(0).map((post, index) => (
-            <Skeleton key={index} className='aspect-square w-full h-full object-cover rounded-none' />
-        ))}
+export const ProfilePostSkeleton = () => {
+    return <div className="mx-auto max-w-[960px] min-h-full">
+        <div className="grid grid-cols-3 gap-[3px] w-full">
+            {Array(9).fill(0).map((post, index) => (
+                <Skeleton key={index} className='aspect-square w-full h-full object-cover rounded-none' />
+            ))}
+        </div>
     </div>
+
 }

@@ -1,7 +1,7 @@
 import { uploadFirebaseFile } from "@/lib/firebase/upload-file";
 import { graphqlQuery } from "@/lib/gql/GraphqlQuery";
 import { setUploadImageInMessage, showUploadImageInMessage } from "@/redux/slice/conversation";
-import { Message } from "@/types";
+import { Message, findDataInput } from "@/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchConversationsApi = createAsyncThunk(
@@ -104,7 +104,7 @@ export const fetchConversationApi = createAsyncThunk(
 
 export const fetchConversationAllMessagesApi = createAsyncThunk(
   'fetchConversationAllMessagesApi/get',
-  async (id: string, thunkAPI) => {
+  async (graphQlPageQuery: findDataInput, thunkAPI) => {
     try {
       let query = `query FindAllMessages($graphQlPageQuery: GraphQLPageQuery!) {
         findAllMessages(graphQLPageQuery: $graphQlPageQuery) {
@@ -129,7 +129,7 @@ export const fetchConversationAllMessagesApi = createAsyncThunk(
       `
       const res = await graphqlQuery({
         query: query,
-        variables: { graphQlPageQuery: { id } }
+        variables: { graphQlPageQuery }
       })
 
       return res.findAllMessages

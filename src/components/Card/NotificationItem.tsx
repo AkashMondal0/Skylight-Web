@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import { Notification, NotificationType } from '@/types'
 import { timeAgoFormat } from '@/lib/timeFormat'
 import { useRouter } from 'next/navigation'
+
 export const NotificationItem = ({
     data
 }: {

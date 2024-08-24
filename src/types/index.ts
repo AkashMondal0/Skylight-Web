@@ -27,8 +27,8 @@ interface AuthorData {
     profilePicture?: string
     followed_by?: boolean
     following?: boolean
-    bio?: string | null;
-    website?: string[];
+    bio?: string;
+    website?: string[] | any[];
 }
 enum Role {
     User = 'user',

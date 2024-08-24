@@ -1,21 +1,14 @@
 "use client"
 import React, { Fragment, useEffect, useRef } from 'react'
-import { useRouter } from 'next/navigation'
-import { ChevronLeft } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { fetchOnePostApi } from '@/redux/services/post'
 import NotFound from '@/components/Error/NotFound'
-import { Post as PostItem } from "@/components/PostFeed/Post"
-import { CommentHeader } from '@/components/Header/CommentHeader'
-import { CommentList } from '@/components/comment/Comment.List'
-import { CommentInput } from '@/components/comment/Comment.Input'
-import PostImage from '@/components/PostFeed/PostImage'
-import { PostPostLoading } from '@/components/loading/Post.Page'
+import { ModelPostSkeleton, PostFeed, PostImage } from '@/components/PostFeed'
+import { CommentHeader, CommentInput, CommentList } from '@/components/Comment'
 import { AppNavbar } from '@/components/Header/Header'
 
 const PostPage = ({ params }: { params: { post: string } }) => {
-  const router = useRouter()
   const dispatch = useDispatch()
   const Post = useSelector((Root: RootState) => Root.posts)
   const loadedRef = useRef(false)
@@ -29,7 +22,7 @@ const PostPage = ({ params }: { params: { post: string } }) => {
   }, []);
 
   if (Post.viewPostLoading || !loadedRef.current) {
-    return <Fragment><PostPostLoading /></Fragment>
+    return <Fragment><ModelPostSkeleton /></Fragment>
   }
 
   if (!Post.viewPostLoading && Post.viewPostError || !Post.viewPost) {
@@ -63,7 +56,7 @@ const PostPage = ({ params }: { params: { post: string } }) => {
       {/* sm  */}
       <div className="w-full h-full flex md:hidden flex-col">
         <AppNavbar name="Post" icon2={<div />}/>
-        <PostItem post={Post.viewPost} />
+        <PostFeed post={Post.viewPost} />
       </div>
     </div>
   )

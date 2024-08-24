@@ -1,5 +1,6 @@
 'use client'
 import React, { useEffect, useState } from "react"
+
 const SkyPageLoading = () => {
     const [progress, setProgress] = useState(60)
 

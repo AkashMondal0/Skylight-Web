@@ -157,10 +157,10 @@ export const ConversationSlice = createSlice({
         })
         builder.addCase(fetchConversationAllMessagesApi.fulfilled, (state, action: PayloadAction<Message[]>) => {
             if (state.conversation) {
-                state.conversation.messages = action.payload
+                state.conversation.messages.unshift(...action.payload)
                 state.conversationList.find((i) => {
                     if (i.id === state.conversation?.id) {
-                        i.messages = action.payload
+                        i.messages.unshift(...action.payload)
                     }
                 })
             }

@@ -1,54 +1,84 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Conversation } from '@/types';
 import { useSession } from 'next-auth/react';
 import { MessageItem } from './MessageItem';
-let _kSavedOffset = 0;
-let _KMeasurementsCache = [] as any // as VirtualItem[] ;
+import { Loader2 } from 'lucide-react';
+import { debounce } from 'lodash';
 
 const VirtualizeMessageList = ({
     conversation,
     loadMore,
     Header,
     Footer,
+    loadMoreMessageLoading
 }: {
     conversation: Conversation
-    loadMore?: () => void
+    loadMore: (conversationId: string) => Promise<boolean>
     Header?: React.ReactNode
     Footer?: React.ReactNode
+    loadMoreMessageLoading?: boolean
 }) => {
     const session = useSession().data?.user
     const parentRef = useRef<HTMLDivElement>(null)
     const [mounted, setMounted] = useState(false)
     const data = useMemo(() => conversation.messages, [conversation.messages])
     const count = useMemo(() => data.length, [data.length])
+    const stopFetch = useRef(false)
+    const stopBottomRef = useRef(true)
+
+    const fetchMore = debounce(async () => {
+        await loadMore(conversation?.id).then((res) => {
+            if (res) {
+                return virtualizer.scrollToIndex(20 + (virtualizer?.range?.endIndex ?? 0))
+            }
+        }).finally(() => {
+            stopFetch.current = false
+        })
+    }, 1000)
+
     // 
     const virtualizer = useVirtualizer({
         count,
         getScrollElement: () => parentRef.current,
         estimateSize: useCallback(() => 200, []),
         overscan: 30,
-        enabled: true,
-        initialOffset: _kSavedOffset,
-        initialMeasurementsCache: _KMeasurementsCache,
         onChange: (virtualizer) => {
-            if (!virtualizer.isScrolling) {
-                _KMeasurementsCache = virtualizer.measurementsCache;
-                _kSavedOffset = virtualizer.scrollOffset || 0;
+            if (!virtualizer?.range || !virtualizer.isScrolling) return
+            if (virtualizer?.range?.startIndex <= 3
+                && virtualizer?.scrollDirection === "backward"
+                && !stopFetch.current) {
+                stopFetch.current = true
+                stopBottomRef.current = false
+                fetchMore()
+            }
+            if (virtualizer?.range?.endIndex !== count - 1
+                && virtualizer?.scrollDirection === "backward"
+                && stopBottomRef.current) {
+                stopBottomRef.current = false
+            }
+            if (virtualizer?.range?.endIndex === count - 1
+                && virtualizer?.scrollDirection === "forward"
+                && !stopBottomRef.current) {
+                // console.log('stop bottom')
+                stopBottomRef.current = true
             }
         },
     })
+    const items = virtualizer.getVirtualItems()
+
+
+    useEffect(() => {
+        if (data.length > 0 && stopBottomRef.current && !virtualizer.isScrolling) {
+            // console.log('scrolling to bottom')
+            const totalHeight = virtualizer.getTotalSize()
+            virtualizer.scrollToOffset(totalHeight);
+        }
+    }, [data.length, virtualizer]);
 
     useEffect(() => {
         setMounted(true)
     }, [])
-
-    const items = virtualizer.getVirtualItems()
-
-    useEffect(() => {
-        const totalHeight = virtualizer.getTotalSize();
-        virtualizer.scrollToOffset(totalHeight);
-      }, [items.length, virtualizer]);
 
     if (!mounted) return <></>
 
@@ -76,10 +106,15 @@ const VirtualizeMessageList = ({
                             padding: 4,
                             transform: `translateY(${items[0]?.start ?? 0}px)`,
                         }}>
+                        <div className='w-full'>
+                            {!loadMoreMessageLoading ? <></> : <Loader2 className="animate-spin w-12 h-12 mx-auto my-5 text-accent" />}
+                        </div>
                         {items.map((virtualRow) => (
                             <div key={virtualRow.key}
+                                // className='outline outline-red-500'
                                 data-index={virtualRow.index}
                                 ref={virtualizer.measureElement}>
+                                {/* <>{virtualRow.index}</> */}
                                 <MessageItem
                                     key={virtualRow.index}
                                     data-index={virtualRow.index}

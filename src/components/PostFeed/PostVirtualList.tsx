@@ -1,13 +1,12 @@
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual';
 import useWindowDimensions from '@/lib/useWindowDimensions';
-import { Post } from '@/components/PostFeed/Post';
 import { NavigationBottom } from '@/components/Navigation/NavigationBottom';
 import { AppHeader } from '@/components/Header/Header';
 import { Stories } from '@/components/Stories/Story';
-import { PostUploadProgress } from '@/components/Alert/PostUploadProgress';
-import { PostLoading } from '../loading/Home.page';
+import { PostUploadProgress } from '@/components/Alert';
 import { Post as PostType } from "@/types"
+import { PostFeed } from './Post';
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 
@@ -79,7 +78,7 @@ const PostVirtualList = memo(function PostVirtualList({
                                     data-index={virtualRow.index}
                                     ref={virtualizer.measureElement}>
                                     <div style={{ padding: '10px 0' }}>
-                                        <Post post={data[virtualRow.index]}
+                                        <PostFeed post={data[virtualRow.index]}
                                             key={data[virtualRow.index].id} />
                                     </div>
                                 </div>

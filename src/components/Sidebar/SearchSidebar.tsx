@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { cn } from '@/lib/utils';
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
@@ -37,6 +37,10 @@ const SearchSidebar = ({
     const clearAll = useCallback(() => {
         dispatch(removeAllUserFormSearch() as any)
     }, []);
+
+    useEffect(() => {
+        inputRef.current?.focus()
+    }, [open])
 
     return (
         <div>
