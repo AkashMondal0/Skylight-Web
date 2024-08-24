@@ -82,7 +82,7 @@ export const ProfileStories = memo(function ProfileStories({
         }}>
         {/* UploadYourStory */}
         <div className='md:h-24 h-20 w-max'>
-          {isProfile ? <UploadYourStory /> : <></>}
+          {isProfile ? <UploadYourStory className='md:w-20 md:h-20 h-16 w-16 '/> : <></>}
         </div>
         {/* other stories*/}
         <div

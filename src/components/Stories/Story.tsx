@@ -81,7 +81,7 @@ export const Stories = memo(function Story({
                     height: `100px`,
                     overflow: 'auto',
                 }}>
-                <UploadYourStory className=''/>
+                <UploadYourStory className='w-16 h-16'/>
                 <div
                     style={{
                         width: `${columnVirtualizer.getTotalSize()}px`,

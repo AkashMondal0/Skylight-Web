@@ -164,9 +164,9 @@ const PostVirtualList = memo(function PostVirtualList({
                 ))}
               </div>
             </div>}
-        {loadMore ? <div className='h-20 w-full'>
-          <Loader2 className="animate-spin w-10 h-10 mx-auto my-10 text-accent" />
-        </div> : <></>}
+        <div className='h-12 w-full'>
+          {loadMore ? <Loader2 className="animate-spin w-10 h-10 mx-auto text-accent" />  : <></>}
+        </div>
         <NavigationBottom />
       </div>
     </>

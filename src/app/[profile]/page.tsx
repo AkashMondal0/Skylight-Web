@@ -143,7 +143,7 @@ const PostGridListVirtualList = memo(function PostGridListVirtualList({
                         <div className="mx-auto max-w-[960px] h-full">
                             <Loader2 className="animate-spin w-10 h-10 mx-auto my-10 text-accent" />
                         </div> :
-                        <>
+                        <div>
                             <div
                                 className='mx-auto max-w-[960px] h-full'
                                 style={{
@@ -172,18 +172,16 @@ const PostGridListVirtualList = memo(function PostGridListVirtualList({
                                     </div>))}
                                 </div>
                             </div>
-                            <div className="mx-auto my-10 w-max">
+                            <div className="w-10 h-16 mx-auto flex items-end">
                                 {pageLoaded && profileUser.morePostsLoading ?
                                     <Loader2 className="animate-spin w-10 h-10 text-accent" /> :
-                                    profileUser.state?.postCount === totalFetchedItemCount ? <></> :
-                                        <Button className="w-10 h-10 p-0 rounded-full" variant={"secondary"} onClick={() => {
-                                            fetchMore(profileUser.state)
-                                        }}>
+                                    profileUser.state?.postCount === data.length ? <></> :
+                                        <Button className="w-10 h-10 p-0 rounded-full" variant={"secondary"}
+                                            onClick={() => { fetchMore(profileUser.state) }}>
                                             <CirclePlus />
                                         </Button>}
                             </div>
-                        </>
-                }
+                        </div>}
             </div>
             <NavigationBottom />
         </div>
