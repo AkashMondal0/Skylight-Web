@@ -47,7 +47,7 @@ export default function Page() {
     } finally {
       setLoadMore(false)
     }
-  }, 1500)
+  }, 1000)
 
   useEffect(() => {
     if (!pageLoaded) {
@@ -102,7 +102,7 @@ const PostVirtualList = memo(function PostVirtualList({
       }
       if (virtualizer.range?.startIndex && virtualizer.scrollDirection === 'forward') {
         const start = virtualizer.range.startIndex
-        if (start === count - 2 && !loadMore) {
+        if (start === count - 4 && !loadMore) {
           fetchMore()
         }
       }

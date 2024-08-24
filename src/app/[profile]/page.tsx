@@ -101,6 +101,7 @@ const PostGridListVirtualList = memo(function PostGridListVirtualList({
                 _kSavedOffset = virtualizer.scrollOffset || 0;
             }
             if (virtualizer.range?.startIndex && virtualizer.scrollDirection === 'forward') {
+                if (profileUser.state?.postCount === data.length) return
                 const start = virtualizer.range.startIndex
                 if (start === count - 2 && !loadMore) {
                     fetchMore(profileUser.state)
