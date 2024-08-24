@@ -15,6 +15,8 @@ import { debounce } from "lodash";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { User } from "@/types";
+import { Button } from "@/components/ui/button";
+import { CirclePlus } from "@/components/sky/icons";
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 let profileUsername = "no_username"
@@ -81,7 +83,6 @@ const PostGridListVirtualList = memo(function PostGridListVirtualList({
 }) {
     const profileUser = useSelector((Root: RootState) => Root.profile)
     const parentRef = useRef<HTMLDivElement>(null)
-    const dimension = useWindowDimensions()
     const [mounted, setMounted] = useState(false)
     const data = useMemo(() => profileUser?.posts.length ? profileUser.posts : [], [profileUser.posts.length])
     const count = useMemo(() => Math.ceil(data.length / 3), [data.length])
@@ -119,10 +120,10 @@ const PostGridListVirtualList = memo(function PostGridListVirtualList({
 
     if (!mounted) return <></>
     return (
-        <>
+        <div className="flex flex-col w-full h-dvh">
             <div ref={parentRef}
                 style={{
-                    height: dimension.height ?? "100%",
+                    height: "100%",
                     width: '100%',
                     overflowY: 'auto',
                     contain: 'strict',
@@ -139,12 +140,12 @@ const PostGridListVirtualList = memo(function PostGridListVirtualList({
                 {pageLoaded && profileUser.error ?
                     <NotFound message={profileUser?.error ?? "PAGE_NOT_FOUND"} /> :
                     !pageLoaded || profileUser.postLoading || profileUser.loading ?
-                        <div className="min-h-dvh mx-auto max-w-[960px] ">
+                        <div className="mx-auto max-w-[960px] h-full">
                             <Loader2 className="animate-spin w-10 h-10 mx-auto my-10 text-accent" />
                         </div> :
                         <>
                             <div
-                                className='mx-auto max-w-[960px] min-h-full'
+                                className='mx-auto max-w-[960px] h-full'
                                 style={{
                                     height: virtualizer.getTotalSize(),
                                     width: '100%',
@@ -171,12 +172,21 @@ const PostGridListVirtualList = memo(function PostGridListVirtualList({
                                     </div>))}
                                 </div>
                             </div>
-                            {pageLoaded && profileUser.morePostsLoading ? <Loader2 className="animate-spin w-10 h-10 mx-auto my-10 text-accent" /> : <></>}
+                            <div className="mx-auto my-10 w-max">
+                                {pageLoaded && profileUser.morePostsLoading ?
+                                    <Loader2 className="animate-spin w-10 h-10 text-accent" /> :
+                                    profileUser.state?.postCount === totalFetchedItemCount ? <></> :
+                                        <Button className="w-10 h-10 p-0 rounded-full" variant={"secondary"} onClick={() => {
+                                            fetchMore(profileUser.state)
+                                        }}>
+                                            <CirclePlus />
+                                        </Button>}
+                            </div>
                         </>
                 }
-                <NavigationBottom />
             </div>
-        </>
+            <NavigationBottom />
+        </div>
     )
 }, ((pre: any, next: any) => {
     return pre?.scrollToTop === next?.scrollToTop

@@ -1,7 +1,6 @@
 "use client"
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual';
-import useWindowDimensions from '@/lib/useWindowDimensions';
 import { NavigationBottom } from '@/components/Navigation/NavigationBottom';
 import { AppHeader } from '@/components/Header/Header';
 import { Stories } from '@/components/Stories/Story';
@@ -30,7 +29,7 @@ export default function Page() {
 
   const fetchMore = debounce(async () => {
     if (loadMore) return
-    if (!totalFetchedItemCount) return toast.info("No more posts to fetch")
+    if (!totalFetchedItemCount) return
     setLoadMore(true)
     try {
       const res = await dispatch(fetchAccountFeedApi({
@@ -48,7 +47,7 @@ export default function Page() {
     } finally {
       setLoadMore(false)
     }
-  }, 500)
+  }, 1500)
 
   useEffect(() => {
     if (!pageLoaded) {
@@ -56,8 +55,8 @@ export default function Page() {
         offset: 0,
         limit: 12
       }) as any)
-      pageLoaded = true
     }
+    pageLoaded = true
   }, [])
 
   return (
@@ -83,7 +82,6 @@ const PostVirtualList = memo(function PostVirtualList({
   loadMore: boolean
 }) {
   const parentRef = React.useRef<HTMLDivElement>(null)
-  const dimension = useWindowDimensions()
   const [mounted, setMounted] = useState(false)
 
   const data = useMemo(() => posts.feeds, [posts.feeds])
@@ -104,7 +102,7 @@ const PostVirtualList = memo(function PostVirtualList({
       }
       if (virtualizer.range?.startIndex && virtualizer.scrollDirection === 'forward') {
         const start = virtualizer.range.startIndex
-        if (start === count - 3 && !loadMore) {
+        if (start === count - 2 && !loadMore) {
           fetchMore()
         }
       }
@@ -126,8 +124,8 @@ const PostVirtualList = memo(function PostVirtualList({
   return (
     <>
       <div ref={parentRef}
+        className='h-dvh'
         style={{
-          height: dimension.height ?? "100%",
           width: '100%',
           overflowY: 'auto',
           contain: 'strict',
@@ -136,37 +134,39 @@ const PostVirtualList = memo(function PostVirtualList({
         <AppHeader />
         <Stories />
         <PostUploadProgress />
-        <div
-          className='min-h-full mb-16'
-          style={{
-            height: virtualizer.getTotalSize(),
-            width: '100%',
-            position: 'relative',
-          }}>
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              transform: `translateY(${items[0]?.start ?? 0}px)`,
-            }}>
-            {items.map((virtualRow) => (
+        {!pageLoaded || !loadMore && posts.feedsLoading ? <PostFeedSkeleton /> :
+          count <= 0 ? <EmptyPost /> :
+            <div
+              className='min-h-full'
+              style={{
+                height: virtualizer.getTotalSize(),
+                width: '100%',
+                position: 'relative',
+              }}>
               <div
-                key={virtualRow.key}
-                data-index={virtualRow.index}
-                ref={virtualizer.measureElement}>
-                <div style={{ padding: '10px 0' }}>
-                  <PostFeed post={data[virtualRow.index]}
-                    key={data[virtualRow.index].id} />
-                </div>
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  transform: `translateY(${items[0]?.start ?? 0}px)`,
+                }}>
+                {items.map((virtualRow) => (
+                  <div
+                    key={virtualRow.key}
+                    data-index={virtualRow.index}
+                    ref={virtualizer.measureElement}>
+                    <div style={{ padding: '10px 0' }}>
+                      <PostFeed post={data[virtualRow.index]}
+                        key={data[virtualRow.index].id} />
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          {!pageLoaded || posts.feedsLoading ? <>
-            <Loader2 className="animate-spin w-10 h-10 mx-auto my-10 text-accent" />
-          </> : <></>}
-        </div>
+            </div>}
+        {loadMore ? <div className='h-20 w-full'>
+          <Loader2 className="animate-spin w-10 h-10 mx-auto my-10 text-accent" />
+        </div> : <></>}
         <NavigationBottom />
       </div>
     </>
@@ -177,3 +177,12 @@ const PostVirtualList = memo(function PostVirtualList({
     && preProps.posts.feedsError === nextProps.posts.feedsError
     && preProps.loadMore === nextProps.loadMore
 }))
+
+
+const EmptyPost = () => {
+  return (
+    <div className='flex justify-center items-center h-full'>
+      <h1 className='text-2xl'>No posts found</h1>
+    </div>
+  )
+}

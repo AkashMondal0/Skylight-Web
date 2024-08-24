@@ -74,16 +74,17 @@ export const ProfileStories = memo(function ProfileStories({
       </Button>
       <div
         ref={parentRef}
-        className="mx-auto px-3 flex hideScrollbar"
+        className="mx-auto flex hideScrollbar"
         style={{
           width: `100%`,
           height: `100%`,
           overflow: 'auto',
         }}>
-
-        <div className='mx-4'>
-          <UploadYourStory className='md:w-20 md:h-20 h-16 w-16' />
+        {/* UploadYourStory */}
+        <div className='md:h-24 h-20 w-max'>
+          {isProfile ? <UploadYourStory /> : <></>}
         </div>
+        {/* other stories*/}
         <div
           style={{
             width: `${columnVirtualizer.getTotalSize()}px`,

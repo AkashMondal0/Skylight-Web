@@ -132,6 +132,7 @@ export const fetchAccountFeedApi = createAsyncThunk(
     'fetchAccountFeedApi/get',
     async (limitAndOffset: findDataInput, thunkApi) => {
         try {
+            // await new Promise((resolve) => setTimeout(resolve, 6000))
             const res = await graphqlQuery({
                 query: FeedQuery.query,
                 variables: { limitAndOffset }
