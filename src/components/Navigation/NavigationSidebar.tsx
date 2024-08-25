@@ -20,7 +20,7 @@ import MoreDropdownMenu from "@/components/Option/HomePageMenu"
 import { useSession } from "next-auth/react"
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import { configs } from "@/configs"
-import { NotificationPopup, NotificationPing } from "../Alert"
+import { NotificationPopup, NotificationPing, NotificationIndicator } from "../Alert"
 import { useDispatch, useSelector } from "react-redux"
 import {
     toggleCreatePostModal,
@@ -58,7 +58,12 @@ export const NavigationSidebar = memo(function NavigationSidebar({
         { icon: <Compass className="w-full h-full p-[2px]" />, label: "Explore", onClick: () => pageChange('/explore') },
         { icon: <Film className="w-full h-full p-[2px]" />, label: "Reels", onClick: () => pageChange('/reels/5') },
         { icon: <MessageCircleCode className="w-full h-full p-[2px]" />, label: "Messages", onClick: () => pageChange('/message'), countIndicatorComponent: <NotificationPing /> },
-        { icon: <Heart className="w-full h-full p-[2px]" />, label: "Notifications", onClick: () => { dispatch(toggleNotificationSidebar()) }, popupIndicatorComponent: <NotificationPopup /> },
+        {
+            icon: <Heart className="w-full h-full p-[2px]" />,
+            label: "Notifications", onClick: () => { dispatch(toggleNotificationSidebar()) },
+            popupIndicatorComponent: <NotificationPopup />,
+            indicatorComponent: <NotificationIndicator />
+        },
         { icon: <UploadPostDialog><CopyPlus className="w-full h-full p-[2px]" /></UploadPostDialog>, label: "Create", onClick: () => { dispatch(toggleCreatePostModal()) } },
         { icon: <SkyAvatar url={session?.image ?? null} className="h-8 w-8" />, label: "Profile", onClick: () => pageChange(`/${session?.username ?? ""}`) },
     ]
@@ -87,6 +92,7 @@ export const NavigationSidebar = memo(function NavigationSidebar({
                                 icon, label, onClick,
                                 countIndicatorComponent,
                                 popupIndicatorComponent,
+                                indicatorComponent
                             }, index) => {
                                 return <NavigationItem
                                     key={index}
@@ -94,6 +100,7 @@ export const NavigationSidebar = memo(function NavigationSidebar({
                                     label={label}
                                     popupIndicatorComponent={popupIndicatorComponent}
                                     countIndicatorComponent={countIndicatorComponent}
+                                    indicatorComponent={indicatorComponent}
                                     hideLabel={hideLabelClass}
                                     onClick={onClick} />
                             })}
@@ -177,6 +184,7 @@ const NavigationItem = ({
                                     <div className="w-8 h-8 flex items-start justify-center">
                                         {icon}
                                     </div>
+                                    {indicatorComponent ?? <></>}
                                     {countIndicatorComponent ?? <></>}
                                 </div>
                                 {hideLabel ? <></> : <p className={cn("text-primary-500 text-base hidden xl:block",
@@ -185,8 +193,22 @@ const NavigationItem = ({
                             {popupIndicatorComponent ?? <></>}
                         </div>
                     </TooltipTrigger>
-                    <TooltipContent side="right" className="rounded-full">
-                        <p>{label}</p>
+                    <TooltipContent
+                        side="right"
+                        className="p-0 bg-transparent border-none">
+                        {/* <p>{label}</p> */}
+                        <div className={cn(`pl-3`)}>
+                            <div className={cn(`w-max flex items-center
+                                 bg-accent justify-center h-10 rounded-xl
+                                  transition duration-500 ease-in-out`)}>
+                                <div className={cn("h-4 w-4 bg-accent relative right-[0.4rem] rotate-45 rounded-sm")} />
+                                <div className={cn("w-max pr-3")}>
+                                    <p className="font-semibold">
+                                        {label}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>

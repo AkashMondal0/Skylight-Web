@@ -5,6 +5,12 @@ import { Heart, MessageCircle } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setOffNotificationPopup, setOnNotificationPopup } from "@/redux/slice/notification";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 let initial = false
 const NotificationPopup = memo(function NotificationPopup() {
     const notifications = useSelector((state: RootState) => state.notification)
@@ -41,7 +47,7 @@ const NotificationPopup = memo(function NotificationPopup() {
     }
 
     return (
-        <>
+        <div>
             {/* sm */}
             <div className="h-auto flex md:hidden items-center flex-none flex-col">
                 <div className={cn(`absolute py-2`)}>
@@ -70,36 +76,44 @@ const NotificationPopup = memo(function NotificationPopup() {
                 </div>
             </div>
             {/* lg */}
-            <div className="h-auto md:flex hidden items-center flex-none">
-                <div className={cn(`absolute pl-3`)}>
-                    <div className={cn(`
-                w-max flex items-center bg-red-500 justify-center
-                 h-9 rounded-xl transition duration-500 ease-in-out`,
-                        notifications.notificationPopup ? "" : "scale-0"
-                    )}>
-                        <div className={cn("h-4 w-4 bg-red-500 relative right-[0.3rem] rotate-45 rounded-sm")} />
-                        <div className={cn("flex items-center pr-2 gap-1 transition-all duration-700 ease-in-out",
-                            notifications.notificationPopup ? "opacity-100" : "opacity-0")}>
+            <div className="md:flex hidden">
+                <TooltipProvider>
+                    <Tooltip open delayDuration={3}>
+                        <TooltipTrigger asChild>
+                            <div />
+                        </TooltipTrigger>
+                        <TooltipContent
+                            side="right"
+                            className="p-0 border-none bg-transparent">
+                            <div className={cn(`pl-3`)}>
+                                <div className={cn(`w-max flex items-center bg-red-500 justify-center h-10 rounded-xl transition duration-500 ease-in-out`,
+                                    notifications.notificationPopup ? "" : "scale-0"
+                                )}>
+                                    <div className={cn("h-4 w-4 bg-red-500 relative right-[0.4rem] rotate-45 rounded-sm")} />
+                                    <div className={cn("flex items-center pr-2 gap-1 transition-all duration-700 ease-in-out",
+                                        notifications.notificationPopup ? "opacity-100" : "opacity-0")}>
 
-                            {notifications.unreadPostLikeCount > 0 ? <div className="flex gap-1 items-center">
-                                <Heart className="w-5 h-5 fill-current text-white" />
-                                <p className="font-semibold text-white">
-                                    {notifications.unreadPostLikeCount}
-                                </p>
-                            </div> : <></>}
+                                        {notifications.unreadPostLikeCount > 0 ? <div className="flex gap-1 items-center">
+                                            <Heart className="w-5 h-5 fill-current text-white" />
+                                            <p className="font-semibold text-white">
+                                                {notifications.unreadPostLikeCount}
+                                            </p>
+                                        </div> : <></>}
 
-                            {notifications.unreadCommentCount > 0 ? <div className="flex gap-1 items-center">
-                                <MessageCircle className="w-5 h-5 fill-current text-white" />
-                                <p className="font-semibold text-white">
-                                    {notifications.unreadCommentCount}
-                                </p>
-                            </div> : <></>}
-
-                        </div>
-                    </div>
-                </div>
+                                        {notifications.unreadCommentCount > 0 ? <div className="flex gap-1 items-center">
+                                            <MessageCircle className="w-5 h-5 fill-current text-white" />
+                                            <p className="font-semibold text-white">
+                                                {notifications.unreadCommentCount}
+                                            </p>
+                                        </div> : <></>}
+                                    </div>
+                                </div>
+                            </div>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
             </div>
-        </>
+        </div>
     );
 }, (() => true))
 

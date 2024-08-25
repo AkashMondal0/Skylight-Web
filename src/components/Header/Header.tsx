@@ -5,7 +5,7 @@ import React, { memo } from 'react'
 import { useRouter } from 'next/navigation'
 import { configs } from '@/configs'
 import UploadPostDialog from '@/components/Dialog/UploadPost.Dialog'
-import NotificationPopup from '../Alert/NotificationPopup'
+import {NotificationPopup,NotificationIndicator} from '../Alert'
 
 export const AppHeader = memo(function AppHeader() {
     // console.info("<AppHeader/>")
@@ -20,6 +20,7 @@ export const AppHeader = memo(function AppHeader() {
                 </div>
                 <div className="flex items-center gap-4">
                     <div>
+                        <NotificationIndicator/>
                         <Heart size={28}
                             className='cursor-pointer'
                             onClick={() => {
