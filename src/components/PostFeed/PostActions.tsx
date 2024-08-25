@@ -1,7 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useContext, useRef, useState } from 'react'
 import { Heart, Send, MessageCircle, BookMarked } from 'lucide-react';
-import { Notification, NotificationType, Post, PostActionsProps, disPatchResponse } from '@/types';
+import { Notification, NotificationType, Post, disPatchResponse } from '@/types';
 import { createPostLikeApi, destroyPostLikeApi, fetchPostLikesApi } from '@/redux/services/post';
 import { useDispatch } from 'react-redux';
 import { toast } from 'sonner';
@@ -29,68 +28,74 @@ const PostActions = ({
 
     const likeHandle = useCallback(async () => {
         if (loading.current) return
-        loading.current = true
-
         if (post.isDummy) return toast("this dummy post")
-        if (!session.data?.user) return toast("Please login first")
-
-        const res = await dispatch(createPostLikeApi(post.id) as any) as disPatchResponse<any>
-
-        if (res.error) {
-            toast("Something went wrong!")
-            return
-        }
-        setLike((pre) => ({ ...pre, isLike: true, likeCount: pre.likeCount + 1 }))
-        if(post.user.id === session.data.user.id) return loading.current = false
-        const notificationRes = await dispatch(createNotificationApi({
-            postId: post.id,
-            authorId: session.data?.user.id,
-            type: NotificationType.Like,
-            recipientId: post.user.id
-        }) as any) as disPatchResponse<Notification>
-        SocketState.socket?.emit(event_name.notification.post, {
-            ...notificationRes.payload,
-            author: {
-                username: session.data?.user.username,
-                profilePicture: session.data?.user.image
-            },
-            post: {
-                id: post.id,
-                fileUrl: post.fileUrl,
+        try {
+            loading.current = true
+            if (!session.data?.user) return toast("Please login first")
+            const res = await dispatch(createPostLikeApi(post.id) as any) as disPatchResponse<any>
+            if (res.error) {
+                toast("Something went wrong!")
+                return
             }
-        })
-        loading.current = false
-    }, [SocketState.socket, post.id, post.isDummy, post.user, session.data?.user])
+            setLike((pre) => ({ ...pre, isLike: true, likeCount: pre.likeCount + 1 }))
+            if (post.user.id === session.data.user.id) return
+            const notificationRes = await dispatch(createNotificationApi({
+                postId: post.id,
+                authorId: session.data?.user.id,
+                type: NotificationType.Like,
+                recipientId: post.user.id
+            }) as any) as disPatchResponse<Notification>
+            SocketState.sendDataToServer(event_name.notification.post, {
+                ...notificationRes.payload,
+                author: {
+                    username: session.data?.user.username,
+                    profilePicture: session.data?.user.image
+                },
+                post: {
+                    id: post.id,
+                    fileUrl: post.fileUrl,
+                }
+            })
+        } catch (error) {
+            toast("Something went wrong!")
+        } finally {
+            loading.current = false
+        }
+    }, [SocketState, post.fileUrl, post.id, post.isDummy, post.user.id, session?.data?.user])
 
     const disLikeHandle = useCallback(async () => {
         if (loading.current) return
-        loading.current = true
-        if (!session.data?.user) return toast("Please login first")
         if (post.isDummy) return toast("this dummy post")
-        const res = await dispatch(destroyPostLikeApi(post.id) as any) as disPatchResponse<any>
-        if (res.error) {
+        try {
+            loading.current = true
+            if (!session.data?.user) return toast("Please login first")
+            const res = await dispatch(destroyPostLikeApi(post.id) as any) as disPatchResponse<any>
+            if (res.error) {
+                return toast("Something went wrong!")
+            }
+            setLike((pre) => ({ ...pre, isLike: false, likeCount: pre.likeCount - 1 }))
+            if (post.user.id === session.data.user.id) return
+            await dispatch(destroyNotificationApi({
+                postId: post.id,
+                authorId: session.data?.user.id,
+                type: NotificationType.Like,
+                recipientId: post.user.id
+            }) as any)
+        } catch (error) {
             toast("Something went wrong!")
-            return
+        } finally {
+            loading.current = false
         }
-        if(post.user.id === session.data.user.id) return loading.current = false
-        setLike((pre) => ({ ...pre, isLike: false, likeCount: pre.likeCount - 1 }))
-        await dispatch(destroyNotificationApi({
-            postId: post.id,
-            authorId: session.data?.user.id,
-            type: NotificationType.Like,
-            recipientId: post.user.id
-        }) as any)
-        loading.current = false
-    }, [SocketState.socket, post.id, post.isDummy, post.user, session.data?.user])
+    }, [post.id, post.isDummy, post.user.id, session?.data?.user])
 
-    const fetchLikes = async () => {
+    const fetchLikes = useCallback(async () => {
         if (post.isDummy) return toast("this dummy post")
         dispatch(fetchPostLikesApi({
             offset: 0,
             limit: 16,
             id: post.id
         }) as any)
-    }
+    }, [post.id, post.isDummy])
     return (
         <>
             <div className=' mt-5 mb-1 mx-3 flex justify-between'>

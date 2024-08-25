@@ -19,10 +19,12 @@ let loadedRef = true
 
 interface SocketStateType {
     socket: Socket | null
+    sendDataToServer: (eventName: string, data: unknown) => void
 }
 
 export const SocketContext = createContext<SocketStateType>({
     socket: null,
+    sendDataToServer: () => { }
 })
 
 
@@ -118,8 +120,18 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
     }, [session, list, socketRef.current, conversation])
 
 
+    const sendDataToServer = useCallback((eventName: string, data: unknown) => {
+        if (socketRef.current) {
+            socketRef.current.emit(eventName, data)
+        }
+    }, [])
+
+
     return (
-        <SocketContext.Provider value={{ socket: socketRef.current }}>
+        <SocketContext.Provider value={{ 
+            socket: socketRef.current,
+            sendDataToServer
+         }}>
             {children}
         </SocketContext.Provider>
     )

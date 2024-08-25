@@ -1,4 +1,4 @@
-export const event_name = {
+export const event_name = Object.freeze({
     conversation: {
         message: "conversation_message",
         seen: "conversation_message_seen",
@@ -6,7 +6,7 @@ export const event_name = {
         listRefetch: "conversation_list_refetch",
     },
     notification: {
-        post:"notification_post",
+        post: "notification_post",
         followRequest: {}
     },
-}
+})
