@@ -6,31 +6,50 @@ import { SkyAvatar } from '@/components/sky'
 import { timeAgoFormat } from '@/lib/timeFormat'
 import { fetchOnePostApi, fetchPostCommentsApi } from '@/redux/services/post'
 import { RootState } from '@/redux/store'
-import { Comment } from '@/types'
+import { Comment, Post, disPatchResponse } from '@/types'
 import { Heart } from 'lucide-react'
-import React, { memo, useEffect } from 'react'
+import React, { memo, useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'sonner'
 let loadedRef = false
 let loadedPostId = "noPostId"
 
 const Page = ({ params }: { params: { post: string } }) => {
   const dispatch = useDispatch()
   const post = useSelector((Root: RootState) => Root.posts.viewPost)
-  const loading = useSelector((Root: RootState) => Root.posts.viewPostLoading)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
-  useEffect(() => {
-    if (params.post !== loadedPostId) {
-      dispatch(fetchOnePostApi(params.post) as any)
-      dispatch(fetchPostCommentsApi({
-        id: params.post,
+  const fetchApi = useCallback(async () => {
+    try {
+      const res = await dispatch(fetchOnePostApi(params.post) as any) as disPatchResponse<Post>
+      if (res.error) {
+        setError(true)
+        return toast.error("Failed to load post")
+      }
+      await dispatch(fetchPostCommentsApi({
+        id: res.payload.id,
         offset: 0,
         limit: 12
       }) as any)
+    } catch (e) {
+      setError(true)
+      toast.error("Failed to load post")
+    } finally {
+      setLoading(false)
+    }
+  }, [params.post])
+
+  useEffect(() => {
+    if (params.post !== loadedPostId) {
+      fetchApi()
       loadedRef = true;
     }
   }, []);
 
-  if (!post && loadedRef && !loading) return <NotFound />
+  if (loading) return <CommentListSkeleton />
+
+  if (error) return <NotFound />
 
   if (post) {
     return (
@@ -51,9 +70,10 @@ const Page = ({ params }: { params: { post: string } }) => {
                 </div>
               </div>
               {/* list */}
-              {loading || !loadedRef ? <CommentListSkeleton /> :
-                post.comments.length <= 0 ? <EmptyComment /> :
-                  post?.comments.map((comment, i) => <CommentItem key={i} comment={comment} />)}
+              {!loading && post.comments.length <= 0 ? <EmptyComment /> :
+                <div className='space-y-4'>
+                  {post?.comments.map((comment, i) => <CommentItem key={i} comment={comment} />)}
+                </div>}
             </div>
           </div>
           {/* input */}
@@ -96,9 +116,9 @@ const CommentItem = memo(function CommentItem({
       </div>
     </>
   )
-},((pre,next)=>{
-  return pre.comment.id === next.comment.id 
-  && pre.comment.content === next.comment.content
+}, ((pre, next) => {
+  return pre.comment.id === next.comment.id
+    && pre.comment.content === next.comment.content
 }))
 
 const EmptyComment = () => {

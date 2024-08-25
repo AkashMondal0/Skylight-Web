@@ -1,6 +1,6 @@
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton"
-import { ChevronLeft } from "lucide-react";
+import { AppNavbar } from "../Header/Header";
 
 export const ImageViewLoading = () => {
     return (<>
@@ -60,7 +60,7 @@ export const ModelPostSkeleton = () => {
 export const PostPageLoading = () => {
 
     return (
-        <div className='w-full h-full smp-5 overflow-hidden'>
+        <div className='w-full h-full sm:p-5 overflow-hidden'>
             <div className="hidden md:flex max-h-[690px] mx-auto my-5 flex-wrap md:border max-w-[860px] min-h-min">
                 {/* left side */}
                 <div className='flex-1 h-auto m-auto'>
@@ -72,18 +72,9 @@ export const PostPageLoading = () => {
                 </div>
             </div>
 
+            {/* sm */}
             <div className="w-full h-dvh flex md:hidden flex-col">
-                <div className={"w-full h-14 border-b"}>
-                    <div className="flex justify-between items-center h-full w-full">
-                        <div className='md:hidden cursor-pointer'>
-                            <ChevronLeft size={30}/>
-                        </div>
-                        <div className='text-xl font-semibold'>
-                            Post
-                        </div>
-                        <div className='w-10' />
-                    </div>
-                </div>
+                <AppNavbar name="Loading"/>
                 <PostFeedSkeleton />
             </div>
 
@@ -93,7 +84,7 @@ export const PostPageLoading = () => {
 
 export const PostFeedSkeleton = ({ size = 1 }: { size?: number }) => {
     return (
-        <>{Array(size).fill(0).map((_,i) => {
+        <>{Array(size).fill(0).map((_, i) => {
             return (
                 <div className='sm:max-w-[480px] w-full sm:mx-auto py-6 border-b p-1' key={i}>
                     {/* post header */}

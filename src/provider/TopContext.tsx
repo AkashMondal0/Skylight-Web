@@ -25,12 +25,12 @@ const TopContext = memo(function TopContext() {
         splashShow = false
         const timeoutId = setTimeout(() => {
             setIsLoading(false)
-        }, 900); // 0.9 seconds delay
+        }, 600); // 0.6 seconds delay
 
         return () => clearTimeout(timeoutId); // Cleanup on unmount
     }, []);
     return (<>
-    {/* <SplashScreen show={isLoading} /> */}
+    <SplashScreen show={isLoading} />
     </>)
 }, (() => true))
 

@@ -22,7 +22,9 @@ const PostPage = ({ params }: { params: { post: string } }) => {
   }, []);
 
   if (Post.viewPostLoading || !loadedRef.current) {
-    return <Fragment><ModelPostSkeleton /></Fragment>
+    return <div className='w-full flex justify-center'>
+      <div className='w-max'><ModelPostSkeleton /></div>
+    </div>
   }
 
   if (!Post.viewPostLoading && Post.viewPostError || !Post.viewPost) {
@@ -31,34 +33,29 @@ const PostPage = ({ params }: { params: { post: string } }) => {
   }
 
   return (
-    <div className='w-full h-full'>
+    <>
       {/* lg */}
-      <div className='w-full max-h-full max-w-[660px] mx-auto p-4 md:flex hidden '>
-        <div className='justify-center'>
-          <div className='flex border'>
-            {/* left side */}
-            <div className='w-96 h-auto m-auto'>
-              <PostImage post={Post.viewPost} />
-            </div>
-            {/* right side */}
-            <div className="flex max-h-[688px] flex-col justify-between w-full sm:w-96 flex-1 border-l">
-              {/* header comment input  */}
-              <CommentHeader data={Post.viewPost} />
-              {/* body comments list  */}
-              <CommentList data={Post.viewPost} />
-              {/* footer comment input  */}
-              <CommentInput data={Post.viewPost} />
-            </div>
-          </div>
+      <div className='w-full max-h-dvh max-w-[70%] mx-auto md:flex hidden border-2'>
+        {/* left side */}
+        <div className='w-full h-auto flex-1 flex items-center justify-center'>
+          <PostImage post={Post.viewPost} />
+        </div>
+        {/* right side */}
+        <div className="flex max-h-[688px] flex-col justify-between w-72 flex-1 border-l">
+          {/* header comment input  */}
+          <CommentHeader data={Post.viewPost} />
+          {/* body comments list  */}
+          <CommentList data={Post.viewPost} />
+          {/* footer comment input  */}
+          <CommentInput data={Post.viewPost} />
         </div>
       </div>
-
       {/* sm  */}
       <div className="w-full h-full flex md:hidden flex-col">
-        <AppNavbar name="Post" icon2={<div />}/>
+        <AppNavbar name="Post" icon2={<div />} />
         <PostFeed post={Post.viewPost} />
       </div>
-    </div>
+    </>
   )
 }
 
