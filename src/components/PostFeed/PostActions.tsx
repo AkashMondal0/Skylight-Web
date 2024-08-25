@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useRef, useState } from 'react'
+import React, { memo, useCallback, useContext, useRef, useState } from 'react'
 import { Heart, Send, MessageCircle, BookMarked } from 'lucide-react';
 import { Notification, NotificationType, Post, disPatchResponse } from '@/types';
 import { createPostLikeApi, destroyPostLikeApi, fetchPostLikesApi } from '@/redux/services/post';
@@ -10,13 +10,13 @@ import { event_name } from '@/configs/socket.event';
 import { useSession } from 'next-auth/react';
 import { createNotificationApi, destroyNotificationApi } from '@/redux/services/notification';
 
-const PostActions = ({
+const PostActions = memo(function PostActions({
     post,
     onNavigate
 }: {
     post: Post
     onNavigate: (path: string) => void,
-}) => {
+}) {
     const dispatch = useDispatch()
     const SocketState = useContext(SocketContext)
     const session = useSession()
@@ -128,6 +128,6 @@ const PostActions = ({
         </>
 
     )
-}
+},(prev, next) => prev.post.id === next.post.id)
 
 export default PostActions

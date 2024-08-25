@@ -66,5 +66,5 @@ export const CommentList = memo(function CommentList({ data }: { data: Post }) {
         </ScrollArea>
     )
 }, ((preProps, nextProps) => {
-    return true
+    return preProps.data.comments.length === nextProps.data.comments.length
 }))

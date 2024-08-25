@@ -2,6 +2,8 @@ import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from '
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Conversation } from '@/types';
 import { MessageUserListItem } from './MessageUserListItem';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
@@ -19,6 +21,7 @@ export const VirtualUserList = memo(function VirtualUserList({
 }) {
     const parentRef = useRef<HTMLDivElement>(null)
     const [mounted, setMounted] = useState(false)
+    const currentTyping = useSelector((Root: RootState) => Root.conversation.currentTyping)
     const data = useMemo(() => {
         return conversation.filter((item) => item.lastMessageCreatedAt !== null)
     }, [conversation])
@@ -75,6 +78,9 @@ export const VirtualUserList = memo(function VirtualUserList({
                                 data-index={virtualRow.index}
                                 ref={virtualizer.measureElement}>
                                 <MessageUserListItem
+                                    currentTyping={currentTyping?.conversationId
+                                        === data[virtualRow.index].id
+                                        && currentTyping?.typing}
                                     data={data[virtualRow.index]}
                                     key={data[virtualRow.index].id} />
                             </div>

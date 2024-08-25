@@ -1,7 +1,7 @@
 import { createPostCommentApi } from "@/redux/services/post"
 import { Comment, NotificationType, Post, disPatchResponse } from "@/types"
 import { useSession } from "next-auth/react"
-import { memo, useContext, useRef } from "react"
+import { memo, useCallback, useContext, useRef } from "react"
 import { useDispatch } from "react-redux"
 import PostActions from "@/components/PostFeed/PostActions"
 import { Smile } from "lucide-react"
@@ -25,13 +25,12 @@ export const CommentInput = memo(function CommentInput({
     const loadingRef = useRef(false)
 
 
-    const handleComment = async () => {
+    const handleComment = useCallback(async () => {
+        if (!inputRef.current?.value || loadingRef.current) return
+        if (!session) return alert("Your not logged in")
+        if (!data?.id) return alert("Post not found")
         try {
-            if (!inputRef.current?.value) return
-            if (loadingRef.current) return
             loadingRef.current = true
-            if (!session) return alert("Your not logged in")
-            if (!data?.id) return alert("Post not found")
             const commentRes = await dispatch(createPostCommentApi({
                 postId: data.id,
                 user: {
@@ -45,7 +44,7 @@ export const CommentInput = memo(function CommentInput({
                 authorId: session.id
             }) as any) as disPatchResponse<Comment>
 
-            if(data.user.id === session.id) return
+            if (data.user.id === session.id) return
             if (commentRes.payload.id) {
                 // notification
                 const notificationRes = await dispatch(createNotificationApi({
@@ -55,7 +54,7 @@ export const CommentInput = memo(function CommentInput({
                     type: NotificationType.Comment,
                     recipientId: data.user.id
                 }) as any) as disPatchResponse<Notification>
-                SocketState.socket?.emit(event_name.notification.post, {
+                SocketState.sendDataToServer(event_name.notification.post, {
                     ...notificationRes.payload,
                     author: {
                         username: session.username,
@@ -66,14 +65,14 @@ export const CommentInput = memo(function CommentInput({
                         fileUrl: data.fileUrl,
                     },
                 })
+                inputRef.current.value = ""
             } else {
                 toast("Something went wrong!")
             }
         } finally {
             loadingRef.current = false
-            inputRef.current.value = ""
         }
-    }
+    }, [SocketState, data.fileUrl, data.id, data.user.id, session])
 
     return (<div className='w-full bg-background border-t sticky bottom-0'>
         {hideActionButtons ? <></> : <PostActions post={data} onNavigate={() => { }} />}
@@ -89,5 +88,5 @@ export const CommentInput = memo(function CommentInput({
         </div>
     </div>)
 }, ((preProps, nextProps) => {
-    return preProps.data.comments.length === nextProps.data.comments.length
+    return preProps.data.id === nextProps.data.id
 }))

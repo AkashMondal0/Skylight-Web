@@ -4,12 +4,11 @@ import { event_name } from "@/configs/socket.event"
 import { cn } from "@/lib/utils"
 import { SocketContext } from "@/provider/Socket_Provider"
 import { conversationSeenAllMessage } from "@/redux/services/conversation"
-import { RootState } from "@/redux/store"
 import { Conversation } from "@/types"
 import { useSession } from "next-auth/react"
 import { useParams, useRouter } from "next/navigation"
 import { memo, useContext, useMemo } from "react"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { toast } from "sonner"
 const timeFormat = (time: string | Date | undefined) => {
     if (!time) return ""
@@ -17,8 +16,10 @@ const timeFormat = (time: string | Date | undefined) => {
 }
 export const MessageUserListItem = memo(function MessageUserListItem({
     data,
+    currentTyping
 }: {
     data: Conversation
+    currentTyping: Boolean
 }) {
     const params = useParams()
     const router = useRouter()
@@ -68,7 +69,9 @@ export const MessageUserListItem = memo(function MessageUserListItem({
                         <p className='font-semibold text-base w-52 text-ellipsis truncate'>
                             {Conversation.name || "group name"}
                         </p>
-                        <UserStatus lastText={Conversation.lastMessageContent} conversationId={data?.id} />
+                        <UserStatus
+                            currentTyping={currentTyping}
+                            lastText={Conversation.lastMessageContent} />
                     </div>
                     <div className='flex items-center flex-col flex-none pr-2'>
                         {timeFormat(Conversation.lastMessageCreatedAt || "")}
@@ -83,13 +86,19 @@ export const MessageUserListItem = memo(function MessageUserListItem({
         && preProps.data?.messages?.length === nextProps.data?.messages?.length
         && preProps.data?.lastMessageContent === nextProps.data?.lastMessageContent
         && preProps.data?.totalUnreadMessagesCount === nextProps.data?.totalUnreadMessagesCount
+        && preProps.currentTyping === nextProps.currentTyping
 }))
 
-const UserStatus = ({ lastText, conversationId }: { lastText: string | any, conversationId: string | any }) => {
-    const currentTyping = useSelector((Root: RootState) => Root.conversation.currentTyping)
+const UserStatus = ({
+    lastText,
+    currentTyping
+}: {
+    lastText: string | any,
+    currentTyping: Boolean
+}) => {
     return (
         <p className='text-sm w-52 text-ellipsis truncate'>
-            {currentTyping?.conversationId === conversationId && currentTyping?.typing ? "typing..." : lastText ?? "new conversation"}
+            {currentTyping ? "typing..." : lastText ?? "new conversation"}
         </p>
     )
 }

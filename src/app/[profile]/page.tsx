@@ -84,7 +84,7 @@ const PostGridListVirtualList = memo(function PostGridListVirtualList({
     const profileUser = useSelector((Root: RootState) => Root.profile)
     const parentRef = useRef<HTMLDivElement>(null)
     const [mounted, setMounted] = useState(false)
-    const data = useMemo(() => profileUser?.posts.length ? profileUser.posts : [], [profileUser.posts.length])
+    const data = useMemo(() => profileUser.posts ?? [], [profileUser.posts])
     const count = useMemo(() => Math.ceil(data.length / 3), [data.length])
 
     const virtualizer = useVirtualizer({
@@ -115,7 +115,9 @@ const PostGridListVirtualList = memo(function PostGridListVirtualList({
             _kSavedOffset = 0;
             _KMeasurementsCache = []
         }
-        setMounted(true)
+        if (!mounted) {
+            setMounted(true)
+        }
     }, [])
     const items = virtualizer.getVirtualItems()
 

@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { useRouter } from 'next/navigation'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,7 +8,7 @@ import { fetchOnePostApi } from '@/redux/services/post'
 import NotFound from '@/components/Error/NotFound'
 import {
   CommentHeader,
-  CommentInput, 
+  CommentInput,
   CommentList,
 } from '@/components/Comment'
 import { ModelPostSkeleton, PostImage } from '@/components/PostFeed'
@@ -19,8 +19,9 @@ export default function Page({ params }: { params: { id: string } }) {
   const router = useRouter()
   const dispatch = useDispatch()
   const loadedRef = useRef(false)
-  const post = useSelector((Root: RootState) => Root.posts)
+  const postState = useSelector((Root: RootState) => Root.posts)
   const [imageError, setImageError] = useState(false)
+  const post = useMemo(() => postState.viewPost, [postState?.viewPost])
 
   useEffect(() => {
     if (!loadedRef.current) {
@@ -29,15 +30,15 @@ export default function Page({ params }: { params: { id: string } }) {
     }
   }, []);
 
-  const onOpenChange = (isOpen: boolean) => {
+  const onOpenChange = useCallback((isOpen: boolean) => {
     if (!isOpen) {
       router.back()
     }
-  }
+  }, [router])
 
-  const onImageError = () => {
+  const onImageError = useCallback(() => {
     setImageError(true)
-  }
+  }, [])
 
   return (
     <Dialog open onOpenChange={onOpenChange}>
@@ -49,21 +50,21 @@ export default function Page({ params }: { params: { id: string } }) {
           borderRadius: 20,
           margin: 5
         }}>
-        {post.viewPostLoading || !loadedRef ? <ModelPostSkeleton/> :
-          post.viewPostError && loadedRef || !post.viewPost ? <NotFound />
+        {postState.viewPostLoading || !loadedRef ? <ModelPostSkeleton /> :
+          postState.viewPostError && loadedRef || !post ? <NotFound />
             :
             <div className='flex flex-wrap w-full'>
               <div className='flex md:flex-1 h-full w-full min-w-96 items-center'>
                 {imageError ? <ImageError /> :
-                  <PostImage post={post.viewPost} onImageError={onImageError} />}
+                  <PostImage post={post} onImageError={onImageError} />}
               </div>
               <div className="flex md:flex-1 h-full w-full min-w-96 flex-col justify-between border-l">
                 {/* header comment input  */}
-                <CommentHeader data={post.viewPost} />
+                <CommentHeader data={post} />
                 {/* body comments list  */}
-                {<CommentList data={post.viewPost} />}
+                {<CommentList data={post} />}
                 {/* footer comment input  */}
-                <CommentInput data={post.viewPost} />
+                <CommentInput data={post} />
               </div>
             </div>
         }
