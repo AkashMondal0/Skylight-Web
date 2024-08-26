@@ -5,7 +5,7 @@ import { RootState } from '@/redux/store'
 import { fetchOnePostApi } from '@/redux/services/post'
 import NotFound from '@/components/Error/NotFound'
 import { ModelPostSkeleton, PostFeed, PostFeedSkeleton, PostImage } from '@/components/PostFeed'
-import { CommentHeader, CommentInput, CommentList } from '@/components/Comment'
+import { CommentHeader, CommentInput, CommentList } from '@/components/PostFeed/Comment'
 import { AppNavbar } from '@/components/Header/Header'
 
 const PostPage = ({ params }: { params: { post: string } }) => {

@@ -10,7 +10,7 @@ import {
   CommentHeader,
   CommentInput,
   CommentList,
-} from '@/components/Comment'
+} from '@/components/PostFeed/Comment'
 import { ModelPostSkeleton, PostImage } from '@/components/PostFeed'
 import { ImageError } from '@/components/sky'
 

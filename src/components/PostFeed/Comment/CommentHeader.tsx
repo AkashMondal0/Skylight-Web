@@ -1,8 +1,8 @@
 import { memo } from "react"
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import { Post } from "@/types"
-import PostOptionsDialog from "../Dialog/Post.Options.Dialog"
-import { EllipsisHorizontal } from "../sky/icons"
+import PostOptionsDialog from "../../Dialog/Post.Options.Dialog"
+import { EllipsisHorizontal } from "../../sky/icons"
 
 export const CommentHeader = memo(function CommentHeader({ data }: { data: Post }) {
 

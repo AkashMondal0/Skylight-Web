@@ -1,5 +1,5 @@
-import { CommentInput } from "./Comment.Input";
-import { CommentList } from "./Comment.List";
+import { CommentInput } from "./CommentInput";
+import { CommentList } from "./CommentList";
 import { CommentHeader } from "./CommentHeader";
 import { CommentViewError, CommentListSkeleton } from "./CommentSkeleton";
 

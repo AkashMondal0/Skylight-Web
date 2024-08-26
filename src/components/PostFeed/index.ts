@@ -3,7 +3,7 @@ import PostImage from './PostImage';
 import { PostComments } from './PostComments';
 import PostActions from './PostActions';
 import PostHeader from './PostHeader';
-import { ModelPostSkeleton, PostFeedSkeleton } from "./Post.Page";
+import { ModelPostSkeleton, PostFeedSkeleton } from "./PostSkeleton";
 
 export {
     PostFeed,

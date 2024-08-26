@@ -1,5 +1,5 @@
 import { memo, useEffect, useRef } from "react"
-import { ScrollArea } from "../ui/scroll-area"
+import { ScrollArea } from "../../ui/scroll-area"
 import { Post } from "@/types"
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import { timeAgoFormat } from "@/lib/timeFormat"

@@ -1,5 +1,5 @@
-import { AppNavbar } from "../Header/Header"
-import { Skeleton } from "../ui/skeleton"
+import { AppNavbar } from "@/components/Header/Header"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export const CommentListSkeleton = () => {
     return (<>

@@ -1,5 +1,5 @@
 "use client"
-import { CommentInput, CommentListSkeleton } from '@/components/Comment'
+import { CommentInput, CommentListSkeleton } from '@/components/PostFeed/Comment'
 import NotFound from '@/components/Error/NotFound'
 import { AppNavbar } from '@/components/Header/Header'
 import { SkyAvatar } from '@/components/sky'
