@@ -21,6 +21,7 @@ export const store = configureStore({
     notification: notificationReducer,
     sidebarSlice: sidebarReducer
   },
+  devTools: true
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
