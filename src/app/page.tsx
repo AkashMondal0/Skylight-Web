@@ -14,6 +14,7 @@ import { Loader2 } from 'lucide-react';
 import { disPatchResponse } from '@/types';
 import { PostFeed, PostFeedSkeleton } from '@/components/PostFeed';
 import { NavigationSidebar, NavigationBottom } from '@/components/Navigation';
+import { useRouter } from 'next/navigation';
 
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
@@ -30,7 +31,11 @@ export default function Page() {
   const count = useMemo(() => posts.length, [posts])
   const parentRef = React.useRef<HTMLDivElement>(null)
   const stopRef = React.useRef(false)
+  const router = useRouter()
 
+  const Navigate = useCallback((path: string) => {
+    router.push(path)
+  }, [router])
   const getPostApi = useCallback(async () => {
     // console.log('fetching more posts')
     if (totalFetchedItemCount === null) return
@@ -136,8 +141,9 @@ export default function Page() {
                       key={virtualRow.key}
                       data-index={virtualRow.index}
                       ref={virtualizer.measureElement}>
-                      <div style={{ padding: '10px 0' }}>
+                      <div style={{ padding: '10px 0' }}> 
                         <PostFeed post={posts[virtualRow.index]}
+                          Navigate={Navigate}
                           key={posts[virtualRow.index].id} />
                       </div>
                     </div>
