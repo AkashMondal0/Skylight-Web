@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { fetchOnePostApi } from '@/redux/services/post'
 import NotFound from '@/components/Error/NotFound'
-import { ModelPostSkeleton, PostFeed, PostImage } from '@/components/PostFeed'
+import { ModelPostSkeleton, PostFeed, PostFeedSkeleton, PostImage } from '@/components/PostFeed'
 import { CommentHeader, CommentInput, CommentList } from '@/components/Comment'
 import { AppNavbar } from '@/components/Header/Header'
 
@@ -22,9 +22,15 @@ const PostPage = ({ params }: { params: { post: string } }) => {
   }, []);
 
   if (Post.viewPostLoading || !loadedRef.current) {
-    return <div className='w-full flex justify-center'>
-      <div className='w-max'><ModelPostSkeleton /></div>
-    </div>
+    return <>
+      <div className='w-full md:flex justify-center hidden'>
+        <div className='w-max'><ModelPostSkeleton /></div>
+      </div>
+      <div className="w-full h-full flex md:hidden flex-col">
+        <AppNavbar name="Post" icon2={<div />} />
+        <PostFeedSkeleton />
+      </div>
+    </>
   }
 
   if (!Post.viewPostLoading && Post.viewPostError || !Post.viewPost) {
