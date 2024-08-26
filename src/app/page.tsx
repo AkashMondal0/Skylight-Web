@@ -116,11 +116,7 @@ export default function Page() {
           <AppHeader />
           <Stories />
           <PostUploadProgress />
-          {loading && count <= 0 ? <PostFeedSkeleton /> :
-            pageLoaded && !loading && count <= 0 ?
-              <div className='flex justify-center items-center h-full'>
-                <h1 className='text-2xl'>No posts found</h1>
-              </div> :
+          {count <= 0 && loading ? <PostFeedSkeleton /> :
               <div
                 className='min-h-full'
                 style={{
@@ -141,7 +137,7 @@ export default function Page() {
                       key={virtualRow.key}
                       data-index={virtualRow.index}
                       ref={virtualizer.measureElement}>
-                      <div style={{ padding: '10px 0' }}> 
+                      <div style={{ padding: '10px 0' }}>
                         <PostFeed post={posts[virtualRow.index]}
                           Navigate={Navigate}
                           key={posts[virtualRow.index].id} />

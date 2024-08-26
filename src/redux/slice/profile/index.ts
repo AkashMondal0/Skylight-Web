@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { AuthorData, Post, User } from '@/types'
-import { fetchMoreUserProfilePostsApi, fetchUserProfileDetailApi, fetchUserProfileFollowerUserApi, fetchUserProfileFollowingUserApi, fetchUserProfilePostsApi } from '@/redux/services/profile'
+import { fetchUserProfileDetailApi, fetchUserProfileFollowerUserApi, fetchUserProfileFollowingUserApi, fetchUserProfilePostsApi } from '@/redux/services/profile'
 
 // Define a type for the slice state
 interface ProfileState {
@@ -12,8 +12,6 @@ interface ProfileState {
     posts: Post[]
     postLoading: boolean
     postError: string | null
-
-    morePostsLoading: boolean
 
     friendShipLoading: boolean
     friendShipError: string | null
@@ -36,8 +34,6 @@ const profileState: ProfileState = {
     posts: [],
     postLoading: false,
     postError: null,
-
-    morePostsLoading: false,
 
     friendShipLoading: false,
     friendShipError: null,
@@ -85,6 +81,7 @@ export const profileSlice = createSlice({
                 state.loading = true
                 state.error = null
                 state.state = null
+                state.posts = []
             })
             .addCase(fetchUserProfileDetailApi.fulfilled, (state, action: PayloadAction<User>) => {
                 state.state = action.payload
@@ -95,32 +92,20 @@ export const profileSlice = createSlice({
                 state.loading = false
                 state.error = action.payload?.message || "Something went wrong!"
                 state.state = null
+                state.posts = []
             })
             // find user profile posts
             .addCase(fetchUserProfilePostsApi.pending, (state) => {
                 state.postLoading = true
                 state.postError = null
-                state.posts = []
             })
             .addCase(fetchUserProfilePostsApi.fulfilled, (state, action: PayloadAction<Post[]>) => {
-                state.posts = action.payload
+                state.posts.push(...action.payload)
                 state.postLoading = false
             })
             .addCase(fetchUserProfilePostsApi.rejected, (state, action) => {
                 state.postLoading = false
                 state.postError = action.error.message || null
-                state.posts = []
-            })
-            // find more user profile posts
-            .addCase(fetchMoreUserProfilePostsApi.pending, (state) => {
-                state.morePostsLoading = true
-            })
-            .addCase(fetchMoreUserProfilePostsApi.fulfilled, (state, action: PayloadAction<Post[]>) => {
-                state.posts.push(...action.payload)
-                state.morePostsLoading = false
-            })
-            .addCase(fetchMoreUserProfilePostsApi.rejected, (state, action) => {
-                state.morePostsLoading = false
             })
             // find user profile following list
             .addCase(fetchUserProfileFollowingUserApi.pending, (state) => {
