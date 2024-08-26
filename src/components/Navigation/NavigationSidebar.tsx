@@ -53,19 +53,51 @@ export const NavigationSidebar = memo(function NavigationSidebar({
         ) return true
     }, [hideLabel, Sidebar.notificationSidebar, Sidebar.searchSidebar])
     const SideIconData = [
-        { icon: <Home className="w-full h-full p-[2px]" />, label: "Home", onClick: () => pageChange('/') },
-        { icon: <Search className="w-full h-full p-[2px]" />, label: "Search", onClick: () => { dispatch(toggleSearchSidebar()) } },
-        { icon: <Compass className="w-full h-full p-[2px]" />, label: "Explore", onClick: () => pageChange('/explore') },
-        { icon: <Film className="w-full h-full p-[2px]" />, label: "Reels", onClick: () => pageChange('/reels/5') },
-        { icon: <MessageCircleCode className="w-full h-full p-[2px]" />, label: "Messages", onClick: () => pageChange('/message'), countIndicatorComponent: <NotificationPing /> },
+        {
+            icon: <Home className="w-full h-full p-[2px]" />,
+            label: "Home",
+            onClick: () => pageChange('/')
+        },
+        {
+            icon: <Search className="w-full h-full p-[2px]" />,
+            label: "Search",
+            onClick: () => { dispatch(toggleSearchSidebar()) }
+        },
+        {
+            icon: <Compass className="w-full h-full p-[2px]" />,
+            label: "Explore",
+            onClick: () => pageChange('/explore')
+        },
+        {
+            icon: <Film className="w-full h-full p-[2px]" />,
+            label: "Reels",
+            onClick: () => pageChange('/reels/5')
+        },
+        {
+            icon: <MessageCircleCode className="w-full h-full p-[2px]" />,
+            label: "Messages",
+            onClick: () => pageChange('/message'),
+            countIndicatorComponent: <NotificationPing />
+        },
         {
             icon: <Heart className="w-full h-full p-[2px]" />,
-            label: "Notifications", onClick: () => { dispatch(toggleNotificationSidebar()) },
+            label: "Notifications",
+            onClick: () => { dispatch(toggleNotificationSidebar()) },
             popupIndicatorComponent: <NotificationPopup />,
             indicatorComponent: <NotificationIndicator />
         },
-        { icon: <UploadPostDialog><CopyPlus className="w-full h-full p-[2px]" /></UploadPostDialog>, label: "Create", onClick: () => { dispatch(toggleCreatePostModal()) } },
-        { icon: <SkyAvatar url={session?.image ?? null} className="h-8 w-8" />, label: "Profile", onClick: () => pageChange(`/${session?.username ?? ""}`) },
+        {
+            icon: <UploadPostDialog>
+                <CopyPlus className="w-full h-full p-[2px]" />
+            </UploadPostDialog>,
+            label: "Create",
+            onClick: () => { dispatch(toggleCreatePostModal()) }
+        },
+        {
+            icon: <SkyAvatar url={session?.image ?? null} className="h-8 w-8" />,
+            label: "Profile",
+            onClick: () => pageChange(`/${session?.username ?? ""}`)
+        },
     ]
 
     if (isHideNav) return <></>

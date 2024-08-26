@@ -47,7 +47,7 @@ const NotificationPopup = memo(function NotificationPopup() {
     }
 
     return (
-        <div>
+        <>
             {/* sm */}
             <div className="h-auto flex md:hidden items-center flex-none flex-col">
                 <div className={cn(`absolute py-2`)}>
@@ -113,7 +113,7 @@ const NotificationPopup = memo(function NotificationPopup() {
                     </Tooltip>
                 </TooltipProvider>
             </div>
-        </div>
+        </>
     );
 }, (() => true))
 
