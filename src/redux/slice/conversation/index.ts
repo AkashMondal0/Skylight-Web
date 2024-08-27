@@ -11,9 +11,10 @@ interface ConversationState {
 
     conversation: Conversation | null
     loading: boolean
+    error: string | null
+    messages: Message[]
     messageLoading: boolean
     messageError: string | null
-    error: string | null
 
     currentTyping: Typing | null
 
@@ -37,10 +38,11 @@ const ConversationState: ConversationState = {
     listError: null,
 
     conversation: null,
-    messageLoading: false,
-    messageError: null,
     loading: false,
     error: null,
+    messages: [],
+    messageLoading: false,
+    messageError: null,
 
     currentTyping: null,
 
@@ -75,20 +77,24 @@ export const ConversationSlice = createSlice({
                 state.conversationList[index].totalUnreadMessagesCount += 1
             }
             if (state?.conversation && action.payload.conversationId === state?.conversation.id) {
-                state.conversation?.messages.push(action.payload)
+                state.messages.push(action.payload)
             }
         },
         setMessageSeen: (state, action: PayloadAction<{ conversationId: string, authorId: string }>) => {
-            const index = state.conversationList.findIndex((i) => i.id === action.payload.conversationId)
-            if (index !== -1) {
-                state.conversationList[index].messages.forEach((message) => {
-                    if (message.seenBy.findIndex((i) => i === action.payload.authorId) === -1) {
-                        message.seenBy.push(action.payload.authorId)
-                    }
-                })
-            }
-            if (state?.conversation && action.payload.conversationId === state?.conversation.id) {
-                state.conversation.messages.forEach((message) => {
+
+            // const index = state.conversationList.findIndex((i) => i.id === action.payload.conversationId)
+            // if (index !== -1) {
+            //     state.conversationList[index].messages.forEach((message) => {
+            //         if (message.seenBy.findIndex((i) => i === action.payload.authorId) === -1) {
+            //             message.seenBy.push(action.payload.authorId)
+            //         }
+            //     })
+            // }
+            // console.log("state", action.payload.authorId)
+            if (action.payload.conversationId === state?.conversation?.id) {
+                // console.log("state", action.payload.authorId)
+                // state.conversationList[index].messagesAllRead = true
+                state.messages.forEach((message) => {
                     if (message.seenBy.findIndex((i) => i === action.payload.authorId) === -1) {
                         message.seenBy.push(action.payload.authorId)
                     }
@@ -97,6 +103,7 @@ export const ConversationSlice = createSlice({
         },
         resetConversation: (state) => {
             state.conversation = null
+            state.messages = []
         },
         // fetch members data
         setMembersData: (state, action: PayloadAction<Conversation>) => { },
@@ -104,7 +111,7 @@ export const ConversationSlice = createSlice({
         setUploadImageInMessage: (state, action: PayloadAction<Message>) => {
             const index = state.conversationList.findIndex((i) => i.id === action.payload.conversationId)
             if (state.conversation) {
-                state.conversation.messages.push(action.payload)
+                state.messages.push(action.payload)
             }
             if (index !== -1) {
                 state.conversationList[index].messages?.push(action.payload)
@@ -141,6 +148,7 @@ export const ConversationSlice = createSlice({
         builder.addCase(fetchConversationApi.pending, (state) => {
             state.loading = true
             state.error = null
+            state.messages = []
         })
         builder.addCase(fetchConversationApi.fulfilled, (state, action: PayloadAction<Conversation>) => {
             state.conversation = action.payload
@@ -149,6 +157,7 @@ export const ConversationSlice = createSlice({
         builder.addCase(fetchConversationApi.rejected, (state, action) => {
             state.loading = false
             state.error = "error"
+            state.messages = []
         })
         //fetchConversationAllMessagesApi
         builder.addCase(fetchConversationAllMessagesApi.pending, (state) => {
@@ -157,12 +166,12 @@ export const ConversationSlice = createSlice({
         })
         builder.addCase(fetchConversationAllMessagesApi.fulfilled, (state, action: PayloadAction<Message[]>) => {
             if (state.conversation) {
-                state.conversation.messages.unshift(...action.payload)
-                state.conversationList.find((i) => {
-                    if (i.id === state.conversation?.id) {
-                        i.messages.unshift(...action.payload)
-                    }
-                })
+                state.messages.unshift(...action.payload)
+                // state.conversationList.find((i) => {
+                //     if (i.id === state.conversation?.id) {
+                //         i.messages.unshift(...action.payload)
+                //     }
+                // })
             }
             state.messageLoading = false
         })
@@ -177,6 +186,7 @@ export const ConversationSlice = createSlice({
         })
         builder.addCase(CreateMessageApi.fulfilled, (state, action: PayloadAction<Message>) => {
             const index = state.conversationList.findIndex((i) => i.id === action.payload.conversationId)
+            // tempMessageId is used to update the message in the conversation list
             if (state.conversation && action.payload.tempMessageId) {
                 const mIndex = state.conversation.messages.findIndex((i) => i.id === action.payload.tempMessageId)
                 state.conversation.messages[mIndex] = action.payload
@@ -192,7 +202,7 @@ export const ConversationSlice = createSlice({
                     state.conversationList[index].lastMessageCreatedAt = action.payload.createdAt
                 }
                 if (state.conversation) {
-                    state.conversation.messages.push(action.payload)
+                    state.messages.push(action.payload)
                 }
             }
         })

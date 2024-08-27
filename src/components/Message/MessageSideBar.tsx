@@ -15,15 +15,18 @@ let pageLoaded = false
 
 export const MessageSideBar = memo(function MessageSideBar() {
     const dispatch = useDispatch()
-    const rootConversation = useSelector((Root: RootState) => Root.conversation)
+    const list = useSelector((Root: RootState) => Root.conversation.conversationList)
+    const loading = useSelector((Root: RootState) => Root.conversation.listLoading)
+    const error = useSelector((Root: RootState) => Root.conversation.listError)
+
     const conversationList = useMemo(() => {
-        return [...rootConversation.conversationList].sort((a, b) => {
+        return [...list].sort((a, b) => {
             if (a.lastMessageCreatedAt && b.lastMessageCreatedAt) {
                 return new Date(b.lastMessageCreatedAt).getTime() - new Date(a.lastMessageCreatedAt).getTime()
             }
             return 0
-        })
-    }, [rootConversation.conversationList])
+        }).filter((item) => item.lastMessageCreatedAt !== null)
+    }, [list])
 
     useEffect(() => {
         if (!pageLoaded) {
@@ -33,11 +36,11 @@ export const MessageSideBar = memo(function MessageSideBar() {
     }, [])
 
 
-    if (rootConversation.listLoading || !pageLoaded) {
+    if (loading || !pageLoaded) {
         return <MessagePageSidebarSkeleton />
     }
 
-    if (rootConversation.listError && pageLoaded) {
+    if (error && pageLoaded) {
         return <div className='md:border-r scroll-smooth flex justify-center items-center text-center
         duration-300 bg-background text-foreground h-dvh md:w-96 ease-in-out w-full mx-auto flex-col'>
             <ServerCrash className='w-16 h-16' />

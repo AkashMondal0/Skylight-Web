@@ -83,7 +83,7 @@ export const MessageUserListItem = memo(function MessageUserListItem({
     )
 }, ((preProps, nextProps) => {
     return preProps.data.id === nextProps.data.id
-        && preProps.data?.messages?.length === nextProps.data?.messages?.length
+        // && preProps.data?.messages?.length === nextProps.data?.messages?.length
         && preProps.data?.lastMessageContent === nextProps.data?.lastMessageContent
         && preProps.data?.totalUnreadMessagesCount === nextProps.data?.totalUnreadMessagesCount
         && preProps.currentTyping === nextProps.currentTyping
@@ -91,13 +91,13 @@ export const MessageUserListItem = memo(function MessageUserListItem({
 
 const UserStatus = ({
     lastText,
-    currentTyping
+    currentTyping,
 }: {
     lastText: string | any,
     currentTyping: Boolean
 }) => {
     return (
-        <p className='text-sm w-52 text-ellipsis truncate'>
+        <p className='text-sm w-52 text-ellipsis truncate flex'>
             {currentTyping ? "typing..." : lastText ?? "new conversation"}
         </p>
     )

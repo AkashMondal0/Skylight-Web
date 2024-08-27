@@ -1,52 +1,119 @@
 "use client"
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useVirtualizer } from '@tanstack/react-virtual';
+import { useSession } from 'next-auth/react';
+import { Loader2 } from 'lucide-react';
+import { debounce } from 'lodash';
 import { RootState } from "@/redux/store"
-import { useCallback, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import NotFound from "@/components/Error/NotFound";
 import { fetchConversationAllMessagesApi, fetchConversationApi } from "@/redux/services/conversation";
 import { Conversation, Message, disPatchResponse } from "@/types";
-import { MessageHeader, MessageInput, MessagePageSkeleton, MessageSideBar, NavigationSidebar, VirtualizeMessageList } from "@/components/Message";
+import { MessageHeader, MessageInput, MessagePageSkeleton, MessageSideBar, NavigationSidebar, MessageItem } from "@/components/Message";
 import { toast } from "sonner";
 
 let pageId = 'no id'
-let totalFetchedItemCount: number = 0
-let stopFetch = false
-let pageLoaded = false
+let totalFetchedItemCount: number | null = 0
 
 export default function Page({ params }: { params: { id: string } }) {
-  const rootConversation = useSelector((Root: RootState) => Root.conversation)
+  const [mounted, setMounted] = useState(false)
+
   const dispatch = useDispatch()
+  const ConversationData = useSelector((Root: RootState) => Root.conversation.conversation, (prev, next) => prev?.id === next?.id)
+  const ConversationLoading = useSelector((Root: RootState) => Root.conversation.loading)
+  const ConversationError = useSelector((Root: RootState) => Root.conversation.error)
 
-  const loadMoreMessages = useCallback(async (conversationId?: string): Promise<boolean> => {
-    if (stopFetch) return false
-    if (!conversationId) return toast.error('Something went wrong'), false
-    const resM = await dispatch(fetchConversationAllMessagesApi({
-      id: params.id,
-      offset: totalFetchedItemCount,
-      limit: 20
-    }) as any) as disPatchResponse<Message[]>
-    if (resM?.error) return toast.error('Error loading messages'), false
-    if (resM.payload.length <= 0) return stopFetch = true, false
-    totalFetchedItemCount += resM.payload.length
-    return true
-  }, [params.id])
+  const Messages = useSelector((Root: RootState) => Root.conversation?.messages)
+  const MessagesLoading = useSelector((Root: RootState) => Root.conversation.messageLoading)
+  const MessagesError = useSelector((Root: RootState) => Root.conversation.messageError)
 
-  const fetch = useCallback(async () => {
-    const res = await dispatch(fetchConversationApi(params.id) as any) as disPatchResponse<Conversation>
-    if (res.payload) {
-      loadMoreMessages(params.id)
+  const session = useSession().data?.user
+  const parentRef = useRef<HTMLDivElement>(null)
+  const count = useMemo(() => Messages?.length, [Messages])
+  const stopFetch = useRef(false)
+  const stopBottomRef = useRef(true)
+
+  const loadMoreMessages = useCallback(async (conversationId?: string) => {
+    if (totalFetchedItemCount === null) return
+    if (!conversationId) return toast.error('Something went wrong')
+    try {
+      const resM = await dispatch(fetchConversationAllMessagesApi({
+        id: params.id,
+        offset: totalFetchedItemCount,
+        limit: 20
+      }) as any) as disPatchResponse<Message[]>
+      if (resM?.error) return toast.error('Error loading messages')
+      if (resM.payload.length >= 20) {
+        totalFetchedItemCount += 20
+        virtualizer.scrollToIndex(resM.payload.length + (virtualizer?.range?.endIndex ?? 0))
+        return
+      }
+      totalFetchedItemCount = null
+    } finally {
+      stopFetch.current = false
     }
   }, [params.id])
+
+  const fetchConversation = useCallback(async () => {
+    const res = await dispatch(fetchConversationApi(params.id) as any) as disPatchResponse<Conversation>
+    if (!res.payload.id || res.error) return toast.error('Error loading conversation')
+    loadMoreMessages(params.id)
+  }, [params.id])
+
+  const fetchMore = debounce(() => {
+    loadMoreMessages(params.id)
+  }, 1000)
+
+  // 
+  const virtualizer = useVirtualizer({
+    count,
+    getScrollElement: () => parentRef.current,
+    estimateSize: useCallback(() => 200, []),
+    overscan: 30,
+    onChange: (virtualizer) => {
+      if (!virtualizer?.range || !virtualizer.isScrolling) return
+      if (virtualizer?.range?.startIndex <= 3
+        && virtualizer?.scrollDirection === "backward"
+        && !stopFetch.current
+        && totalFetchedItemCount !== null
+      ) {
+        stopFetch.current = true
+        stopBottomRef.current = false
+        fetchMore()
+      }
+      if (virtualizer?.range?.endIndex !== count - 1
+        && virtualizer?.scrollDirection === "backward"
+        && stopBottomRef.current) {
+        stopBottomRef.current = false
+      }
+      if (virtualizer?.range?.endIndex === count - 1
+        && virtualizer?.scrollDirection === "forward"
+        && !stopBottomRef.current) {
+        stopBottomRef.current = true
+      }
+    },
+  })
+
+  const items = virtualizer.getVirtualItems()
 
   useEffect(() => {
-    if (!pageLoaded || pageId !== params.id) {
-      fetch()
+    // console.log('scrolling to bottom')
+    if (Messages.length > 0 && stopBottomRef.current && !virtualizer.isScrolling) {
+      const totalHeight = virtualizer.getTotalSize()
+      virtualizer.scrollToOffset(totalHeight);
+    }
+  }, [Messages.length, virtualizer]);
+
+  useEffect(() => {
+    if (!mounted) setMounted(true)
+    if (pageId !== params.id) {
+      fetchConversation()
       pageId = params.id
       totalFetchedItemCount = 0
-      stopFetch = false
-      pageLoaded = true
     }
   }, [params.id])
+
+  if (!mounted) return <></>
 
   return (
     <div className='flex'>
@@ -55,14 +122,57 @@ export default function Page({ params }: { params: { id: string } }) {
         <MessageSideBar />
       </div>
       {/*  */}
-      {rootConversation.loading || !pageLoaded ? <MessagePageSkeleton /> :
-        pageLoaded && rootConversation.error || !rootConversation.conversation ? <NotFound /> :
+      {ConversationLoading ? <MessagePageSkeleton /> :
+        !ConversationData || ConversationError ? <NotFound /> :
           <div className='w-full flex flex-col min-h-dvh flex-1'>
-            <MessageHeader data={rootConversation.conversation} />
-            <VirtualizeMessageList conversation={rootConversation.conversation}
-              loadMoreMessageLoading={rootConversation.messageLoading}
-              loadMore={loadMoreMessages} />
-            <MessageInput data={rootConversation.conversation} />
+            <MessageHeader data={ConversationData} />
+            <>
+              <div ref={parentRef}
+                className='h-full w-full flex-1 hideScrollbar' id='style-1'
+                style={{
+                  height: "100%",
+                  width: '100%', overflowY: 'auto', contain: 'strict'
+                }}>
+                {/* {Header} */}
+                <div
+                  style={{
+                    height: virtualizer.getTotalSize(),
+                    width: '100%',
+                    position: 'relative',
+                  }}>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      padding: 4,
+                      transform: `translateY(${items[0]?.start ?? 0}px)`,
+                    }}>
+                    <div className='w-full'>
+                      {!MessagesLoading ? <></> : <Loader2 className="animate-spin w-12 h-12 mx-auto my-5 text-accent" />}
+                    </div>
+                    {items.map((virtualRow) => (
+                      <div key={virtualRow.key}
+                        // className='outline outline-red-500'
+                        data-index={virtualRow.index}
+                        ref={virtualizer.measureElement}>
+                        {/* <>{virtualRow.index}</> */}
+                        <MessageItem
+                          key={virtualRow.index}
+                          data-index={virtualRow.index}
+                          seen={ConversationData?.messagesAllRead ? true :
+                            Messages[virtualRow.index].seenBy.length === ConversationData?.members.length}
+                          isProfile={session?.id === Messages[virtualRow.index].authorId}
+                          data={Messages[virtualRow.index]} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {/* {Footer} */}
+              </div>
+            </>
+            <MessageInput data={ConversationData} />
           </div>}
     </div>
   )
