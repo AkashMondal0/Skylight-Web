@@ -1,21 +1,23 @@
 "use client";
-import React, { memo, useMemo } from 'react'
-import { toast } from 'sonner';
+import React, { memo, useCallback } from 'react'
 import { Post as PostFeedType } from '@/types';
 import {
     PostHeader,
     PostImage,
     PostActions,
     PostComments
-} from './';
+} from '@/components/PostFeed';
+import { useRouter } from 'next/navigation';
 
 export const PostFeed = memo(function Post({
     post,
-    Navigate
 }: {
     post: PostFeedType,
-    Navigate: (path: string) => void
 }) {
+    const router = useRouter()
+    const Navigate = useCallback((path: string) => {
+        router.push(path)
+    }, [router])
 
     return (
         <div className='sm:max-w-[480px] w-full sm:mx-auto py-4 border-b p-1'>

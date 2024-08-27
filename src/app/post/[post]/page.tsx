@@ -1,5 +1,5 @@
 "use client"
-import React, { Fragment, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { fetchOnePostApi } from '@/redux/services/post'
@@ -12,7 +12,6 @@ const PostPage = ({ params }: { params: { post: string } }) => {
   const dispatch = useDispatch()
   const Post = useSelector((Root: RootState) => Root.posts)
   const loadedRef = useRef(false)
-
 
   useEffect(() => {
     if (!loadedRef.current) {
@@ -59,7 +58,7 @@ const PostPage = ({ params }: { params: { post: string } }) => {
       {/* sm  */}
       <div className="w-full h-full flex md:hidden flex-col">
         <AppNavbar name="Post" icon2={<div />} />
-        <PostFeed post={Post.viewPost} />
+        <PostFeed post={Post.viewPost}/>
       </div>
     </>
   )

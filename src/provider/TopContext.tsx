@@ -30,7 +30,7 @@ const TopContext = memo(function TopContext() {
         return () => clearTimeout(timeoutId); // Cleanup on unmount
     }, []);
     return (<>
-    {/* <SplashScreen show={isLoading} /> */}
+    <SplashScreen show={isLoading} />
     </>)
 }, (() => true))
 

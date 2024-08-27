@@ -56,7 +56,7 @@ export default function Page({ params }: { params: { id: string } }) {
             <div className='flex flex-wrap w-full'>
               <div className='flex md:flex-1 h-full w-full min-w-96 items-center'>
                 {imageError ? <ImageError /> :
-                  <PostImage post={post} onImageError={onImageError} />}
+                  <PostImage post={post} />}
               </div>
               <div className="flex md:flex-1 h-full w-full min-w-96 flex-col justify-between border-l">
                 {/* header comment input  */}
