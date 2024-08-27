@@ -69,9 +69,7 @@ export default function Page({ params }: { params: { profile: string } }) {
             if (res.error || !res.payload.id) return toast.error("Something went wrong")
             fetchProfilePosts(res.payload.id)
         } finally {
-            if (!mounted) {
-                setMounted(true)
-            }
+
         }
     }, [fetchProfilePosts, params.profile])
 
@@ -108,22 +106,14 @@ export default function Page({ params }: { params: { profile: string } }) {
             fetchProfileData()
             // reset the state
         }
+        if (!mounted) {
+            setMounted(true)
+        }
     }, [params.profile])
 
     const items = virtualizer.getVirtualItems()
 
-    if (!mounted) return <div className="flex flex-col w-full h-dvh">
-        <div
-            style={{
-                height: "100%",
-                width: '100%',
-                overflowY: 'auto',
-                contain: 'strict',
-            }}>
-            <ProfileNavbar name={"Loading"} />
-            <ProfileHeroSkeleton />
-        </div>
-    </div>
+    if(!mounted) return <></>
 
     return (
         <div className="flex flex-col w-full h-dvh">
