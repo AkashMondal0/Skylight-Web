@@ -10,13 +10,13 @@ import { event_name } from '@/configs/socket.event';
 import { useSession } from 'next-auth/react';
 import { createNotificationApi, destroyNotificationApi } from '@/redux/services/notification';
 
-const PostActions = memo(function PostActions({
+const PostActions = ({
     post,
     onNavigate
 }: {
     post: Post
     onNavigate: (path: string) => void,
-}) {
+})=> {
     const dispatch = useDispatch()
     const SocketState = useContext(SocketContext)
     const session = useSession()
@@ -128,6 +128,6 @@ const PostActions = memo(function PostActions({
         </>
 
     )
-},(prev, next) => prev.post.id === next.post.id)
+}
 
 export default PostActions

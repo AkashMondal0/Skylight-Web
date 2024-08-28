@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React from 'react'
 import {
     Carousel,
     CarouselContent,
@@ -10,13 +10,11 @@ import OptimizedImage from '../sky/SkyImage'
 import { Post } from '@/types'
 import { cn } from '@/lib/utils'
 
-const PostImage = memo(function PostImage({
+const PostImage = ({
     post,
-    onImageError
 }: {
     post: Post | null
-    onImageError?:()=>void
-}) {
+}) => {
 
     if (!post) return null
 
@@ -32,7 +30,6 @@ const PostImage = memo(function PostImage({
                                     src={url}
                                     width={500}
                                     height={500}
-                                    onError={onImageError}
                                     alt="Picture of the author"
                                     fetchPriority={"high"}
                                     sizes={"(min-width: 808px) 50vw, 100vw"}
@@ -48,8 +45,6 @@ const PostImage = memo(function PostImage({
             </div>
         </div>
     )
-}, ((pre: any, next: any) => {
-    return pre.post.id == next.post.id
-}))
+}
 
 export default PostImage

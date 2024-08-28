@@ -5,21 +5,21 @@ import { Conversation, User, disPatchResponse } from "@/types"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { memo, useCallback, useRef } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { EllipsisVertical } from "../sky/icons"
 import { followUser, unFollowUser } from "@/redux/slice/profile"
 import { toast } from "sonner"
 import { CreateConversationApi } from "@/redux/services/conversation"
+import { RootState } from "@/redux/store"
 
 const ProfileFollowButton = memo(function FollowButton({
     user,
-    isFollowing,
     isProfile
 }: {
     user: User
-    isFollowing?: boolean | null
     isProfile: boolean
 }) {
+    const isFollowing = useSelector((Root: RootState) => Root.profile.state?.friendship.following)
     const router = useRouter()
     const dispatch = useDispatch()
     const session = useSession().data?.user
@@ -131,7 +131,6 @@ const ProfileFollowButton = memo(function FollowButton({
             {EllipsisVertical('w-full h-full')}
         </div>
     </div>
-}, ((prevProps: any, nextProps: any) => prevProps.isProfile === nextProps.isProfile
-    && prevProps.isFollowing === nextProps.isFollowing
-    && prevProps.user.id === nextProps.user.id))
+}, ((prevProps, nextProps) => prevProps.isProfile === nextProps.isProfile && prevProps.user.id === nextProps.user.id))
+
 export default ProfileFollowButton

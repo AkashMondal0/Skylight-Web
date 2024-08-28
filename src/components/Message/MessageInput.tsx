@@ -32,7 +32,7 @@ const schema = z.object({
 })
 export const MessageInput = memo(function MessageInput({ data }: { data: Conversation }) {
     const dispatch = useDispatch()
-    const ConversationList = useSelector((state: RootState) => state.conversation.conversationList)
+    const ConversationList = useSelector((state: RootState) => state.conversation.conversationList, (prev, next) => prev.length === next.length)
     const session = useSession().data?.user
     const [isFile, setIsFile] = useState<File[]>([])
     const [loading, setLoading] = useState(false)
@@ -165,6 +165,6 @@ export const MessageInput = memo(function MessageInput({ data }: { data: Convers
             </div>
         </>
     );
-}, ((preProps: any, nestProps: any) => {
-    return preProps.id === nestProps.id
+}, ((preProps, nestProps) => {
+    return preProps.data.id === nestProps.data.id
 }))

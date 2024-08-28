@@ -84,7 +84,7 @@ const NotificationPopup = memo(function NotificationPopup() {
                         </TooltipTrigger>
                         <TooltipContent
                             side="right"
-                            className="p-0 border-none bg-transparent">
+                            className="p-0 border-none bg-transparent shadow-none">
                             <div className={cn(`pl-3`)}>
                                 <div className={cn(`w-max flex items-center bg-red-500 justify-center h-10 rounded-xl transition duration-500 ease-in-out`,
                                     notifications.notificationPopup ? "" : "scale-0"

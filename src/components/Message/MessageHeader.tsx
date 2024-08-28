@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { ChevronLeft, Info } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import SkyAvatar from '@/components/sky/SkyAvatar';
 import { Conversation } from '@/types';
@@ -34,13 +34,11 @@ export const MessageHeader = memo(function MessageHeader({ data }: { data: Conve
                     <div className='md:hidden cursor-pointer'>
                         <ChevronLeft size={30} onClick={() => router.back()} />
                     </div>
-                    <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
-                        !data.isGroup && router.push(`/${Conversation.name}`)
-                    }}>
+                    <div className="flex items-center gap-2 cursor-pointer">
                         <div>
                             <SkyAvatar className='md:h-12 md:w-12 w-10 h-10' url={Conversation.image || '/user.jpg'} />
                         </div>
-                        <div className='w-40'>
+                        <div className='w-40' onClick={() => { !data.isGroup && router.push(`/${Conversation.name}`) }}>
                             <div className="text-xl font-bold text-gray-900 dark:text-gray-100 truncate">
                                 {Conversation?.name || "...."}
                             </div>
@@ -52,8 +50,8 @@ export const MessageHeader = memo(function MessageHeader({ data }: { data: Conve
             </div>
         </div>
     );
-}, ((preProps: any, nestProps: any) => {
-    return preProps.id === nestProps.id
+}, ((preProps, nestProps) => {
+    return preProps.data.id === nestProps.data.id
 }))
 
 const UserStatus = ({ conversationId }: any) => {

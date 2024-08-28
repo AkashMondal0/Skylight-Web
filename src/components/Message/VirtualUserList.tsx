@@ -8,7 +8,7 @@ import { RootState } from '@/redux/store';
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
 
-export const VirtualUserList = memo(function VirtualUserList({
+export const VirtualUserList = ({
     conversation,
     loadMore,
     Header,
@@ -18,14 +18,11 @@ export const VirtualUserList = memo(function VirtualUserList({
     loadMore?: () => void
     Header?: React.ReactNode
     Footer?: React.ReactNode
-}) {
+}) => {
     const parentRef = useRef<HTMLDivElement>(null)
     const [mounted, setMounted] = useState(false)
     const currentTyping = useSelector((Root: RootState) => Root.conversation.currentTyping)
-    const data = useMemo(() => {
-        return conversation.filter((item) => item.lastMessageCreatedAt !== null)
-    }, [conversation])
-    const count = useMemo(() => data.length, [data.length])
+    const count = useMemo(() => conversation.length, [conversation.length])
 
     const virtualizer = useVirtualizer({
         count,
@@ -79,10 +76,10 @@ export const VirtualUserList = memo(function VirtualUserList({
                                 ref={virtualizer.measureElement}>
                                 <MessageUserListItem
                                     currentTyping={currentTyping?.conversationId
-                                        === data[virtualRow.index].id
+                                        === conversation[virtualRow.index].id
                                         && currentTyping?.typing}
-                                    data={data[virtualRow.index]}
-                                    key={data[virtualRow.index].id} />
+                                    data={conversation[virtualRow.index]}
+                                    key={conversation[virtualRow.index].id} />
                             </div>
                         ))}
                     </div>
@@ -91,6 +88,4 @@ export const VirtualUserList = memo(function VirtualUserList({
             </div>
         </div>
     )
-}, ((preProps, nestProps) => {
-    return false
-}))
+}

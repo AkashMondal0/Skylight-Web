@@ -1,31 +1,16 @@
 import { AtSign, ChevronDown, Settings } from 'lucide-react'
-import React, { memo, useEffect } from 'react'
+import React, { memo } from 'react'
 import Link from 'next/link'
 import { Link2 } from 'lucide-react'
 import SkyAvatar from '@/components/sky/SkyAvatar'
-import { useDispatch } from 'react-redux'
 import { ProfileStories } from '@/components/Profile/ProfileStories'
-import { fetchUserProfilePostsApi } from '@/redux/services/profile'
 import { useSession } from 'next-auth/react'
 import OptionAvatarDialog from '../Dialog/Avatar.Options.Dialog'
 import { User } from '@/types'
 import { ProfileFollowButton } from '.'
-let profileUsername = "no_username"
 
 export const ProfileHero = memo(function ProfileHero({ profileUser, isProfile }: { profileUser: User | null, isProfile: boolean }) {
-    const dispatch = useDispatch()
     const session = useSession().data?.user
-
-    useEffect(() => {
-        if (profileUser?.username && profileUser?.username !== profileUsername) {
-            profileUsername = profileUser.username
-            dispatch(fetchUserProfilePostsApi({
-                username: profileUser?.id,
-                limit: 12,
-                offset: 0
-            }) as any)
-        }
-    }, [profileUser?.username, profileUser?.id])
 
     if (!profileUser) return <></>
 
@@ -59,7 +44,6 @@ export const ProfileHero = memo(function ProfileHero({ profileUser, isProfile }:
                                     {/* follow button */}
                                     <ProfileFollowButton
                                         isProfile={isProfile}
-                                        isFollowing={profileUser?.friendship?.following}
                                         user={profileUser} />
                                     {/* profile details */}
                                     <div className='sm:flex hidden justify-between px-3 w-max gap-11'>
@@ -112,7 +96,7 @@ export const ProfileHero = memo(function ProfileHero({ profileUser, isProfile }:
                 </div>
                 {/* small device */}
                 <div className='md:hidden block'>
-                    <div className='h-5'/>
+                    <div className='h-5' />
                     {/* profile header */}
                     <div className='flex gap-3 my-5 items-center px-2'>
                         <SkyAvatar url={isProfile ? session?.image : profileUser.profilePicture}
@@ -120,7 +104,6 @@ export const ProfileHero = memo(function ProfileHero({ profileUser, isProfile }:
                         {/* followers and following */}
                         <ProfileFollowButton
                             isProfile={isProfile}
-                            isFollowing={profileUser.friendship.following}
                             user={profileUser} />
                     </div>
                     <>
@@ -179,7 +162,6 @@ export const ProfileHero = memo(function ProfileHero({ profileUser, isProfile }:
 }, ((prevProps, nextProps) => {
     return prevProps.profileUser?.id === nextProps.profileUser?.id
         && prevProps.isProfile === nextProps.isProfile
-        && prevProps.profileUser?.friendship.following === nextProps.profileUser?.friendship.following
 }))
 
 

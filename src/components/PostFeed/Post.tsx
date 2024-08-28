@@ -1,38 +1,30 @@
 "use client";
-import React, { memo, useMemo } from 'react'
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import React, { memo, useCallback } from 'react'
 import { Post as PostFeedType } from '@/types';
-import { 
+import {
     PostHeader,
     PostImage,
     PostActions,
     PostComments
- } from './';
+} from '@/components/PostFeed';
+import { useRouter } from 'next/navigation';
 
 export const PostFeed = memo(function Post({
     post,
 }: {
-    post: PostFeedType
+    post: PostFeedType,
 }) {
-    // console.log("<Post/>")
     const router = useRouter()
-
-    const memoPost = useMemo(() => {
-        return post
-    }, [post])
-
-    const NavigatePage = (path: string) => {
-        if (post.isDummy) return toast("this dummy post")
+    const Navigate = useCallback((path: string) => {
         router.push(path)
-    }
+    }, [router])
 
     return (
         <div className='sm:max-w-[480px] w-full sm:mx-auto py-4 border-b p-1'>
-            <PostHeader post={memoPost} onNavigate={NavigatePage} />
-            <PostImage post={memoPost} />
-            <PostActions post={memoPost} onNavigate={NavigatePage} />
-            <PostComments post={memoPost} onNavigate={NavigatePage} />
+            <PostHeader post={post} onNavigate={Navigate} />
+            <PostImage post={post} />
+            <PostActions post={post} onNavigate={Navigate} />
+            <PostComments post={post} onNavigate={Navigate} />
         </div >
     )
-}, ((preProps: any, nextProps: any) => true))
+}, (() => true))
