@@ -64,13 +64,9 @@ export default function Page({ params }: { params: { profile: string } }) {
     }, [])
 
     const fetchProfileData = useCallback(async () => {
-        try {
-            const res = await dispatch(fetchUserProfileDetailApi(params.profile) as any) as disPatchResponse<AuthorData>
-            if (res.error || !res.payload.id) return toast.error("Something went wrong")
-            fetchProfilePosts(res.payload.id)
-        } finally {
-
-        }
+        const res = await dispatch(fetchUserProfileDetailApi(params.profile) as any) as disPatchResponse<AuthorData>
+        if (res.error || !res.payload.id) return toast.error("Something went wrong")
+        fetchProfilePosts(res.payload.id)
     }, [fetchProfilePosts, params.profile])
 
     const fetchMorePost = debounce(() => fetchProfilePosts(userData?.id), 1000)
@@ -113,7 +109,7 @@ export default function Page({ params }: { params: { profile: string } }) {
 
     const items = virtualizer.getVirtualItems()
 
-    if(!mounted) return <></>
+    if (!mounted) return <></>
 
     return (
         <div className="flex flex-col w-full h-dvh">

@@ -100,8 +100,21 @@ export const NavigationSidebar = memo(function NavigationSidebar({
         },
     ]
 
-    if (isHideNav) return <></>
+    if (!session) {
+        return <>
+            <div className='sticky top-0 h-full z-50'>
+                <div className={cn(
+                    "duration-300 ease-in-out transition-all",
+                    `md:w-[4.5rem] xl:w-[18rem] hidden md:flex 
+                    h-dvh scroll-smooth overflow-x-hidden 
+                    overflow-y-auto hideScrollbar`,
+                    hideLabel ? "max-w-[4.5rem]" : "max-w-[18rem]"
+                )}>
 
+                </div>
+            </div>
+        </>
+    }
     return (
         <div className='sticky top-0 h-full z-50'>
             <div className={cn(

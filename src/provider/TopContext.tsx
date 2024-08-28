@@ -4,12 +4,15 @@ import React, { memo, useEffect, useState } from 'react'
 import { useTheme } from "next-themes"
 import SplashScreen from '@/components/sky/SplashScreen'
 import { usePathname } from 'next/navigation'
+import { UnauthorizedAlert } from '@/components/Alert'
+import { useSession } from 'next-auth/react'
 let splashShow = true
 
 const TopContext = memo(function TopContext() {
     const { theme } = useTheme()
     const path = usePathname()
     const [isLoading, setIsLoading] = useState(splashShow);
+    const session = useSession().data?.user
 
     useEffect(() => {
         const metaThemeColor = document.querySelector('meta[name=theme-color]');
@@ -30,7 +33,8 @@ const TopContext = memo(function TopContext() {
         return () => clearTimeout(timeoutId); // Cleanup on unmount
     }, []);
     return (<>
-    <SplashScreen show={isLoading} />
+        <SplashScreen show={isLoading} />
+        {!path.includes('/auth') && !session ? <UnauthorizedAlert /> : <></>}
     </>)
 }, (() => true))
 

@@ -4,7 +4,6 @@ import {
     Film, Home,
     MessageCircleCode, Search
 } from "lucide-react"
-
 import React, { memo } from "react"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
@@ -24,6 +23,15 @@ export const NavigationBottom = memo(function NavigationBottom() {
         { icon: CircleUserRound, label: "Profile", onClick: () => pageChange(`/${session?.username || ""}`) },
     ]
 
+    if (!session) {
+        return <>
+            <div className={`md:hidden w-full sticky flex bottom-0 z-10
+         py-2 bg-background text-foreground h-14 items-center`}>
+                <div className="p-1 w-full flex justify-around"></div>
+            </div>
+        </>
+    }
+
     return (
         <div className={`md:hidden w-full sticky flex bottom-0 z-10 border-t
          py-2 bg-background text-foreground h-14 items-center`}>
@@ -37,7 +45,7 @@ export const NavigationBottom = memo(function NavigationBottom() {
                     if (label === "Messages") {
                         return <div key={index} onClick={onClick}>
                             <div className="relative">
-                                <NotificationPing/>
+                                <NotificationPing />
                                 {React.createElement(icon, { size: 28 })}
                             </div>
                         </div>
