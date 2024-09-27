@@ -1,5 +1,5 @@
 import { graphqlQuery } from "@/lib/gql/GraphqlQuery";
-import { PostActionsProps } from "@/types";
+import { findDataInput, PostActionsProps } from "@/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const createNotificationApi = createAsyncThunk(
@@ -78,10 +78,10 @@ export const destroyNotificationApi = createAsyncThunk(
 
 export const fetchAccountNotificationApi = createAsyncThunk(
   'fetchAccountNotificationApi/post',
-  async (_, thunkAPI) => {
+  async (findAllNotificationInput: findDataInput, thunkAPI) => {
     try {
-      let query = `query FindAllNotifications {
-        findAllNotifications {
+      let query = `query FindAllNotifications($findAllNotificationInput: GraphQLPageQuery!) {
+        findAllNotifications(findAllNotificationInput: $findAllNotificationInput) {
           id
           type
           authorId
@@ -108,6 +108,7 @@ export const fetchAccountNotificationApi = createAsyncThunk(
       }`
       const res = await graphqlQuery({
         query: query,
+        variables: { findAllNotificationInput }
       })
 
       return res.findAllNotifications

@@ -27,7 +27,14 @@ const authOptions: NextAuthOptions = {
         try {
           if (!credentials) return null
           const cookieStore = cookies();
-          cookieStore.set("skylight-token", credentials.accessToken)
+          cookieStore.set("skylight-session-token", credentials.accessToken, {
+            maxAge: 30 * 24 * 60 * 60, // 30 days
+            path: "/",
+            httpOnly: true,
+            priority: "medium",
+            sameSite: "lax",
+            secure: true
+          })
           return { ...credentials, profilePicture: credentials.image } as any
         } catch (error) {
           console.log("Error", error)

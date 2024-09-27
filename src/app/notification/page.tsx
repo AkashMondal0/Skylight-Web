@@ -12,7 +12,10 @@ export default function Page() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(fetchAccountNotificationApi() as any)
+    dispatch(fetchAccountNotificationApi({
+      limit: 12,
+      offset: 0
+    }) as any)
   }, [])
 
   return <div className="mx-auto max-w-[600px] w-full">

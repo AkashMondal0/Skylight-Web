@@ -120,7 +120,6 @@ export default function HomePageDropdownMenu({ children }: {
         <DropdownMenuItem className="rounded-xl" onClick={() => {
           signOut()
           logoutApi()
-          router.replace('/auth/login')
         }}>
           <LogOut className="mr-3 h-7 w-7" />
           <span>Log out</span>

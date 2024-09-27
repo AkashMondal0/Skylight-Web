@@ -22,7 +22,10 @@ const NotificationSidebar = ({
 
     useEffect(() => {
         if (open) {
-            dispatch(fetchAccountNotificationApi() as any)
+            dispatch(fetchAccountNotificationApi({
+                limit: 12,
+                offset: 0
+            }) as any)
         }
     }, [open])
 
