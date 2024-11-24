@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { RootState } from "@/redux-stores/store";
 import React, { memo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 
 const NotificationPing = memo(function NotificationPing() {
-    const notifications = useSelector((state: RootState) => state.notification)
+    const notifications = useSelector((state: RootState) => state.NotificationState)
 
 
     return (

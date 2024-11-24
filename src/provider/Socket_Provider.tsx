@@ -2,11 +2,11 @@
 'use client'
 import { configs } from "@/configs";
 import { event_name } from "@/configs/socket.event";
-import { conversationSeenAllMessage, fetchConversationsApi } from "@/redux/services/conversation";
-import { fetchUnreadMessageNotificationCountApi, fetchUnreadNotificationCountApi } from "@/redux/services/notification";
-import { setMessage, setMessageSeen, setTyping } from "@/redux/slice/conversation";
-import { setNotification } from "@/redux/slice/notification";
-import { RootState } from "@/redux/store";
+import { setMessage, setMessageSeen, setTyping } from "@/redux-stores/slice/conversation";
+import { conversationSeenAllMessage, fetchConversationsApi } from "@/redux-stores/slice/conversation/api.service";
+import { setNotification } from "@/redux-stores/slice/notification";
+import { fetchUnreadMessageNotificationCountApi, fetchUnreadNotificationCountApi } from "@/redux-stores/slice/notification/api.service";
+import { RootState } from "@/redux-stores/store";
 import { Message, Notification, Typing } from "@/types";
 import { debounce } from "lodash";
 import { useSession } from "next-auth/react";
@@ -31,8 +31,8 @@ export const SocketContext = createContext<SocketStateType>({
 const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
     const dispatch = useDispatch()
     const session = useSession().data?.user
-    const list = useSelector((state: RootState) => state.conversation.conversationList)
-    const conversation = useSelector((state: RootState) => state.conversation.conversation)
+    const list = useSelector((state: RootState) => state.ConversationState.conversationList)
+    const conversation = useSelector((state: RootState) => state.ConversationState.conversation)
     const socketRef = useRef<Socket | null>(null)
     const params = useParams()
 
@@ -83,7 +83,11 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
                     if (list.find(conversation => conversation.id === data.conversationId)) {
                         dispatch(setMessage(data))
                     } else {
-                        dispatch(fetchConversationsApi() as any)
+                        dispatch(fetchConversationsApi({
+                            limit: 16,
+                            offset: 0,
+                            id: data.conversationId
+                        }) as any)
                     }
                     dispatch(fetchUnreadMessageNotificationCountApi() as any)
                     seenAllMessage(data.conversationId)

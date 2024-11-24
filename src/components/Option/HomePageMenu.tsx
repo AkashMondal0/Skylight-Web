@@ -29,8 +29,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useTheme } from "next-themes"
 import { signOut } from "next-auth/react"
-import { logoutApi } from "@/redux/services/account"
 import { useRouter } from "next/navigation"
+import { logoutApi } from "@/redux-stores/slice/auth/api.service"
 
 export default function HomePageDropdownMenu({ children }: {
   children: React.ReactNode

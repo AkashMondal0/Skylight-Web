@@ -18,7 +18,8 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { useState } from "react";
-import { loginApi } from "@/redux/services/account";
+import { loginApi } from "@/redux-stores/slice/auth/api.service";
+import { ApiResponse, Session } from "@/types";
 
 const FormSchema = z.object({
     password: z.string().min(6, {
@@ -44,30 +45,33 @@ export default function LoginPage() {
     });
 
     const onSubmit = async (data: FormData) => {
-        setLoading(true);
-        const { password, email } = data;
-        const res = await loginApi({ email, password })
-        const callbackUrlPath = new URL(window.location.href).searchParams.get("callbackUrl")
-        if (res?.code === 1) {
-            signIn("credentials", {
-                email: res.data.email,
-                username: res.data.username,
-                name: res.data.name,
-                id: res.data.id,
-                image: res.data.profilePicture ?? "/user.jpg",
-                bio: res.data.bio,
-                website: res.data.website ?? [],
-                accessToken: res.data.accessToken,
-                redirect: true,
-                callbackUrl: callbackUrlPath ? `${process.env.NEXTAUTH_URL}${callbackUrlPath}` : `${process.env.NEXTAUTH_URL}`,
-            });
-            reset();
-            toast.success(`${res.message}`)
+        try {
+            setLoading(true);
+            const { password, email } = data;
+            const res = await loginApi({ email, password }) as ApiResponse<Session["user"]>
+            const callbackUrlPath = new URL(window.location.href).searchParams.get("callbackUrl")
+            if (res?.data) {
+                signIn("credentials", {
+                    email: res.data.email,
+                    username: res.data.username,
+                    name: res.data.name,
+                    id: res.data.id,
+                    image: res.data.profilePicture ?? "/user.jpg",
+                    bio: res.data.bio,
+                    website: [],
+                    accessToken: res.data.accessToken,
+                    redirect: true,
+                    callbackUrl: callbackUrlPath ? `${process.env.NEXTAUTH_URL}${callbackUrlPath}` : `${process.env.NEXTAUTH_URL}`,
+                });
+                reset();
+                toast.success(`${res.message}`)
+            }
+            else {
+                toast.error(`${res.message}`)
+            }
+        } finally {
+            setLoading(false);
         }
-        else {
-            toast.error(`${res.message}`)
-        }
-        setLoading(false);
     };
 
     return (

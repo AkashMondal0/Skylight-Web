@@ -1,40 +1,61 @@
-interface Post {
-    id: string
-    fileUrl: string[]
-    commentCount: number
-    likeCount: number
-    createdAt: Date | string
-    comments: Comment[]
-    likes: AuthorData[]
-    isDummy?: boolean
-    content: string;
-    title: string;
-    updatedAt?: Date;
-    is_Liked: boolean;
-    user: AuthorData;
-    song?: string[];
-    tags?: string[]
-    locations?: string[];
-    country?: string;
-    city?: string;
+export type loadingType = 'idle' | 'pending' | 'normal'
+export interface PageProps<T> {
+    navigation?: NavigationProps;
+    route?: {
+        params?: T,
+        name: string;
+        key: string;
+    }
 }
-
-interface AuthorData {
+export type Theme = "light" | "dark" | "system";
+export type variantType = "default" | "secondary" | "danger" | "warning" | "success" | "outline" | "primary"
+export interface NavigationProps {
+    addListener: (type: string, callback: () => void) => void,
+    canGoBack: () => boolean,
+    dangerouslyGetParent: () => any,
+    dangerouslyGetState: () => any,
+    dispatch: (action: any) => void,
+    goBack: () => void,
+    isFocused: () => boolean,
+    navigate: (name: string, params?: any) => void,
+    pop: () => void,
+    popToTop: () => void,
+    push: (name: string, params: any) => void,
+    removeListener: (type: string, callback: () => void) => void,
+    replace: (name: string, params: any) => void,
+    reset: (state: any) => void,
+    setOptions: (options: any) => void,
+    setParams: (params: any) => void,
+    toggleDrawer: () => void,
+}
+// user account
+export interface Session {
+    user: {
+        id: string,
+        username: string,
+        email: string,
+        name: string,
+        profilePicture: string,
+        accessToken: string,
+        bio: string,
+    } | null
+}
+export interface AuthorData {
     id: string
     username: string
     email: string
     name: string
-    profilePicture?: string
+    profilePicture?: string | null
     followed_by?: boolean
     following?: boolean
     bio?: string;
     website?: string[] | any[];
 }
-enum Role {
+export enum Role {
     User = 'user',
     Admin = 'admin',
 }
-type User = {
+export type User = {
     id: string;
     username: string;
     name: string;
@@ -56,8 +77,7 @@ type User = {
     followerCount: number;
     followingCount: number;
 }
-
-enum FriendshipStatus {
+export enum FriendshipStatus {
     // 'pending', 'accepted', 'rejected', 'blocked', 'deleted'
     Pending = 'pending',
     Accepted = 'accepted',
@@ -65,7 +85,7 @@ enum FriendshipStatus {
     Blocked = 'blocked',
     Deleted = 'deleted',
 }
-type Friendship = {
+export type Friendship = {
     id?: string;
     followingUsername?: string;
     authorUsername?: string;
@@ -75,11 +95,11 @@ type Friendship = {
     updatedAt?: Date | string | unknown;
     status?: FriendshipStatus | string;
 }
-
-interface Message {
+// message
+export interface Message {
     id: string;
     content: string;
-    fileUrl: string[];
+    fileUrl: Assets[];
     authorId: string;
     deleted: boolean;
     seenBy: string[];
@@ -89,18 +109,17 @@ interface Message {
     user?: AuthorData | null;
     tempMessageId?: string;
 }
-
-interface Conversation {
+export interface Conversation {
     id: string;
     members: string[];
     authorId: string;
     messages: Message[]
-    user?: AuthorData | null
+    user?: AuthorData | User | null
     isGroup: boolean | null;
     lastMessageContent: string | null;
     totalUnreadMessagesCount: number;
     lastMessageCreatedAt: Date | string;
-    messagesAllRead: boolean;
+    messagesAllRead?: boolean;
     createdAt?: Date | null;
     updatedAt?: Date | null;
     groupName?: string | null;
@@ -108,32 +127,101 @@ interface Conversation {
     groupDescription?: string | null;
 
 }
+export type Typing = {
+    typing: boolean
+    authorId: string
+    members: string[]
+    conversationId: string
+    isGroup: boolean
+    groupUser?: AuthorData
+}
+// user post and content
+export interface Post {
+    id: string
+    fileUrl: Assets[]
+    commentCount: number
+    likeCount: number
+    createdAt: Date | string
+    comments: Comment[]
+    likes: AuthorData[]
+    isDummy?: boolean
+    content: string;
+    title: string;
+    updatedAt?: Date;
+    is_Liked: boolean;
+    user: AuthorData;
+    song?: string[];
+    tags?: string[]
+    locations?: string[];
+    country?: string;
+    city?: string;
+}
 
-interface Comment {
+export interface Highlight {
+    id: string;
+    content?: string | null;
+    stories?: Story[] | null;
+    createdAt?: Date | unknown;
+    updatedAt?: Date | unknown;
+    coverImageIndex: number | 0;
+    authorId?: string;
+    viewCount?: number;
+    user?: AuthorData | null | unknown;
+    comments?: Comment[] | any[];
+    likes?: AuthorData[] | any[];
+    status?: "published" | "draft" | "deleted";
+}
+export interface Comment {
     id: string;
     content: string;
     authorId: string;
     postId: string;
-    createdAt: Date;
-    updatedAt: Date;
-    user: AuthorData
-}
+    createdAt: Date | string;
+    updatedAt: Date | null;
+    user: {
+        username: string
+        email: string
+        name: string
+        profilePicture: string
+    }
 
-type Assets = {
+}
+export type Assets = {
     id?: string,
-    url?: string,
-    type?: 'image' | 'video' | 'audio' | "text"
+    urls?: {
+        low?: string | null,
+        medium?: string | null,
+        high?: string | null,
+        blur?: string | null,
+        thumbnail?: string | null,
+    }
+    type?: 'photo' | 'video' | 'audio' | "text"
     caption?: string;
 }
 
-type findDataInput = {
+export type Story = {
+    id: string;
+    content: string | null;
+    fileUrl?: Assets[] | null;
+    song?: any[];
+    createdAt?: Date | any;
+    updatedAt?: Date | any;
+    authorId?: string;
+    viewCount?: number;
+    expiresAt?: Date;
+    user?: AuthorData | null | unknown;
+    comments?: Comment[] | any[];
+    likes?: AuthorData[] | any[];
+    status?: "published" | "draft" | "deleted";
+}
+export type findDataInput = {
     username?: string
     id?: string
     offset: number
     limit: number
 }
-
-type GraphqlError = {
+// api response
+export type GraphqlError = {
     message: string
     locations: {
         line: number
@@ -149,37 +237,16 @@ type GraphqlError = {
         stacktrace: string[]
     }
 }
-type code = 0 | 1
-interface ApiPayloadData<T> {
-    code: code,
+export interface ApiResponse<T> {
+    code: 0 | 1,
     message: string,
     data: T,
 }
-type Typing = {
-    typing: boolean
-    authorId: string
-    members: string[]
-    conversationId: string
-    isGroup: boolean
-    groupUser?: AuthorData
-}
-type disPatchResponse<T> = {
+export type disPatchResponse<T> = {
     payload: T,
     error: any
 }
-
-type PostActionsProps = {
-    authorId: string,
-    postId: string,
-    type: NotificationType,
-    recipientId: string,
-
-    // 
-    commentId?: string
-    storyId?: string
-    reelId?: string
-}
-
+// notification
 export enum NotificationType {
     Like = 'like',
     Comment = 'comment',
@@ -191,8 +258,7 @@ export enum NotificationType {
     Story = 'story',
     Post = 'post',
 }
-
-type Notification = {
+export type Notification = {
     id: string;
     type: NotificationType;
     authorId: string;
@@ -208,22 +274,14 @@ type Notification = {
     comment?: Comment
 }
 
-export type {
-    User,
-    Message,
-    Conversation,
-    Post,
-    Comment,
-    PostActionsProps,
-    AuthorData,
-    Assets,
-    Friendship,
-    Role,
-    Notification,
-    FriendshipStatus,
-    findDataInput,
-    GraphqlError,
-    Typing,
-    ApiPayloadData,
-    disPatchResponse
+export type PostActionsProps = {
+    authorId: string,
+    postId: string,
+    type: NotificationType,
+    recipientId: string,
+
+    // 
+    commentId?: string
+    storyId?: string
+    reelId?: string
 }

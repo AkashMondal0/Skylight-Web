@@ -1,14 +1,14 @@
 import React, { memo, useCallback, useContext, useRef, useState } from 'react'
 import { Heart, Send, MessageCircle, BookMarked } from 'lucide-react';
 import { Notification, NotificationType, Post, disPatchResponse } from '@/types';
-import { createPostLikeApi, destroyPostLikeApi, fetchPostLikesApi } from '@/redux/services/post';
 import { useDispatch } from 'react-redux';
 import { toast } from 'sonner';
 import LikeViewModal from '@/components/Dialog/View.Like.Dialog';
 import { SocketContext } from '@/provider/Socket_Provider';
 import { event_name } from '@/configs/socket.event';
 import { useSession } from 'next-auth/react';
-import { createNotificationApi, destroyNotificationApi } from '@/redux/services/notification';
+import { createPostLikeApi, destroyPostLikeApi, fetchPostLikesApi } from '@/redux-stores/slice/post/api.service';
+import { createNotificationApi, destroyNotificationApi } from '@/redux-stores/slice/notification/api.service';
 
 const PostActions = ({
     post,
@@ -16,7 +16,7 @@ const PostActions = ({
 }: {
     post: Post
     onNavigate: (path: string) => void,
-})=> {
+}) => {
     const dispatch = useDispatch()
     const SocketState = useContext(SocketContext)
     const session = useSession()

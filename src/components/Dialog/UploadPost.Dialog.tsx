@@ -19,9 +19,6 @@ import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 import OptimizedImage from "@/components/sky/SkyImage"
 import { TempleDialog } from "./Temple.Dialog"
-import { UploadImagesFireBaseApi } from "@/redux/services/upload"
-// import { RootState } from "@/redux/store"
-// import { toggleCreatePostModal } from "@/redux/slice/sidebar"
 
 export default function UploadPostDialog({
     children
@@ -67,7 +64,7 @@ export default function UploadPostDialog({
         if (isFile.length > 5) {
             return ToastAlert("You can't upload more than 5 images")
         }
-        dispatch(UploadImagesFireBaseApi({
+        dispatch(UploadImages({
             isFile,
             isCaption: caption ?? "",
             profileId: session?.id

@@ -22,15 +22,11 @@ import SkyAvatar from "@/components/sky/SkyAvatar"
 import { configs } from "@/configs"
 import { NotificationPopup, NotificationPing, NotificationIndicator } from "../Alert"
 import { useDispatch, useSelector } from "react-redux"
-import {
-    toggleCreatePostModal,
-    toggleNotificationSidebar,
-    toggleSearchSidebar
-} from "@/redux/slice/sidebar"
 import NotificationSidebar from "../Sidebar/NotificationSidebar"
 import SearchSidebar from "../Sidebar/SearchSidebar"
-import { RootState } from "@/redux/store"
 import UploadPostDialog from "../Dialog/UploadPost.Dialog"
+import { RootState } from "@/redux-stores/store"
+import { toggleCreatePostModal, toggleNotificationSidebar, toggleSearchSidebar } from "@/redux-stores/slice/sidebar"
 
 // for large screen device 
 export const NavigationSidebar = memo(function NavigationSidebar({
@@ -40,7 +36,7 @@ export const NavigationSidebar = memo(function NavigationSidebar({
     hideLabel?: boolean
     isHideNav?: boolean,
 }) {
-    const Sidebar = useSelector((state: RootState) => state.sidebarSlice)
+    const Sidebar = useSelector((state: RootState) => state.SidebarState)
     const session = useSession().data?.user
     const router = useRouter()
     const dispatch = useDispatch()

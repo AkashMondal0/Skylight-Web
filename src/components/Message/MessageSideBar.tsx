@@ -6,18 +6,18 @@ import { ServerCrash, SquarePen } from 'lucide-react';
 import { Button } from '../ui/button';
 import UserToMessage from '@/components/Dialog/UserToMessage.Dialog';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
-import { fetchConversationsApi } from '@/redux/services/conversation';
 import { NavigationBottom } from '../Navigation/NavigationBottom';
 import { VirtualUserList } from './VirtualUserList';
 import { MessagePageSidebarSkeleton } from './MessageSkeleton';
+import { RootState } from '@/redux-stores/store';
+import { fetchConversationsApi } from '@/redux-stores/slice/conversation/api.service';
 let pageLoaded = false
 
 export const MessageSideBar = memo(function MessageSideBar() {
     const dispatch = useDispatch()
-    const list = useSelector((Root: RootState) => Root.conversation.conversationList)
-    const loading = useSelector((Root: RootState) => Root.conversation.listLoading)
-    const error = useSelector((Root: RootState) => Root.conversation.listError)
+    const list = useSelector((Root: RootState) => Root.ConversationState.conversationList) || []
+    const loading = useSelector((Root: RootState) => Root.ConversationState.listLoading)
+    const error = useSelector((Root: RootState) => Root.ConversationState.listError)
 
     const conversationList = useMemo(() => {
         return [...list].sort((a, b) => {
@@ -30,7 +30,10 @@ export const MessageSideBar = memo(function MessageSideBar() {
 
     useEffect(() => {
         if (!pageLoaded) {
-            dispatch(fetchConversationsApi() as any)
+            dispatch(fetchConversationsApi({
+                offset: 0,
+                limit: 16
+            }) as any)
             pageLoaded = true
         }
     }, [])

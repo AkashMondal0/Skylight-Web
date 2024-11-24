@@ -1,9 +1,8 @@
+import { RootState } from "@/redux-stores/store";
 import React, { memo } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-
 const NotificationIndicator = memo(function NotificationIndicator() {
-    const notifications = useSelector((state: RootState) => state.notification)
+    const notifications = useSelector((state: RootState) => state.NotificationState)
 
 
     return (

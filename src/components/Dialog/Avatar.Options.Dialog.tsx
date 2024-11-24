@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux"
 import { TempleAlertDialog } from "@/components/Dialog/Temple.Dialog"
 import { toast } from "sonner"
 import { useSession } from "next-auth/react"
-import { profileUpdateApi } from "@/redux/services/account"
+import { profileUpdateApi } from "@/redux-stores/slice/auth/api.service"
 
 export default function OptionAvatarDialog({
     children,

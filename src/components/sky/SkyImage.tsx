@@ -1,11 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
+import { configs } from '@/configs';
 import { cn } from '@/lib/utils';
 import { RotateCcw } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface OptimizedImageProps {
-    src?: string;
+    src?: string | null | undefined;
     alt?: string;
     width: number;
     height: number;
@@ -17,6 +18,7 @@ interface OptimizedImageProps {
     hideErrorLabel?: boolean;
     onError?: () => void;
     onLoad?: () => void;
+    isServerImage?: boolean;
 }
 
 const OptimizedImage: React.FC<OptimizedImageProps> = ({
@@ -31,7 +33,8 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
     onLoad,
     hideErrorLabel = false,
     showErrorIconSm = false,
-    showErrorIcon = false
+    showErrorIcon = false,
+    isServerImage = true,
 }) => {
     const [error, setError] = useState(false)
     const [loading, setLoading] = useState(true)
@@ -45,6 +48,8 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
     }
 
     if (!src) return <ImageError hideErrorLabel={hideErrorLabel} className={className} />
+
+    src = isServerImage ? configs.serverApi.supabaseStorageUrl + src : src
 
     return (
         <>
@@ -79,7 +84,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
                         setError(true)
                         onError && onError()
                     }}
-                    onLoad={()=>{
+                    onLoad={() => {
                         if (!loading) return;
                         setLoading(false)
                         onLoad && onLoad()

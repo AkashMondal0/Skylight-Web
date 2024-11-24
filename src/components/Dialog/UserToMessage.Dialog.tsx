@@ -2,25 +2,25 @@
 import React, { useCallback } from 'react'
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
-import { removeAllUserFormSearch } from '@/redux/slice/users';
 import { DialogClose } from '@/components/ui/dialog'
 import SkyAvatar from '@/components/sky/SkyAvatar';
 import { AuthorData, Conversation, disPatchResponse } from '@/types';
 import { useRouter } from 'next/navigation';
 import { MessagesSquare } from 'lucide-react';
-import { searchUsersProfileApi } from '@/redux/services/users';
 import { LoadingUserCardWithButton } from '@/components/loading/Card';
 import { TempleDialog } from '@/components/Dialog/Temple.Dialog';
-import { CreateConversationApi } from '@/redux/services/conversation';
 import { toast } from 'sonner';
+import { searchUsersProfileApi } from '@/redux-stores/slice/users/api.service';
+import { RootState } from '@/redux-stores/store';
+import { removeAllUserFormSearch } from '@/redux-stores/slice/users';
+import { CreateConversationApi } from '@/redux-stores/slice/conversation/api.service';
 
 
 
 const UserToMessage = ({ children }: { children: React.ReactNode }) => {
     const dispatch = useDispatch();
     const inputRef = React.useRef<any>();
-    const Users = useSelector((Root: RootState) => Root.users);
+    const Users = useSelector((Root: RootState) => Root.UsersState);
 
     const handleSearch = useCallback(() => {
         if (inputRef?.current?.value) {

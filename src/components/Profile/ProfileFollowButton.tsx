@@ -1,16 +1,16 @@
 "use client"
 import { Button } from "@/components/ui/button"
-import { createFriendshipApi, destroyFriendshipApi } from "@/redux/services/profile"
 import { Conversation, User, disPatchResponse } from "@/types"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { memo, useCallback, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { EllipsisVertical } from "../sky/icons"
-import { followUser, unFollowUser } from "@/redux/slice/profile"
 import { toast } from "sonner"
-import { CreateConversationApi } from "@/redux/services/conversation"
-import { RootState } from "@/redux/store"
+import { RootState } from "@/redux-stores/store"
+import { createFriendshipApi, destroyFriendshipApi } from "@/redux-stores/slice/profile/api.service"
+import { followUser, unFollowUser } from "@/redux-stores/slice/profile"
+import { CreateConversationApi } from "@/redux-stores/slice/conversation/api.service"
 
 const ProfileFollowButton = memo(function FollowButton({
     user,
@@ -19,7 +19,7 @@ const ProfileFollowButton = memo(function FollowButton({
     user: User
     isProfile: boolean
 }) {
-    const isFollowing = useSelector((Root: RootState) => Root.profile.state?.friendship.following)
+    const isFollowing = useSelector((Root: RootState) => Root.ProfileState.state?.friendship.following)
     const router = useRouter()
     const dispatch = useDispatch()
     const session = useSession().data?.user

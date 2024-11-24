@@ -1,12 +1,12 @@
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import { Button } from '@/components/ui/button'
-import { RemoveFriendshipApi, createFriendshipApi, destroyFriendshipApi } from '@/redux/services/profile'
 import { AuthorData, disPatchResponse } from '@/types'
 import { useSession } from 'next-auth/react'
 import React, { useMemo, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { FollowerRemoveDialog, UnFollowDialog } from '@/components/Dialog/Follow.Dialog'
 import { useParams, useRouter } from 'next/navigation'
+import { RemoveFriendshipApi, createFriendshipApi, destroyFriendshipApi } from '@/redux-stores/slice/profile/api.service'
 
 export const UserItemFollow = ({
     user,
