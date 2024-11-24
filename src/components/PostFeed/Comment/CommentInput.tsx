@@ -1,4 +1,3 @@
-import { createPostCommentApi } from "@/redux/services/post"
 import { Comment, NotificationType, Post, disPatchResponse } from "@/types"
 import { useSession } from "next-auth/react"
 import { memo, useCallback, useContext, useRef } from "react"
@@ -6,10 +5,11 @@ import { useDispatch } from "react-redux"
 import PostActions from "@/components/PostFeed/PostActions"
 import { Smile } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { createNotificationApi } from "@/redux/services/notification"
 import { SocketContext } from "@/provider/Socket_Provider"
 import { event_name } from "@/configs/socket.event"
 import { toast } from "sonner"
+import { createPostCommentApi } from "@/redux-stores/slice/post/api.service"
+import { createNotificationApi } from "@/redux-stores/slice/notification/api.service"
 
 export const CommentInput = memo(function CommentInput({
     data,

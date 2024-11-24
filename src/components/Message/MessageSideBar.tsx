@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import React, { memo, useEffect, useMemo } from 'react'
+import React, { memo, useEffect, useMemo, useState } from 'react'
 import { CardTitle } from '../ui/card';
 import { ServerCrash, SquarePen } from 'lucide-react';
 import { Button } from '../ui/button';
@@ -11,13 +11,16 @@ import { VirtualUserList } from './VirtualUserList';
 import { MessagePageSidebarSkeleton } from './MessageSkeleton';
 import { RootState } from '@/redux-stores/store';
 import { fetchConversationsApi } from '@/redux-stores/slice/conversation/api.service';
+import searchText from '@/lib/TextSearch';
 let pageLoaded = false
 
 export const MessageSideBar = memo(function MessageSideBar() {
-    const dispatch = useDispatch()
     const list = useSelector((Root: RootState) => Root.ConversationState.conversationList) || []
     const loading = useSelector((Root: RootState) => Root.ConversationState.listLoading)
     const error = useSelector((Root: RootState) => Root.ConversationState.listError)
+
+    const [inputText, setInputText] = useState("")
+    const dispatch = useDispatch()
 
     const conversationList = useMemo(() => {
         return [...list].sort((a, b) => {
@@ -25,8 +28,10 @@ export const MessageSideBar = memo(function MessageSideBar() {
                 return new Date(b.lastMessageCreatedAt).getTime() - new Date(a.lastMessageCreatedAt).getTime()
             }
             return 0
-        }).filter((item) => item.lastMessageCreatedAt !== null)
-    }, [list])
+        })
+            .filter((item) => item.lastMessageCreatedAt !== null)
+            .filter((item) => searchText(item?.user?.name, inputText))
+    }, [list, inputText])
 
     useEffect(() => {
         if (!pageLoaded) {
@@ -38,8 +43,9 @@ export const MessageSideBar = memo(function MessageSideBar() {
         }
     }, [])
 
+    console.log(conversationList)
 
-    if (loading || !pageLoaded) {
+    if (loading !== "normal") {
         return <MessagePageSidebarSkeleton />
     }
 

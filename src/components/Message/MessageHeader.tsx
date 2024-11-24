@@ -5,7 +5,7 @@ import SkyAvatar from '@/components/sky/SkyAvatar';
 import { Conversation } from '@/types';
 import { memo, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import { RootState } from '@/redux-stores/store';
 
 export const MessageHeader = memo(function MessageHeader({ data }: { data: Conversation }) {
     const router = useRouter()
@@ -55,7 +55,7 @@ export const MessageHeader = memo(function MessageHeader({ data }: { data: Conve
 }))
 
 const UserStatus = ({ conversationId }: any) => {
-    const currentTyping = useSelector((Root: RootState) => Root.conversation.currentTyping)
+    const currentTyping = useSelector((Root: RootState) => Root.ConversationState.currentTyping)
     return (
         <div className="text-sm text-gray-500 dark:text-gray-400">
             {currentTyping?.conversationId === conversationId && currentTyping?.typing ? "typing..." : "status"}

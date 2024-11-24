@@ -15,9 +15,7 @@ import { CirclePlus } from "@/components/sky/icons";
 import { fetchUserProfileDetailApi, fetchUserProfilePostsApi } from "@/redux-stores/slice/profile/api.service";
 
 let _kSavedOffset = 0;
-let _KMeasurementsCache = [] as any // as VirtualItem[] ;
-
-let profileUsername = "no_username"
+let _KMeasurementsCache = [] as any; // as VirtualItem[]
 
 export default function Page({ params }: { params: { profile: string } }) {
     const [mounted, setMounted] = useState(false)
@@ -34,9 +32,7 @@ export default function Page({ params }: { params: { profile: string } }) {
     //
     const stopRef = useRef(false)
     const parentRef = useRef<HTMLDivElement>(null)
-    // 
-
-    console.log(Posts.current.length,postsFetched.current)
+    //
 
     const fetchPosts = useCallback(async () => {
         if (loading === "pending") return
@@ -100,15 +96,11 @@ export default function Page({ params }: { params: { profile: string } }) {
     })
 
     useEffect(() => {
-        if (profileUsername !== params.profile) {
+        if (!mounted) {
             postsFetched.current = false
             _kSavedOffset = 0;
             _KMeasurementsCache = []
-            profileUsername = params.profile
             fetchUserData()
-            // reset the state
-        }
-        if (!mounted) {
             setMounted(true)
         }
     }, [params.profile])
@@ -128,7 +120,7 @@ export default function Page({ params }: { params: { profile: string } }) {
                 }}>
                 <>
                     <ProfileNavbar name={loading === "normal" ? UserData.current?.username : "Loading"} isProfile={isProfile} />
-                    {loading === "normal" ? <ProfileHero profileUser={UserData.current} isProfile={isProfile} /> : <ProfileHeroSkeleton />}
+                    {loading === "idle" ? <ProfileHeroSkeleton /> : <ProfileHero profileUser={UserData.current} isProfile={isProfile} />}
                 </>
                 {error ?
                     <NotFound message={error ?? "PAGE_NOT_FOUND"} /> :

@@ -3,7 +3,7 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import { Conversation } from '@/types';
 import { MessageUserListItem } from './MessageUserListItem';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import { RootState } from '@/redux-stores/store';
 
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[] ;
@@ -21,7 +21,7 @@ export const VirtualUserList = ({
 }) => {
     const parentRef = useRef<HTMLDivElement>(null)
     const [mounted, setMounted] = useState(false)
-    const currentTyping = useSelector((Root: RootState) => Root.conversation.currentTyping)
+    const currentTyping = useSelector((Root: RootState) => Root.ConversationState.currentTyping)
     const count = useMemo(() => conversation.length, [conversation.length])
 
     const virtualizer = useVirtualizer({

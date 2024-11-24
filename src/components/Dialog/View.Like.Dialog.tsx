@@ -17,7 +17,7 @@ const ViewLikeDialog = ({
 
 
   return (<TempleDialog TriggerChildren={children} headerTitle={'Likes'}>
-    {likesLoading ? <>{Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)}</> : <>{likesUserList?.map((user, i) => (<UserItemFollow key={i} user={user} />))}</>}
+    {likesLoading !== "normal" ? <>{Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)}</> : <>{likesUserList?.map((user, i) => (<UserItemFollow key={i} user={user} />))}</>}
   </TempleDialog>)
 }
 

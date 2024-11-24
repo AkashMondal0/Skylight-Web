@@ -58,7 +58,7 @@ export const MessageUserListItem = memo(function MessageUserListItem({
     return (
         <>
             <div className={cn(`flex cursor-pointer rounded-2xl justify-between p-1 py-2 my-1
-            transition-all duration-150 delay-75 ease-in-out hover:bg-primary/10 hover:outline outline-[1px] outline-primary/50`,
+            transition-all duration-150 delay-75 ease-in-out hover:bg-primary/10 hover:outline outline-[1px] outline-primary/20`,
                 params.id === data.id ? "bg-accent text-accent-foreground" : ""
             )} onClick={seenAllMessage}>
                 <div className='flex space-x-2 items-center cursor-pointer justify-between w-full'>

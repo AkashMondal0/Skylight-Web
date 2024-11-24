@@ -3,16 +3,16 @@ import { ScrollArea } from "../../ui/scroll-area"
 import { Post } from "@/types"
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import { timeAgoFormat } from "@/lib/timeFormat"
-import { fetchPostCommentsApi } from "@/redux/services/post"
 import { useDispatch, useSelector } from "react-redux"
-import { RootState } from "@/redux/store"
 import { CommentListSkeleton } from "./CommentSkeleton"
+import { RootState } from "@/redux-stores/store"
+import { fetchPostCommentsApi } from "@/redux-stores/slice/post/api.service"
 let previousPostId = "noPost"
 export const CommentList = memo(function CommentList({ data }: { data: Post }) {
     const dispatch = useDispatch()
     const loadedRef = useRef(false)
-    const comments = useSelector((Root: RootState) => Root.posts.viewPost?.comments)
-    const loading = useSelector((Root: RootState) => Root.posts.fetchPostCommentsLoading)
+    const comments = useSelector((Root: RootState) => Root.PostState.comments)
+    const loading = useSelector((Root: RootState) => Root.PostState.commentsLoading)
 
     useEffect(() => {
         if (previousPostId !== data.id) {
@@ -37,7 +37,7 @@ export const CommentList = memo(function CommentList({ data }: { data: Post }) {
                     <div className="text-sm text-gray-500">{timeAgoFormat(data.createdAt)}</div>
                 </div>
             </div>
-            {loading ? <CommentListSkeleton /> :
+            {loading !== "normal" ? <CommentListSkeleton /> :
                 comments?.length === 0 ?
                     <div className='flex justify-center items-center h-96'>
                         <div>

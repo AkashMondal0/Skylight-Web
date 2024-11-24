@@ -75,13 +75,9 @@ const NotificationSidebar = ({
                         </div>
                         <h2 className='w-full text-xl font-semibold px-4'>Today</h2>
                         <div className='w-full pt-4 h-full min-h-dvh'>
-                            {
-                                allNotifications.loading ? Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)
-                                    :
-                                    allNotifications.notifications.map((data, i) => (
-                                        <NotificationItem key={i} data={data} />
-                                    ))
-                            }
+                            {allNotifications.loading === "normal" ? allNotifications.notifications.map((data, i) => (
+                                <NotificationItem key={i} data={data} />
+                            )) : Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)}
                         </div>
                     </div>
                 </div>

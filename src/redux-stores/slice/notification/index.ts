@@ -124,6 +124,9 @@ export const NotificationSlice = createSlice({
                 state.unreadCommentCount = action.payload.unreadCommentCount ?? 0
                 state.unreadPostLikeCount = action.payload.unreadPostCount ?? 0
                 state.unreadChatCount = action.payload.unreadChatCount ?? 0
+                if(action.payload.unreadCommentCount > 0 || action.payload.unreadPostCount > 0){
+                    state.notificationPopup = true
+                }
             })
             .addCase(fetchUnreadNotificationCountApi.rejected, (state, action: PayloadAction<any>) => {
 

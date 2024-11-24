@@ -3,6 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { AuthorData, Comment, Post } from '@/types'
 import {
     createPostCommentApi,
+    fetchOnePostApi,
     //  fetchOnePostApi, 
     fetchPostCommentsApi,
     fetchPostLikesApi
@@ -72,21 +73,21 @@ export const PostsSlice = createSlice({
     extraReducers: (builder) => {
         builder
             // view post
-            // .addCase(fetchOnePostApi.pending, (state) => {
-            //     state.viewPostLoading = "pending"
-            //     state.viewPostError = null
-            //     state.viewPost = null
-            // })
-            // .addCase(fetchOnePostApi.fulfilled, (state, action: PayloadAction<Post>) => {
-            //     state.viewPost = action.payload
-            //     state.viewPostLoading = "normal"
-            //     state.viewPostError = null
-            // })
-            // .addCase(fetchOnePostApi.rejected, (state, action) => {
-            //     state.viewPostLoading = "normal"
-            //     state.viewPost = null
-            //     state.viewPostError = action.error.message || 'Failed to fetch post'
-            // })
+            .addCase(fetchOnePostApi.pending, (state) => {
+                state.viewPostLoading = "pending"
+                state.viewPostError = null
+                state.viewPost = null
+            })
+            .addCase(fetchOnePostApi.fulfilled, (state, action: PayloadAction<Post>) => {
+                state.viewPost = action.payload
+                state.viewPostLoading = "normal"
+                state.viewPostError = null
+            })
+            .addCase(fetchOnePostApi.rejected, (state, action) => {
+                state.viewPostLoading = "normal"
+                state.viewPost = null
+                state.viewPostError = action.error.message || 'Failed to fetch post'
+            })
             // fetchPostLikesApi
             .addCase(fetchPostLikesApi.pending, (state) => {
                 state.likesLoading = "pending"

@@ -1,6 +1,6 @@
 {
   "name": "skylight",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -42,7 +42,6 @@
     "compressorjs": "^1.2.1",
     "date-fns": "^3.4.0",
     "embla-carousel-react": "^8.0.0",
-    "firebase": "^10.12.1",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "lucide-react": "^0.350.0",

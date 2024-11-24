@@ -56,7 +56,7 @@ export const NotificationItem = ({
                 <div onClick={navigate}
                     className='flex items-center flex-col flex-none h-12 w-12'>
                     <OptimizedImage
-                        src={data?.post?.fileUrl[0]}
+                        src={data?.post?.fileUrl[0].urls?.low}
                         width={50}
                         height={50}
                         hideErrorLabel
