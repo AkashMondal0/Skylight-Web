@@ -1,7 +1,6 @@
 import "./globals.css";
 import type { Metadata } from 'next'
 import { ThemeProvider } from "@/provider/ThemeProvider";
-import NextAuth_Provider from "@/provider/NextAuth_Provider";
 import { Toaster } from "@/components/ui/sonner"
 import Redux_Provider from "@/provider/Redux_Provider";
 import type { Viewport } from 'next'
@@ -34,18 +33,16 @@ export default function RootLayout({ children,
       <html lang="en" suppressHydrationWarning={false}>
         <body className="ease-in-out duration-300 ">
           <Redux_Provider>
-            <NextAuth_Provider>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="light">
-                <Socket_Provider>
-                  <TopContext />
-                  <Toaster />
-                  {children}
-                  {modal}
-                </Socket_Provider>
-              </ThemeProvider>
-            </NextAuth_Provider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="light">
+              <Socket_Provider>
+                <TopContext />
+                <Toaster />
+                {children}
+                {modal}
+              </Socket_Provider>
+            </ThemeProvider>
           </Redux_Provider>
         </body>
       </html>

@@ -1,18 +1,17 @@
 import type { Metadata } from 'next'
-
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 export const metadata: Metadata = {
-  title: 'Sky Form - Login',
+  title: 'SkyLight - Login',
   description: ``,
 }
-import { getServerSession } from 'next-auth';
-import { redirect } from 'next/navigation';
 
 export default async function LoginLayout({ children }: {
   children: React.ReactNode;
 }) {
-  const login = await getServerSession();
-
-  if (login) {
+  const cookieStore = cookies();
+  const Cookies = cookieStore.get("skylight-token");
+  if (Cookies) {
     return redirect('/');
   }
 

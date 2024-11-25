@@ -1,7 +1,6 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import { Conversation, User, disPatchResponse } from "@/types"
-import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { memo, useCallback, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
@@ -22,7 +21,7 @@ const ProfileFollowButton = memo(function FollowButton({
     const isFollowing = useSelector((Root: RootState) => Root.ProfileState.state?.friendship.following)
     const router = useRouter()
     const dispatch = useDispatch()
-    const session = useSession().data?.user
+    const session = useSelector((Root: RootState) => Root.AccountState.session)
     const loadingRef = useRef(false)
 
     const handleFollow = useCallback(async () => {

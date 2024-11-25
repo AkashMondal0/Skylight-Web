@@ -14,20 +14,20 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import SkyAvatar from '@/components/sky/SkyAvatar'
-import { signOut, useSession } from 'next-auth/react'
-import { logoutApi, profileUpdateApi } from '@/redux/services/account'
 import OptionAvatarDialog from '@/components/Dialog/Avatar.Options.Dialog'
 import { useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { Moon, Sun } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { AuthorData, disPatchResponse } from '@/types'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Label } from '@/components/ui/label'
+import { RootState } from '@/redux-stores/store'
+import { logoutApi, profileUpdateApi } from '@/redux-stores/slice/auth/api.service'
 const FormSchema = z.object({
     name: z.string().min(3, {
         message: "Name must be at least 3 characters.",
@@ -44,15 +44,15 @@ type FormData = z.infer<typeof FormSchema>;
 const Page = () => {
     const router = useRouter()
     const { setTheme, themes, theme } = useTheme()
-    const session = useSession()
+    const session = useSelector((state: RootState) => state.AccountState.session)
     const dispatch = useDispatch()
     const [loading, setLoading] = useState(false);
 
     const { handleSubmit, register, reset, formState: { errors } } = useForm({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            name: session.data?.user?.name || '',
-            username: session.data?.user?.username || '',
+            name: session?.name || '',
+            username: session?.username || '',
             bio: 'coming soon...',
             website: [],
         },
@@ -60,10 +60,9 @@ const Page = () => {
 
     const onSubmit = async (inputData: FormData) => {
         try {
-            if (!session.data?.user?.id) return toast("Something's went Wrong")
-
+            if (!session) return toast("Something's went Wrong")
             const res = await dispatch(profileUpdateApi({
-                profile: session.data.user,
+                profile: session,
                 updateUsersInput: {
                     name: inputData.name,
                     username: inputData.username,
@@ -76,7 +75,7 @@ const Page = () => {
 
             if (res.payload) {
                 await session.update({
-                    ...session.data.user,
+                    ...session,
                     name: res.payload.name,
                     username: res.payload.username,
                     bio: res.payload.bio,
@@ -99,19 +98,19 @@ const Page = () => {
 
 
     useEffect(() => {
-        if (session.data?.user) {
+        if (session) {
             reset({
-                name: session.data.user.name,
-                username: session.data.user.username,
-                // website: session.data.user.website || [],
-                // bio: session.data.user.bio,
+                name: session.name,
+                username: session.username,
+                // website: session.website || [],
+                // bio: session.bio,
             })
         }
-    }, [session.data?.user])
+    }, [session])
 
 
 
-    if (!session.data?.user) return null
+    if (!session) return null
     return (
         <>
             <div className='w-full flex justify-center'>
@@ -121,11 +120,11 @@ const Page = () => {
                     </h1>
                     <div className='flex justify-between p-4 my-4 bg-secondary text-secondary-foreground rounded-2xl'>
                         <div className='flex space-x-3'>
-                            <SkyAvatar className='h-12 w-12 mx-auto' url={session.data.user?.image || null} />
+                            <SkyAvatar className='h-12 w-12 mx-auto' url={session?.profilePicture || null} />
                             <div>
-                                <div className='font-semibold text-base'>{session.data.user?.username}</div>
+                                <div className='font-semibold text-base'>{session?.username}</div>
                                 <div className='text-sm'>
-                                    {session.data.user?.name}
+                                    {session?.name}
                                 </div>
                             </div>
                         </div>
@@ -222,11 +221,7 @@ const Page = () => {
                     <div className='flex justify-around gap-4' >
                         <Button variant={"destructive"}
                             disabled={loading}
-                            onClick={() => {
-                                signOut()
-                                logoutApi()
-                                router.replace('/auth/login')
-                            }}
+                            onClick={logoutApi}
                             className="rounded-xl w-full">
                             logout
                         </Button>

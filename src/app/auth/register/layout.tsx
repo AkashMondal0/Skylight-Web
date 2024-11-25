@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { getServerSession } from 'next-auth';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
@@ -9,9 +9,9 @@ export const metadata: Metadata = {
 export default async function RegisterLayout({ children }: {
   children: React.ReactNode;
 }) {
-  const login = await getServerSession();
-
-  if (login) {
+  const cookieStore = cookies();
+  const Cookies = cookieStore.get("skylight-token");
+  if (Cookies) {
     return redirect('/');
   }
 

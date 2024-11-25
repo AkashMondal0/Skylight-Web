@@ -1,5 +1,4 @@
 'use client'
-import { signIn } from "next-auth/react"
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -20,6 +19,8 @@ import {
 import { useState } from "react";
 import { loginApi } from "@/redux-stores/slice/auth/api.service";
 import { ApiResponse, Session } from "@/types";
+import { getSessionApi } from "@/redux-stores/slice/account/api.service";
+import { useDispatch } from "react-redux";
 
 const FormSchema = z.object({
     password: z.string().min(6, {
@@ -34,6 +35,7 @@ type FormData = z.infer<typeof FormSchema>;
 
 export default function LoginPage() {
     const router = useRouter();
+    const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
 
     const { handleSubmit, register, reset, formState: { errors } } = useForm({
@@ -48,26 +50,15 @@ export default function LoginPage() {
         try {
             setLoading(true);
             const { password, email } = data;
-            const res = await loginApi({ email, password }) as ApiResponse<Session["user"]>
-            const callbackUrlPath = new URL(window.location.href).searchParams.get("callbackUrl")
-            if (res?.data) {
-                signIn("credentials", {
-                    email: res.data.email,
-                    username: res.data.username,
-                    name: res.data.name,
-                    id: res.data.id,
-                    image: res.data.profilePicture ?? "/user.jpg",
-                    bio: res.data.bio,
-                    website: [],
-                    accessToken: res.data.accessToken,
-                    redirect: true,
-                    callbackUrl: callbackUrlPath ? `${process.env.NEXTAUTH_URL}${callbackUrlPath}` : `${process.env.NEXTAUTH_URL}`,
-                });
-                reset();
-                toast.success(`${res.message}`)
+            // const callbackUrlPath = new URL(window.location.href).searchParams.get("callbackUrl")
+            const res = await loginApi({ email, password }) as ApiResponse<Session>
+            if (!res.data) {
+                toast.error(res.message)
             }
-            else {
-                toast.error(`${res.message}`)
+            if (res.data) {
+                dispatch(getSessionApi() as any)
+                toast.success('Login Successful')
+                router.replace("/")
             }
         } finally {
             setLoading(false);

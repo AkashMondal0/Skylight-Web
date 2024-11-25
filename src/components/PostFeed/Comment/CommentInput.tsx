@@ -1,7 +1,6 @@
 import { Comment, NotificationType, Post, disPatchResponse } from "@/types"
-import { useSession } from "next-auth/react"
 import { memo, useCallback, useContext, useRef } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import PostActions from "@/components/PostFeed/PostActions"
 import { Smile } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -10,6 +9,7 @@ import { event_name } from "@/configs/socket.event"
 import { toast } from "sonner"
 import { createPostCommentApi } from "@/redux-stores/slice/post/api.service"
 import { createNotificationApi } from "@/redux-stores/slice/notification/api.service"
+import { RootState } from "@/redux-stores/store"
 
 export const CommentInput = memo(function CommentInput({
     data,
@@ -19,7 +19,7 @@ export const CommentInput = memo(function CommentInput({
     hideActionButtons?: boolean
 }) {
     const SocketState = useContext(SocketContext)
-    const session = useSession().data?.user
+    const session = useSelector((Root: RootState) => Root.AccountState.session)
     const dispatch = useDispatch()
     const inputRef = useRef<any>(null)
     const loadingRef = useRef(false)
@@ -36,7 +36,7 @@ export const CommentInput = memo(function CommentInput({
                 user: {
                     username: session.username,
                     name: session.name,
-                    profilePicture: session.image as string,
+                    profilePicture: session.profilePicture as string,
                     id: session.id,
                     email: session.email
                 },
@@ -58,7 +58,7 @@ export const CommentInput = memo(function CommentInput({
                     ...notificationRes.payload,
                     author: {
                         username: session.username,
-                        profilePicture: session.image
+                        profilePicture: session.profilePicture
                     },
                     post: {
                         id: data.id,

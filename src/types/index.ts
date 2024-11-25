@@ -30,7 +30,6 @@ export interface NavigationProps {
 }
 // user account
 export interface Session {
-    user: {
         id: string,
         username: string,
         email: string,
@@ -38,7 +37,7 @@ export interface Session {
         profilePicture: string,
         accessToken: string,
         bio: string,
-    } | null
+        website?: string[] | any[],
 }
 export interface AuthorData {
     id: string

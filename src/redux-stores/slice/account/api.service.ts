@@ -196,3 +196,20 @@ export const uploadHighlightApi = createAsyncThunk(
         }
     },
 );
+
+export const getSessionApi = createAsyncThunk(
+    "getSessionApi/get",
+    async (_, thunkApi) => {
+        try {
+            const res = await graphqlQuery({
+                query: AQ.getSessionApi,
+                variables: {},
+            });
+            return res;
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({
+                message: error?.message,
+            });
+        }
+    },
+);

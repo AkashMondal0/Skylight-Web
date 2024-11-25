@@ -111,4 +111,15 @@ export const AQ = {
   createHighlight(createHighlightInput: $createHighlightInput) {
     __typename
   }}`,
+  getSessionApi: `query GetSession {
+    getSession {
+      email
+      username
+      id
+      name
+      profilePicture
+      bio
+      website
+    }
+  }`
 }

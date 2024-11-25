@@ -1,11 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { AuthorData, loadingType, Post, Story } from '@/types'
-import { fetchAccountAllStroyApi, fetchAccountFeedApi, fetchAccountStoryApi, fetchAccountStoryTimelineApi, uploadFilesApi, uploadStoryApi } from './api.service'
+import { AuthorData, loadingType, Post, Session, Story } from '@/types'
+import {
+  fetchAccountAllStroyApi, fetchAccountFeedApi,
+  fetchAccountStoryApi, fetchAccountStoryTimelineApi,
+  getSessionApi,
+  uploadFilesApi,
+  uploadStoryApi
+} from './api.service'
 import { isArray } from 'lodash'
 
 
 export type AccountState = {
+  session: Session | null
+  sessionLoading: loadingType
+  sessionError: string | null
   //
   accountStories: Story[]
   accountStoriesLoading: loadingType
@@ -37,7 +46,10 @@ export type AccountState = {
 
 
 const initialState: AccountState = {
-
+  session: null,
+  sessionLoading: "idle",
+  sessionError: null,
+  // 
   uploadFile: null,
   uploadFilesLoading: false,
   uploadFilesError: null,
@@ -95,6 +107,20 @@ export const AccountSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // getSessionApi
+      .addCase(getSessionApi.pending, (state) => {
+        state.sessionLoading = "pending"
+        state.sessionError = null
+      })
+      .addCase(getSessionApi.fulfilled, (state, action: PayloadAction<Session>) => {
+        state.session = action.payload
+        state.sessionLoading = "normal"
+      })
+      .addCase(getSessionApi.rejected, (state, action: PayloadAction<any>) => {
+        state.sessionLoading = "normal"
+        state.sessionError = action.payload?.message ?? "fetch error"
+      })
+      // fetchAccountFeedApi
       .addCase(fetchAccountFeedApi.pending, (state) => {
         state.feedsLoading = "pending"
         state.feedsError = null

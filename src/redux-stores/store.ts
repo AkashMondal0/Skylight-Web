@@ -1,5 +1,4 @@
 import { configureStore } from '@reduxjs/toolkit'
-import AuthReducer from './slice/auth'
 import AccountReducer from './slice/account'
 import ConversationReducer from './slice/conversation'
 import PostReducer from './slice/post'
@@ -11,7 +10,6 @@ import SidebarReducer from './slice/sidebar'
 
 export const store = configureStore({
   reducer: {
-    AuthState: AuthReducer,
     AccountState: AccountReducer,
     ConversationState: ConversationReducer,
     PostState: PostReducer,

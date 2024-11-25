@@ -17,7 +17,6 @@ import {
 import React, { memo, useCallback, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import MoreDropdownMenu from "@/components/Option/HomePageMenu"
-import { useSession } from "next-auth/react"
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import { configs } from "@/configs"
 import { NotificationPopup, NotificationPing, NotificationIndicator } from "../Alert"
@@ -37,7 +36,7 @@ export const NavigationSidebar = memo(function NavigationSidebar({
     isHideNav?: boolean,
 }) {
     const Sidebar = useSelector((state: RootState) => state.SidebarState)
-    const session = useSession().data?.user
+    const session = useSelector((state: RootState) => state.AccountState.session)
     const router = useRouter()
     const dispatch = useDispatch()
     const pageChange = useCallback((path: string) => router.push(path), [router])
@@ -90,7 +89,7 @@ export const NavigationSidebar = memo(function NavigationSidebar({
             onClick: () => { dispatch(toggleCreatePostModal()) }
         },
         {
-            icon: <SkyAvatar url={session?.image ?? null} className="h-8 w-8" />,
+            icon: <SkyAvatar url={session?.profilePicture ?? null} className="h-8 w-8" />,
             label: "Profile",
             onClick: () => pageChange(`/${session?.username ?? ""}`)
         },

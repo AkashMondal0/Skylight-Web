@@ -4,11 +4,11 @@ import { event_name } from "@/configs/socket.event"
 import { cn } from "@/lib/utils"
 import { SocketContext } from "@/provider/Socket_Provider"
 import { conversationSeenAllMessage } from "@/redux-stores/slice/conversation/api.service"
+import { RootState } from "@/redux-stores/store"
 import { Conversation } from "@/types"
-import { useSession } from "next-auth/react"
 import { useParams, useRouter } from "next/navigation"
 import { memo, useContext, useMemo } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { toast } from "sonner"
 const timeFormat = (time: string | Date | undefined) => {
     if (!time) return ""
@@ -24,7 +24,7 @@ export const MessageUserListItem = memo(function MessageUserListItem({
     const params = useParams()
     const router = useRouter()
     const dispatch = useDispatch()
-    const session = useSession().data?.user
+    const session = useSelector((Root: RootState) => Root.AccountState.session)
     const socketState = useContext(SocketContext)
     const Conversation = useMemo(() => {
         return data?.isGroup ? {

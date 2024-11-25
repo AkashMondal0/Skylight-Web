@@ -2,9 +2,8 @@
 import { useVirtualizer, } from "@tanstack/react-virtual";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { NavigationBottom } from "@/components/Navigation";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ProfileHero, ProfileHeroSkeleton, ProfileNavbar, ProfilePost } from "@/components/Profile";
-import { useSession } from "next-auth/react";
 import NotFound from "@/components/Error/NotFound";
 import { debounce } from "lodash";
 import { toast } from "sonner";
@@ -13,6 +12,7 @@ import { Post, User, disPatchResponse, loadingType } from "@/types";
 import { Button } from "@/components/ui/button";
 import { CirclePlus } from "@/components/sky/icons";
 import { fetchUserProfileDetailApi, fetchUserProfilePostsApi } from "@/redux-stores/slice/profile/api.service";
+import { RootState } from "@/redux-stores/store";
 
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any; // as VirtualItem[]
@@ -20,7 +20,7 @@ let _KMeasurementsCache = [] as any; // as VirtualItem[]
 export default function Page({ params }: { params: { profile: string } }) {
     const [mounted, setMounted] = useState(false)
     const dispatch = useDispatch()
-    const session = useSession().data?.user
+    const session = useSelector((Root: RootState) => Root.AccountState.session)
     const [loading, setLoading] = useState<loadingType>('idle')
     const [error, setError] = useState<string | null>(null)
     const Posts = useRef<Post[]>([])

@@ -7,15 +7,16 @@ import {
 
 import React, { memo } from "react"
 import { useRouter } from "next/navigation"
-import { useSession } from "next-auth/react"
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import NotificationPing from "../Alert/NotificationPing"
+import { useSelector } from "react-redux"
+import { RootState } from "@/redux-stores/store"
 // for small screen device 
 export const NavigationBottom = memo(function NavigationBottom() {
     // console.info("<NavigationBottom/>")
     const router = useRouter()
     const pageChange = (path: string) => router.push(path)
-    const session = useSession().data?.user
+    const session = useSelector((state: RootState) => state.AccountState.session)
     const SideIconData = [
         { icon: Home, label: "Home", onClick: () => pageChange('/') },
         { icon: Search, label: "Search", onClick: () => pageChange('/search') },
@@ -31,13 +32,13 @@ export const NavigationBottom = memo(function NavigationBottom() {
                 {SideIconData.map(({ icon, label, onClick }, index) => {
                     if (label === "Profile") {
                         return <div key={index} onClick={onClick}>
-                            <SkyAvatar url={session?.image ?? null} className="h-7 w-7" />
+                            <SkyAvatar url={session?.profilePicture ?? null} className="h-7 w-7" />
                         </div>
                     }
                     if (label === "Messages") {
                         return <div key={index} onClick={onClick}>
                             <div className="relative">
-                                <NotificationPing/>
+                                <NotificationPing />
                                 {React.createElement(icon, { size: 28 })}
                             </div>
                         </div>

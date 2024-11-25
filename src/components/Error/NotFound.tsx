@@ -1,9 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { Button } from '../ui/button'
-import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { logoutApi } from '@/redux-stores/slice/auth/api.service'
 
 export default function NotFound({
   message = "PAGE_NOT_FOUND"

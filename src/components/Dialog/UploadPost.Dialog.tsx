@@ -15,10 +15,10 @@ import {
     type CarouselApi,
 } from "@/components/ui/carousel"
 import { useDispatch, useSelector } from "react-redux"
-import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 import OptimizedImage from "@/components/sky/SkyImage"
 import { TempleDialog } from "./Temple.Dialog"
+import { RootState } from "@/redux-stores/store"
 
 export default function UploadPostDialog({
     children
@@ -28,7 +28,7 @@ export default function UploadPostDialog({
     // const modalOpen = useSelector((state: RootState) => state.sidebarSlice.uploadPostModal)
     const dispatch = useDispatch()
     const [isFile, setIsFile] = useState<File[]>([])
-    const session = useSession().data?.user
+    const session = useSelector((state: RootState) => state.AccountState.session)
     const [step, setStep] = useState(0)
 
     const ToastAlert = (text: string) => {
@@ -44,7 +44,7 @@ export default function UploadPostDialog({
             files = files.filter((f) => f.name !== file.name)
         })
         setIsFile((prev) => [...prev, ...files])
-    },[isFile])
+    }, [isFile])
 
     const onRemoveItem = useCallback((id: string) => {
         setIsFile((prev) => prev.filter((i) => i.name !== id))
@@ -240,7 +240,7 @@ const ImageItem = memo(function ImageItem({ image }: { image: File }) {
             <p>{image.name.slice(0, 11)}...</p>
         </div>
     )
-}, ((pre,next)=>pre.image.name === next.image.name))
+}, ((pre, next) => pre.image.name === next.image.name))
 
 const CarouselImageItem = memo(function CarouselImageItem({ image }: { image: File }) {
     return (<CarouselItem className="m-auto">

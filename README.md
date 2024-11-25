@@ -36,7 +36,6 @@ The client-side application is built using [Next.js](https://nextjs.org/), a Rea
 - `firebase`: Firebase client library.
 - `jsonwebtoken`: JWT handling.
 - `lucide-react`: Icon library for React.
-- `next-auth`: Authentication for Next.js.
 - `next-themes`: Theme switching for Next.js.
 - `react-hook-form`: Forms library for React.
 - `react-redux`: Official React bindings for Redux.

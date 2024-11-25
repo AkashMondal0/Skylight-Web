@@ -2,6 +2,7 @@
 'use client'
 import { configs } from "@/configs";
 import { event_name } from "@/configs/socket.event";
+import { getSessionApi } from "@/redux-stores/slice/account/api.service";
 import { setMessage, setMessageSeen, setTyping } from "@/redux-stores/slice/conversation";
 import { conversationSeenAllMessage, fetchConversationsApi } from "@/redux-stores/slice/conversation/api.service";
 import { setNotification } from "@/redux-stores/slice/notification";
@@ -9,13 +10,12 @@ import { fetchUnreadMessageNotificationCountApi, fetchUnreadNotificationCountApi
 import { RootState } from "@/redux-stores/store";
 import { Message, Notification, Typing } from "@/types";
 import { debounce } from "lodash";
-import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import { createContext, useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Socket, io } from "socket.io-client";
 import { toast } from 'sonner'
-let loadedRef = true
+let loadedRef = false
 
 interface SocketStateType {
     socket: Socket | null
@@ -30,14 +30,16 @@ export const SocketContext = createContext<SocketStateType>({
 
 const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
     const dispatch = useDispatch()
-    const session = useSession().data?.user
+    const session = useSelector((Root: RootState) => Root.AccountState.session)
     const list = useSelector((state: RootState) => state.ConversationState.conversationList)
     const conversation = useSelector((state: RootState) => state.ConversationState.conversation)
     const socketRef = useRef<Socket | null>(null)
     const params = useParams()
 
     async function SocketConnection() {
-        if (loadedRef && session?.id) {
+        if (loadedRef) return
+        dispatch(getSessionApi() as any)
+        if (session?.id) {
             // fetchAllNotification 
             dispatch(fetchUnreadNotificationCountApi() as any)
             // 
@@ -49,9 +51,10 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
                     username: session.username
                 }
             })
-            loadedRef = false
         }
+        loadedRef = true
     }
+
     const seenAllMessage = debounce(async (conversationId: string) => {
         if (!conversationId || !session?.id) return
         if (params?.id === conversationId && conversation) {
@@ -71,12 +74,12 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
         SocketConnection()
         if (socketRef.current && session?.id) {
             // connection
-            // socketRef.current?.on('connect', () => {
-            //     toast("User Connected", { position: "top-center" })
-            // });
-            // socketRef.current?.on('disconnect', () => {
-            //     toast("User Disconnected", { position: "top-center" })
-            // });
+            socketRef.current?.on('connect', () => {
+                toast("User Connected", { position: "top-center" })
+            });
+            socketRef.current?.on('disconnect', () => {
+                toast("User Disconnected", { position: "top-center" })
+            });
             // incoming events
             socketRef.current?.on(event_name.conversation.message, (data: Message) => {
                 if (data.authorId !== session?.id) {
@@ -112,8 +115,8 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
                 toast("From Server Test Event Message", { position: "top-center" })
             });
             return () => {
-                // socketRef.current?.off('connect')
-                // socketRef.current?.off('disconnect')
+                socketRef.current?.off('connect')
+                socketRef.current?.off('disconnect')
                 socketRef.current?.off('test')
                 socketRef.current?.off(event_name.conversation.message)
                 socketRef.current?.off(event_name.conversation.seen)
@@ -132,10 +135,10 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
 
 
     return (
-        <SocketContext.Provider value={{ 
+        <SocketContext.Provider value={{
             socket: socketRef.current,
             sendDataToServer
-         }}>
+        }}>
             {children}
         </SocketContext.Provider>
     )

@@ -1,12 +1,12 @@
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import { Button } from '@/components/ui/button'
 import { AuthorData, disPatchResponse } from '@/types'
-import { useSession } from 'next-auth/react'
 import React, { useMemo, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { FollowerRemoveDialog, UnFollowDialog } from '@/components/Dialog/Follow.Dialog'
 import { useParams, useRouter } from 'next/navigation'
 import { RemoveFriendshipApi, createFriendshipApi, destroyFriendshipApi } from '@/redux-stores/slice/profile/api.service'
+import { RootState } from '@/redux-stores/store'
 
 export const UserItemFollow = ({
     user,
@@ -15,7 +15,7 @@ export const UserItemFollow = ({
     user?: AuthorData
     showRemoveButton?: boolean
 }) => {
-    const session = useSession().data?.user
+    const session = useSelector((state: RootState) => state.AccountState.session)
     const dispatch = useDispatch()
     const params = useParams()
     const router = useRouter()
@@ -24,6 +24,7 @@ export const UserItemFollow = ({
     const loadingRef = useRef(false)
 
     const isProfile = useMemo(() => {
+        if (!session || !user) return false
         return session?.id === user?.id
     }, [session?.id, user?.id])
 
