@@ -1,34 +1,27 @@
 "use client"
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { StoryItem, UploadYourStory } from '@/components/Stories/StoryItem';
+import { AvatarItem, UploadYourStory } from '@/components/Stories/StoryItem';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { generateRandomUsername } from '../sky/random';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-const story = Array.from({ length: 20 }, (_, i) => {
-    return {
-        url: `https://picsum.photos/id/${100 + i}/${50}/${50}`,
-        label: `${generateRandomUsername()}`
-    }
-})
-interface StoriesProp {
-    // story: {
-    //     url: string
-    //     label: string
-    // }[]
-}
-let _kSavedOffset = 0;
-let _KMeasurementsCache = [] as any // as VirtualItem[] ;
-export const Stories = memo(function Story({
-    // story
-}: StoriesProp) {
+import { RootState } from '@/redux-stores/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAccountStoryTimelineApi } from '@/redux-stores/slice/account/api.service';
 
-    // const posts = useSelector((Root: RootState) => Root.posts)
+let _kSavedOffset = 0;
+let _KMeasurementsCache = [] as any // as VirtualItem[];
+export const Stories = memo(function Story({ }) {
+    const storyList = useSelector((state: RootState) => state.AccountState.storyAvatars)
+    const storyListLoading = useSelector((state: RootState) => state.AccountState.storyAvatarsLoading)
+    const storyError = useSelector((state: RootState) => state.AccountState.storyAvatarsError)
+    const totalFetchedItemCount = useSelector((state: RootState) => state.AccountState.storyAvatarsFetched)
+    const stopRef = useRef(false)
+    const dispatch = useDispatch()
+
     const parentRef = useRef<HTMLDivElement>(null)
     const [mounted, setMounted] = useState(false)
-    const data = useMemo(() => story, [])
-    const count = useMemo(() => data.length, [data.length])
+    const count = useMemo(() => storyList.length, [storyList.length])
 
     const columnVirtualizer = useVirtualizer({
         horizontal: true,
@@ -39,8 +32,24 @@ export const Stories = memo(function Story({
     })
     // const items = columnVirtualizer.getVirtualItems()
 
+    const fetchApi = useCallback(async () => {
+        if (stopRef.current || totalFetchedItemCount) return
+        stopRef.current = true
+        try {
+            await dispatch(fetchAccountStoryTimelineApi({
+                limit: 12,
+                offset: storyList.length,
+            }) as any)
+        } finally {
+            stopRef.current = false
+        }
+    }, [totalFetchedItemCount])
+
     useEffect(() => {
-        setMounted(true)
+        if (!mounted) {
+            fetchApi()
+            setMounted(true)
+        }
     }, [])
 
     const handleScrollPrevious = useCallback(() => {
@@ -67,7 +76,7 @@ export const Stories = memo(function Story({
     if (!mounted) return <></>
 
     return (
-        <div className='flex md:w-max w-full items-center mx-auto'>
+        <div className='flex md:w-max w-full items-center mx-auto min-w-[580px]'>
             <Button variant={"outline"} className={cn("rounded-full p-0 w-7 h-7 hidden md:flex")}
                 onClick={handleScrollPrevious}>
                 <ChevronLeft className="w-6 h-6" />
@@ -81,7 +90,7 @@ export const Stories = memo(function Story({
                     height: `100px`,
                     overflow: 'auto',
                 }}>
-                <UploadYourStory className='w-16 h-16'/>
+                <UploadYourStory className='w-16 h-16' />
                 <div
                     style={{
                         width: `${columnVirtualizer.getTotalSize()}px`,
@@ -101,7 +110,7 @@ export const Stories = memo(function Story({
                                 transform: `translateX(${virtualColumn.start}px)`,
                             }}
                         >
-                            <StoryItem key={virtualColumn.index} story={data[virtualColumn.index]} />
+                            <AvatarItem key={virtualColumn.index} data={storyList[virtualColumn.index]} />
                         </div>
                     ))}
                 </div>

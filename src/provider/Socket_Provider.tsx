@@ -15,7 +15,7 @@ import { createContext, useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Socket, io } from "socket.io-client";
 import { toast } from 'sonner'
-let loadedRef = false
+// let loadedRef = false
 
 interface SocketStateType {
     socket: Socket | null
@@ -36,14 +36,12 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
     const socketRef = useRef<Socket | null>(null)
     const params = useParams()
 
-    async function SocketConnection() {
-        if (loadedRef) return
-        dispatch(getSessionApi() as any)
-        if (session?.id) {
+    const SocketConnection = useCallback(async () => {
+        if (session) {
+            if (socketRef.current) return
             // fetchAllNotification 
             dispatch(fetchUnreadNotificationCountApi() as any)
-            // 
-            socketRef.current = io(`${configs.serverApi.baseUrl}/chat`, {
+            socketRef.current = io(`${configs.serverApi?.baseUrl?.replace("/v1", "")}/chat`, {
                 transports: ['websocket'],
                 withCredentials: true,
                 query: {
@@ -51,9 +49,10 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
                     username: session.username
                 }
             })
+        } else {
+            dispatch(getSessionApi() as any)
         }
-        loadedRef = true
-    }
+    }, [session?.id, socketRef.current])
 
     const seenAllMessage = debounce(async (conversationId: string) => {
         if (!conversationId || !session?.id) return
@@ -124,7 +123,7 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
                 socketRef.current?.off(event_name.notification.post)
             }
         }
-    }, [session, list, socketRef.current, conversation])
+    }, [session?.id, list, socketRef.current, conversation])
 
 
     const sendDataToServer = useCallback((eventName: string, data: unknown) => {

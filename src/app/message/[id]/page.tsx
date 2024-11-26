@@ -1,7 +1,6 @@
 "use client"
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { useSession } from 'next-auth/react';
 import { Loader2 } from 'lucide-react';
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from "react-redux"
@@ -27,7 +26,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const MessagesLoading = useSelector((Root: RootState) => Root.ConversationState.messageLoading)
   const MessagesError = useSelector((Root: RootState) => Root.ConversationState.messageError)
 
-  const session = useSession().data?.user
+  const session = useSelector((Root: RootState) => Root.AccountState.session)
   const parentRef = useRef<HTMLDivElement>(null)
   const count = useMemo(() => Messages?.length, [Messages])
   const stopFetch = useRef(false)

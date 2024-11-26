@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: 'Sky Form - Register',
+  title: 'Skylight - Register',
   description: ``,
 }
 export default async function RegisterLayout({ children }: {

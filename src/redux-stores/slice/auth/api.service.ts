@@ -36,8 +36,7 @@ export const registerApi = async ({
     name: string,
     username: string
 }) => {
-
-    return await fetch(`${configs.serverApi.baseUrl}/auth/register`, {
+    const res = await fetch(`/api/register`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -51,28 +50,8 @@ export const registerApi = async ({
         }),
         credentials: "include"
     })
-        .then(async (res) => {
-            const _data = await res.json()
-            if (!res.ok) {
-                return {
-                    data: _data,
-                    message: _data.message,
-                    code: 0
-                }
-            }
-            return {
-                data: _data,
-                message: "Register Successful",
-                code: 1
-            };
-        })
-        .catch((e) => {
-            return {
-                data: e,
-                message: e.message,
-                code: 0
-            }
-        });
+    const _data = await res.json()
+    return _data
 }
 
 export const logoutApi = async () => {

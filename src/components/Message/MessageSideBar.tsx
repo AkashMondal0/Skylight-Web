@@ -43,7 +43,7 @@ export const MessageSideBar = memo(function MessageSideBar() {
         }
     }, [])
 
-    console.log(conversationList)
+    // console.log(conversationList)
 
     if (loading !== "normal") {
         return <MessagePageSidebarSkeleton />

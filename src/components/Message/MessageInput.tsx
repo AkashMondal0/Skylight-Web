@@ -8,7 +8,6 @@ import { useForm } from 'react-hook-form'
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux'
 import { Conversation } from '@/types';
-import { useSession } from 'next-auth/react';
 import { SocketContext } from '@/provider/Socket_Provider';
 import { event_name } from '@/configs/socket.event';
 import { toast } from 'sonner';
@@ -33,7 +32,7 @@ const schema = z.object({
 export const MessageInput = memo(function MessageInput({ data }: { data: Conversation }) {
     const dispatch = useDispatch()
     const ConversationList = useSelector((state: RootState) => state.ConversationState.conversationList, (prev, next) => prev.length === next.length)
-    const session = useSession().data?.user
+    const session = useSelector((Root: RootState) => Root.AccountState.session)
     const [isFile, setIsFile] = useState<File[]>([])
     const [loading, setLoading] = useState(false)
     const socketState = useContext(SocketContext)
