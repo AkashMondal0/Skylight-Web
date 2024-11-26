@@ -83,30 +83,26 @@ export const destroyFriendshipApi = async (data: {
     }
 }
 
-export const RemoveFriendshipApi = createAsyncThunk(
-    'RemoveFriendshipApi/post',
-    async (data: {
-        authorUserId: string,
-        authorUsername: string,
-        followingUserId: string,
-        followingUsername: string
-    }, thunkApi) => {
-        const { ...destroyFriendship } = data
-        try {
-            await graphqlQuery({
-                query: QProfile.RemoveFriendshipApi,
-                variables: {
-                    destroyFriendship
-                }
-            })
-            return true
-        } catch (error: any) {
-            return thunkApi.rejectWithValue({
-                ...error?.response?.data,
-            })
-        }
+export const RemoveFriendshipApi = async (data: {
+    authorUserId: string,
+    authorUsername: string,
+    followingUserId: string,
+    followingUsername: string
+}) => {
+    const { ...destroyFriendship } = data
+    try {
+        await graphqlQuery({
+            query: QProfile.RemoveFriendshipApi,
+            variables: {
+                destroyFriendship
+            }
+        })
+        return true
+    } catch (error: any) {
+        console.error(error)
+        return false
     }
-);
+}
 
 export const fetchUserProfileFollowingUserApi = createAsyncThunk(
     'fetchUserProfileFollowingUserApi/get',

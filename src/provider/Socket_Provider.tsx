@@ -74,10 +74,10 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
         if (socketRef.current && session?.id) {
             // connection
             socketRef.current?.on('connect', () => {
-                toast("User Connected", { position: "top-center" })
+                toast("User Connected")
             });
             socketRef.current?.on('disconnect', () => {
-                toast("User Disconnected", { position: "top-center" })
+                toast("User Disconnected")
             });
             // incoming events
             socketRef.current?.on(event_name.conversation.message, (data: Message) => {
@@ -111,7 +111,7 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
                 }
             });
             socketRef.current?.on("test", (data: Typing) => {
-                toast("From Server Test Event Message", { position: "top-center" })
+                toast("From Server Test Event Message")
             });
             return () => {
                 socketRef.current?.off('connect')

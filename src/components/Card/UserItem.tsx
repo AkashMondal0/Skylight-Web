@@ -33,13 +33,13 @@ export const UserItemFollow = ({
         loadingRef.current = true
         if (!session?.id) return alert('no user id from unfollow button')
         if (!user?.id) return alert('no user id from unfollow button')
-        const res = await dispatch(destroyFriendshipApi({
+        const res = await destroyFriendshipApi({
             authorUserId: session?.id,
             authorUsername: session?.username,
             followingUserId: user?.id,
             followingUsername: user?.username
-        }) as any)
-        if (userData && res.payload) {
+        })
+        if (userData && res) {
             setUserData({
                 ...userData,
                 following: false
@@ -55,14 +55,14 @@ export const UserItemFollow = ({
         loadingRef.current = true
         if (!session?.id) return alert('no user id from follow button')
         if (!user?.id) return alert('no user id from follow button')
-        const res = await dispatch(createFriendshipApi({
+        const res = await createFriendshipApi({
             authorUserId: session?.id,
             authorUsername: session?.username,
             followingUserId: user?.id,
             followingUsername: user?.username,
-        }) as any)
+        })
 
-        if (userData && res.payload) {
+        if (userData && res) {
             setUserData({
                 ...userData,
                 following: true
@@ -78,13 +78,13 @@ export const UserItemFollow = ({
         loadingRef.current = true
         if (!session?.id) return alert('no user id from follow button')
         if (!user?.id) return alert('no user id from follow button')
-        const res = await dispatch(RemoveFriendshipApi({
+        const res = await RemoveFriendshipApi({
             authorUserId: user?.id,
             authorUsername: user?.username,
             followingUserId: session?.id,
             followingUsername: session?.username
-        }) as any) as disPatchResponse<any>
-        if (res.payload) {
+        })
+        if (res) {
             setRemoved(true)
         } else {
             alert('Something went Wrong')
