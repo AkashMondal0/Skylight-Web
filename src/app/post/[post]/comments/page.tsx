@@ -4,19 +4,19 @@ import NotFound from '@/components/Error/NotFound'
 import { AppNavbar } from '@/components/Header/Header'
 import { SkyAvatar } from '@/components/sky'
 import { timeAgoFormat } from '@/lib/timeFormat'
-import { fetchOnePostApi, fetchPostCommentsApi } from '@/redux/services/post'
-import { RootState } from '@/redux/store'
 import { Comment, Post, disPatchResponse } from '@/types'
 import { Heart } from 'lucide-react'
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'sonner'
+import { RootState } from '@/redux-stores/store'
+import { fetchOnePostApi, fetchPostCommentsApi } from '@/redux-stores/slice/post/api.service'
 let loadedRef = false
 let loadedPostId = "noPostId"
 
 const Page = ({ params }: { params: { post: string } }) => {
   const dispatch = useDispatch()
-  const post = useSelector((Root: RootState) => Root.posts.viewPost)
+  const post = useSelector((Root: RootState) => Root.PostState.viewPost)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
 

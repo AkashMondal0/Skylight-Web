@@ -42,65 +42,65 @@ export function getRandomCountryAndPlace() {
   };
 }
 
-export function getRandomPost(size: number) {
-  const _posts: Post[] = Array.from({ length: size }, (_, i) => {
-    const a = Math.floor(Math.random() * (7 - 3 + 1)) + 3;
-    const b = Math.floor(Math.random() * (7 - 3 + 1)) + 3;
-    const generate_img = `https://picsum.photos/id/${i + size}/${a * 100}/${b * 100}`
-    return {
-      id: `${i + size}`,
-      content: `${generateRandomCaption()}`,
-      fileUrl: [generate_img],
-      title: `${getRandomCountryAndPlace().country, getRandomCountryAndPlace().place}`,
-      commentCount: 4 * a,
-      likeCount: 6 * b,
-      createdAt: new Date().toDateString(),
-      updatedAt: new Date(),
-      is_Liked: false,
-      user: {
-        id: `user-${i + size}`,
-        username: `${generateRandomUsername() + i}`,
-        email: `user-${i} @gmail.com`,
-        name: `User ${i + size}`,
-        profilePicture: generate_img,
-        followed_by: false,
-        following: false
-      },
-      comments: [],
-      likes: [],
-      isDummy: true
-    }
-  })
+// export function getRandomPost(size: number) {
+//   const _posts: Post[] = Array.from({ length: size }, (_, i) => {
+//     const a = Math.floor(Math.random() * (7 - 3 + 1)) + 3;
+//     const b = Math.floor(Math.random() * (7 - 3 + 1)) + 3;
+//     const generate_img = `https://picsum.photos/id/${i + size}/${a * 100}/${b * 100}`
+//     return {
+//       id: `${i + size}`,
+//       content: `${generateRandomCaption()}`,
+//       fileUrl: [generate_img],
+//       title: `${getRandomCountryAndPlace().country, getRandomCountryAndPlace().place}`,
+//       commentCount: 4 * a,
+//       likeCount: 6 * b,
+//       createdAt: new Date().toDateString(),
+//       updatedAt: new Date(),
+//       is_Liked: false,
+//       user: {
+//         id: `user-${i + size}`,
+//         username: `${generateRandomUsername() + i}`,
+//         email: `user-${i} @gmail.com`,
+//         name: `User ${i + size}`,
+//         profilePicture: generate_img,
+//         followed_by: false,
+//         following: false
+//       },
+//       comments: [],
+//       likes: [],
+//       isDummy: true
+//     }
+//   })
 
-  return _posts
-}
+//   return _posts
+// }
 
-export function getRandomProfilePost(size: number) {
-  const _posts: Post[] = Array.from({ length: size }, (_, i) => {
-    const generate_img = `https://picsum.photos/id/${i + size}/100/100`
-    return {
-      id: `${i + size}`,
-      content: `Caption ${i + size}`,
-      fileUrl: [generate_img],
-      title: "",
-      commentCount: 10,
-      likeCount: 10,
-      createdAt: new Date().toDateString(),
-      updatedAt: new Date(),
-      is_Liked: false,
-      user: {
-        id: `user-${i + size}`,
-        username: `user-${i + size}`,
-        email: `user-${i} @gmail.com`,
-        name: `User ${i + size}`,
-        profilePicture: generate_img,
-        followed_by: false,
-        following: false
-      },
-      comments: [],
-      likes: [],
-      isDummy: true
-    }
-  })
-  return _posts
-}
+// export function getRandomProfilePost(size: number) {
+//   const _posts: Post[] = Array.from({ length: size }, (_, i) => {
+//     const generate_img = `https://picsum.photos/id/${i + size}/100/100`
+//     return {
+//       id: `${i + size}`,
+//       content: `Caption ${i + size}`,
+//       fileUrl: [generate_img],
+//       title: "",
+//       commentCount: 10,
+//       likeCount: 10,
+//       createdAt: new Date().toDateString(),
+//       updatedAt: new Date(),
+//       is_Liked: false,
+//       user: {
+//         id: `user-${i + size}`,
+//         username: `user-${i + size}`,
+//         email: `user-${i} @gmail.com`,
+//         name: `User ${i + size}`,
+//         profilePicture: generate_img,
+//         followed_by: false,
+//         following: false
+//       },
+//       comments: [],
+//       likes: [],
+//       isDummy: true
+//     }
+//   })
+//   return _posts
+// }

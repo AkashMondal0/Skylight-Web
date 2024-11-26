@@ -2,17 +2,20 @@
 'use client'
 import { NotificationItem } from "@/components/Card/NotificationItem";
 import { LoadingUserCardWithButton } from "@/components/loading/Card";
-import { fetchAccountNotificationApi } from "@/redux/services/notification";
-import { RootState } from "@/redux/store";
+import { fetchAccountNotificationApi } from "@/redux-stores/slice/notification/api.service";
+import { RootState } from "@/redux-stores/store";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Page() {
-  const allNotifications = useSelector((state: RootState) => state.notification)
+  const allNotifications = useSelector((state: RootState) => state.NotificationState)
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(fetchAccountNotificationApi() as any)
+    dispatch(fetchAccountNotificationApi({
+      limit: 10,
+      offset: 0
+    }) as any)
   }, [])
 
   return <div className="mx-auto max-w-[600px] w-full">

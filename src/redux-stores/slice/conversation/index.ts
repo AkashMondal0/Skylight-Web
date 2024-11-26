@@ -9,7 +9,6 @@ import {
 import { Conversation, Message, Typing } from "@/types";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Asset } from "expo-media-library";
 
 export type loadingType = "idle" | "pending" | "normal";
 export type AiMessage = {
@@ -41,7 +40,7 @@ interface ConversationStateType {
     createMessageError: string | null;
 
     // sending image in message
-    uploadFiles: Asset[];
+    uploadFiles: any[];
     uploadFilesLoading: boolean;
     uploadFilesError: string | null;
 
@@ -167,7 +166,7 @@ export const ConversationSlice = createSlice({
             state.messages = [];
         },
         //
-        setUploadFiles: (state, action: PayloadAction<Asset[] | []>) => {
+        setUploadFiles: (state, action: PayloadAction<any[] | []>) => {
             state.uploadFiles = action.payload;
         },
         // save my prompt
