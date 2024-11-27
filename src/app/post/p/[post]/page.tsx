@@ -1,5 +1,5 @@
 "use client"
-import React, { Fragment, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import NotFound from '@/components/Error/NotFound'
 import { ModelPostSkeleton, PostFeed, PostFeedSkeleton, PostImage } from '@/components/PostFeed'
@@ -10,9 +10,11 @@ import { fetchOnePostApi } from '@/redux-stores/slice/post/api.service'
 
 const PostPage = ({ params }: { params: { post: string } }) => {
   const dispatch = useDispatch()
-  const Post = useSelector((Root: RootState) => Root.PostState)
-  const loadedRef = useRef(false)
+  const post = useSelector((Root: RootState) => Root.PostState.viewPost)
+  const loading = useSelector((Root: RootState) => Root.PostState.viewPostLoading)
+  const error = useSelector((Root: RootState) => Root.PostState.viewPostError)
 
+  const loadedRef = useRef(false)
 
   useEffect(() => {
     if (!loadedRef.current) {
@@ -21,7 +23,7 @@ const PostPage = ({ params }: { params: { post: string } }) => {
     }
   }, []);
 
-  if (Post.viewPostLoading || !loadedRef.current) {
+  if (loading !== "normal" || !loadedRef.current) {
     return <>
       <div className='w-full md:flex justify-center hidden'>
         <div className='w-max'><ModelPostSkeleton /></div>
@@ -33,9 +35,9 @@ const PostPage = ({ params }: { params: { post: string } }) => {
     </>
   }
 
-  if (!Post.viewPostLoading && Post.viewPostError || !Post.viewPost) {
-    if (!Post.viewPostError) return <NotFound message="PAGE_NOT_FOUND" />
-    return <NotFound message={Post.viewPostError} />
+  if (loading !== "normal" && error || !post) {
+    if (!error) return <NotFound message="PAGE_NOT_FOUND" />
+    return <NotFound message={error} />
   }
 
   return (
@@ -44,22 +46,22 @@ const PostPage = ({ params }: { params: { post: string } }) => {
       <div className='w-full max-h-dvh max-w-[70%] mx-auto md:flex hidden border-2'>
         {/* left side */}
         <div className='w-full h-auto flex-1 flex items-center justify-center'>
-          <PostImage post={Post.viewPost} />
+          <PostImage post={post} />
         </div>
         {/* right side */}
         <div className="flex max-h-[688px] flex-col justify-between w-72 flex-1 border-l">
           {/* header comment input  */}
-          <CommentHeader data={Post.viewPost} />
+          <CommentHeader data={post} />
           {/* body comments list  */}
-          <CommentList data={Post.viewPost} />
+          <CommentList data={post} />
           {/* footer comment input  */}
-          <CommentInput data={Post.viewPost} />
+          <CommentInput data={post} />
         </div>
       </div>
       {/* sm  */}
       <div className="w-full h-full flex md:hidden flex-col">
         <AppNavbar name="Post" icon2={<div />} />
-        <PostFeed post={Post.viewPost} />
+        <PostFeed post={post} />
       </div>
     </>
   )

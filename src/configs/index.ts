@@ -5,7 +5,7 @@ const _configs = {
         baseUrl: process.env.SERVER_API_URL,
         supabaseUrl: process.env.SUPABASE_URL,
         supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
-        supabaseStorageUrl: process.env.SUPABASE_STORAGE_URL,
+        supabaseStorageUrl: process.env.SUPABASE_STORAGE_URL??"/primary-light-logo.jpeg",
         aiApiUrl: process.env.AI_API_URL,
     },
     AppDetails: {

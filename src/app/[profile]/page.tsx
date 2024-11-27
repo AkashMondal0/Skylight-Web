@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { CirclePlus } from "@/components/sky/icons";
 import { fetchUserProfileDetailApi, fetchUserProfilePostsApi } from "@/redux-stores/slice/profile/api.service";
 import { RootState } from "@/redux-stores/store";
+import PrivateAccount from "@/components/Profile/PrivateAccount";
 
 let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any; // as VirtualItem[]
@@ -35,6 +36,10 @@ export default function Page({ params }: { params: { profile: string } }) {
     //
 
     const fetchPosts = useCallback(async () => {
+        if (UserData.current?.isPrivate) {
+            setLoading("normal")
+            return
+        }
         if (loading === "pending") return
         setLoading("pending")
         try {
@@ -122,49 +127,50 @@ export default function Page({ params }: { params: { profile: string } }) {
                     <ProfileNavbar name={loading === "normal" ? UserData.current?.username : "Loading"} isProfile={isProfile} />
                     {loading === "idle" ? <ProfileHeroSkeleton /> : <ProfileHero profileUser={UserData.current} isProfile={isProfile} />}
                 </>
-                {error ?
-                    <NotFound message={error ?? "PAGE_NOT_FOUND"} /> :
-                    <div>
-                        <div
-                            className='mx-auto max-w-[960px] h-full'
-                            style={{
-                                height: virtualizer.getTotalSize(),
-                                width: '100%',
-                                position: 'relative'
-                            }}>
-                            <div
-                                style={{
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    width: '100%',
-                                    transform: `translateY(${items[0]?.start ?? 0}px)`
-                                }}>
-                                {items.map((virtualRow) => (<div
-                                    key={virtualRow.key}
-                                    data-index={virtualRow.index}
-                                    ref={virtualizer.measureElement}>
-                                    <div className="w-full flex h-full space-x-[2px] my-[2px] sm:space-x-[3px] sm:my-[3px]"
-                                        style={{ aspectRatio: "3:1" }} key={Posts.current[virtualRow.index].id}>
-                                        <ProfilePost data={Posts.current[virtualRow.index * 3 + 0] ?? null} />
-                                        <ProfilePost data={Posts.current[virtualRow.index * 3 + 1] ?? null} />
-                                        <ProfilePost data={Posts.current[virtualRow.index * 3 + 2] ?? null} />
-                                    </div>
-                                </div>))}
-                            </div>
-                        </div>
+                {UserData.current?.isPrivate ? <PrivateAccount /> :
+                    error ?
+                        <NotFound message={"PAGE_NOT_FOUND"} /> :
                         <div>
-                            <div className="w-10 h-16 mx-auto z-50">
-                                {loading === "normal" ?
-                                    UserData.current?.postCount === Posts.current.length ? <></> :
-                                        <Button className="w-10 h-10 p-0 rounded-full" variant={"secondary"}
-                                            onClick={fetchUserData}>
-                                            <CirclePlus />
-                                        </Button> :
-                                    <Loader2 className="animate-spin w-10 h-10 text-accent" />}
+                            <div
+                                className='mx-auto max-w-[960px] h-full'
+                                style={{
+                                    height: virtualizer.getTotalSize(),
+                                    width: '100%',
+                                    position: 'relative'
+                                }}>
+                                <div
+                                    style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        width: '100%',
+                                        transform: `translateY(${items[0]?.start ?? 0}px)`
+                                    }}>
+                                    {items.map((virtualRow) => (<div
+                                        key={virtualRow.key}
+                                        data-index={virtualRow.index}
+                                        ref={virtualizer.measureElement}>
+                                        <div className="w-full flex h-full space-x-[2px] my-[2px] sm:space-x-[3px] sm:my-[3px]"
+                                            style={{ aspectRatio: "3:1" }} key={Posts.current[virtualRow.index].id}>
+                                            <ProfilePost data={Posts.current[virtualRow.index * 3 + 0] ?? null} />
+                                            <ProfilePost data={Posts.current[virtualRow.index * 3 + 1] ?? null} />
+                                            <ProfilePost data={Posts.current[virtualRow.index * 3 + 2] ?? null} />
+                                        </div>
+                                    </div>))}
+                                </div>
                             </div>
-                        </div>
-                    </div>}
+                            <div>
+                                <div className="w-10 h-16 mx-auto z-50">
+                                    {loading === "normal" ?
+                                        UserData.current?.postCount === Posts.current.length || UserData.current?.isPrivate ? <></> :
+                                            <Button className="w-10 h-10 p-0 rounded-full" variant={"secondary"}
+                                                onClick={fetchUserData}>
+                                                <CirclePlus />
+                                            </Button> :
+                                        <Loader2 className="animate-spin w-10 h-10 text-accent" />}
+                                </div>
+                            </div>
+                        </div>}
             </div>
             <NavigationBottom />
         </div>

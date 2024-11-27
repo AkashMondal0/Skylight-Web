@@ -48,7 +48,10 @@ export interface AuthorData {
     followed_by?: boolean
     following?: boolean
     bio?: string;
-    website?: string[] | any[];
+    website?: string[] | any[]
+
+    isPrivate?: boolean | null
+    isVerified?: boolean | null
 }
 export enum Role {
     User = 'user',

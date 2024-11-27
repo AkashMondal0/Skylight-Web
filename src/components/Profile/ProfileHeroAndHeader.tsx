@@ -92,7 +92,7 @@ export const ProfileHero = memo(function ProfileHero({ profileUser, isProfile }:
                         <div />
                     </div>
                     {/* story */}
-                    <ProfileStories user={profileUser} isProfile={isProfile} />
+                    {profileUser.isPrivate ? <></> : < ProfileStories user={profileUser} isProfile={isProfile} />}
                     <div className='border-t my-5 mx-2'></div>
                 </div>
                 {/* small device */}
@@ -125,7 +125,7 @@ export const ProfileHero = memo(function ProfileHero({ profileUser, isProfile }:
                                 </div>
                             }
                         </div>
-                        <ProfileStories user={profileUser} isProfile={isProfile} />
+                        {profileUser.isPrivate ? <></> : < ProfileStories user={profileUser} isProfile={isProfile} />}
                         {/* name or links and users count */}
                         <div className='flex justify-around p-2 border-y md:hidden'>
                             <div className=' text-center'>

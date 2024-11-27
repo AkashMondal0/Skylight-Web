@@ -58,7 +58,7 @@ export default function LoginPage() {
             if (res.data) {
                 dispatch(getSessionApi() as any)
                 toast.success('Login Successful')
-                router.replace("/")
+                location.replace(new URL(window.location.href).searchParams.get("callbackUrl") || "/")
             }
         } finally {
             setLoading(false);

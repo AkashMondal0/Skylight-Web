@@ -21,9 +21,9 @@ const ProfileFollowButton = memo(function FollowButton({
     const router = useRouter()
     const dispatch = useDispatch()
     const [state, setState] = useState({
-        isFollowing: user.friendship.following,
-        isFollower: user.friendship.followed_by,
-        loading: false
+        isFollowing: user.friendship?.following,
+        isFollower: user.friendship?.followed_by,
+        loading: false,
     })
 
     const handleFollow = useCallback(async () => {
@@ -88,6 +88,21 @@ const ProfileFollowButton = memo(function FollowButton({
 
     if (!user) return <div></div>
 
+    if (!session || user.friendship) {
+        return (<>
+            <div className='md:flex space-x-2 space-y-2 items-center'>
+                <div className="flex items-center">
+                    <p className='text-xl px-3 line-clamp-1'>{user.username}</p>
+                </div>
+
+                <Button variant={"secondary"} disabled={state.loading} className='rounded-xl' onClick={() => {
+                    router.push(`/auth/login?callback=${user.username}`)
+                }}>
+                    Follow
+                </Button>
+            </div>
+        </>)
+    }
 
     if (isProfile) {
         return <div className='md:flex space-x-2 space-y-2 items-center'>

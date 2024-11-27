@@ -28,8 +28,9 @@ export const graphqlQuery = async <T>({
     const BearerToken = await fetch(`/api/cookies`).then((res) => res.json())
         .then((res) => res).catch((err) => {
             console.error(err);
-            throw new Error("Unauthorized");
+            return new Error("Unauthorized");
         });
+
     const response = await fetch(
         `${configs.serverApi.baseUrl}/graphql`.replace("/v1", ""),
         {
@@ -37,7 +38,7 @@ export const graphqlQuery = async <T>({
             credentials: "include",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${BearerToken}`,
+                "Authorization": `${BearerToken}`,
             },
             body: JSON.stringify({
                 query,
