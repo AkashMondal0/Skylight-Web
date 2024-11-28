@@ -1,11 +1,14 @@
 const _configs = {
-    appUrl: process.env.NEXTAUTH_URL,
+    appUrl: "https://sky-light.vercel.app",
     cookieName: "skylight-token",
+
     serverApi: {
         baseUrl: process.env.SERVER_API_URL,
+        // 
         supabaseUrl: process.env.SUPABASE_URL,
         supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
-        supabaseStorageUrl: process.env.SUPABASE_STORAGE_URL??"/primary-light-logo.jpeg",
+        supabaseStorageUrl: process.env.SUPABASE_STORAGE_URL,
+        // 
         aiApiUrl: process.env.AI_API_URL,
     },
     AppDetails: {

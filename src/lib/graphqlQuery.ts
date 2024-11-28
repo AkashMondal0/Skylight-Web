@@ -19,34 +19,41 @@ export interface GraphqlError {
 export const graphqlQuery = async <T>({
     query,
     variables,
+    skipToken = false,
 }: {
     query: string;
     variables?: any;
+    skipToken?: boolean;
     withCredentials?: boolean;
     errorCallBack?: (error: GraphqlError[]) => void;
 }): Promise<T | any> => {
-    const BearerToken = await fetch(`/api/cookies`).then((res) => res.json())
-        .then((res) => res).catch((err) => {
-            console.error(err);
-            return new Error("Unauthorized");
-        });
-
-    const response = await fetch(
-        `${configs.serverApi.baseUrl}/graphql`.replace("/v1", ""),
-        {
+    let response: Response;
+    const url = `${configs.serverApi.baseUrl}/graphql`.replace("/v1", "");
+    const option: any = (bearerToken: string | undefined = undefined) => {
+        return {
             method: "POST",
-            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `${BearerToken}`,
+                "Authorization": `${bearerToken}`,
             },
             body: JSON.stringify({
                 query,
                 variables,
             }),
             cache: "no-cache",
-        },
-    );
+        };
+    };
+
+    if (skipToken) {
+        response = await fetch(url, option());
+    } else {
+        let BearerToken = await fetch(`/api/cookies`)
+        if (!BearerToken.ok) {
+            throw new Error("Network response was not ok");
+        }
+        BearerToken = await BearerToken.json()
+        response = await fetch(url, option(BearerToken));
+    }
 
     if (!response.ok) {
         const responseBody: GraphqlResponse<any> = await response.json();

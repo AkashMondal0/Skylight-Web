@@ -13,8 +13,6 @@ let _kSavedOffset = 0;
 let _KMeasurementsCache = [] as any // as VirtualItem[];
 export const Stories = memo(function Story({ }) {
     const storyList = useSelector((state: RootState) => state.AccountState.storyAvatars)
-    const storyListLoading = useSelector((state: RootState) => state.AccountState.storyAvatarsLoading)
-    const storyError = useSelector((state: RootState) => state.AccountState.storyAvatarsError)
     const totalFetchedItemCount = useSelector((state: RootState) => state.AccountState.storyAvatarsFetched)
     const stopRef = useRef(false)
     const dispatch = useDispatch()
@@ -76,7 +74,7 @@ export const Stories = memo(function Story({ }) {
     if (!mounted) return <></>
 
     return (
-        <div className='flex md:w-max w-full items-center mx-auto min-w-[580px]'>
+        <div className='flex md:w-max w-full items-center mx-auto md:min-w-[580px] min-w-full'>
             <Button variant={"outline"} className={cn("rounded-full p-0 w-7 h-7 hidden md:flex")}
                 onClick={handleScrollPrevious}>
                 <ChevronLeft className="w-6 h-6" />

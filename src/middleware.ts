@@ -25,5 +25,13 @@ export const config = {
     "/search/:path*",
     "/account/:path*",
     "/notification/:path*",
+    // post page
+    "/post/:path*/comments",
+    "/post/:path*/liked_by",
+    "/p/:path*/comments",
+    "/p/:path*/liked_by",
+    // profile page
+    "/:path*/follower",
+    "/:path*/following",
   ]
 }

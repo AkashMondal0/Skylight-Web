@@ -26,7 +26,7 @@ export async function generateMetadata({ params: { profile } }: any): Promise<Me
 
     const title = `${data?.name} (@${data.username}) • Skylight photos and videos`
     const description = `${data?.followerCount} Followers, ${data?.followingCount} Following, ${data?.postCount} posts - See Skylight photos and video form(@${data.username})`
-    const image = configs.serverApi.supabaseStorageUrl + data?.profilePicture
+    const image = configs.serverApi.supabaseStorageUrl ? configs.serverApi.supabaseStorageUrl + data?.profilePicture : configs.AppDetails.primaryLightLogo
 
     return {
       title: title,
@@ -67,7 +67,7 @@ export async function generateMetadata({ params: { profile } }: any): Promise<Me
             width: 800,
             height: 600,
             alt: "image not found",
-            url: data?.profilePicture ?? configs.AppDetails.primaryLightLogo
+            url: image
           },
         ]
       },
@@ -78,7 +78,7 @@ export async function generateMetadata({ params: { profile } }: any): Promise<Me
         description: description,
         site: '@SkyLightApp',
         creator: `@${data.username}`,
-        images: [data?.profilePicture ?? configs.AppDetails.primaryLightLogo],
+        images: [image],
       },
       // robots
       robots: metaRobots

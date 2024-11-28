@@ -10,6 +10,7 @@ export const fetchUserProfileDetailApi = createAsyncThunk(
             await new Promise(resolve => setTimeout(resolve, 400))
             const res = await graphqlQuery({
                 query: QProfile.findUserProfile,
+                skipToken: true,
                 variables: { username }
             })
 

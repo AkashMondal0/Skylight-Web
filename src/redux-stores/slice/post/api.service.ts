@@ -9,6 +9,7 @@ export const fetchOnePostApi = createAsyncThunk(
         try {
             const data = await graphqlQuery({
                 query: QPost.findOnePost,
+                skipToken: true,
                 variables: { findOnePostId }
             })
             return data

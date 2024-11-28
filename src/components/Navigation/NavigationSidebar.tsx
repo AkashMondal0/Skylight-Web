@@ -17,7 +17,6 @@ import {
 import React, { memo, useCallback, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import MoreDropdownMenu from "@/components/Option/HomePageMenu"
-import SkyAvatar from "@/components/sky/SkyAvatar"
 import { configs } from "@/configs"
 import { NotificationPopup, NotificationPing, NotificationIndicator } from "../Alert"
 import { useDispatch, useSelector } from "react-redux"
@@ -26,6 +25,7 @@ import SearchSidebar from "../Sidebar/SearchSidebar"
 import UploadPostDialog from "../Dialog/UploadPost.Dialog"
 import { RootState } from "@/redux-stores/store"
 import { toggleCreatePostModal, toggleNotificationSidebar, toggleSearchSidebar } from "@/redux-stores/slice/sidebar"
+import { OptimizedImage } from "../sky"
 
 // for large screen device 
 export const NavigationSidebar = memo(function NavigationSidebar({
@@ -89,8 +89,15 @@ export const NavigationSidebar = memo(function NavigationSidebar({
             onClick: () => { dispatch(toggleCreatePostModal()) }
         },
         {
-            icon: <SkyAvatar url={session?.profilePicture ?? null} className="h-8 w-8" />,
-            label: "Profile",
+            icon: <OptimizedImage
+                src={session?.profilePicture}
+                width={50}
+                height={50}
+                alt="Picture of the author"
+                sizes={"(min-width: 808px) 20vw, 30vw"}
+                fetchPriority="high"
+                className={cn(`w-8 h-8 cursor-pointer rounded-full userNotSelectImg bg-muted object-cover p-0`)} />,
+            label: session?.username ?? '',
             onClick: () => pageChange(`/${session?.username ?? ""}`)
         },
     ]

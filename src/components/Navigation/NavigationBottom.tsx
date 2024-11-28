@@ -11,6 +11,8 @@ import SkyAvatar from "@/components/sky/SkyAvatar"
 import NotificationPing from "../Alert/NotificationPing"
 import { useSelector } from "react-redux"
 import { RootState } from "@/redux-stores/store"
+import { cn } from "@/lib/utils"
+import { OptimizedImage } from "../sky"
 // for small screen device 
 export const NavigationBottom = memo(function NavigationBottom() {
     // console.info("<NavigationBottom/>")
@@ -32,7 +34,16 @@ export const NavigationBottom = memo(function NavigationBottom() {
                 {SideIconData.map(({ icon, label, onClick }, index) => {
                     if (label === "Profile") {
                         return <div key={index} onClick={onClick}>
-                            <SkyAvatar url={session?.profilePicture ?? null} className="h-7 w-7" />
+                            <OptimizedImage
+                                src={session?.profilePicture}
+                                width={50}
+                                height={50}
+                                alt="Picture of the author"
+                                sizes={"(min-width: 808px) 20vw, 30vw"}
+                                fetchPriority="high"
+                                className={cn(`w-8 h-8 cursor-pointer 
+                                rounded-full userNotSelectImg bg-muted
+                                 object-cover p-0`)} />
                         </div>
                     }
                     if (label === "Messages") {

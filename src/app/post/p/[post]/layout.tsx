@@ -1,12 +1,12 @@
 import { configs } from "@/configs";
-import { AuthorData } from "@/types";
+import { Assets, AuthorData } from "@/types";
 import { NotFoundMetadata, metaRobots } from "@/types/Metadata";
 import { Metadata } from "next";
 
 interface PostData {
   id: string,
   content: string,
-  fileUrl: string[],
+  fileUrl: Assets[],
   likeCount: number,
   commentCount: number,
   user: AuthorData
@@ -25,7 +25,7 @@ export async function generateMetadata({ params: { post } }: { params: { post: s
 
     const title = `${data.user.name} on Skylight: ${data.content}`;
     const description = `Posted on: ${new Date(data.createdAt).toDateString()}, Likes: ${data.likeCount}, Comments: ${data.commentCount}, Image: ${data.fileUrl[0]}`;
-    const image = configs.serverApi.supabaseStorageUrl + data.fileUrl[0]
+    const image = configs.serverApi.supabaseStorageUrl ? configs.serverApi.supabaseStorageUrl + data.fileUrl[0]?.urls?.high : configs.AppDetails.primaryLightLogo
 
     return {
       title: title,

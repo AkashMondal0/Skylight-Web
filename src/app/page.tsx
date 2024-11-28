@@ -97,7 +97,7 @@ export default function Page() {
           <Stories />
           <PostUploadProgress />
           {loading === "idle" ? <PostFeedSkeleton /> :
-            count <= 0 ? <div className='w-full text-center text-xl font-bold'>No Feeds Available</div> :
+            // count <= 0 ? <div className='w-full text-center text-xl font-bold'>No Feeds Available</div> :
               <div
                 className='min-h-full'
                 style={{
