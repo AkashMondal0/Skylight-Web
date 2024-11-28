@@ -25,20 +25,21 @@ export default function OptionAvatarDialog({
     const handleUpload = async () => {
         if (!session?.id || !isFile) return toast("Something's went Wrong")
 
-        const res = await dispatch(profileUpdateApi({
-            file: isFile,
-            profile: session
-        }) as any) as disPatchResponse<AuthorData>
+        // TODO: uncomment this code after the backend is ready
+        // const res = await dispatch(profileUpdateApi({
+        //     file: isFile,
+        //     profile: session
+        // }) as any) as disPatchResponse<AuthorData>
 
-        if (res.error) return toast("Something's went Wrong")
+        // if (res.error) return toast("Something's went Wrong")
 
-        if (res.payload.profilePicture) {
-            await session.update({
-                ...session,
-                image: res.payload.profilePicture,
-                profilePicture:res.payload.profilePicture
-            });
-        }
+        // if (res.payload.profilePicture) {
+        //     await session.update({
+        //         ...session,
+        //         image: res.payload.profilePicture,
+        //         profilePicture:res.payload.profilePicture
+        //     });
+        // }
         setIsFile(null)
         toast("Profile Picture Updated")
     }

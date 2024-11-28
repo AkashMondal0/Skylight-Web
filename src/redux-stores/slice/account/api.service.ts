@@ -36,11 +36,12 @@ export const uploadFilesApi = createAsyncThunk(
                 await new Promise((resolve) => setTimeout(resolve, 300));
                 const compressedImages = await compressImage(file, {});
                 if (!compressedImages) return;
-                fileUrls.push({
-                    id: file.name,
-                    urls: compressedImages,
-                    type: "photo",
-                });
+                // TODO: Add the compressedImages to the fileUrls array
+                // fileUrls.push({
+                //     id: file.name,
+                //     urls: compressedImages,
+                //     type: "photo",
+                // });
             }));
             const res = await graphqlQuery({
                 query: AQ.createPost,
@@ -72,18 +73,19 @@ export const uploadStoryApi = createAsyncThunk(
     }, thunkApi) => {
         try {
             let fileUrls: Assets[] = [];
-            await Promise.all(data.files.map(async (file) => {
-                await new Promise((resolve) => setTimeout(resolve, 300));
-                const compressedImages = await ImageCompressorAllQuality({
-                    image: file.uri,
-                });
-                if (!compressedImages) return;
-                fileUrls.push({
-                    id: file.id,
-                    urls: compressedImages,
-                    type: file.mediaType === "photo" ? "photo" : "video",
-                });
-            }));
+            //TODO: Add the compressedImages to the fileUrls array
+            // await Promise.all(data.files.map(async (file) => {
+            //     await new Promise((resolve) => setTimeout(resolve, 300));
+            //     const compressedImages = await ImageCompressorAllQuality({
+            //         image: file.uri,
+            //     });
+            //     if (!compressedImages) return;
+            //     fileUrls.push({
+            //         id: file.id,
+            //         urls: compressedImages,
+            //         type: file.mediaType === "photo" ? "photo" : "video",
+            //     });
+            // }));
             const res = await graphqlQuery({
                 query: AQ.createStory,
                 variables: {

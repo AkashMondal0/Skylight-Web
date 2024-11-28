@@ -96,18 +96,19 @@ export const CreateMessageApi = createAsyncThunk(
                         await new Promise((resolve) =>
                             setTimeout(resolve, 300)
                         );
-                        const compressedImages =
-                            await ImageCompressorAllQuality({
-                                image: file.uri,
-                            });
-                        if (!compressedImages) return;
-                        fileUrls.push({
-                            id: file.id,
-                            urls: compressedImages,
-                            type: file.mediaType === "photo"
-                                ? "photo"
-                                : "video",
-                        });
+                        //TODO: compress image
+                        // const compressedImages =
+                        //     await ImageCompressorAllQuality({
+                        //         image: file.uri,
+                        //     });
+                        // if (!compressedImages) return;
+                        // fileUrls.push({
+                        //     id: file.id,
+                        //     urls: compressedImages,
+                        //     type: file.mediaType === "photo"
+                        //         ? "photo"
+                        //         : "video",
+                        // });
                     }),
                 );
             }
@@ -168,15 +169,16 @@ export const AiMessagePromptApi = createAsyncThunk(
             myHeaders.append("Content-Type", "application/json");
             let raw;
             if (data.file) {
-                let fileUrl = await uploadFileToSupabase(
-                    data?.file,
-                    "image/jpeg",
-                    data.authorId,
-                );
-                raw = JSON.stringify({
-                    "image": configs.serverApi.supabaseStorageUrl + fileUrl,
-                    "query": data.content,
-                });
+                //TODO: upload file to supabase
+                // let fileUrl = await uploadFileToSupabase(
+                //     data?.file,
+                //     "image/jpeg",
+                //     data.authorId,
+                // );
+                // raw = JSON.stringify({
+                //     "image": configs.serverApi.supabaseStorageUrl + fileUrl,
+                //     "query": data.content,
+                // });
             } else {
                 raw = JSON.stringify({
                     "query": data.content,

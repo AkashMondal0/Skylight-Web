@@ -19,6 +19,7 @@ import { toast } from "sonner"
 import OptimizedImage from "@/components/sky/SkyImage"
 import { TempleDialog } from "./Temple.Dialog"
 import { RootState } from "@/redux-stores/store"
+import { uploadFilesApi } from "@/redux-stores/slice/account/api.service"
 
 export default function UploadPostDialog({
     children
@@ -64,10 +65,13 @@ export default function UploadPostDialog({
         if (isFile.length > 5) {
             return ToastAlert("You can't upload more than 5 images")
         }
-        dispatch(UploadImages({
-            isFile,
-            isCaption: caption ?? "",
-            profileId: session?.id
+        // TODO: uncomment this code after the backend is ready
+        dispatch(uploadFilesApi({
+            files: isFile,
+            caption: caption,
+            location: '',
+            tags: [],
+            authorId: session?.id
         }) as any)
         setIsFile([])
         document.getElementById('closeDialog')?.click()

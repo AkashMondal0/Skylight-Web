@@ -59,41 +59,42 @@ const Page = () => {
     });
 
     const onSubmit = async (inputData: FormData) => {
-        try {
-            if (!session) return toast("Something's went Wrong")
-            const res = await dispatch(profileUpdateApi({
-                profile: session,
-                updateUsersInput: {
-                    name: inputData.name,
-                    username: inputData.username,
-                    bio: inputData.bio,
-                    website: inputData.website,
-                }
-            }) as any) as disPatchResponse<AuthorData>
+        // TODO : Implement Profile Update
+        // try {
+        //     if (!session) return toast("Something's went Wrong")
+        //     const res = await dispatch(profileUpdateApi({
+        //         profile: session,
+        //         updateUsersInput: {
+        //             name: inputData.name,
+        //             username: inputData.username,
+        //             bio: inputData.bio,
+        //             website: inputData.website,
+        //         }
+        //     }) as any) as disPatchResponse<AuthorData>
 
-            if (res.error) return toast("Something's went Wrong")
+        //     if (res.error) return toast("Something's went Wrong")
 
-            if (res.payload) {
-                await session.update({
-                    ...session,
-                    name: res.payload.name,
-                    username: res.payload.username,
-                    bio: res.payload.bio,
-                    website: res.payload.website,
-                });
-                reset({
-                    name: res.payload.name,
-                    username: res.payload.username,
-                    bio: res.payload.bio,
-                    website: res.payload.website ?? [],
-                });
-                toast("Profile Picture Updated")
-            }
-        } catch (error) {
-            toast("Something's went Wrong")
-        } finally {
-            setLoading(false)
-        }
+        //     if (res.payload) {
+        //         await session.update({
+        //             ...session,
+        //             name: res.payload.name,
+        //             username: res.payload.username,
+        //             bio: res.payload.bio,
+        //             website: res.payload.website,
+        //         });
+        //         reset({
+        //             name: res.payload.name,
+        //             username: res.payload.username,
+        //             bio: res.payload.bio,
+        //             website: res.payload.website ?? [],
+        //         });
+        //         toast("Profile Picture Updated")
+        //     }
+        // } catch (error) {
+        //     toast("Something's went Wrong")
+        // } finally {
+        //     setLoading(false)
+        // }
     }
 
 
