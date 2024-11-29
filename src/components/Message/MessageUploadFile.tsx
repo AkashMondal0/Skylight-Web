@@ -11,7 +11,7 @@ export const UploadFileList = memo(function UploadFileList({
     assets: File[],
     removeItem: (id: string) => void,
     addItem: () => void
-}){
+}) {
     if (assets.length <= 0) return <></>
 
     return (
@@ -29,7 +29,7 @@ export const UploadFileList = memo(function UploadFileList({
             </div>
         </div>
     )
-},((pre, next) => pre.assets.length === next.assets.length))
+}, ((pre, next) => pre.assets.length === next.assets.length))
 
 const ImageItem = memo(function ImageItem({
     src,
@@ -48,6 +48,7 @@ const ImageItem = memo(function ImageItem({
                 </div>
             </div>
             <OptimizedImage
+                isServerImage={false}
                 className='rounded-xl border hover:opacity-60 h-full object-cover w-full'
                 src={src} alt="image" width={100} height={100} />
         </div>

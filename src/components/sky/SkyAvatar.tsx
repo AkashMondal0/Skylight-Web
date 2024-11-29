@@ -1,26 +1,24 @@
-import React, { memo } from 'react'
+import React from 'react'
 import { cn } from '@/lib/utils'
 import OptimizedImage from './SkyImage'
 
-const SkyAvatar = memo(function ProfileHeader({
+const SkyAvatar = ({
     url = "/user.jpg",
     className,
     border = false,
-}:
-    {
-        url?: string | null,
-        className: string
-        border?: boolean
-        sizeImage?: string
-    }) {
+}: {
+    url?: string | null,
+    className: string
+    border?: boolean
+    sizeImage?: string
+}) => {
     return <div>
         <div className={cn('sky-gradient w-auto h-auto rounded-full border',
-            border ? "gradient p-[4px]" : "p-[2px]",className)}>
+            border ? "gradient p-[4px]" : "p-[2px]", className)}>
             <OptimizedImage
-                src={url || "/user.jpg"}
+                src={url}
                 width={50}
                 height={50}
-                showErrorIconSm
                 alt="Picture of the author"
                 sizes={"(min-width: 808px) 20vw, 30vw"}
                 fetchPriority="high"
@@ -29,8 +27,6 @@ const SkyAvatar = memo(function ProfileHeader({
             object-cover p-0`)} />
         </div>
     </div>
-}, ((prevProps: any, nextProps: any) => {
-    return prevProps.url === nextProps.url
-}))
+}
 
 export default SkyAvatar

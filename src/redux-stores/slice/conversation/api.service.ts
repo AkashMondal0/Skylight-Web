@@ -1,9 +1,12 @@
-import { findDataInput, Post } from "@/types";
+import { Assets, findDataInput, Post } from "@/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { CQ } from "./conversation.queries";
 import { configs } from "@/configs";
 import { uploadFileToSupabase } from "@/lib/SupaBase-uploadFile";
 import { graphqlQuery } from "@/lib/graphqlQuery";
+import { compressImage } from "@/lib/image.compress";
+import { uuid } from "@/lib/uuid";
+import FileCompressAndUpload from "@/lib/fileCompressAndUpload";
 export const fetchConversationsApi = createAsyncThunk(
     "fetchConversationsApi/get",
     async (limitAndOffset: findDataInput, thunkAPI) => {
@@ -88,32 +91,7 @@ export const CreateMessageApi = createAsyncThunk(
         fileUrl: File[];
     }, thunkAPI) => {
         try {
-            let fileUrls: Post["fileUrl"] = [];
-            if (createMessageInput.fileUrl.length > 0) {
-                await Promise.all(
-                    createMessageInput.fileUrl.map(async (file) => {
-                        // thunkApi.dispatch(currentUploadingFile(file.uri))
-                        await new Promise((resolve) =>
-                            setTimeout(resolve, 300)
-                        );
-                        //TODO: compress image
-                        // const compressedImages =
-                        //     await ImageCompressorAllQuality({
-                        //         image: file.uri,
-                        //     });
-                        // if (!compressedImages) return;
-                        // fileUrls.push({
-                        //     id: file.id,
-                        //     urls: compressedImages,
-                        //     type: file.mediaType === "photo"
-                        //         ? "photo"
-                        //         : "video",
-                        // });
-                    }),
-                );
-            }
-
-            createMessageInput.fileUrl = fileUrls as any;
+            createMessageInput.fileUrl = await FileCompressAndUpload(createMessageInput.fileUrl) as any
             const res = await graphqlQuery({
                 query: CQ.createMessage,
                 variables: { createMessageInput },

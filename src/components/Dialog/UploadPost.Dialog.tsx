@@ -236,6 +236,7 @@ const ImageItem = memo(function ImageItem({ image }: { image: File }) {
             <OptimizedImage
                 width={320}
                 height={320}
+                isServerImage={false}
                 sizes="(min-width: 808px) 10vw, 15vw"
                 src={URL.createObjectURL(image)}
                 alt={image.name}
@@ -251,6 +252,7 @@ const CarouselImageItem = memo(function CarouselImageItem({ image }: { image: Fi
         <OptimizedImage
             width={320}
             height={320}
+            isServerImage={false}
             sizes="(min-width: 808px) 30vw, 50vw"
             src={URL.createObjectURL(image)}
             alt={`Image`}

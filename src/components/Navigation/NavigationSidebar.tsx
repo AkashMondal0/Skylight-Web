@@ -25,7 +25,7 @@ import SearchSidebar from "../Sidebar/SearchSidebar"
 import UploadPostDialog from "../Dialog/UploadPost.Dialog"
 import { RootState } from "@/redux-stores/store"
 import { toggleCreatePostModal, toggleNotificationSidebar, toggleSearchSidebar } from "@/redux-stores/slice/sidebar"
-import { OptimizedImage } from "../sky"
+import { OptimizedImage, SkyAvatar } from "../sky"
 
 // for large screen device 
 export const NavigationSidebar = memo(function NavigationSidebar({
@@ -89,15 +89,8 @@ export const NavigationSidebar = memo(function NavigationSidebar({
             onClick: () => { dispatch(toggleCreatePostModal()) }
         },
         {
-            icon: <OptimizedImage
-                src={session?.profilePicture}
-                width={50}
-                height={50}
-                alt="Picture of the author"
-                sizes={"(min-width: 808px) 20vw, 30vw"}
-                fetchPriority="high"
-                className={cn(`w-8 h-8 cursor-pointer rounded-full userNotSelectImg bg-muted object-cover p-0`)} />,
-            label: session?.username ?? '',
+            icon: <SkyAvatar url={session?.profilePicture} className="w-9 h-9" />,
+            label: 'Profile',
             onClick: () => pageChange(`/${session?.username ?? ""}`)
         },
     ]

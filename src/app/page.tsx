@@ -96,36 +96,36 @@ export default function Page() {
           <AppHeader />
           <Stories />
           <PostUploadProgress />
-          {loading === "idle" ? <PostFeedSkeleton /> :
-            // count <= 0 ? <div className='w-full text-center text-xl font-bold'>No Feeds Available</div> :
+          {loading !== "normal" && count <= 0 ? <PostFeedSkeleton /> :
+            // loading === "normal" && count <= 0 ? <div className='w-full text-center text-xl font-bold'>No Feeds Available</div> :
+            <div
+              className='min-h-full'
+              style={{
+                height: virtualizer.getTotalSize(),
+                width: '100%',
+                position: 'relative',
+              }}>
               <div
-                className='min-h-full'
                 style={{
-                  height: virtualizer.getTotalSize(),
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
                   width: '100%',
-                  position: 'relative',
+                  transform: `translateY(${items[0]?.start ?? 0}px)`,
                 }}>
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    transform: `translateY(${items[0]?.start ?? 0}px)`,
-                  }}>
-                  {items.map((virtualRow) => (
-                    <div
-                      key={virtualRow.key}
-                      data-index={virtualRow.index}
-                      ref={virtualizer.measureElement}>
-                      <div style={{ padding: '10px 0' }}>
-                        <PostFeed post={posts[virtualRow.index]}
-                          key={posts[virtualRow.index].id} />
-                      </div>
+                {items.map((virtualRow) => (
+                  <div
+                    key={virtualRow.key}
+                    data-index={virtualRow.index}
+                    ref={virtualizer.measureElement}>
+                    <div style={{ padding: '10px 0' }}>
+                      <PostFeed post={posts[virtualRow.index]}
+                        key={posts[virtualRow.index].id} />
                     </div>
-                  ))}
-                </div>
-              </div>}
+                  </div>
+                ))}
+              </div>
+            </div>}
           <div className='h-12 w-full'>
             {count > 0 && loading === "pending" ? <Loader2 className="animate-spin w-10 h-10 mx-auto text-accent" /> : <></>}
           </div>

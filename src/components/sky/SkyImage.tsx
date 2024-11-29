@@ -2,6 +2,7 @@
 "use client";
 import { configs } from '@/configs';
 import { cn } from '@/lib/utils';
+import { loadingType } from '@/types';
 import { RotateCcw } from 'lucide-react';
 import React, { useState } from 'react';
 
@@ -36,14 +37,13 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
     showErrorIcon = false,
     isServerImage = true,
 }) => {
-    const [error, setError] = useState(false)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState<loadingType | "error">("idle")
 
-    if (error && showErrorIcon) {
+    if (showErrorIcon && loading === "error") {
         return <ImageError hideErrorLabel={hideErrorLabel} className={className} />
     }
 
-    if (error && showErrorIconSm) {
+    if (showErrorIconSm && loading === "error") {
         return <ImageErrorSm className={className} hideErrorLabel={hideErrorLabel} />
     }
 
@@ -64,7 +64,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
                     onContextMenu={event => event.preventDefault()}
                     data-src={src}
                     src={src}
-                    alt={''}
+                    alt={'image'}
                     width={width}
                     height={height}
                     loading="lazy"
@@ -77,17 +77,17 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
                     fetchPriority={fetchPriority}
                     sizes={sizes}
                     className={cn('h-auto w-full userNotSelectImg',
-                        loading ? 'bg-muted animate-pulse' : '',
+                        loading !== "normal" ? 'bg-muted animate-pulse' : '',
                         className)}
+                    onLoadStart={() => {
+                        if (loading === "idle") setLoading("pending")
+                    }}
                     onError={() => {
-                        if (error) return;
-                        setError(true)
-                        onError && onError()
+                        if (onError) onError()
+                        if (loading !== "error") setLoading("error")
                     }}
                     onLoad={() => {
-                        if (!loading) return;
-                        setLoading(false)
-                        onLoad && onLoad()
+                        if (loading !== "normal") setLoading("normal")
                     }}
                 />
             </picture>

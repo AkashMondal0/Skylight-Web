@@ -221,7 +221,7 @@ export const ConversationSlice = createSlice({
             fetchConversationAllMessagesApi.fulfilled,
             (state, action: PayloadAction<Message[]>) => {
                 if (state.conversation) {
-                    state.messages.push(...action.payload.reverse());
+                    state.messages.push(...action.payload);
                 }
                 state.messageLoading = false;
             },
@@ -269,7 +269,7 @@ export const ConversationSlice = createSlice({
                             action.payload.createdAt;
                     }
                     if (state.conversation) {
-                        state.messages.unshift(action.payload);
+                        state.messages.push(action.payload);
                     }
                 }
             },

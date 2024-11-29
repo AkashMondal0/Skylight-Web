@@ -3,6 +3,9 @@ import { Assets, findDataInput, Story } from "@/types";
 import { AQ } from "./account.queries";
 import { compressImage } from "@/lib/image.compress";
 import { graphqlQuery } from "@/lib/graphqlQuery";
+import { uploadFileToSupabase } from "@/lib/SupaBase-uploadFile";
+import { uuid } from "@/lib/uuid";
+import FileCompressAndUpload from "@/lib/fileCompressAndUpload";
 
 export const fetchAccountFeedApi = createAsyncThunk(
     "fetchAccountFeedApi/get",
@@ -31,18 +34,7 @@ export const uploadFilesApi = createAsyncThunk(
         authorId: string;
     }, thunkApi) => {
         try {
-            let fileUrls: Assets[] = [];
-            await Promise.all(data.files.map(async (file) => {
-                await new Promise((resolve) => setTimeout(resolve, 300));
-                const compressedImages = await compressImage(file, {});
-                if (!compressedImages) return;
-                // TODO: Add the compressedImages to the fileUrls array
-                // fileUrls.push({
-                //     id: file.name,
-                //     urls: compressedImages,
-                //     type: "photo",
-                // });
-            }));
+            let fileUrls = await FileCompressAndUpload(data.files);
             const res = await graphqlQuery({
                 query: AQ.createPost,
                 variables: {
@@ -72,20 +64,7 @@ export const uploadStoryApi = createAsyncThunk(
         song?: any[];
     }, thunkApi) => {
         try {
-            let fileUrls: Assets[] = [];
-            //TODO: Add the compressedImages to the fileUrls array
-            // await Promise.all(data.files.map(async (file) => {
-            //     await new Promise((resolve) => setTimeout(resolve, 300));
-            //     const compressedImages = await ImageCompressorAllQuality({
-            //         image: file.uri,
-            //     });
-            //     if (!compressedImages) return;
-            //     fileUrls.push({
-            //         id: file.id,
-            //         urls: compressedImages,
-            //         type: file.mediaType === "photo" ? "photo" : "video",
-            //     });
-            // }));
+            let fileUrls = await FileCompressAndUpload(data.files);
             const res = await graphqlQuery({
                 query: AQ.createStory,
                 variables: {
