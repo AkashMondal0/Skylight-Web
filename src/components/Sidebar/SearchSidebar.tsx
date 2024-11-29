@@ -107,7 +107,7 @@ const UserCard = memo(function UserCard({
         <div className='flex justify-between p-2 hover:bg-secondary hover:text-secondary-foreground rounded-2xl my-1 cursor-pointer'
             onClick={navigateToProfile}>
             <div className='flex space-x-2 items-center'>
-                <SkyAvatar className='h-12 w-12 mx-auto' url={item.profilePicture ? item.profilePicture : "/user.jpg"} />
+                <SkyAvatar className='h-12 w-12 mx-auto' url={item.profilePicture} />
                 <div className='ml-2 text-start'>
                     <div className='font-semibold text-base'>
                         {item.name}

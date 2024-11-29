@@ -64,7 +64,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
                     onContextMenu={event => event.preventDefault()}
                     data-src={src}
                     src={src}
-                    alt={'image'}
+                    alt={alt}
                     width={width}
                     height={height}
                     loading="lazy"
@@ -83,8 +83,10 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
                         if (loading === "idle") setLoading("pending")
                     }}
                     onError={() => {
-                        if (onError) onError()
-                        if (loading !== "error") setLoading("error")
+                        if (loading !== "error") {
+                            if (onError) onError()
+                            setLoading("error")
+                        }
                     }}
                     onLoad={() => {
                         if (loading !== "normal") setLoading("normal")

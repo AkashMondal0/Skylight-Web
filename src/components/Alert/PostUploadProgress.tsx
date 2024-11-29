@@ -25,7 +25,7 @@ export const PostUploadProgress = () => {
                         width={20}
                         height={20}
                         sizes="10vw"
-                        src={profile.UploadFiles.currentUploadImg ?? "/user.jpg"}
+                        src={profile.UploadFiles.currentUploadImg}
                         alt='User profile picture'
                         className="w-10 h-10 object-cover rounded-xl animate-pulse" />
                 </div>

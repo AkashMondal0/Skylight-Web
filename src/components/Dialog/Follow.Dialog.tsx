@@ -29,7 +29,7 @@ export function FollowerRemoveDialog({
             <div className="space-y-4 my-8">
                 <SkyAvatar
                     sizeImage='10vw'
-                    url={user.profilePicture ?? "/user.jpg"}
+                    url={user.profilePicture}
                     className={'w-28 h-28 mx-auto'} />
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-bold text-center my-2">Remove follower?</DialogTitle>
@@ -66,7 +66,7 @@ export function UnFollowDialog({
             <div className="space-y-4 my-8">
                 <SkyAvatar
                     sizeImage='10vw'
-                    url={user.profilePicture ?? "/user.jpg"}
+                    url={user.profilePicture}
                     className={'w-28 h-28 mx-auto'} />
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-bold text-center my-2">Unfollow @{user.username}</DialogTitle>

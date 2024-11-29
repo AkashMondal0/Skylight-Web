@@ -63,7 +63,7 @@ export const MessageUserListItem = memo(function MessageUserListItem({
             )} onClick={seenAllMessage}>
                 <div className='flex space-x-2 items-center cursor-pointer justify-between w-full'>
                     <div className="flex-none">
-                        <SkyAvatar url={Conversation.image || "/user.jpg"} className='h-[3.3rem] w-[3.3rem] mx-auto' />
+                        <SkyAvatar url={Conversation.image} className='h-[3.3rem] w-[3.3rem] mx-auto' />
                     </div>
                     <div className="grow">
                         <p className='font-semibold text-base w-52 text-ellipsis truncate'>

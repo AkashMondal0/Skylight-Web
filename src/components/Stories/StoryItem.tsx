@@ -6,6 +6,7 @@ import { AuthorData, Highlight } from "@/types"
 import { Plus } from "lucide-react"
 import { memo } from "react"
 import { useSelector } from "react-redux"
+import { toast } from "sonner"
 
 export const StoryItem = memo(function Story({ data, className }: { data: Highlight, className?: string }) {
     // console.info('%c<StoryItem/>', 'color: yellow; font-weight: bold;');
@@ -48,7 +49,9 @@ export const AvatarItem = memo(function Story({ data, className }: { data: Autho
 export const UploadYourStory = memo(function YourStory({ className }: { className?: string }) {
     const session = useSelector((state: RootState) => state.AccountState.session)
 
-    return <div>
+    return <div onClick={() => {
+        toast.message('Coming soon...')
+    }}>
         <div className={cn(`flex items-end`)}>
             <SkyAvatar url={session?.profilePicture} className={cn("w-16 h-16", className)} />
             <div className="w-0 relative right-5">

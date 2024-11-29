@@ -61,7 +61,6 @@ const Page = ({
         {loading === "normal" ?
           <>
             {Users.current?.map((user, i) => <UserItemFollow
-              showRemoveButton
               key={i} user={user} />)}
           </> :
           <>{Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)}</>}

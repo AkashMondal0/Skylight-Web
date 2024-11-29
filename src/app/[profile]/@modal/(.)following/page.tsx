@@ -62,7 +62,7 @@ const Page = ({
       onOpenChange={onOpenChange}
       headerTitle={'Following'}>
       {loading === "normal" ?
-            Users.current?.map((user, i) => <UserItemFollow showRemoveButton key={i} user={user} />) :
+            Users.current?.map((user, i) => <UserItemFollow key={i} user={user} />) :
             Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)}
     </TempleDialog>)
   )

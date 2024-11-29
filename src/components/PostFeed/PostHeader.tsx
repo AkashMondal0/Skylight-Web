@@ -15,7 +15,7 @@ const PostHeader = ({
     return (
         <div className='flex justify-between px-2'>
             <div className='flex space-x-2 items-center cursor-pointer' onClick={() => onNavigate(`/${post.user.username}`)}>
-                <SkyAvatar url={post.user.profilePicture || "/user.jpg"} className='h-12 w-12 mx-auto flex-none' />
+                <SkyAvatar url={post.user.profilePicture} className='h-12 w-12 mx-auto flex-none' />
                 <div className='shrink flex flex-col'>
                     <div className='flex gap-1 flex-none'>
                         <p className='font-semibold text-base max-w-52 text-ellipsis truncate'>

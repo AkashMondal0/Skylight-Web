@@ -17,6 +17,7 @@ const SkyAvatar = ({
             border ? "gradient p-[4px]" : "p-[2px]", className)}>
             <OptimizedImage
                 src={url}
+                isServerImage={url !== "/user.jpg"}
                 width={50}
                 height={50}
                 alt="Picture of the author"

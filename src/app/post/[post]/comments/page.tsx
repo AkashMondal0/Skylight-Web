@@ -61,7 +61,7 @@ const Page = ({ params }: { params: { post: string } }) => {
             <AppNavbar name="Comments" icon2={<div />} />
             <div className='h-full px-3 space-y-1'>
               <div className="flex border-b py-2 mb-4">
-                <SkyAvatar url={post?.user?.profilePicture || "/user.jpg"} className='h-12 w-12' />
+                <SkyAvatar url={post?.user?.profilePicture} className='h-12 w-12' />
                 <div className="flex flex-col ml-4">
                   <p className="break-all"><span className='font-semibold text-lg'>
                     {post?.user?.username}</span> {post?.content}
@@ -94,7 +94,7 @@ const CommentItem = memo(function CommentItem({
   return (
     <>
       <div className="flex gap-2">
-        <SkyAvatar url={comment?.user?.profilePicture || "/user.jpg"}
+        <SkyAvatar url={comment?.user?.profilePicture}
           className='h-12 w-12 ' />
 
         <div className="flex justify-between items-center w-full flex-1">
