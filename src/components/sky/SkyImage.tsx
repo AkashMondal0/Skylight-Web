@@ -47,9 +47,10 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
         return <ImageErrorSm className={className} hideErrorLabel={hideErrorLabel} />
     }
 
-    if (!src) return <ImageError hideErrorLabel={hideErrorLabel} className={className} />
+    if (!src && showErrorIcon) return <ImageError hideErrorLabel={hideErrorLabel} className={className} />
 
-    src = isServerImage ? configs.serverApi.supabaseStorageUrl + src : src
+    if (!src) return <></>
+    src = (isServerImage ? configs.serverApi.supabaseStorageUrl + src : src)
 
     return (
         <>

@@ -12,8 +12,25 @@ const SkyAvatar = ({
     border?: boolean
     sizeImage?: string
 }) => {
+
+    if (!url) return (
+        <div className={cn('sky-gradient w-auto h-auto rounded-full border aspect-square',
+            border ? "gradient p-[4px]" : "p-[2px]", className)}>
+            <OptimizedImage
+                src="/user.jpg"
+                isServerImage={false}
+                width={50}
+                height={50}
+                alt="Picture of the author"
+                sizes={"(min-width: 808px) 20vw, 30vw"}
+                fetchPriority="high"
+                className={cn(`w-full h-full cursor-pointer 
+            rounded-full userNotSelectImg bg-muted
+            object-cover p-0`)} />
+        </div>
+    )
     return <div>
-        <div className={cn('sky-gradient w-auto h-auto rounded-full border',
+        <div className={cn('sky-gradient w-auto h-auto rounded-full border aspect-square',
             border ? "gradient p-[4px]" : "p-[2px]", className)}>
             <OptimizedImage
                 src={url}

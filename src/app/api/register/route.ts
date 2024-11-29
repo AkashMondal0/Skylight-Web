@@ -3,7 +3,6 @@ import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 export async function POST(request: NextRequest) {
     try {
-        console.log("Request")
         const body = await request.json()
         const cookieStore = cookies();
         const res = await fetch(`${configs.serverApi.baseUrl}/auth/register`, {
