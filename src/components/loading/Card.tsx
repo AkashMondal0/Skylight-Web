@@ -12,13 +12,13 @@ export const LoadingUserCardWithButton = () => {
         </div>
 
         <div className="grow space-y-1">
-          <Skeleton className='w-[50dvw] h-4' />
           <Skeleton className='w-28 h-4' />
+          <Skeleton className='w-16 h-4' />
         </div>
 
         <div
           className='flex items-center flex-col flex-none h-12 w-12'>
-          <Skeleton className='w-12 h-12 rounded-xl' />
+          <Skeleton className='w-14 h-8 rounded-xl' />
         </div>
       </div>
     </div>

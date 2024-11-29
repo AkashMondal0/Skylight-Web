@@ -1,5 +1,5 @@
 const _configs = {
-    appUrl: "https://sky-light.vercel.app",
+    appUrl: process.env.NEXT_PUBLIC_BASE_URL,
     cookieName: "skylight-token",
 
     serverApi: {
@@ -16,7 +16,7 @@ const _configs = {
         name: "Skylight",
         description:
             "SkyLight is a social media platform that allows users to share their thoughts and ideas with the world.",
-        appUrl: process.env.NEXTAUTH_URL ?? "https://skysolo.me",
+        appUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
         logoUrl: "/primary-logo.png",
         primaryLightLogo: "/primary-light-logo.jpeg",
         creator: "@AkashMondal",

@@ -52,7 +52,7 @@ Nextjs, Redux toolkit, TailwindCSS, shadcn ui, react-hook-form, socket io, zod
 
 ## Features
 
-- User authentication with JWT and NextAuth.js
+- User authentication with JWT
 - Real time chat using Socket io
 - Image uploading feature
 - Share Photo with your friends
@@ -83,12 +83,6 @@ Install dependencies
 ## Environment Variables
 Create a `.env.local` file in the `client` directory and configure the necessary environment variables:
 
-### Next auth 
-
-```env
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your-secret-value
-```
 
 ### Nestjs Backend
 

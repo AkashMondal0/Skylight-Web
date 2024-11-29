@@ -5,10 +5,8 @@ const nextConfig = {
     env: {
         // API
         SERVER_API_URL: process.env.SERVER_API_URL,
-        // NextAuth
-        NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-        NEXTAUTH_URL: process.env.NEXTAUTH_URL,
         // Supabase
+        NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
         SUPABASE_URL: process.env.SUPABASE_URL,
         SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
         SUPABASE_STORAGE_URL: process.env.SUPABASE_STORAGE_URL,
