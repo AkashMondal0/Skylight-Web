@@ -89,27 +89,14 @@ Create a `.env.local` file in the `client` directory and configure the necessary
 In this case, the SERVER_API_URL is set to http://localhost:5000, which means the backend server is running on the same machine (localhost) on port 5000.
 
 ```env
-SERVER_API_URL=http://localhost:5000
-```
-
-### Firebase storage
-
-- `FIREBASE_API_KEY`: Your Firebase API key.
-- `FIREBASE_AUTH_DOMAIN`: Your Firebase Auth domain.
-- `FIREBASE_PROJECT_ID`: Your Firebase Project ID.
-- `FIREBASE_STORAGE_BUCKET`: Your Firebase Storage bucket.
-- `FIREBASE_MESSAGING_SENDER_ID`: Your Firebase Messaging sender ID.
-- `FIREBASE_APP_ID`: Your Firebase App ID.
-
-You can set these variables in a `.env.local` file at the root of your project. Here's a template:
-
-```env
-FIREBASE_API_KEY=your_firebase_api_key
-FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
-FIREBASE_PROJECT_ID=your_firebase_project_id
-FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
-FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id
-FIREBASE_APP_ID=your_firebase_app_id
+SERVER_API_URL=http://localhost:5000/v1
+# supabase config
+SUPABASE_URL=https://your.supabase.co
+SUPABASE_ANON_KEY=your-token
+# user config
+SUPABASE_STORAGE_URL=https://your.supabase.co/storage/v1/object/public/
+# generative ai api key
+AI_API_URL=https://your.supabase.co/functions/v1/generative
 ```
 
 To run this project, you will need to add the following environment variables to your .env file
@@ -165,7 +152,6 @@ Create a `.env` file in the `backend` directory and configure the necessary envi
 
 ```env
 JWT_SECRET=your_jwt_secret
-DOMAIN=localhost
 REDIS_URL=database-url Redis
 PG_URL=database-url PostgreSQL
 ```
@@ -181,40 +167,33 @@ Open your browser and navigate to `http://localhost:5000`.
 
 ## Technologies Used
 
-- **Client**: Next.js, React, Redux Toolkit, Supabase, Firebase, Tailwind CSS
+- **Client**: Next.js, React, Redux Toolkit, Supabase, Tailwind CSS
 
 - **Backend**: NestJS, GraphQL, PostgreSQL, Passport, JWT
 
 
 ## Screenshots
 
-### Tab Screenshot
+### Profile Page
 
-![App Screenshot](/public/screen-shots/tab.jpg)
+![App Screenshot](/public/app_screen/1.png)
 
-### Tab Screenshot
+### Chatting Page
 
-![App Screenshot](/public/screen-shots/tab2.jpg)
+![App Screenshot](/public/app_screen/2.png)
 
-### Tab Screenshot
+### Home Page
 
-![App Screenshot](/public/screen-shots/tab3.jpg)
+![App Screenshot](/public/app_screen/3.png)
 
-### Desktop Screenshot
+### Edit Page
 
-![App Screenshot](/public/screen-shots/pc2.png)
+![App Screenshot](/public/app_screen/4.png)
 
-### Desktop Screenshot
+### Notification Page
 
-![App Screenshot](/public/screen-shots/pc.png)
+![App Screenshot](/public/app_screen/5.png)
 
-### Mobile Screenshot
-
-![App Screenshot](/public/screen-shots/mobile.png)
-
-### Chat Page
-
-![App Screenshot](/public/screen-shots/Screenshot2.png)
 
 ## Contributing
 
@@ -225,7 +204,3 @@ Contributions are welcome! Please follow these steps to contribute:
 3. Make your changes and commit them: `git commit -m 'Add some feature'`.
 4. Push to the branch: `git push origin feature-name`.
 5. Open a pull request.
-
-## Feedback
-
-If you have any feedback, please reach out to us at akash2003mondal@gmail.com
