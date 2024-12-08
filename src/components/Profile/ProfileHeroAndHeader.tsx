@@ -4,13 +4,14 @@ import Link from 'next/link'
 import { Link2 } from 'lucide-react'
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import { ProfileStories } from '@/components/Profile/ProfileStories'
-import { useSession } from 'next-auth/react'
 import OptionAvatarDialog from '../Dialog/Avatar.Options.Dialog'
 import { User } from '@/types'
 import { ProfileFollowButton } from '.'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux-stores/store'
 
 export const ProfileHero = memo(function ProfileHero({ profileUser, isProfile }: { profileUser: User | null, isProfile: boolean }) {
-    const session = useSession().data?.user
+    const session = useSelector((Root: RootState) => Root.AccountState.session)
 
     if (!profileUser) return <></>
 
@@ -28,7 +29,7 @@ export const ProfileHero = memo(function ProfileHero({ profileUser, isProfile }:
                                     <OptionAvatarDialog>
                                         <SkyAvatar
                                             sizeImage='20vw'
-                                            url={profileUser.profilePicture === session?.image ? profileUser.profilePicture : session?.image}
+                                            url={profileUser.profilePicture === session?.profilePicture ? profileUser.profilePicture : session?.profilePicture}
                                             className={`sm:w-36 sm:h-36 lg:w-44 lg:h-44 
                                     w-16 h-16 rounded-full aspect-square`} />
                                     </OptionAvatarDialog> :
@@ -91,7 +92,7 @@ export const ProfileHero = memo(function ProfileHero({ profileUser, isProfile }:
                         <div />
                     </div>
                     {/* story */}
-                    <ProfileStories user={profileUser} isProfile={isProfile} />
+                    {profileUser.isPrivate ? <></> : < ProfileStories user={profileUser} isProfile={isProfile} />}
                     <div className='border-t my-5 mx-2'></div>
                 </div>
                 {/* small device */}
@@ -99,7 +100,7 @@ export const ProfileHero = memo(function ProfileHero({ profileUser, isProfile }:
                     <div className='h-5' />
                     {/* profile header */}
                     <div className='flex gap-3 my-5 items-center px-2'>
-                        <SkyAvatar url={isProfile ? session?.image : profileUser.profilePicture}
+                        <SkyAvatar url={isProfile ? session?.profilePicture : profileUser.profilePicture}
                             className={'w-24 h-24 rounded-full object-cover'} />
                         {/* followers and following */}
                         <ProfileFollowButton
@@ -124,7 +125,7 @@ export const ProfileHero = memo(function ProfileHero({ profileUser, isProfile }:
                                 </div>
                             }
                         </div>
-                        <ProfileStories user={profileUser} isProfile={isProfile} />
+                        {profileUser.isPrivate ? <></> : < ProfileStories user={profileUser} isProfile={isProfile} />}
                         {/* name or links and users count */}
                         <div className='flex justify-around p-2 border-y md:hidden'>
                             <div className=' text-center'>

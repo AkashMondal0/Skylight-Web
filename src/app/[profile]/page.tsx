@@ -1,79 +1,82 @@
 'use client'
 import { useVirtualizer, } from "@tanstack/react-virtual";
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { NavigationBottom } from "@/components/Navigation";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/redux/store";
-import { fetchUserProfilePostsApi, fetchUserProfileDetailApi } from "@/redux/services/profile";
+import { useDispatch, useSelector } from "react-redux";
 import { ProfileHero, ProfileHeroSkeleton, ProfileNavbar, ProfilePost } from "@/components/Profile";
-import { useSession } from "next-auth/react";
 import NotFound from "@/components/Error/NotFound";
 import { debounce } from "lodash";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { AuthorData, Post, disPatchResponse } from "@/types";
+import { Post, User, disPatchResponse, loadingType } from "@/types";
 import { Button } from "@/components/ui/button";
 import { CirclePlus } from "@/components/sky/icons";
+import { fetchUserProfileDetailApi, fetchUserProfilePostsApi } from "@/redux-stores/slice/profile/api.service";
+import { RootState } from "@/redux-stores/store";
+import PrivateAccount from "@/components/Profile/PrivateAccount";
 
 let _kSavedOffset = 0;
-let _KMeasurementsCache = [] as any // as VirtualItem[] ;
-
-let profileUsername = "no_username"
-let totalFetchedItemCount: number | null = 0
+let _KMeasurementsCache = [] as any; // as VirtualItem[]
 
 export default function Page({ params }: { params: { profile: string } }) {
     const [mounted, setMounted] = useState(false)
     const dispatch = useDispatch()
-    const session = useSession().data?.user
-    //
-    const userData = useSelector((Root: RootState) => Root.profile.state, (prev, next) => prev?.id === next?.id)
-    const loading = useSelector((Root: RootState) => Root.profile.loading)
-    const error = useSelector((Root: RootState) => Root.profile.error)
-    //
-    const posts = useSelector((Root: RootState) => Root.profile.posts)
-    const postsLoading = useSelector((Root: RootState) => Root.profile.postLoading)
-    //
-    const count = useMemo(() => Math.ceil(posts.length / 3), [posts.length])
+    const session = useSelector((Root: RootState) => Root.AccountState.session)
+    const [loading, setLoading] = useState<loadingType>('idle')
+    const [error, setError] = useState<string | null>(null)
+    const Posts = useRef<Post[]>([])
+    const UserData = useRef<User | null>(null)
+    const username = params?.profile
+    const postsFetched = useRef(false)
+    const count = useMemo(() => Math.ceil(Posts.current.length / 3), [Posts.current.length])
     const isProfile = useMemo(() => session?.username === params?.profile, [session?.username, params?.profile])
     //
     const stopRef = useRef(false)
     const parentRef = useRef<HTMLDivElement>(null)
-    // 
+    //
 
-    const fetchProfilePosts = useCallback(async (id?: string) => {
-        // console.log("fetching", stopRef.current, !id, totalFetchedItemCount === null)
-        if (stopRef.current || !id || totalFetchedItemCount === null) return
+    const fetchPosts = useCallback(async () => {
+        if (UserData.current?.isPrivate) {
+            setLoading("normal")
+            return
+        }
+        if (loading === "pending") return
+        setLoading("pending")
         try {
-            stopRef.current = true
-            const res2 = await dispatch(fetchUserProfilePostsApi({
-                username: id,
-                limit: 12,
-                offset: totalFetchedItemCount
+            const res = await dispatch(fetchUserProfilePostsApi({
+                username: UserData.current?.id,
+                offset: Posts.current.length,
+                limit: 12
             }) as any) as disPatchResponse<Post[]>
-            if (res2.payload.length > 0) {
-                // if less than 12 items fetched, stop fetching
-                if (res2.payload.length < 12) {
-                    return totalFetchedItemCount = null
-                }
-                // if more than 12 items fetched, continue fetching
-                totalFetchedItemCount += 12
+            if (res.error) {
+                toast.error(res?.error?.message || "An error occurred")
+                setError(res?.error?.message || "An error occurred")
+                return
             }
+            if (res.payload.length <= 0) {
+                postsFetched.current = true
+                return
+            }
+            Posts.current.push(...res.payload)
         } finally {
-            stopRef.current = false
+            setLoading("normal")
         }
-    }, [])
+    }, [loading, UserData.current, Posts.current])
 
-    const fetchProfileData = useCallback(async () => {
-        try {
-            const res = await dispatch(fetchUserProfileDetailApi(params.profile) as any) as disPatchResponse<AuthorData>
-            if (res.error || !res.payload.id) return toast.error("Something went wrong")
-            fetchProfilePosts(res.payload.id)
-        } finally {
 
+    const fetchUserData = useCallback(async () => {
+        if (UserData.current) return
+        const res = await dispatch(fetchUserProfileDetailApi(username) as any) as disPatchResponse<User>
+        if (res.error) {
+            setError(res?.error?.message || "An error occurred")
+            setLoading("normal")
+            return
         }
-    }, [fetchProfilePosts, params.profile])
+        UserData.current = res.payload
+        fetchPosts()
+    }, [username])
 
-    const fetchMorePost = debounce(() => fetchProfilePosts(userData?.id), 1000)
+    const fetchMorePost = debounce(() => fetchPosts(), 1000)
 
     const virtualizer = useVirtualizer({
         count,
@@ -91,29 +94,25 @@ export default function Page({ params }: { params: { profile: string } }) {
             if (virtualizer.scrollDirection === 'forward'
                 && virtualizer?.range?.startIndex === count - 2
                 && !stopRef.current
-                && totalFetchedItemCount !== null) {
+                && !postsFetched.current) {
                 fetchMorePost()
             }
         },
     })
 
     useEffect(() => {
-        if (profileUsername !== params.profile) {
-            totalFetchedItemCount = 0
+        if (!mounted) {
+            postsFetched.current = false
             _kSavedOffset = 0;
             _KMeasurementsCache = []
-            profileUsername = params.profile
-            fetchProfileData()
-            // reset the state
-        }
-        if (!mounted) {
+            fetchUserData()
             setMounted(true)
         }
     }, [params.profile])
 
     const items = virtualizer.getVirtualItems()
 
-    if(!mounted) return <></>
+    if (!mounted) return <></>
 
     return (
         <div className="flex flex-col w-full h-dvh">
@@ -125,52 +124,53 @@ export default function Page({ params }: { params: { profile: string } }) {
                     contain: 'strict',
                 }}>
                 <>
-                    <ProfileNavbar name={loading ? "Loading" : userData?.username} isProfile={isProfile} />
-                    {loading ? <ProfileHeroSkeleton /> : <ProfileHero profileUser={userData} isProfile={isProfile} />}
+                    <ProfileNavbar name={loading === "normal" ? UserData.current?.username : "Loading"} isProfile={isProfile} />
+                    {loading === "idle" ? <ProfileHeroSkeleton /> : <ProfileHero profileUser={UserData.current} isProfile={isProfile} />}
                 </>
-                {error ?
-                    <NotFound message={error ?? "PAGE_NOT_FOUND"} /> :
-                    <div>
-                        <div
-                            className='mx-auto max-w-[960px] h-full'
-                            style={{
-                                height: virtualizer.getTotalSize(),
-                                width: '100%',
-                                position: 'relative'
-                            }}>
-                            <div
-                                style={{
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    width: '100%',
-                                    transform: `translateY(${items[0]?.start ?? 0}px)`
-                                }}>
-                                {items.map((virtualRow) => (<div
-                                    key={virtualRow.key}
-                                    data-index={virtualRow.index}
-                                    ref={virtualizer.measureElement}>
-                                    <div className="w-full flex h-full space-x-[2px] my-[2px] sm:space-x-[3px] sm:my-[3px]"
-                                        style={{ aspectRatio: "3:1" }} key={posts[virtualRow.index].id}>
-                                        <ProfilePost data={posts[virtualRow.index * 3 + 0] ?? null} />
-                                        <ProfilePost data={posts[virtualRow.index * 3 + 1] ?? null} />
-                                        <ProfilePost data={posts[virtualRow.index * 3 + 2] ?? null} />
-                                    </div>
-                                </div>))}
-                            </div>
-                        </div>
+                {UserData.current?.isPrivate ? <PrivateAccount /> :
+                    error ?
+                        <NotFound message={"PAGE_NOT_FOUND"} /> :
                         <div>
-                            <div className="w-10 h-16 mx-auto z-50">
-                                {postsLoading || loading ?
-                                    <Loader2 className="animate-spin w-10 h-10 text-accent" /> :
-                                    userData?.postCount === posts.length ? <></> :
-                                        <Button className="w-10 h-10 p-0 rounded-full" variant={"secondary"}
-                                            onClick={() => { fetchProfilePosts(userData?.id) }}>
-                                            <CirclePlus />
-                                        </Button>}
+                            <div
+                                className='mx-auto max-w-[960px] h-full'
+                                style={{
+                                    height: virtualizer.getTotalSize(),
+                                    width: '100%',
+                                    position: 'relative'
+                                }}>
+                                <div
+                                    style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        width: '100%',
+                                        transform: `translateY(${items[0]?.start ?? 0}px)`
+                                    }}>
+                                    {items.map((virtualRow) => (<div
+                                        key={virtualRow.key}
+                                        data-index={virtualRow.index}
+                                        ref={virtualizer.measureElement}>
+                                        <div className="w-full flex h-full space-x-[2px] my-[2px] sm:space-x-[3px] sm:my-[3px]"
+                                            style={{ aspectRatio: "3:1" }} key={Posts.current[virtualRow.index].id}>
+                                            <ProfilePost data={Posts.current[virtualRow.index * 3 + 0] ?? null} />
+                                            <ProfilePost data={Posts.current[virtualRow.index * 3 + 1] ?? null} />
+                                            <ProfilePost data={Posts.current[virtualRow.index * 3 + 2] ?? null} />
+                                        </div>
+                                    </div>))}
+                                </div>
                             </div>
-                        </div>
-                    </div>}
+                            <div>
+                                <div className="w-10 h-16 mx-auto z-50">
+                                    {loading === "normal" ?
+                                        UserData.current?.postCount === Posts.current.length || UserData.current?.isPrivate ? <></> :
+                                            <Button className="w-10 h-10 p-0 rounded-full" variant={"secondary"}
+                                                onClick={fetchUserData}>
+                                                <CirclePlus />
+                                            </Button> :
+                                        <Loader2 className="animate-spin w-10 h-10 text-accent" />}
+                                </div>
+                            </div>
+                        </div>}
             </div>
             <NavigationBottom />
         </div>

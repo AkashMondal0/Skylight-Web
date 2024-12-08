@@ -31,7 +31,7 @@ const MessageFile = ({
                     </div> : <></>}
                   <OptimizedImage
                     className={'h-auto w-auto aspect-square object-cover rounded-xl'}
-                    src={asset} alt="image" width={100} height={100} />
+                    src={asset.urls?.high} alt="image" width={100} height={100} />
                 </div>
               ))}
             </div>
@@ -54,16 +54,16 @@ const MessageFile = ({
 
   return <div>
     {data?.fileUrl?.map((asset, index) => {
-      if (asset.includes("jpeg")) {
+      if (asset.type === "photo") {
         return <div
           key={index}
           className={`p-1 my-1 rounded-2xl border ${isProfile ? "bg-primary/90 text-primary-foreground" : "bg-accent"}`}>
-          <ViewImageDialog photos={[asset]}>
+          <ViewImageDialog photos={data.fileUrl}>
             <div className='flex justify-end items-end'>
               <OptimizedImage
                 key={index}
                 className='max-h-96 w-72 object-cover rounded-xl'
-                src={asset} alt="image" width={100} height={100} />
+                src={asset.urls?.high} alt="image" width={100} height={100} />
               <div className='flex justify-end gap-2 mt-[2px] w-0 shadow-2xl'>
                 <div className='w-max flex px-1'>
                   <div className={`text-sm text-white w-max`}>

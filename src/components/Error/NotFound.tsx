@@ -1,8 +1,6 @@
 'use client'
 import Link from 'next/link'
 import { Button } from '../ui/button'
-import { signOut } from 'next-auth/react'
-import { logoutApi } from '@/redux/services/account'
 import { useRouter } from 'next/navigation'
 
 export default function NotFound({
@@ -11,16 +9,16 @@ export default function NotFound({
   message?: ErrorType | string,
 }) {
   const router = useRouter()
-  const login: () => Promise<void> = async () => {
-    await logoutApi()
-    signOut()
-    router.replace('/auth/login')
-  }
+  // const login: () => Promise<void> = async () => {
+  //   await logoutApi()
+  //   signOut()
+  //   router.replace('/auth/login')
+  // }
 
   return <div className='max-w-[520px] h-dvh
       w-full mx-auto text-center flex flex-col gap-4'>
     <div className='px-5'>
-      {displayErrorMessage({ ErrorType: message, Action: login })}
+      {displayErrorMessage({ ErrorType: message, Action: () => router.push('/auth/login') })}
     </div>
     <Link href='/'
       className='text-blue-500 hover:underline'>

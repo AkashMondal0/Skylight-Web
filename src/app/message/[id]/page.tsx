@@ -1,16 +1,15 @@
 "use client"
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { useSession } from 'next-auth/react';
 import { Loader2 } from 'lucide-react';
 import { debounce } from 'lodash';
-import { RootState } from "@/redux/store"
 import { useDispatch, useSelector } from "react-redux"
 import NotFound from "@/components/Error/NotFound";
-import { fetchConversationAllMessagesApi, fetchConversationApi } from "@/redux/services/conversation";
 import { Conversation, Message, disPatchResponse } from "@/types";
 import { MessageHeader, MessageInput, MessagePageSkeleton, MessageSideBar, NavigationSidebar, MessageItem } from "@/components/Message";
 import { toast } from "sonner";
+import { RootState } from '@/redux-stores/store';
+import { fetchConversationAllMessagesApi, fetchConversationApi } from '@/redux-stores/slice/conversation/api.service';
 
 let pageId = 'no id'
 let totalFetchedItemCount: number | null = 0
@@ -19,15 +18,15 @@ export default function Page({ params }: { params: { id: string } }) {
   const [mounted, setMounted] = useState(false)
 
   const dispatch = useDispatch()
-  const ConversationData = useSelector((Root: RootState) => Root.conversation.conversation, (prev, next) => prev?.id === next?.id)
-  const ConversationLoading = useSelector((Root: RootState) => Root.conversation.loading)
-  const ConversationError = useSelector((Root: RootState) => Root.conversation.error)
+  const ConversationData = useSelector((Root: RootState) => Root.ConversationState.conversation, (prev, next) => prev?.id === next?.id)
+  const ConversationLoading = useSelector((Root: RootState) => Root.ConversationState.loading)
+  const ConversationError = useSelector((Root: RootState) => Root.ConversationState.error)
 
-  const Messages = useSelector((Root: RootState) => Root.conversation?.messages)
-  const MessagesLoading = useSelector((Root: RootState) => Root.conversation.messageLoading)
-  const MessagesError = useSelector((Root: RootState) => Root.conversation.messageError)
+  const Messages = useSelector((Root: RootState) => Root.ConversationState?.messages)
+  const MessagesLoading = useSelector((Root: RootState) => Root.ConversationState.messageLoading)
+  const MessagesError = useSelector((Root: RootState) => Root.ConversationState.messageError)
 
-  const session = useSession().data?.user
+  const session = useSelector((Root: RootState) => Root.AccountState.session)
   const parentRef = useRef<HTMLDivElement>(null)
   const count = useMemo(() => Messages?.length, [Messages])
   const stopFetch = useRef(false)

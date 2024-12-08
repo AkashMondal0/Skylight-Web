@@ -1,11 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
+import { configs } from '@/configs';
 import { cn } from '@/lib/utils';
+import { loadingType } from '@/types';
 import { RotateCcw } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface OptimizedImageProps {
-    src?: string;
+    src?: string | null | undefined;
     alt?: string;
     width: number;
     height: number;
@@ -17,6 +19,7 @@ interface OptimizedImageProps {
     hideErrorLabel?: boolean;
     onError?: () => void;
     onLoad?: () => void;
+    isServerImage?: boolean;
 }
 
 const OptimizedImage: React.FC<OptimizedImageProps> = ({
@@ -31,20 +34,23 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
     onLoad,
     hideErrorLabel = false,
     showErrorIconSm = false,
-    showErrorIcon = false
+    showErrorIcon = false,
+    isServerImage = true,
 }) => {
-    const [error, setError] = useState(false)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState<loadingType | "error">("idle")
 
-    if (error && showErrorIcon) {
+    if (showErrorIcon && loading === "error") {
         return <ImageError hideErrorLabel={hideErrorLabel} className={className} />
     }
 
-    if (error && showErrorIconSm) {
+    if (showErrorIconSm && loading === "error") {
         return <ImageErrorSm className={className} hideErrorLabel={hideErrorLabel} />
     }
 
-    if (!src) return <ImageError hideErrorLabel={hideErrorLabel} className={className} />
+    if (!src && showErrorIcon) return <ImageError hideErrorLabel={hideErrorLabel} className={className} />
+
+    if (!src) return <></>
+    src = (isServerImage ? configs.serverApi.supabaseStorageUrl + src : src)
 
     return (
         <>
@@ -59,7 +65,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
                     onContextMenu={event => event.preventDefault()}
                     data-src={src}
                     src={src}
-                    alt={''}
+                    alt={alt}
                     width={width}
                     height={height}
                     loading="lazy"
@@ -72,17 +78,19 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
                     fetchPriority={fetchPriority}
                     sizes={sizes}
                     className={cn('h-auto w-full userNotSelectImg',
-                        loading ? 'bg-muted animate-pulse' : '',
+                        loading !== "normal" ? 'bg-muted animate-pulse' : '',
                         className)}
-                    onError={() => {
-                        if (error) return;
-                        setError(true)
-                        onError && onError()
+                    onLoadStart={() => {
+                        if (loading === "idle") setLoading("pending")
                     }}
-                    onLoad={()=>{
-                        if (!loading) return;
-                        setLoading(false)
-                        onLoad && onLoad()
+                    onError={() => {
+                        if (loading !== "error") {
+                            if (onError) onError()
+                            setLoading("error")
+                        }
+                    }}
+                    onLoad={() => {
+                        if (loading !== "normal") setLoading("normal")
                     }}
                 />
             </picture>

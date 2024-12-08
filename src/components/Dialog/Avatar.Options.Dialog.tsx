@@ -6,11 +6,11 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { AuthorData, disPatchResponse } from "@/types"
 import { useState } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { TempleAlertDialog } from "@/components/Dialog/Temple.Dialog"
 import { toast } from "sonner"
-import { useSession } from "next-auth/react"
-import { profileUpdateApi } from "@/redux/services/account"
+import { profileUpdateApi } from "@/redux-stores/slice/auth/api.service"
+import { RootState } from "@/redux-stores/store"
 
 export default function OptionAvatarDialog({
     children,
@@ -19,25 +19,27 @@ export default function OptionAvatarDialog({
 }) {
     const dispatch = useDispatch()
     const [isFile, setIsFile] = useState<File | null>()
-    const session = useSession()
+    const session = useSelector((Root: RootState) => Root.AccountState.session)
+
 
     const handleUpload = async () => {
-        if (!session.data?.user?.id || !isFile) return toast("Something's went Wrong")
+        if (!session?.id || !isFile) return toast("Something's went Wrong")
 
-        const res = await dispatch(profileUpdateApi({
-            file: isFile,
-            profile: session.data.user
-        }) as any) as disPatchResponse<AuthorData>
+        // TODO: uncomment this code after the backend is ready
+        // const res = await dispatch(profileUpdateApi({
+        //     file: isFile,
+        //     profile: session
+        // }) as any) as disPatchResponse<AuthorData>
 
-        if (res.error) return toast("Something's went Wrong")
+        // if (res.error) return toast("Something's went Wrong")
 
-        if (res.payload.profilePicture) {
-            await session.update({
-                ...session.data.user,
-                image: res.payload.profilePicture,
-                profilePicture:res.payload.profilePicture
-            });
-        }
+        // if (res.payload.profilePicture) {
+        //     await session.update({
+        //         ...session,
+        //         image: res.payload.profilePicture,
+        //         profilePicture:res.payload.profilePicture
+        //     });
+        // }
         setIsFile(null)
         toast("Profile Picture Updated")
     }

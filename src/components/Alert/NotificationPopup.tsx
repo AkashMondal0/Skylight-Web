@@ -3,19 +3,19 @@ import React, { memo, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Heart, MessageCircle } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { setOffNotificationPopup, setOnNotificationPopup } from "@/redux/slice/notification";
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { setOffNotificationPopup, setOnNotificationPopup } from "@/redux-stores/slice/notification";
+import { RootState } from "@/redux-stores/store";
 let initial = false
 const NotificationPopup = memo(function NotificationPopup() {
-    const notifications = useSelector((state: RootState) => state.notification)
+    const notifications = useSelector((state: RootState) => state.NotificationState)
     const dispatch = useDispatch()
-    const Sidebar = useSelector((state: RootState) => state.sidebarSlice)
+    const Sidebar = useSelector((state: RootState) => state.SidebarState)
 
     useEffect(() => {
         const time = setTimeout(() => {

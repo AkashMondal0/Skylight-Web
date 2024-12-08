@@ -16,7 +16,7 @@ export const SplashScreen = memo(function SplashScreen({ show }: { show: boolean
                             className='w-32 h-32 mx-auto animate-pulse' src={configs.AppDetails.logoUrl}
                             alt='logo picture' />
                         <div className='flex justify-center items-end font-bold text-3xl font-sans'>
-                            SkyLight
+                            Snaapio
                         </div>
                     </div>
                     <p className='font-sans font-semibold'>By Skysolo</p>

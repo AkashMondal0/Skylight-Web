@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Conversation } from '@/types';
-import { useSession } from 'next-auth/react';
+
 import { MessageItem } from './MessageItem';
 import { Loader2 } from 'lucide-react';
 import { debounce } from 'lodash';
+import { RootState } from '@/redux-stores/store';
+import { useSelector } from 'react-redux';
 
 const VirtualizeMessageList = ({
     conversation,
@@ -19,7 +21,7 @@ const VirtualizeMessageList = ({
     Footer?: React.ReactNode
     loadMoreMessageLoading?: boolean
 }) => {
-    const session = useSession().data?.user
+    const session = useSelector((Root: RootState) => Root.AccountState.session)
     const parentRef = useRef<HTMLDivElement>(null)
     const [mounted, setMounted] = useState(false)
     const data = useMemo(() => conversation.messages, [conversation.messages])

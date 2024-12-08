@@ -10,7 +10,7 @@ export const CommentHeader = memo(function CommentHeader({ data }: { data: Post 
         <div className='flex space-x-2 items-center cursor-pointer'
         // onClick={() => onNavigate(`/${post.user.username}`)}
         >
-            <SkyAvatar url={data.user.profilePicture || "/user.jpg"} className='h-12 w-12 mx-auto' />
+            <SkyAvatar url={data.user.profilePicture} className='h-12 w-12 mx-auto' />
             <div>
                 <div className='font-semibold text-base'>{data.user.username}</div>
                 <div className='text-sm'>Los Angeles, California</div>

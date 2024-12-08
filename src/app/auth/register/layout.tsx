@@ -1,17 +1,17 @@
 import type { Metadata } from 'next'
-import { getServerSession } from 'next-auth';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: 'Sky Form - Register',
+  title: 'Snaapio - Register',
   description: ``,
 }
 export default async function RegisterLayout({ children }: {
   children: React.ReactNode;
 }) {
-  const login = await getServerSession();
-
-  if (login) {
+  const cookieStore = cookies();
+  const Cookies = cookieStore.get("skylight-token");
+  if (Cookies) {
     return redirect('/');
   }
 

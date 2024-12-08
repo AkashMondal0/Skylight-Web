@@ -17,20 +17,15 @@ import {
 import React, { memo, useCallback, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import MoreDropdownMenu from "@/components/Option/HomePageMenu"
-import { useSession } from "next-auth/react"
-import SkyAvatar from "@/components/sky/SkyAvatar"
 import { configs } from "@/configs"
 import { NotificationPopup, NotificationPing, NotificationIndicator } from "../Alert"
 import { useDispatch, useSelector } from "react-redux"
-import {
-    toggleCreatePostModal,
-    toggleNotificationSidebar,
-    toggleSearchSidebar
-} from "@/redux/slice/sidebar"
 import NotificationSidebar from "../Sidebar/NotificationSidebar"
 import SearchSidebar from "../Sidebar/SearchSidebar"
-import { RootState } from "@/redux/store"
 import UploadPostDialog from "../Dialog/UploadPost.Dialog"
+import { RootState } from "@/redux-stores/store"
+import { toggleCreatePostModal, toggleNotificationSidebar, toggleSearchSidebar } from "@/redux-stores/slice/sidebar"
+import { OptimizedImage, SkyAvatar } from "../sky"
 
 // for large screen device 
 export const NavigationSidebar = memo(function NavigationSidebar({
@@ -40,8 +35,8 @@ export const NavigationSidebar = memo(function NavigationSidebar({
     hideLabel?: boolean
     isHideNav?: boolean,
 }) {
-    const Sidebar = useSelector((state: RootState) => state.sidebarSlice)
-    const session = useSession().data?.user
+    const Sidebar = useSelector((state: RootState) => state.SidebarState)
+    const session = useSelector((state: RootState) => state.AccountState.session)
     const router = useRouter()
     const dispatch = useDispatch()
     const pageChange = useCallback((path: string) => router.push(path), [router])
@@ -94,8 +89,8 @@ export const NavigationSidebar = memo(function NavigationSidebar({
             onClick: () => { dispatch(toggleCreatePostModal()) }
         },
         {
-            icon: <SkyAvatar url={session?.image ?? null} className="h-8 w-8" />,
-            label: "Profile",
+            icon: <SkyAvatar url={session?.profilePicture} className="w-9 h-9" />,
+            label: 'Profile',
             onClick: () => pageChange(`/${session?.username ?? ""}`)
         },
     ]
@@ -227,7 +222,7 @@ const NavigationItem = ({
                     </TooltipTrigger>
                     <TooltipContent
                         side="right"
-                        className="p-0 bg-transparent border-none">
+                        className="p-0 bg-transparent border-none shadow-none">
                         {/* <p>{label}</p> */}
                         <div className={cn(`pl-3`)}>
                             <div className={cn(`w-max flex items-center

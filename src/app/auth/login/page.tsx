@@ -1,5 +1,4 @@
 'use client'
-import { signIn } from "next-auth/react"
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -18,7 +17,10 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { useState } from "react";
-import { loginApi } from "@/redux/services/account";
+import { loginApi } from "@/redux-stores/slice/auth/api.service";
+import { ApiResponse, Session } from "@/types";
+import { getSessionApi } from "@/redux-stores/slice/account/api.service";
+import { useDispatch } from "react-redux";
 
 const FormSchema = z.object({
     password: z.string().min(6, {
@@ -33,6 +35,7 @@ type FormData = z.infer<typeof FormSchema>;
 
 export default function LoginPage() {
     const router = useRouter();
+    const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
 
     const { handleSubmit, register, reset, formState: { errors } } = useForm({
@@ -44,30 +47,22 @@ export default function LoginPage() {
     });
 
     const onSubmit = async (data: FormData) => {
-        setLoading(true);
-        const { password, email } = data;
-        const res = await loginApi({ email, password })
-        const callbackUrlPath = new URL(window.location.href).searchParams.get("callbackUrl")
-        if (res?.code === 1) {
-            signIn("credentials", {
-                email: res.data.email,
-                username: res.data.username,
-                name: res.data.name,
-                id: res.data.id,
-                image: res.data.profilePicture ?? "/user.jpg",
-                bio: res.data.bio,
-                website: res.data.website ?? [],
-                accessToken: res.data.accessToken,
-                redirect: true,
-                callbackUrl: callbackUrlPath ? `${process.env.NEXTAUTH_URL}${callbackUrlPath}` : `${process.env.NEXTAUTH_URL}`,
-            });
-            reset();
-            toast.success(`${res.message}`)
+        try {
+            setLoading(true);
+            const { password, email } = data;
+            // const callbackUrlPath = new URL(window.location.href).searchParams.get("callbackUrl")
+            const res = await loginApi({ email, password }) as ApiResponse<Session>
+            if (!res.data) {
+                toast.error(res.message)
+            }
+            if (res.data) {
+                dispatch(getSessionApi() as any)
+                toast.success('Login Successful')
+                location.replace(new URL(window.location.href).searchParams.get("callbackUrl") || "/")
+            }
+        } finally {
+            setLoading(false);
         }
-        else {
-            toast.error(`${res.message}`)
-        }
-        setLoading(false);
     };
 
     return (
@@ -82,26 +77,6 @@ export default function LoginPage() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="grid gap-4">
-                    {/* <div className="grid grid-cols-2 gap-6">
-                        <Button variant="outline">
-                            <Github className="mr-2 h-4 w-4" />
-                            Github
-                        </Button>
-                        <Button variant="outline" onClick={() => { }}>
-                            <Github className="mr-2 h-4 w-4" />
-                            Google
-                        </Button>
-                    </div>
-                    <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                            <span className="w-full border-t" />
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-background px-2 text-muted-foreground">
-                                Or continue with
-                            </span>
-                        </div>
-                    </div> */}
                     <div className="grid gap-2">
                         <Label htmlFor="email">Email</Label>
                         <Input id="email" type="email" placeholder="m@example.com" {...register("email", { required: true })} />

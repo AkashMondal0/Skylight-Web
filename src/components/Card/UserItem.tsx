@@ -1,12 +1,12 @@
 import SkyAvatar from '@/components/sky/SkyAvatar'
 import { Button } from '@/components/ui/button'
-import { RemoveFriendshipApi, createFriendshipApi, destroyFriendshipApi } from '@/redux/services/profile'
 import { AuthorData, disPatchResponse } from '@/types'
-import { useSession } from 'next-auth/react'
 import React, { useMemo, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { FollowerRemoveDialog, UnFollowDialog } from '@/components/Dialog/Follow.Dialog'
 import { useParams, useRouter } from 'next/navigation'
+import { RemoveFriendshipApi, createFriendshipApi, destroyFriendshipApi } from '@/redux-stores/slice/profile/api.service'
+import { RootState } from '@/redux-stores/store'
 
 export const UserItemFollow = ({
     user,
@@ -15,7 +15,7 @@ export const UserItemFollow = ({
     user?: AuthorData
     showRemoveButton?: boolean
 }) => {
-    const session = useSession().data?.user
+    const session = useSelector((state: RootState) => state.AccountState.session)
     const dispatch = useDispatch()
     const params = useParams()
     const router = useRouter()
@@ -24,6 +24,7 @@ export const UserItemFollow = ({
     const loadingRef = useRef(false)
 
     const isProfile = useMemo(() => {
+        if (!session || !user) return false
         return session?.id === user?.id
     }, [session?.id, user?.id])
 
@@ -32,13 +33,13 @@ export const UserItemFollow = ({
         loadingRef.current = true
         if (!session?.id) return alert('no user id from unfollow button')
         if (!user?.id) return alert('no user id from unfollow button')
-        const res = await dispatch(destroyFriendshipApi({
+        const res = await destroyFriendshipApi({
             authorUserId: session?.id,
             authorUsername: session?.username,
             followingUserId: user?.id,
             followingUsername: user?.username
-        }) as any)
-        if (userData && res.payload) {
+        })
+        if (userData && res) {
             setUserData({
                 ...userData,
                 following: false
@@ -54,14 +55,14 @@ export const UserItemFollow = ({
         loadingRef.current = true
         if (!session?.id) return alert('no user id from follow button')
         if (!user?.id) return alert('no user id from follow button')
-        const res = await dispatch(createFriendshipApi({
+        const res = await createFriendshipApi({
             authorUserId: session?.id,
             authorUsername: session?.username,
             followingUserId: user?.id,
             followingUsername: user?.username,
-        }) as any)
+        })
 
-        if (userData && res.payload) {
+        if (userData && res) {
             setUserData({
                 ...userData,
                 following: true
@@ -77,13 +78,13 @@ export const UserItemFollow = ({
         loadingRef.current = true
         if (!session?.id) return alert('no user id from follow button')
         if (!user?.id) return alert('no user id from follow button')
-        const res = await dispatch(RemoveFriendshipApi({
+        const res = await RemoveFriendshipApi({
             authorUserId: user?.id,
             authorUsername: user?.username,
             followingUserId: session?.id,
             followingUsername: session?.username
-        }) as any) as disPatchResponse<any>
-        if (res.payload) {
+        })
+        if (res) {
             setRemoved(true)
         } else {
             alert('Something went Wrong')

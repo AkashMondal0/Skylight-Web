@@ -3,12 +3,12 @@ import SkyAvatar from "@/components/sky/SkyAvatar"
 import { event_name } from "@/configs/socket.event"
 import { cn } from "@/lib/utils"
 import { SocketContext } from "@/provider/Socket_Provider"
-import { conversationSeenAllMessage } from "@/redux/services/conversation"
+import { conversationSeenAllMessage } from "@/redux-stores/slice/conversation/api.service"
+import { RootState } from "@/redux-stores/store"
 import { Conversation } from "@/types"
-import { useSession } from "next-auth/react"
 import { useParams, useRouter } from "next/navigation"
 import { memo, useContext, useMemo } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { toast } from "sonner"
 const timeFormat = (time: string | Date | undefined) => {
     if (!time) return ""
@@ -24,7 +24,7 @@ export const MessageUserListItem = memo(function MessageUserListItem({
     const params = useParams()
     const router = useRouter()
     const dispatch = useDispatch()
-    const session = useSession().data?.user
+    const session = useSelector((Root: RootState) => Root.AccountState.session)
     const socketState = useContext(SocketContext)
     const Conversation = useMemo(() => {
         return data?.isGroup ? {
@@ -58,12 +58,12 @@ export const MessageUserListItem = memo(function MessageUserListItem({
     return (
         <>
             <div className={cn(`flex cursor-pointer rounded-2xl justify-between p-1 py-2 my-1
-            transition-all duration-150 delay-75 ease-in-out hover:bg-primary/10 hover:outline outline-[1px] outline-primary/50`,
+            transition-all duration-150 delay-75 ease-in-out hover:bg-primary/10 hover:outline outline-[1px] outline-primary/20`,
                 params.id === data.id ? "bg-accent text-accent-foreground" : ""
             )} onClick={seenAllMessage}>
                 <div className='flex space-x-2 items-center cursor-pointer justify-between w-full'>
                     <div className="flex-none">
-                        <SkyAvatar url={Conversation.image || "/user.jpg"} className='h-[3.3rem] w-[3.3rem] mx-auto' />
+                        <SkyAvatar url={Conversation.image} className='h-[3.3rem] w-[3.3rem] mx-auto' />
                     </div>
                     <div className="grow">
                         <p className='font-semibold text-base w-52 text-ellipsis truncate'>

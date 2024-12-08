@@ -2,6 +2,7 @@
 import React from 'react'
 import { TempleDialog } from '@/components/Dialog/Temple.Dialog'
 import OptimizedImage from '../sky/SkyImage'
+import { Assets } from '@/types'
 
 
 const ViewImageDialog = ({
@@ -9,17 +10,17 @@ const ViewImageDialog = ({
     photos
 }: {
     children: React.ReactNode
-    photos: string[]
+    photos: Assets[]
 }) => {
     return (<TempleDialog TriggerChildren={children} headerTitle={'Photos'}>
         {photos?.map((asset, index) => {
-            if (asset.includes("jpeg")) {
+            if (asset.type === "photo") {
                 return <div key={index}>
                     <div className='flex justify-end items-end py-2'>
                         <OptimizedImage
                             key={index}
                             className='max-h-full w-full object-cover rounded-xl'
-                            src={asset} alt="image" width={100} height={100} />
+                            src={asset.urls?.high} alt="image" width={100} height={100} />
                     </div>
                 </div>
             }

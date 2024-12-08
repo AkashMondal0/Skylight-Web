@@ -1,17 +1,14 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StoryItem, UploadYourStory } from '@/components/Stories/StoryItem';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { generateRandomUsername } from '../sky/random';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { User } from '@/types';
-const story = Array.from({ length: 30 }, (_, i) => {
-  return {
-    url: `https://picsum.photos/id/${100 + i}/${50}/${50}`,
-    label: `${generateRandomUsername()}`
-  }
-})
+import { Highlight, User, disPatchResponse, loadingType } from '@/types';
+import { useDispatch } from 'react-redux';
+import { toast } from 'sonner';
+import { fetchUserHighlightApi } from '@/redux-stores/slice/profile/api.service';
+
 interface StoriesProp {
   url: string
   label: string
@@ -27,8 +24,52 @@ export const ProfileStories = memo(function ProfileStories({
 }) {
   const parentRef = useRef<HTMLDivElement>(null)
   const [mounted, setMounted] = useState(false)
-  const data = useMemo(() => story, [])
-  const count = useMemo(() => data.length, [data.length])
+  const [state, setState] = useState<{
+    loading: loadingType,
+    error: boolean,
+    data: Highlight[]
+  }>({
+    data: [],
+    error: false,
+    loading: "idle",
+  })
+  const count = useMemo(() => state.data.length, [state.data.length])
+  const totalFetchedItemCount = useRef<number>(0)
+  const dispatch = useDispatch()
+
+  const fetchApi = useCallback(async () => {
+    if (totalFetchedItemCount.current === -1 || state.loading === "pending") return
+    try {
+      setState((prev) => ({ ...prev, loading: "pending" }))
+      if (!user?.id) return toast.error("User id not found")
+      const res = await dispatch(fetchUserHighlightApi({
+        limit: 12,
+        offset: totalFetchedItemCount.current,
+        id: user?.id
+      }) as any) as disPatchResponse<Highlight[]>
+      if (res.error) {
+        totalFetchedItemCount.current = -1
+        setState((prev) => ({ ...prev, loading: "normal", error: true }))
+        return
+      }
+      setState((prev) => ({
+        ...prev,
+        loading: "normal",
+        data: [...prev.data, ...res.payload]
+      }))
+      if (res.payload.length >= 12) {
+        totalFetchedItemCount.current += res.payload.length
+        return
+      }
+      totalFetchedItemCount.current = -1
+    } finally {
+      setState((prev) => ({ ...prev, loading: "normal" }))
+    }
+  }, [user?.id, totalFetchedItemCount.current])
+
+  useEffect(() => {
+    fetchApi()
+  }, [])
 
   const columnVirtualizer = useVirtualizer({
     horizontal: true,
@@ -82,7 +123,7 @@ export const ProfileStories = memo(function ProfileStories({
         }}>
         {/* UploadYourStory */}
         <div className='md:h-24 h-20 w-max'>
-          {isProfile ? <UploadYourStory className='md:w-20 md:h-20 h-16 w-16 '/> : <></>}
+          {isProfile ? <UploadYourStory className='md:w-20 md:h-20 h-16 w-16 ' /> : <></>}
         </div>
         {/* other stories*/}
         <div
@@ -104,7 +145,7 @@ export const ProfileStories = memo(function ProfileStories({
               }}
             >
               <StoryItem key={virtualColumn.index}
-                story={data[virtualColumn.index]}
+                data={state.data[virtualColumn.index]}
                 className='md:w-20 md:h-20 h-16 w-16' />
             </div>
           ))}

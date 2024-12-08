@@ -28,9 +28,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useTheme } from "next-themes"
-import { signOut } from "next-auth/react"
-import { logoutApi } from "@/redux/services/account"
 import { useRouter } from "next/navigation"
+import { logoutApi } from "@/redux-stores/slice/auth/api.service"
 
 export default function HomePageDropdownMenu({ children }: {
   children: React.ReactNode
@@ -117,11 +116,7 @@ export default function HomePageDropdownMenu({ children }: {
           <span>API</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="rounded-xl" onClick={() => {
-          signOut()
-          logoutApi()
-          router.replace('/auth/login')
-        }}>
+        <DropdownMenuItem className="rounded-xl" onClick={logoutApi}>
           <LogOut className="mr-3 h-7 w-7" />
           <span>Log out</span>
           {/* <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut> */}

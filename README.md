@@ -2,8 +2,8 @@
 ![Logo](/public/skylight-github-banner.png)
 
 
-# SkyLight App Overview
-
+# Snaapio Web App Overview
+ 
 This repository includes a complete social media application backend created using NestJS and a client-side application developed with Next.js. The backend offers a strong API for social media features like authentication, user management, and post interactions. The client-side application provides a user-friendly and responsive interface for users to engage with the social media platform.
 
 
@@ -36,7 +36,6 @@ The client-side application is built using [Next.js](https://nextjs.org/), a Rea
 - `firebase`: Firebase client library.
 - `jsonwebtoken`: JWT handling.
 - `lucide-react`: Icon library for React.
-- `next-auth`: Authentication for Next.js.
 - `next-themes`: Theme switching for Next.js.
 - `react-hook-form`: Forms library for React.
 - `react-redux`: Official React bindings for Redux.
@@ -53,7 +52,7 @@ Nextjs, Redux toolkit, TailwindCSS, shadcn ui, react-hook-form, socket io, zod
 
 ## Features
 
-- User authentication with JWT and NextAuth.js
+- User authentication with JWT
 - Real time chat using Socket io
 - Image uploading feature
 - Share Photo with your friends
@@ -66,13 +65,13 @@ Nextjs, Redux toolkit, TailwindCSS, shadcn ui, react-hook-form, socket io, zod
 Clone the project
 
 ```bash
-  git clone https://github.com/AkashMondal0/Skylight.git
+  git clone https://github.com/AkashMondal0/snaapio-web.git
 ```
 
 Go to the project directory
 
 ```bash
-  cd Skylight
+  cd snaapio-web
 ```
 
 Install dependencies
@@ -84,12 +83,6 @@ Install dependencies
 ## Environment Variables
 Create a `.env.local` file in the `client` directory and configure the necessary environment variables:
 
-### Next auth 
-
-```env
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your-secret-value
-```
 
 ### Nestjs Backend
 
@@ -156,9 +149,9 @@ The backend of this project is built using [NestJS](https://nestjs.com/), a prog
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/AkashMondal0/skylight-nestjs-server.git
+   git clone https://github.com/AkashMondal0/Snaapio-server.git
 
-   cd skylight-nestjs-server
+   cd Snaapio-server
    ```
 
 2. Install dependencies:

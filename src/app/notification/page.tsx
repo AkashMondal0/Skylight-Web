@@ -2,17 +2,21 @@
 'use client'
 import { NotificationItem } from "@/components/Card/NotificationItem";
 import { LoadingUserCardWithButton } from "@/components/loading/Card";
-import { fetchAccountNotificationApi } from "@/redux/services/notification";
-import { RootState } from "@/redux/store";
+import { fetchAccountNotificationApi } from "@/redux-stores/slice/notification/api.service";
+import { RootState } from "@/redux-stores/store";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Page() {
-  const allNotifications = useSelector((state: RootState) => state.notification)
+  const notifications = useSelector((state: RootState) => state.NotificationState.notifications)
+  const loading = useSelector((state: RootState) => state.NotificationState.loading)
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(fetchAccountNotificationApi() as any)
+    dispatch(fetchAccountNotificationApi({
+      limit: 20,
+      offset: 0
+    }) as any)
   }, [])
 
   return <div className="mx-auto max-w-[600px] w-full">
@@ -21,13 +25,11 @@ export default function Page() {
     </div>
     <h2 className='w-full text-xl font-semibold px-4'>Today</h2>
     <div className='w-full pt-4 h-full min-h-dvh px-2 space-y-2'>
-      {
-        allNotifications.loading ? Array(10).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)
-          :
-          allNotifications.notifications.map((data, i) => (
-            <NotificationItem key={i} data={data} />
-          ))
-      }
+      {loading !== "normal" ? Array(20).fill(0).map((_, i) => <LoadingUserCardWithButton key={i} />)
+        :
+        notifications.map((data, i) => (
+          <NotificationItem key={i} data={data} />
+        ))}
     </div>
   </div>
 }

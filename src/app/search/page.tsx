@@ -3,19 +3,19 @@ import React, { memo, useCallback } from 'react'
 import { X } from 'lucide-react'
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
 import { AuthorData } from '@/types';
 import { useRouter } from 'next/navigation';
 import SkyAvatar from '@/components/sky/SkyAvatar';
-import { searchUsersProfileApi } from '@/redux/services/users';
-import { removeAllUserFormSearch } from '@/redux/slice/users';
 import { NavigationBottom } from '@/components/Navigation/NavigationBottom';
 import { LoadingUserCardWithButton } from '@/components/loading/Card';
+import { RootState } from '@/redux-stores/store';
+import { searchUsersProfileApi } from '@/redux-stores/slice/users/api.service';
+import { removeAllUserFormSearch } from '@/redux-stores/slice/users';
 
 const SearchModel = () => {
   const dispatch = useDispatch();
   const inputRef = React.useRef<any>("");
-  const Users = useSelector((Root: RootState) => Root.users);
+  const Users = useSelector((Root: RootState) => Root.UsersState);
 
   const handleSearch = useCallback(() => {
     if (inputRef?.current?.value) {
@@ -78,7 +78,7 @@ const UserItem = memo(function UserItem({
       <div className='flex justify-between p-2  cursor-pointer
       hover:bg-secondary hover:text-secondary-foreground rounded-2xl my-1'>
         <div className='flex space-x-2 items-center' onClick={navigateToProfile}>
-          <SkyAvatar url={item.profilePicture ? item.profilePicture : "/user.jpg"} className='h-12 w-12 mx-auto' />
+          <SkyAvatar url={item.profilePicture} className='h-12 w-12 mx-auto' />
           <div className='ml-2'>
             <div className='font-semibold text-base text-start'>{item.username}</div>
             <div className='text-sm'>

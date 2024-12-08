@@ -3,8 +3,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { useRouter } from 'next/navigation'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '@/redux/store'
-import { fetchOnePostApi } from '@/redux/services/post'
 import NotFound from '@/components/Error/NotFound'
 import {
   CommentHeader,
@@ -13,13 +11,15 @@ import {
 } from '@/components/PostFeed/Comment'
 import { ModelPostSkeleton, PostImage } from '@/components/PostFeed'
 import { ImageError } from '@/components/sky'
+import { RootState } from '@/redux-stores/store'
+import { fetchOnePostApi } from '@/redux-stores/slice/post/api.service'
 
 
 export default function Page({ params }: { params: { id: string } }) {
   const router = useRouter()
   const dispatch = useDispatch()
   const loadedRef = useRef(false)
-  const postState = useSelector((Root: RootState) => Root.posts)
+  const postState = useSelector((Root: RootState) => Root.PostState)
   const [imageError, setImageError] = useState(false)
   const post = useMemo(() => postState.viewPost, [postState?.viewPost])
 
@@ -50,7 +50,7 @@ export default function Page({ params }: { params: { id: string } }) {
           borderRadius: 20,
           margin: 5
         }}>
-        {postState.viewPostLoading || !loadedRef ? <ModelPostSkeleton /> :
+        {postState.viewPostLoading !== "normal" ? <ModelPostSkeleton /> :
           postState.viewPostError && loadedRef || !post ? <NotFound />
             :
             <div className='flex flex-wrap w-full'>

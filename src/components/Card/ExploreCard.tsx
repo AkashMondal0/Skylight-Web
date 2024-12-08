@@ -3,7 +3,7 @@ import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import Link from 'next/link'
 
 const ExploreUserCard = ({
-  url = "/user.jpg",
+  url
 }: {
   url?: string
 }) => {

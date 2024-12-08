@@ -11,14 +11,10 @@ export const ProfilePost = memo(function ImageComponent({
 }: {
     data: Post
 }) {
-    // console.info("<ProfilePost>")
     const router = useRouter()
     if (!data) {
         return <div className="h-full aspect-square w-full" />
     }
-    // if (data?.isDummy) {
-    //     return <div className="h-full aspect-square w-full" />
-    // }
     return (
         <>
             <div className='relative transition-all duration-300 ease-in-out w-full h-full cursor-pointer'>
@@ -52,7 +48,7 @@ export const ProfilePost = memo(function ImageComponent({
                 </div>
                 <OptimizedImage
                     fetchPriority="high"
-                    src={data?.fileUrl[0]}
+                    src={data?.fileUrl[0].urls?.high}
                     width={300}
                     height={300}
                     showErrorIcon

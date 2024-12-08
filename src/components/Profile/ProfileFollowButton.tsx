@@ -1,16 +1,14 @@
 "use client"
 import { Button } from "@/components/ui/button"
-import { createFriendshipApi, destroyFriendshipApi } from "@/redux/services/profile"
 import { Conversation, User, disPatchResponse } from "@/types"
-import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { memo, useCallback, useRef } from "react"
+import { memo, useCallback, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { EllipsisVertical } from "../sky/icons"
-import { followUser, unFollowUser } from "@/redux/slice/profile"
 import { toast } from "sonner"
-import { CreateConversationApi } from "@/redux/services/conversation"
-import { RootState } from "@/redux/store"
+import { RootState } from "@/redux-stores/store"
+import { createFriendshipApi, destroyFriendshipApi } from "@/redux-stores/slice/profile/api.service"
+import { CreateConversationApi } from "@/redux-stores/slice/conversation/api.service"
 
 const ProfileFollowButton = memo(function FollowButton({
     user,
@@ -19,62 +17,64 @@ const ProfileFollowButton = memo(function FollowButton({
     user: User
     isProfile: boolean
 }) {
-    const isFollowing = useSelector((Root: RootState) => Root.profile.state?.friendship.following)
+    const session = useSelector((Root: RootState) => Root.AccountState.session)
     const router = useRouter()
     const dispatch = useDispatch()
-    const session = useSession().data?.user
-    const loadingRef = useRef(false)
+    const [state, setState] = useState({
+        isFollowing: user.friendship?.following,
+        isFollower: user.friendship?.followed_by,
+        loading: false,
+    })
 
     const handleFollow = useCallback(async () => {
-        if (loadingRef.current) return
-        loadingRef.current = true
+        if (state.loading) return
+        setState({ ...state, loading: true })
         try {
             if (!session?.id) return toast('You are not logged in')
             if (!user?.id) return toast('User id issue')
-            const res = await dispatch(createFriendshipApi({
+            const res = await createFriendshipApi({
                 authorUserId: session?.id,
                 authorUsername: session?.username,
                 followingUserId: user?.id,
                 followingUsername: user?.username,
-            }) as any) as disPatchResponse<any>
-            if (!isProfile && res.payload) {
-                dispatch(followUser())
+            }) as unknown as disPatchResponse<any>
+            if (res) {
+                setState((prev) => ({ ...prev, isFollowing: true }))
             } else {
                 toast("Something's went Wrong")
             }
         }
         finally {
-            loadingRef.current = false
+            setState((prev) => ({ ...prev, loading: false }))
         }
     }, [isProfile, session?.id, user?.id])
 
     const handleUnFollow = useCallback(async () => {
-        if (loadingRef.current) return
-        loadingRef.current = true
+        if (state.loading) return
+        setState({ ...state, loading: true })
         try {
-            if (!session?.id) return alert('You are not logged in')
-            if (!user?.id) return alert('User login issue')
-            const res = await dispatch(destroyFriendshipApi({
+            if (!session?.id) return toast('You are not logged in')
+            if (!user?.id) return toast('User id issue')
+            const res = await destroyFriendshipApi({
                 authorUserId: session?.id,
                 authorUsername: session?.username,
                 followingUserId: user?.id,
                 followingUsername: user?.username
-            }) as any) as disPatchResponse<any>
-            if (!isProfile && res.payload) {
-                dispatch(unFollowUser())
+            }) as unknown as disPatchResponse<boolean>
+            if (res) {
+                setState((prev) => ({ ...prev, isFollowing: false }))
             } else {
                 alert("Something's went Wrong")
             }
         } finally {
-            loadingRef.current = false
+            setState((prev) => ({ ...prev, loading: false }))
         }
     }, [isProfile, session?.id, user?.id])
 
     const messagePageNavigate = useCallback(async () => {
-        if (loadingRef.current) return
-        loadingRef.current = true
+        if (state.loading) return
         try {
-            if (!session?.id) return alert('You are not logged in')
+            if (!session?.id) return toast('You are not logged in')
             if (!user?.id || user?.id === session?.id) return toast("Something went wrong")
             const res = await dispatch(CreateConversationApi([user.id]) as any) as disPatchResponse<Conversation>
             if (res.error) return toast("Something went wrong")
@@ -82,12 +82,27 @@ const ProfileFollowButton = memo(function FollowButton({
         } catch (error) {
             toast("Something went wrong")
         } finally {
-            loadingRef.current = false
+            setState((prev) => ({ ...prev, loading: false }))
         }
     }, [isProfile, session?.id, user])
 
     if (!user) return <div></div>
 
+    if (!session || user.friendship) {
+        return (<>
+            <div className='md:flex space-x-2 space-y-2 items-center'>
+                <div className="flex items-center">
+                    <p className='text-xl px-3 line-clamp-1'>{user.username}</p>
+                </div>
+
+                <Button variant={"secondary"} disabled={state.loading} className='rounded-xl' onClick={() => {
+                    router.push(`/auth/login?callback=${user.username}`)
+                }}>
+                    Follow
+                </Button>
+            </div>
+        </>)
+    }
 
     if (isProfile) {
         return <div className='md:flex space-x-2 space-y-2 items-center'>
@@ -95,12 +110,12 @@ const ProfileFollowButton = memo(function FollowButton({
                 <p className='text-xl px-3 line-clamp-1'>{user.username}</p>
             </div>
 
-            <Button variant={"secondary"} disabled={loadingRef.current} className='rounded-xl' onClick={() => {
+            <Button variant={"secondary"} disabled={state.loading} className='rounded-xl' onClick={() => {
                 router.push('/account/edit')
             }}>
                 Edit Profile
             </Button>
-            <Button variant={"secondary"} disabled={loadingRef.current} className='rounded-xl' onClick={() => {
+            <Button variant={"secondary"} disabled={state.loading} className='rounded-xl' onClick={() => {
                 router.push('/account/archive')
             }}>
                 View Archive
@@ -115,15 +130,14 @@ const ProfileFollowButton = memo(function FollowButton({
         <div className="flex items-center">
             <p className='text-xl px-3 line-clamp-1'>{user.username}</p>
         </div>
-        {isFollowing ?
-            <Button className='rounded-xl px-6 w-24' variant={"secondary"} disabled={loadingRef.current} onClick={handleUnFollow}>
+        {state.isFollowing ?
+            <Button className='rounded-xl px-6 w-24' variant={"secondary"} disabled={state.loading} onClick={handleUnFollow}>
                 Following
             </Button> :
-            <Button className='rounded-xl px-6 w-24' disabled={loadingRef.current} onClick={handleFollow}>
+            <Button className='rounded-xl px-6 w-24' disabled={state.loading} onClick={handleFollow}>
                 Follow
-            </Button>
-        }
-        <Button variant={"secondary"} className='rounded-xl' disabled={loadingRef.current}
+            </Button>}
+        <Button variant={"secondary"} className='rounded-xl' disabled={state.loading}
             onClick={messagePageNavigate}>
             Message
         </Button>

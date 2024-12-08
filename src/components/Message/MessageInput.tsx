@@ -8,14 +8,13 @@ import { useForm } from 'react-hook-form'
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux'
 import { Conversation } from '@/types';
-import { useSession } from 'next-auth/react';
-import { CreateMessageApi, fetchConversationsApi } from '@/redux/services/conversation';
 import { SocketContext } from '@/provider/Socket_Provider';
 import { event_name } from '@/configs/socket.event';
 import { toast } from 'sonner';
-import { RootState } from '@/redux/store';
 import { FileUploadMenu } from '../Option/FileUploadMenu';
 import { UploadFileList } from './MessageUploadFile';
+import { RootState } from '@/redux-stores/store';
+import { CreateMessageApi, fetchConversationsApi } from '@/redux-stores/slice/conversation/api.service';
 
 const dropdownData = [
     {
@@ -32,8 +31,8 @@ const schema = z.object({
 })
 export const MessageInput = memo(function MessageInput({ data }: { data: Conversation }) {
     const dispatch = useDispatch()
-    const ConversationList = useSelector((state: RootState) => state.conversation.conversationList, (prev, next) => prev.length === next.length)
-    const session = useSession().data?.user
+    const ConversationList = useSelector((state: RootState) => state.ConversationState.conversationList, (prev, next) => prev.length === next.length)
+    const session = useSelector((Root: RootState) => Root.AccountState.session)
     const [isFile, setIsFile] = useState<File[]>([])
     const [loading, setLoading] = useState(false)
     const socketState = useContext(SocketContext)
@@ -91,9 +90,12 @@ export const MessageInput = memo(function MessageInput({ data }: { data: Convers
                     ...newMessage.payload, members: members
                 })
             }
-            if (ConversationList.findIndex((i) => i.id === data.id) === -1) {
+            if (ConversationList.findIndex((i) => i.id === data.id) === -1 && data.id) {
                 // toast.success("New conversation created")
-                dispatch(fetchConversationsApi() as any)
+                dispatch(fetchConversationsApi({
+                    limit: 16,
+                    offset: 0
+                }) as any)
             }
             reset()
             setIsFile([])

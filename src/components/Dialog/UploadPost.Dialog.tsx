@@ -15,13 +15,11 @@ import {
     type CarouselApi,
 } from "@/components/ui/carousel"
 import { useDispatch, useSelector } from "react-redux"
-import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 import OptimizedImage from "@/components/sky/SkyImage"
 import { TempleDialog } from "./Temple.Dialog"
-import { UploadImagesFireBaseApi } from "@/redux/services/upload"
-// import { RootState } from "@/redux/store"
-// import { toggleCreatePostModal } from "@/redux/slice/sidebar"
+import { RootState } from "@/redux-stores/store"
+import { uploadFilesApi } from "@/redux-stores/slice/account/api.service"
 
 export default function UploadPostDialog({
     children
@@ -31,7 +29,7 @@ export default function UploadPostDialog({
     // const modalOpen = useSelector((state: RootState) => state.sidebarSlice.uploadPostModal)
     const dispatch = useDispatch()
     const [isFile, setIsFile] = useState<File[]>([])
-    const session = useSession().data?.user
+    const session = useSelector((state: RootState) => state.AccountState.session)
     const [step, setStep] = useState(0)
 
     const ToastAlert = (text: string) => {
@@ -47,7 +45,7 @@ export default function UploadPostDialog({
             files = files.filter((f) => f.name !== file.name)
         })
         setIsFile((prev) => [...prev, ...files])
-    },[isFile])
+    }, [isFile])
 
     const onRemoveItem = useCallback((id: string) => {
         setIsFile((prev) => prev.filter((i) => i.name !== id))
@@ -67,10 +65,13 @@ export default function UploadPostDialog({
         if (isFile.length > 5) {
             return ToastAlert("You can't upload more than 5 images")
         }
-        dispatch(UploadImagesFireBaseApi({
-            isFile,
-            isCaption: caption ?? "",
-            profileId: session?.id
+        // TODO: uncomment this code after the backend is ready
+        dispatch(uploadFilesApi({
+            files: isFile,
+            caption: caption,
+            location: '',
+            tags: [],
+            authorId: session?.id
         }) as any)
         setIsFile([])
         document.getElementById('closeDialog')?.click()
@@ -235,6 +236,7 @@ const ImageItem = memo(function ImageItem({ image }: { image: File }) {
             <OptimizedImage
                 width={320}
                 height={320}
+                isServerImage={false}
                 sizes="(min-width: 808px) 10vw, 15vw"
                 src={URL.createObjectURL(image)}
                 alt={image.name}
@@ -243,13 +245,14 @@ const ImageItem = memo(function ImageItem({ image }: { image: File }) {
             <p>{image.name.slice(0, 11)}...</p>
         </div>
     )
-}, ((pre,next)=>pre.image.name === next.image.name))
+}, ((pre, next) => pre.image.name === next.image.name))
 
 const CarouselImageItem = memo(function CarouselImageItem({ image }: { image: File }) {
     return (<CarouselItem className="m-auto">
         <OptimizedImage
             width={320}
             height={320}
+            isServerImage={false}
             sizes="(min-width: 808px) 30vw, 50vw"
             src={URL.createObjectURL(image)}
             alt={`Image`}

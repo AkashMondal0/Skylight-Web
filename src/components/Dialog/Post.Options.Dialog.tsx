@@ -4,12 +4,12 @@ import {
 } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
 import { useState } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { TempleAlertDialog } from "@/components/Dialog/Temple.Dialog"
 import { toast } from "sonner"
-import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { Post } from "@/types"
+import { RootState } from "@/redux-stores/store"
 
 export default function PostOptionsDialog({
     children,
@@ -18,7 +18,7 @@ export default function PostOptionsDialog({
     children: React.ReactNode
     data: Post
 }) {
-    const session = useSession().data?.user
+    const session = useSelector((state: RootState) => state.AccountState.session)
     const router = useRouter()
     const dispatch = useDispatch()
 

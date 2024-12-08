@@ -2,25 +2,25 @@
 import React, { useCallback } from 'react'
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
-import { removeAllUserFormSearch } from '@/redux/slice/users';
 import { DialogClose } from '@/components/ui/dialog'
 import SkyAvatar from '@/components/sky/SkyAvatar';
 import { AuthorData, Conversation, disPatchResponse } from '@/types';
 import { useRouter } from 'next/navigation';
 import { MessagesSquare } from 'lucide-react';
-import { searchUsersProfileApi } from '@/redux/services/users';
 import { LoadingUserCardWithButton } from '@/components/loading/Card';
 import { TempleDialog } from '@/components/Dialog/Temple.Dialog';
-import { CreateConversationApi } from '@/redux/services/conversation';
 import { toast } from 'sonner';
+import { searchUsersProfileApi } from '@/redux-stores/slice/users/api.service';
+import { RootState } from '@/redux-stores/store';
+import { removeAllUserFormSearch } from '@/redux-stores/slice/users';
+import { CreateConversationApi } from '@/redux-stores/slice/conversation/api.service';
 
 
 
 const UserToMessage = ({ children }: { children: React.ReactNode }) => {
     const dispatch = useDispatch();
     const inputRef = React.useRef<any>();
-    const Users = useSelector((Root: RootState) => Root.users);
+    const Users = useSelector((Root: RootState) => Root.UsersState);
 
     const handleSearch = useCallback(() => {
         if (inputRef?.current?.value) {
@@ -86,7 +86,7 @@ const UserCard = ({
         <DialogClose onClick={navigate} className='w-full h-full'>
             <div className='flex justify-between p-2 hover:bg-secondary hover:text-secondary-foreground rounded-2xl my-1 cursor-pointer'>
                 <div className='flex space-x-2 items-center'>
-                    <SkyAvatar className='h-12 w-12 mx-auto' url={item.profilePicture ? item.profilePicture : "/user.jpg"} />
+                    <SkyAvatar className='h-12 w-12 mx-auto' url={item.profilePicture} />
                     <div className='ml-2 text-start'>
                         <div className='font-semibold text-base'>
                             {item.name}

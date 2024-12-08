@@ -16,7 +16,7 @@ export const AppHeader = memo(function AppHeader() {
             <div className="p-4 w-full flex justify-between">
                 <div className="flex items-center">
                     <img src={configs.AppDetails.logoUrl} alt="logo" className="w-6 h-6" />
-                    <span className="text-xl font-bold">SkyLight</span>
+                    <span className="text-xl font-bold">Snaapio</span>
                 </div>
                 <div className="flex items-center gap-4">
                     <div>

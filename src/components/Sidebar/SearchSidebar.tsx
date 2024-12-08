@@ -3,16 +3,16 @@ import { cn } from '@/lib/utils';
 import React, { memo, useCallback, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
 import { Cancel } from '../sky/icons';
 import { LoadingUserCardWithButton } from '../loading/Card';
-import { searchUsersProfileApi } from '@/redux/services/users';
 import { debounce } from 'lodash';
-import { removeAllUserFormSearch, removeUserByIdFormSearch } from '@/redux/slice/users';
 import { useRouter } from 'next/navigation';
 import SkyAvatar from '../sky/SkyAvatar';
 import { X } from 'lucide-react';
 import { AuthorData } from '@/types';
+import { RootState } from '@/redux-stores/store';
+import { searchUsersProfileApi } from '@/redux-stores/slice/users/api.service';
+import { removeAllUserFormSearch } from '@/redux-stores/slice/users';
 
 
 const SearchSidebar = ({
@@ -23,7 +23,7 @@ const SearchSidebar = ({
     close: () => void
 }) => {
     const inputRef = React.useRef<any>("");
-    const Users = useSelector((Root: RootState) => Root.users);
+    const Users = useSelector((Root: RootState) => Root.UsersState);
     const dispatch = useDispatch()
 
     const handleSearch = useCallback(() => {
@@ -107,7 +107,7 @@ const UserCard = memo(function UserCard({
         <div className='flex justify-between p-2 hover:bg-secondary hover:text-secondary-foreground rounded-2xl my-1 cursor-pointer'
             onClick={navigateToProfile}>
             <div className='flex space-x-2 items-center'>
-                <SkyAvatar className='h-12 w-12 mx-auto' url={item.profilePicture ? item.profilePicture : "/user.jpg"} />
+                <SkyAvatar className='h-12 w-12 mx-auto' url={item.profilePicture} />
                 <div className='ml-2 text-start'>
                     <div className='font-semibold text-base'>
                         {item.name}

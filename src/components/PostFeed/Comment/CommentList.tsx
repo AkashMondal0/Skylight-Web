@@ -3,16 +3,16 @@ import { ScrollArea } from "../../ui/scroll-area"
 import { Post } from "@/types"
 import SkyAvatar from "@/components/sky/SkyAvatar"
 import { timeAgoFormat } from "@/lib/timeFormat"
-import { fetchPostCommentsApi } from "@/redux/services/post"
 import { useDispatch, useSelector } from "react-redux"
-import { RootState } from "@/redux/store"
 import { CommentListSkeleton } from "./CommentSkeleton"
+import { RootState } from "@/redux-stores/store"
+import { fetchPostCommentsApi } from "@/redux-stores/slice/post/api.service"
 let previousPostId = "noPost"
 export const CommentList = memo(function CommentList({ data }: { data: Post }) {
     const dispatch = useDispatch()
     const loadedRef = useRef(false)
-    const comments = useSelector((Root: RootState) => Root.posts.viewPost?.comments)
-    const loading = useSelector((Root: RootState) => Root.posts.fetchPostCommentsLoading)
+    const comments = useSelector((Root: RootState) => Root.PostState.comments)
+    const loading = useSelector((Root: RootState) => Root.PostState.commentsLoading)
 
     useEffect(() => {
         if (previousPostId !== data.id) {
@@ -29,7 +29,7 @@ export const CommentList = memo(function CommentList({ data }: { data: Post }) {
     return (
         <ScrollArea className='h-auto flex-1 scrollbarStyle'>
             <div className="flex p-4 border-b">
-                <SkyAvatar url={data?.user?.profilePicture || "/user.jpg"} className='h-12 w-12 ' />
+                <SkyAvatar url={data?.user?.profilePicture} className='h-12 w-12 ' />
                 <div className="flex flex-col ml-4">
                     <p className="break-all"><span className='font-semibold text-lg'>
                         {data?.user?.username}</span> {data?.content}
@@ -37,7 +37,7 @@ export const CommentList = memo(function CommentList({ data }: { data: Post }) {
                     <div className="text-sm text-gray-500">{timeAgoFormat(data.createdAt)}</div>
                 </div>
             </div>
-            {loading ? <CommentListSkeleton /> :
+            {loading !== "normal" ? <CommentListSkeleton /> :
                 comments?.length === 0 ?
                     <div className='flex justify-center items-center h-96'>
                         <div>
@@ -48,7 +48,7 @@ export const CommentList = memo(function CommentList({ data }: { data: Post }) {
                     <>
                         {comments?.map((comment, index) => (
                             <div key={index} className="flex p-4 my-auto">
-                                <SkyAvatar url={comment?.user?.profilePicture || "/user.jpg"} className='h-12 w-12 ' />
+                                <SkyAvatar url={comment?.user?.profilePicture} className='h-12 w-12 ' />
                                 <div className="flex flex-col ml-4">
                                     <p className="break-all text-base font-light">
                                         <span className='font-semibold text-lg mr-2'>
