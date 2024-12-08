@@ -222,7 +222,7 @@ const NavigationItem = ({
                     </TooltipTrigger>
                     <TooltipContent
                         side="right"
-                        className="p-0 bg-transparent border-none">
+                        className="p-0 bg-transparent border-none shadow-none">
                         {/* <p>{label}</p> */}
                         <div className={cn(`pl-3`)}>
                             <div className={cn(`w-max flex items-center

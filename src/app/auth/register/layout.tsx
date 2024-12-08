@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: 'Skylight - Register',
+  title: 'Snaapio - Register',
   description: ``,
 }
 export default async function RegisterLayout({ children }: {

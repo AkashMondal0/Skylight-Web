@@ -16,13 +16,13 @@ export const metaRobots: Metadata["robots"] = {
 }
 
 export const AppMetadata: Metadata = {
-  title: 'SkyLight',
-  description: `SkyLight is a social media platform that 
+  title: 'Snaapio',
+  description: `Snaapio is a social media platform that 
     allows users to share their thoughts and ideas with the world.`,
-  generator: 'SkyLight',
+  generator: 'Snaapio',
   applicationName: `${configs.AppDetails.name}`,
   referrer: 'origin-when-cross-origin',
-  keywords: ['SkyLight', 'React', 'Next.js', 'JavaScript', 'TypeScript'],
+  keywords: ['Snaapio', 'React', 'Next.js', 'JavaScript', 'TypeScript'],
   authors: [
     { name: 'Akash Mondal', url: 'https://skysolo.me' },
     { name: 'Akash Mondal', url: 'https://github.com/akashmondal0' },
@@ -33,10 +33,10 @@ export const AppMetadata: Metadata = {
   publisher: 'SkySolo.Inc',
   metadataBase: new URL('https://skysolo.me'),
   openGraph: {
-    title: 'SkyLight - Share Your World',
-    description: 'Join SkyLight to connect with others and share your ideas.',
+    title: 'Snaapio - Share Your World',
+    description: 'Join Snaapio to connect with others and share your ideas.',
     url: `${configs.AppDetails.appUrl}`,
-    siteName: 'SkyLight',
+    siteName: 'Snaapio',
     images: [
       {
         url: `${configs.AppDetails.appUrl}${configs.AppDetails.primaryLightLogo}`,
@@ -54,9 +54,9 @@ export const AppMetadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'SkyLight - Share Your World',
-    description: 'Join SkyLight to connect with others and share your ideas.',
-    site: '@SkyLightApp',
+    title: 'Snaapio - Share Your World',
+    description: 'Join Snaapio to connect with others and share your ideas.',
+    site: '@SnaapioApp',
     creator: '@AkashMondal',
     images: [
       `${configs.AppDetails.appUrl}${configs.AppDetails.primaryLightLogo}`,
@@ -69,16 +69,16 @@ export const AppMetadata: Metadata = {
 export const NotFoundMetadata: Metadata = {
   ...AppMetadata,
   title: "Page isn't available",
-  description: "The link you followed may be broken, or the page may have been removed. Go back to SkyLight Home Page.",
+  description: "The link you followed may be broken, or the page may have been removed. Go back to Snaapio Home Page.",
   openGraph: {
     ...AppMetadata.openGraph,
     title: "Page isn't available",
-    description: "The link you followed may be broken, or the page may have been removed. Go back to SkyLight Home Page.",
+    description: "The link you followed may be broken, or the page may have been removed. Go back to Snaapio Home Page.",
   },
   twitter: {
     ...AppMetadata.twitter,
     card: 'summary_large_image',
     title: "Page isn't available",
-    description: "The link you followed may be broken, or the page may have been removed. Go back to SkyLight Home Page.",
+    description: "The link you followed may be broken, or the page may have been removed. Go back to Snaapio Home Page.",
   },
 }

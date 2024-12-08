@@ -23,7 +23,7 @@ export async function generateMetadata({ params: { post } }: { params: { post: s
     if (!data) return NotFoundMetadata
     if (!data?.user?.name) return NotFoundMetadata
 
-    const title = `${data.user.name} on Skylight: ${data.content}`;
+    const title = `${data.user.name} on Snaapio: ${data.content}`;
     const description = `Posted on: ${new Date(data.createdAt).toDateString()}, Likes: ${data.likeCount}, Comments: ${data.commentCount}, Image: ${data.fileUrl[0]}`;
     const image = configs.serverApi.supabaseStorageUrl ? configs.serverApi.supabaseStorageUrl + data.fileUrl[0]?.urls?.high : configs.AppDetails.primaryLightLogo
 
@@ -31,20 +31,20 @@ export async function generateMetadata({ params: { post } }: { params: { post: s
       title: title,
       description: description,
       // 
-      generator: 'SkyLight',
+      generator: 'Snaapio',
       applicationName: `${configs.AppDetails.name} `,
       referrer: 'origin-when-cross-origin',
-      keywords: [data.user.username, data.user.name, 'SkyLight'],
+      keywords: [data.user.username, data.user.name, 'Snaapio'],
       authors: [{ name: data?.user.name, url: `https://skysolo.me/${data.user.username}` }],
       creator: data.user.name,
       publisher: data.user.username,
-      metadataBase: new URL(`${configs.AppDetails.appUrl}/p/${data.id}`),
+      // metadataBase: new URL(`${configs.AppDetails.appUrl}/p/${data.id}`),
       //
       openGraph: {
         title: title,
         description: description,
         url: `${configs.AppDetails.appUrl}/p/${data.id}`,
-        siteName: 'SkyLight',
+        siteName: 'Snaapio',
         locale: "en-US",
         type: 'website',
         images: [
@@ -66,7 +66,7 @@ export async function generateMetadata({ params: { post } }: { params: { post: s
         card: 'summary_large_image',
         title: title,
         description: description,
-        site: '@SkyLightApp',
+        site: '@SnaapioApp',
         creator: `@${data.user.username}`,
         images: [image],
       },

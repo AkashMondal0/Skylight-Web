@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 export const metadata: Metadata = {
-  title: 'SkyLight - Login',
+  title: 'Snaapio - Login',
   description: ``,
 }
 

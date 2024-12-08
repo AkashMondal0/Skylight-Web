@@ -72,7 +72,7 @@ const Header = memo(function Header() {
 
     return <div className='w-full p-4 pb-0 sticky top-0 bg-background z-50'>
         <div className="flex justify-between w-full items-center">
-            <CardTitle>SkyLight</CardTitle>
+            <CardTitle>Snaapio</CardTitle>
             <div>
                 <UserToMessage>
                     <Button variant={"ghost"} className='rounded-2xl w-8 h-8 p-1'>

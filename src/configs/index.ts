@@ -13,9 +13,9 @@ const _configs = {
     },
     AppDetails: {
         version: "1.0.0",
-        name: "Skylight",
+        name: "Snaapio",
         description:
-            "SkyLight is a social media platform that allows users to share their thoughts and ideas with the world.",
+            "Snaapio is a social media platform that allows users to share their thoughts and ideas with the world.",
         appUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
         logoUrl: "/primary-logo.png",
         primaryLightLogo: "/primary-light-logo.jpeg",

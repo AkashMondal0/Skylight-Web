@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation"
 
 const UnauthorizedAlert = () => {
     const router = useRouter()
-    return <Alert className="flex items-center h-28 absolute bottom-0 justify-around border-0 border-t rounded-none">
+    return <Alert className="flex items-center h-28 absolute bottom-0 justify-around border-0 border-t rounded-none z-50">
         <div className="flex items-center gap-5">
             <img src={configs.AppDetails.logoUrl} alt="upload" className="w-10 h-10" />
             <div>

@@ -24,17 +24,17 @@ export async function generateMetadata({ params: { profile } }: any): Promise<Me
 
     if (!data) return NotFoundMetadata
 
-    const title = `${data?.name} (@${data.username}) • Skylight photos and videos`
-    const description = `${data?.followerCount} Followers, ${data?.followingCount} Following, ${data?.postCount} posts - See Skylight photos and video form(@${data.username})`
+    const title = `${data?.name} (@${data.username}) • Snaapio photos and videos`
+    const description = `${data?.followerCount} Followers, ${data?.followingCount} Following, ${data?.postCount} posts - See Snaapio photos and video form(@${data.username})`
     const image = configs.serverApi.supabaseStorageUrl ? configs.serverApi.supabaseStorageUrl + data?.profilePicture : configs.AppDetails.primaryLightLogo
 
     return {
       title: title,
       description: description,
-      generator: 'SkyLight',
+      generator: 'Snaapio',
       applicationName: `${configs.AppDetails.name} `,
       referrer: 'origin-when-cross-origin',
-      keywords: [data.username, data.name, 'SkyLight'],
+      keywords: [data.username, data.name, 'Snaapio'],
       authors: [
         { name: data?.name, url: `${configs.appUrl}${data.username}` },
         // profile user other social account links
@@ -44,14 +44,14 @@ export async function generateMetadata({ params: { profile } }: any): Promise<Me
       ],
       creator: data.name,
       publisher: data.username,
-      metadataBase: new URL(`${configs.AppDetails.appUrl}/${data.username}`),
+      // metadataBase: new URL(`${configs.AppDetails.appUrl}/${data.username}`),
       category: `Public figure`,
       // openGraph
       openGraph: {
         title: title,
         description: description,
         url: `${configs.AppDetails.appUrl}/${data.username}`,
-        siteName: 'SkyLight',
+        siteName: 'Snaapio',
         locale: "en-IN",
         type: 'website',
         images: [
@@ -76,7 +76,7 @@ export async function generateMetadata({ params: { profile } }: any): Promise<Me
         card: 'summary_large_image',
         title: title,
         description: description,
-        site: '@SkyLightApp',
+        site: '@SnaapioApp',
         creator: `@${data.username}`,
         images: [image],
       },

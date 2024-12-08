@@ -73,9 +73,9 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
         SocketConnection()
         if (socketRef.current && session?.id) {
             // connection
-            socketRef.current?.on('connect', () => {
-                toast("User Connected")
-            });
+            // socketRef.current?.on('connect', () => {
+            //     toast("User Connected")
+            // });
             socketRef.current?.on('disconnect', () => {
                 toast("User Disconnected")
             });
@@ -114,7 +114,7 @@ const Socket_Provider = ({ children }: { children: React.ReactNode }) => {
                 toast("From Server Test Event Message")
             });
             return () => {
-                socketRef.current?.off('connect')
+                // socketRef.current?.off('connect')
                 socketRef.current?.off('disconnect')
                 socketRef.current?.off('test')
                 socketRef.current?.off(event_name.conversation.message)
