@@ -1,8 +1,8 @@
 
-![Logo](/public/skylight-github-banner.png)
+![Logo](/public/skylight%20github%20banner.jpg)
 
 
-# Snaapio Web App Overview
+# Snaapio WebApp Overview
  
 This repository includes a complete social media application backend created using NestJS and a client-side application developed with Next.js. The backend offers a strong API for social media features like authentication, user management, and post interactions. The client-side application provides a user-friendly and responsive interface for users to engage with the social media platform.
 
